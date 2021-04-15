@@ -22,6 +22,10 @@ Here are some essential features of this project:
 * A database server is not needed at all.
 * No persistence needed, all works *in-memory*
 
+## Watch the Demo
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XFPFwfsEJSg" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Preparations
 
 Card data and images are not part of this project, so you will have to use a third-party domain to obtain them.
@@ -43,11 +47,11 @@ This project will query its own endpoint ``/cards/:set/:image`` and you can simp
 
 A sample request would be as follows:
 
-``/cards/METW/imagefile.jpg``
+``/cards/THESET/imagefile.jpg``
 
 The redirect then uses your CDN `https://your-domain.com` and your `image-path` (e.g. `/img/cards`) create a redirect
 
-``https://your-domain.com/img/cards/METW/imagefile.jpg``
+``https://your-domain.com/img/cards/THESET/imagefile.jpg``
 
 *HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations.
 
