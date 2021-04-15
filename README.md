@@ -24,7 +24,7 @@ Here are some essential features of this project:
 
 ## Watch the Demo
 
-[![Watch the Demo](https://img.youtube.com/vi/XFPFwfsEJSg/0.jpg)](https://www.youtube.com/XFPFwfsEJSg)
+[![Watch the Demo](https://img.youtube.com/vi/XFPFwfsEJSg/0.jpg)](https://www.youtube.com/watch?v=XFPFwfsEJSg)
 
 ## Preparations
 
