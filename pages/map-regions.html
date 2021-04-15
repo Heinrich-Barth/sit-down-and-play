@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Plan your movement</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; {TPL_CSP}">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; {TPL_CSP_X}">
+
+        <link rel="stylesheet" href="/media/assets/css/tabletop.css" />
+        <link rel="stylesheet" href="/media/assets/css/bootstrap.css" />
+        <link rel="stylesheet" href="/media/assets/css/leaflet.css" />
+        <link rel="stylesheet" href="/media/assets/css/mapview.css" />
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
+        <script src="/media/assets/js/jquery.min.js"></script>
+        <script src="/media/assets/js/leaflet.js"></script>
+    </head>
+
+
+    <body class="bgblack preview-zoom">
+
+        <div id="map_view_layer" class="map_view_layer hide">
+            <div class="mapview map">
+                <div class="map-title">
+                    Click on a region and select target site from list 
+                    <div class="map-search cursor-pointer fr blue-box">
+                        <i class="fa fa-search" aria-hidden="true" title="Click to see search options"></i>
+                    </div>
+                </div>
+                <div class="map-inline fl">
+                    <div id="map"></div>
+                
+                    <div id="site_movement" class="side_panel hide">
+                        <div class="fl padl10 blue-box card-box">
+                            <div class="site_movement_start_site site-list fl"></div>
+                        </div>
+                        <div class="fl padl10 card-box">
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-compass.png" title="through"></div>
+                        </div>
+                        <div class="fl padl10 blue-box card-box">
+                            <div class="site_movement_start_region site-list fl"></div>
+                            <div class="site_movement_other_region cursor-remove site-list fl"></div>
+                            <div class="site_movement_target_region site-list fl"></div>
+                        </div>
+                        <div class="fl padl10 card-box">
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-start.png" title="to"></div>
+                        </div>
+                        <div class="fl padl10 blue-box card-box">
+                            <div class="site_movement_target_site site-list min-container"></div>
+                        </div>
+                        <div class="fl side_panel panel-buttons blue-box">
+                            <div class="cursor-pointer map-action-image" id="movement_accept" title="accept movement"><img width="40" src="/media/assets/images/icons/icon-mapview-accept.png"></div>
+                            <div class="cursor-pointer map-action-image" id="movement_cancel" title="cancel movement"><img width="40" src="/media/assets/images/icons/icon-mapview-cancel.png"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <div class="side_panel fr blue-box">
+                    <div id="found_sites" class="cursor-pointer"></div>
+                </div>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript" nonce="START">
+            g_sImageCDNUrl = "{IMAGE_CDN_URL}";
+        </script>
+        
+        <script src="/media/client/mapwindow/renderer.js"></script>
+        <script src="/media/client/game/card-preview.js"></script>
+        <script src="/media/client/game/cardlist.js"></script>
+        <script src="/media/client/mapwindow/mapview.js"></script>
+        
+    </body>
+</html>

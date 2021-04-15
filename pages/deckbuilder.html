@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
+
+        <title>Build a Deck</title>
+
+        <link rel="stylesheet" href="/media/assets/css/main.css" />
+        <link rel="stylesheet" href="/media/assets/css/deckbuilder.css" />
+        <script src="/media/assets/js/jquery.min.js"></script>  
+    </head>
+    <body class="bgnature deckbuilding" data-image-cdn="{IMAGE_CDN_URL}">
+
+        <div class="pos-rel bgblue filters">
+            <form method="post" action="#">
+                <div class="fields" style="margin: 0px;">
+                    <div class="field"><input type="text" name="card_title" id="card_title" placeholder="Card title" /></div>
+                    <div class="field"><input type="text" name="card_text" id="card_text" placeholder="Card text" /></div>
+
+                    <div class="field">
+                        <select id="view_card_type">
+                            <option value="">Card Type</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_align">
+                            <option value="">Align</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_category">
+                            <option value="">Category</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="bgblue deckbuilding-summary">
+            <span id="summary_characters">0</span> <label>Characters</label><br>
+            <span id="summary_resources">0</span> <label>Resources</label><br>
+            <span id="summary_hazards">0</span> <label>Hazards</label><br>
+            <span id="summary_sideboard">0</span> <label>Sideboard</label>
+        </div>
+
+        <h1>Displaying <span id="size">0</span> card(s)</h1>
+
+        <div class="result_container">
+
+            <div class="decklist fl bgblue" id="deck_container">
+                <h2><span id="deck_name">Your Deck</span> (<span id="deck_count">0</span>)</h2>
+                <input type="button" class="button-small" name="start" id="save_deck" value="Save deck" />
+
+                <div class="pos-rel">
+                    <div class="pos-rel fl w48 deck_part">
+                        <h3>Pool (<span class="count_type" id="count_pool">0</span>)</h3>
+                        <div id="pool" class="d_container pt5">-</div>
+                    </div>
+                    <div class="pos-rel fl w48 deck_part_col" id="deck_chars">
+                        <h3 class="mr-20">Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</h3>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+
+                <div class="pos-rel">
+                    <div class="pos-rel fl w48 deck_part_col" id="deck_resources">
+                        <h3 class="mr-20">Resources (<span class="count_type_col" id="count_deck_r">0</span>)</h3>
+                    </div>
+
+                    <div class="pos-rel fl w48 deck_part_col" id="deck_hazards">
+                        <h3>Hazards (<span class="count_type_col" id="count_deck_h">0</span>)</h3>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+
+                <div class="pos-rel deck_part">
+                    <h3>Sideboard (<span class="count_type" id="count_sideboard">0</span>)</h3>
+                    <div id="sideboard" class="d_container pt5">-</div>
+                </div>
+
+                <div id="deckentry-tpl" class="hidden">
+                    <div id="IDID_id" class="dflex card_of_deck_construct" data-index="{index}">
+                        <span class="action"  data-is-deck="{data-is-deck}">
+                            <a href="#" class="deck_add icon_add" title="increase">
+                                <img src="/media/assets/images/icon-transparent.png" alt="add">
+                            </a>
+                            <a href="#" class="deck_rem icon_remove" title="decrease">
+                                <img src="/media/assets/images/icon-transparent.png" alt="decrease">
+                            </a>
+                        </span>
+                        <span class="title card_deck_title">{title}</span>&nbsp;(<span class="count count_deck_entry">1</span>)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list_left">
+                
+                <div id="linklist" class="linklist fl"></div>
+                <div class="">
+                    
+                <div id="result"></div>
+                <div class="clear"></div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div id="tpl" class="hidden">
+
+            <div class="characters" id="tplDefault">
+                <div class="fl image" id="{gindex}" >
+                    <div class="image_overlay" >
+                        <img src="/media/assets/images/cards/notfound-generic.jpg" data-hide="/media/assets/images/cards/notfound-generic.jpg" data-src="{img}" class="preview" decoding="async">
+                    </div>
+                    <div class="actions" data-index="{index}" id="count_{cindex}" data-count="{count}">
+                        <a href="#" class="link_add icon_add_pool" title="add to starting pool"  data-target="pool">
+                            &nbsp;
+                        </a>
+                        <a href="#" class="link_add icon_add_deck" title="add to deck"  data-target="{data-target}">
+                            &nbsp;
+                        </a>
+                        <a href="#" class="link_add icon_add_sideboard" title="add to sideboard" data-target="sb">
+                            &nbsp;
+                        </a>
+                    </div>
+                    <div class="count_bubble">{count2}</div>
+                </div>
+            </div>
+        </div>
+        <div id="deck_card_view" class="hidden"></div>
+
+
+        <script src="/media/client/game/notify.js"></script>
+        <script src="/media/client/game/cardlist.js"></script>
+        <script src="/media/client/game/card-preview.js"></script>
+        <script src="/media/client/deckbuilder/quantities.js"></script>
+        <script src="/media/client/deckbuilder/cards-meta.js"></script>
+        <script src="/media/client/deckbuilder/deckbuilder-api.js"></script>
+        <script src="/media/client/deckbuilder/view-cards.js"></script>
+    </body>
+</html>

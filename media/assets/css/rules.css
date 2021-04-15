@@ -1,0 +1,24 @@
+
+body {
+    background: rgba(39,56,76,1);
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-weight: 300;
+    line-height: 1.75em;
+    color: #fff;
+    letter-spacing: 0.025em;
+}
+.content {
+    margin: 20px;    
+    text-align: left;
+}
+
+h1 { font-size: 1.5em; text-align: center; margin-bottom: 10px; 
+    font-weight: 300;
+    text-decoration: none;
+}
+
+.rule-nav { position: fixed; left: 10px; top: 30px; width: 350px; line-height: 1.3em; }
+.rule-content { margin-left: 370px; }
+
+h1, h2, h3, h4,
+a, a:active, a:visited { color: #ffa500; text-decoration: none; font-weight: normal; }

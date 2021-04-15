@@ -1,0 +1,65 @@
+
+body {
+    background: rgba(39,56,76,1);
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-weight: 300;
+    line-height: 1.75em;
+    color: #fff;
+    letter-spacing: 0.025em;
+}
+
+.content {
+    text-align: center;
+    width: 700px;
+    margin: auto;
+}
+
+h1, h2 { 
+    color: #ffa500;
+    text-align: center; 
+    margin-bottom: 10px; 
+    font-weight: 300;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 1.5em; 
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.2em; 
+}
+
+.bgnature
+{
+    background: url("/media/assets/images/poster_nature.jpg") no-repeat center center fixed;
+}
+
+.text-center { text-align: center; }
+
+.blue-box {
+
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+    
+    max-width: 80%;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: left;
+
+    padding: 20px;
+    color: white;
+}
+
+ul {
+    list-style: disc;
+    margin-left: 15px;
+    margin-bottom: 50px;
+}
+
+
+.about h2 { margin-top: 2em; }

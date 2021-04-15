@@ -1,0 +1,58 @@
+
+#notifications {
+    position: fixed;
+    top: 60px;
+    right: 45%;
+    padding: 20px;
+}
+
+.success
+{
+    background: #98c593;
+}
+
+.failure{
+    background: rgb(195,34,34);
+
+}
+  
+.notify
+{  
+    box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+    border-radius: 5px;
+    padding: 20px;
+    font-size: 20px;
+    color:#f0f0f0;  
+    width:300px;
+    box-sizing:border-box;
+    text-align:left;
+    overflow:hidden;
+    box-sizing:border-box;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.notification-text { display: block; }
+.notification-text i { margin-right: 10px; }
+.notification-line-countdown 
+{   
+    animation: notification-line 2s linear forwards;
+    height: 2px;
+    background: white;
+    width: 1%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+@keyframes notification-line {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.info
+{
+    color: #000;
+    background: rgb(255,213,56);
+    background: linear-gradient(90deg, rgba(255,213,56,1) 0%, rgba(254,210,47,0.9248074229691877) 100%);
+}

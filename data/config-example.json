@@ -1,0 +1,15 @@
+{
+    "image_domain" : "https://my-cdn.com",
+    
+    "image_path" : "/img/cards/",
+
+    "imageExpires": 8640000,
+
+    "maxRooms" : 10,
+
+    "maxPlayersPerRoom" : 10,
+
+    "cspReportUri" : "",
+
+    "cardsUrl" : "https://my-cdn.com/data/cards"
+}

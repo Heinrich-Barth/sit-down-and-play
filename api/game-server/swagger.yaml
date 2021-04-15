@@ -1,0 +1,849 @@
+swagger: "2.0"
+info:
+  description: "Game Server API"
+  version: "1.0.0"
+  title: "Sit down and play"
+  license:
+    name: "See project license file"
+tags:
+- name: "Authentication"
+  description: "The authentication process"
+- name: "Game Management"
+  description: "General Game Management"
+- name: "Load/Save"
+  description: "Load or Save"
+- name: "Card Action"
+- name: "Scoring a Card"
+- name: "View Pile"
+- name: "Play Cards"
+schemes:
+- "wss"
+paths:
+  /authenticate:
+    post:
+      tags:
+      - "Authentication"
+      summary: "Authenticate to the game."
+      description: "This endpoint will reply with `/authenticate/success` only if the login is successful. Otherwise, it will say nothing and wait. With each new connection, the client has 3 seconds to send this authentication. Otherwise, the connection will be closed by the server anyway."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Login data"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            room:
+              type: "string"
+            token:
+              type: "string"
+            userId:
+              type: "string"
+              description: "User Id"
+            joined:
+              type: "integer"
+            player_access_token_once:
+              type: "string"
+              description: "One time access token baked into the HTML from the server"
+
+      responses:
+        "204":
+          description: "This endpoint will reply with `/authenticate/success` only if the login is successful."
+
+  /game/view-cards/reveal-pile:
+    post:
+      tags:
+      - "View Pile"
+      summary: "Reveal a deck pile by type to opponent"
+      description: "Cards will be face down and manually flipped"
+      consumes:
+      - "text/plain"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "sideboard|discardpile|discard|playdeck|victory|hand"
+        schema:
+          type: "object"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/view-cards/reveal/list` and send the card code list"
+  /game/view-cards/list:
+    post:
+      tags:
+      - "View Pile"
+      summary: "View a deck pile by type"
+      consumes:
+      - "text/plain"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "sideboard|discardpile|discard|playdeck|victory|hand"
+        schema:
+          type: "object"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/view-cards/list` and send the card code list"
+  
+  /game/view-cards/list/close:
+    post:
+      tags:
+      - "View Pile"
+      summary: "Close viewing a deck pile (also for other players when showing to opponent)"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            offered:
+              type: "boolean"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/view-cards/list/close`"
+          
+  /game/view-cards/offer-reveal:
+    post:
+      tags:
+      - "View Pile"
+      summary: "Reveal a card to opponent"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "card uuid"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/view-cards/reveal/reveal`"
+          
+  /game/view-cards/offer-remove:
+    post:
+      tags:
+      - "View Pile"
+      summary: "Remove a card from deck offering view (only from view)"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "card uuid"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/view-cards/reveal/remove`"
+          
+  /game/view-cards/shuffle:
+    post:
+      tags:
+      - "View Pile"
+      - "Card Action"
+      summary: "Shuffle cards in playdeck or discardpile"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            target:
+              type: "string"
+              description: "playdeck|discardpile"
+      responses:
+        "204":
+          description: ""
+  
+  /game/score/show:
+    post:
+      tags:
+      - "Scoring a Card"
+      summary: "View victory pile"
+      description: "View victory pile and score sheet"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/score/show` and `/game/score/show-pile` "
+
+  /game/score/update:
+    post:
+      tags:
+      - "Scoring a Card"
+      summary: "Update victory points"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            stage:
+              type: "integer"
+              description: "Points"
+            character:
+              type: "integer"
+              description: "Character Points"
+            ally:
+              type: "integer"
+              description: "Ally Points"
+            item:
+              type: "integer"
+              description: "Item Points"
+            faction:
+              type: "integer"
+              description: "Faction Points"
+            kill:
+              type: "integer"
+              description: "Kill Points"
+            misc:
+              type: "integer"
+              description: "Misc. Points"
+      responses:
+        "204":
+          description: ""
+
+  /game/score/add:
+    post:
+      tags:
+      - "Scoring a Card"
+      summary: "Add a scored card to the score sheet"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            points:
+              type: "integer"
+              description: "Points"
+            type:
+              type: "string"
+              description: "stage|character|ally|item|faction|kill|misc"
+      responses:
+        "204":
+          description: ""
+          
+  /game/card/state/set:
+    post:
+      tags:
+      - "Card Action"
+      summary: "Set a card state"
+      description: "Such as ready, tap, untap, wound etc."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+            state:
+              type: "integer"
+              description: >
+                Rotate degree:
+                `0` = ready/untap
+                `90` = tap (will untap in organisation phase)
+                `91` = tap (will NOT untap in organisation phase)
+                `180` = wound/rotate 180 degrees
+                `270` = rotate 270 degrees
+      responses:
+        "204":
+          description: ""
+          
+  /game/card/state/reveal:
+    post:
+      tags:
+      - "Card Action"
+      summary: "Reveal/Hide a card"
+      description: "Reveals or hides a card on the board"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+            code:
+              type: "string"
+              description: "card code"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/card/reveal` "
+
+  /game/card/store:
+    post:
+      tags:
+      - "Card Action"
+      - "Scoring a Card"
+      summary: "Move card to victory pile"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+      responses:
+        "204":
+          description: ""
+          
+  /game/card/move:
+    post:
+      tags:
+      - "Card Action"
+      summary: "Move card to victory pile"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            drawTop:
+              type: "boolean"
+              description: "Draw top card automatically (e.g. when moved to hand)"
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+            source:
+              type: "string"
+              description: "inplay|hand"
+            target:
+              type: "string"
+              description: "victory|sideboard|discardpile|discard|playdeck|hand"
+      responses:
+        "204":
+          description: ""
+          
+  /game/card/discard:
+    post:
+      tags:
+      - "Card Action"
+      summary: "Move card to discard pile"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+      responses:
+        "204":
+          description: ""
+          
+
+  /game/card/draw:
+    post:
+      tags:
+      - "Draw Hand"
+      summary: "Draw starting hand"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/card/draw`"
+
+  /game/card/draw/single:
+    post:
+      tags:
+      - "Draw Hand"
+      summary: "Draw a single card"
+      description: "Draws a single card. If there are no more cards in the deck (all discarded), the discard pile is moved into the play deck automatically and will be reshuffled"
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/card/draw`"
+          
+  /game/card/state/glow:
+    post:
+      tags:
+      - "Card Action"
+      summary: "Highights card"
+      description: "Highights a card on the board"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The cards uuid"
+            code:
+              type: "string"
+              description: "card code"
+              
+      responses:
+        "204":
+          description: "This endpoint will reply with `/game/card/state/glow` and sends the body data of this request"
+  
+  /game/finalscore:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Ask to send the final game scroe"
+      description: ""
+      responses:
+        "204":
+          description: ""
+          
+  /game/draw/company:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Draw a company"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The company id"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: "This endpoint will reply with  `/game/player/draw/company` and sends the company json"
+          
+  /game/draw/companies:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Draw all companies on the board"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "204":
+          description: "This endpoint will reply for each company in the game and send `/game/player/draw/company` and sends the company json"
+
+  /game/phase/set:
+    post:
+      tags:
+      - "Game Management"
+      summary: "End the game and destroy the game room object"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Phase: May only be organisation|movement|site|eotdiscard|longevent|eot"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: ""
+          
+  /game/state/restore:          
+    post:
+      tags:
+      - "Load/Save"
+      summary: "Not yet implemented"
+      description: "Restore a game from a saved json "
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "JSON object"
+        required: true
+        schema:
+          type: "object"
+      responses:
+        "204":
+          description: ""
+  /game/state/save/request:          
+    post:
+      tags:
+      - "Load/Save"
+      summary: "Not yet implemented"
+      description: ""
+      responses:
+        "204":
+          description: ""
+          
+  /game/state/save/current:          
+    post:
+      tags:
+      - "Load/Save"
+      summary: "Not yet implemented"
+      description: ""
+      responses:
+        "204":
+          description: ""
+          
+  /game/discardopenly:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Not yet fully implemented."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+          description: ""
+      responses:
+        "204":
+          description: "replies with `/game/discardopenly`"
+
+  /game/roll-dices:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Roll the dices: 2xW6"
+      description: ""
+      responses:
+        "204":
+          description: ""
+  /game/quit:
+    post:
+      tags:
+      - "Game Management"
+      summary: "End the game and destroy the game room object"
+      description: ""
+      responses:
+        "204":
+          description: ""
+  /game/chat/message:
+    post:
+      tags:
+      - "Game Management"
+      summary: "Publish a chat message to everybody in the game"
+      description: ""
+      consumes:
+      - "text/plain"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Text so send"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: ""
+
+  /game/stagingarea/add/card:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Place a card in the staging area"
+      description: "This will remove the card from the hand (if necessary) via `/game/remove-card-from-hand` and send it to the players via `/game/add-to-staging-area`"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+          description: ""
+      responses:
+        "204":
+          description: ""
+      
+  /game/character/host-card:      
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Let a character host another card"
+      description: "This will remove the card from the hand (if necessary) via `/game/remove-card-from-hand`"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+            companyId:
+              type: "string"
+              description: "The target company"
+            characterUuid:
+              type: "string"
+              description: "The target character"
+            fromHand:
+              type: "boolean"
+              description: "Indicate if the card is played from the hand"
+      responses:
+        "204":
+          description: ""
+
+  /game/character/join/company:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Character joins a company under general influence"
+      description: "This will only add the character, but not force a company redrawing."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+            companyId:
+              type: "string"
+              description: "The target company"
+            source:
+              type: "string"
+              description: "hand|empty string"
+      responses:
+        "204":
+          description: ""
+
+  /game/character/join/character:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Character joins another character under direct influence"
+      description: "Character will be removed from origin company if necessary. This will only add the character, but not force a company redrawing."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+            companyId:
+              type: "string"
+              description: "The target company"
+            targetcharacter:
+              type: "string"
+              description: "Target character uuid"
+            fromHand:
+              type: "boolean"
+      responses:
+        "204":
+          description: ""
+
+  /game/company/create:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Create a new company and place character under general influence"
+      description: "The new company will be drawn automatically"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            uuid:
+              type: "string"
+              description: "The card's uuid"
+            source:
+              type: "string"
+              description: "hand|empty string"
+      responses:
+        "204":
+          description: ""
+
+  /game/company/highlight:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Highlight a company once"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            company:
+              type: "string"
+              description: "The company id"
+      responses:
+        "204":
+          description: ""
+
+  /game/company/location/set-location:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Set the movement sites (source, regions, target)"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            companyUuid:
+              type: "string"
+              description: "The company id"
+            start:
+              type: "string"
+              description: "site card code"
+            destination:
+              type: "string"
+              description: "site card code"
+            regions:
+              type: "array"
+              description: "list of region card codes"
+              items:
+                type: "string"
+                description: "region card code"
+      responses:
+        "204":
+          description: ""
+        
+  /game/company/location/reveal:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Reveals company movement cards (regions, target size)"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            companyUuid:
+              type: "string"
+              description: "The company id"
+      responses:
+        "204":
+          description: ""
+
+  /game/company/location/attach:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Attach a card to company's target site"
+      description: ""
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            companyUuid:
+              type: "string"
+              description: "The company id"
+            uuid:
+              type: "string"
+              description: "card uuid"
+            reveal:
+              type: "boolean"
+              description: "reveal card"
+      responses:
+        "204":
+          description: ""
+
+  /game/company/arrive:
+    post:
+      tags:
+      - "Play Cards"
+      summary: "Let company arrive at target site"
+      description: "This will also remove the regions and site of origin from the board"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            company:
+              type: "string"
+              description: "The company id"
+      responses:
+        "204":
+          description: ""

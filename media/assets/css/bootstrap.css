@@ -1,0 +1,47 @@
+/* 
+    Created on : Apr 8, 2020, 4:40:30 PM
+    Author     : phillip
+*/
+.row {
+    display: flex;
+
+    flex-flow: row wrap;
+
+    justify-content: space-around;
+    padding: 0 50px;
+    height: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+.col6 {
+    flex: 1 50%; 
+}
+
+.col1 {
+    flex: 1 10%; 
+}
+.col15 {
+    flex: 1 15%;
+}
+.col90 {
+    flex: 1 80%; 
+}
+.tableCell { display: inline-block; }
+.center-text { text-align: center;}
+.hidden { display: none !important; }
+.hiddenVisibility { visibility: hidden !important; }
+.pos-rel {
+    position: relative;
+}
+.fl { float: left; }
+.fr { float: right; }
+
+.cursor-default {
+    cursor: default !important;
+}
+.cursor-pointer {
+    cursor: pointer;
+}

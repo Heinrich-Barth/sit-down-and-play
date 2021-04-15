@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Sit down and start playing</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+
+        <link rel="stylesheet" href="/media/assets/css/notifications.css" />
+        <link rel="stylesheet" href="/media/assets/css/about.css" />
+        <link rel="stylesheet" href="/media/assets/css/home.css" />
+
+        <script src="/media/assets/js/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="content">
+            <div class="blue-box join-game" id="login">
+            
+                <h1>Start a Game</h1>
+                
+                <div>
+                    <div class="enter-room-input-container">
+
+                        <p class="center">Choose your game name and click on <i>Start Game</i></p>
+                        
+                        <input id="enter_room"  placeholder="Your game name here (a-zA-Z0-9)"  type="text" value="">
+                        <button id="start_game" type="button">Start Game</button>
+                    
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="blue-box join-game hidden" id="no_games">
+                <h2>Be the first...</h2>
+                <p class="center">Start a game and invite your friends to join.</p>
+            </div>
+
+            <div class="blue-box join-game hidden" id="active_games">
+            
+                <h2>Join a Table</h2>
+                <p class="center">Click on a game to join</p>
+                <div class="game_list"></div>
+
+            </div>
+        </div>
+        
+        <div class="blue-box navigation"><a href="/about">About</a></div>
+
+        <script src="/media/client/game/notify.js"></script>
+        <script src="/media/client/home.js"></script>
+    </body>
+</html>

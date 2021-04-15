@@ -1,0 +1,63 @@
+
+.config-wrapper {
+    z-index: 200;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    top: 40px;
+    position: absolute;
+    color: white;
+    overflow: hidden;
+}
+
+.config-wrapper:hover 
+{
+    width: 530px;
+    height: 560px;
+    overflow: auto;
+}
+
+.config-panel {
+    display: none; 
+}
+.config-wrapper:hover .config-panel
+{
+    display: block; 
+}
+.config-panel .preference-section-pad {
+    margin-top: 20px;
+    color:#ffa500;
+    text-transform: uppercase;
+}
+
+.config-wrapper .icons { width: 20px; padding: 0; }
+
+.config-wrapper:hover .icon {
+    background: url(/media/assets/images/icons/icon-prefs-hover.png) 0 0 no-repeat;
+}
+
+.config-wrapper .icon {
+    background: url(/media/assets/images/icons/icon-prefs.png) 0 0 no-repeat;
+}
+.config-panel .preference {
+    line-height: 18px;
+    margin-top: 10px;
+}
+.config-wrapper label { margin: 0; cursor: pointer;}
+.config-wrapper .preference:hover { color:#ffa500 };
+
+.config-panel .switch {
+position: relative;
+display: inline-block;
+width: 34px;
+height: 17px;
+}
+div#config-panel {
+    margin-left: 40px;
+    position: relative;
+    margin-top: -50px;
+}
+.config-panel input { 
+display: none;
+}

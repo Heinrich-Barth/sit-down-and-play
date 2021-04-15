@@ -1,0 +1,30 @@
+
+body {
+    background: rgba(39,56,76,1);
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-weight: 300;
+    line-height: 1.75em;
+    color: #fff;
+    letter-spacing: 0.025em;
+}
+.content 
+{
+    margin: 20px;    
+}
+
+h1,
+h2 {
+     text-align: center; margin-bottom: 10px; 
+text-align: center;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 1.5em;
+    font-weight: 300;
+}
+
+h2 {
+    font-size: 1.3em;
+    font-weight: 200;
+}

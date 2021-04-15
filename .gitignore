@@ -1,0 +1,17 @@
+# Node build artifacts
+node_modules
+npm-debug.log
+
+# Local development
+*.env
+*.dev
+.DS_Store
+
+data/cards-raw.json
+data/config.json
+data/decks
+data/map-positions.json
+
+media/maps/*
+
+pages/rules-*.html

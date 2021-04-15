@@ -1,0 +1,162 @@
+.score-overlay { background: rgba(0,0,0,0.2); position: fixed; z-index: 300; left: 0; top: 0; right: 0; bottom: 0; }
+
+.scoring-card {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    text-align: center;
+    z-index: 101;
+}
+
+.scoring-sheet table { color: white; width: 100%; }
+
+.scoring-card img {
+    max-width: 300px;
+    max-height: 300px;
+    margin: 0 20px;
+}
+
+.scoring-sheet .view-score-container,
+.scoring-card .view-score-container {
+    position: relative;
+    margin: 0 auto;
+    min-width: 300px;
+    top: 30%;    
+    padding: 20px;
+    z-index: 301;
+    display: inline-block;
+}
+
+.scoring-sheet .view-score-container { 
+    top: 5%;
+    right: 0;
+    position: fixed;
+    right: 5%;
+ }
+
+.scoring-card .view-score-container h2 { text-align: center; color: #ffa500; }
+.scoring-sheet .button,
+.scoring-card .button {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    background-color: #a8cea4;
+}
+
+.scoring-sheet.final-score a,
+.scoring-sheet.final-score .button
+{
+    display: none !important;
+}
+
+.scoring-sheet th,
+.scoring-sheet td
+{
+    padding-top: 5px;
+}
+.scoring-sheet td span 
+{
+    display: inline-block;
+    width: 20px;
+}
+.scoring-sheet .text-right
+{
+    text-align: right;
+}
+.scoring-sheet td
+{
+    text-align: center;
+}
+.scoring-sheet th
+{
+    padding-right: 10px;
+}
+.scoring-sheet thead th
+{
+    border-bottom: 1px solid white;
+}
+.scoring-sheet tfoot tr.score-total th 
+{
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+.scoring-sheet tfoot tr.score-total th.score-total 
+{
+    text-align: center;
+}
+.scoring-sheet tbody th
+{
+    font-weight: normal;
+    text-align: left;
+}
+.scoring-sheet a
+{
+    padding: 10px 5px;
+    display: inline-block;
+}
+
+
+.view-score-victory-container {
+    position: fixed;
+    left: 5%;
+    top: 5%;
+    width: 500px;
+    max-height: 500px;
+    z-index: 500;
+}
+.view-score-victory-container  .view-card-list-container
+{
+    max-height: 500px;
+}
+.view-score-victory-container  .container-title-bar-title
+{
+    padding: 5px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+#scoring-sheet input.buttonCancel { background-color: #c32222; }
+#scoring-sheet input.buttonCancel:hover { background-color: #dc2600; }
+
+.scoring-card select.req {
+    border: 2px solid red;
+    animation: glowRed linear 1s 1 forwards; 
+}
+
+.scoring-card select {
+    padding: 0.65em 0.75em;
+    border-radius: 5px;
+    outline: none;
+    display: block;
+    text-decoration: none;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+@keyframes glowRed 
+{
+    0% {
+      box-shadow: 0 0 10px -10px #9b0404;
+    }
+    50% {
+        box-shadow: 0 0 10px 10px #9b0404;
+    }
+    99% {
+        box-shadow: 0 0 10px -10px #9b0404;
+    }
+    100% {
+        box-shadow: none;
+    }
+  }

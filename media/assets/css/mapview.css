@@ -1,0 +1,266 @@
+html, body {
+    font-family:Arial;  
+}
+
+.blue-box 
+{
+    background: rgba(39,56,76,0.82);
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+#map {
+    width: 800px;
+    height: 600px;
+    margin-right: 0px;
+    padding-right: 0;
+    display: inline-block;
+}
+
+.map{
+    border-radius: 5px;
+    width: 1020px;
+    height: 750px;
+    display: block;
+}
+
+.map-full #map {
+    width: 100%;
+    height: 99%;
+    display: inline-block;
+}
+
+.map-full .map-inline {
+    width: 80%;
+    height: 99%;
+    display: inline-block;
+}
+
+.map-full div.side_panel {
+    width: 200px;
+    max-height: 97%;
+    height: 97%;
+}
+
+
+.map-full .map
+{
+    width: 99%;
+    height: 99%;
+    display: inline-block;
+}
+
+.underdeeps-map.map,
+.underdeeps-map #map {
+    width: 90%;
+    height: 90%;
+    display: block;
+}
+
+.underdeeps-map .map-inline
+{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+body.bgblack,
+body.underdeeps-map
+{
+    background: #000 !important;
+}
+
+body.underdeeps-map{ margin-top: 20px; }
+
+.map-inline { display: inline-block; }
+.mapview { text-align: center;}
+
+.form {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    height: 400px;
+}
+
+.form select,
+.form input { display: block;   }
+
+.form input { border: 1px solid transparent; margin-bottom: 5px; }
+.form input.next { border: 1px solid  #ffa500; }
+
+.form select { margin-bottom: 20px; margin-top: 20px; }
+.field { color: white; }
+
+
+table.site_leaflet td
+{
+    padding: 5px;
+}
+
+table.site_leaflet td:nth-child(even) {
+  background-color: lightgrey;
+}
+
+
+form {
+    margin: 0 0 2em 0;
+}
+
+select
+{
+    -webkit-appearance: none;
+   -moz-appearance: none;
+}
+
+form > .fields {
+    display: block;    
+}
+
+input {
+    background-color: #ffffff;
+}
+
+form > .fields > .field {
+    padding: 0.5em;
+    width: 17%;
+    display: inline-flex;
+
+}
+
+select{ margin-bottom: 0.65em;}
+input[type="text"],
+select,
+textarea {
+    color: #39454b;
+    display: block;
+    width: 100%;
+    padding: 0.65em 0.75em;
+    border: solid 2px #e5e6e7;
+    border-radius: 0.5em;
+    outline: none;
+}
+label { font-size: 0.7em; }
+.mapchooser {
+    text-align: center;
+}
+
+div.side_panel {
+    width: 200px;
+    max-height: 600px;
+    display: inline-block;
+    overflow: auto;
+}
+.side_panel img { max-width: 80px; margin-right: 2px;  }
+.site-list img { height: 80px; }
+.fl {float: left;}
+
+.map-title {
+    color: #ffa500;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: block;
+    text-align: center;
+}
+#site_movement { display: block; width: 100%; height: 135px; }
+.clear { clear: both; }
+
+.cursor-pointer { cursor: pointer; }
+.cursor-remove img { cursor: no-drop; }
+
+.padl10 { padding-left: 10px; }
+.site-list img { margin-right: 5px; }
+
+#found_sites { 
+    text-align: left;
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.hide{ display: none !important; }
+
+#site_movement { padding-top: 10px; }
+.card-box { padding: 10px 5px; min-height: 90px; height: 90px; margin-right: 10px; min-width: 60px; }
+.map-action-image { padding: 6px 10px;  text-align: center; opacity: 0.5;}
+.map-action-image:hover { opacity: 1;}
+.clear { clear: both; float: none; }
+
+div.panel-buttons { width: 70px; }
+.map-search { padding: 5px;}
+.map-title { margin: 10px 0;}
+.mapchooser {
+    position: fixed;
+    right: 45px;
+    z-index: 900;
+    width: 300px;
+    background: rgba(39,56,76,1);
+    top: 15px;
+}
+
+form > .fields > .field
+{
+    padding: 0.5em;
+    width: 90%;
+    display: block;
+    text-align: left;
+}
+
+form input[type="text"]
+{
+    width: 246px;
+}
+
+
+.mapchooser input[type="checkbox"] {
+    visibility: hidden;
+    display: none;
+}
+
+label {
+    cursor: pointer;
+    display: block;
+    font-size: 1em;
+    margin: 10px 0;
+}
+    
+.map {
+    margin-top: 0;
+}
+
+.mapchooser h2 {
+    display: block;
+    font-size: 1em;
+    text-transform: uppercase;
+    color: #ffa500;
+    margin: 15px 0 0 0;
+}
+.mapchooser form > .fields > .field.padding10 {
+    padding-left: 10px;
+}
+#found_sites img { width: 80px; height: 112px; }
+@media only screen and (min-width: 1500px) 
+{
+
+    .map 
+    {
+        width: 1450px;
+        margin: 20px;
+        height: 750px;
+    }
+
+    .map-inline.fl 
+    {
+        float: none;
+    }
+
+    div.side_panel.fr {
+        position: absolute;
+        right: 10px;
+        width: 200px;
+    }
+
+    #map {
+        width: 1450px;
+        height: 750px;
+    }
+}
+

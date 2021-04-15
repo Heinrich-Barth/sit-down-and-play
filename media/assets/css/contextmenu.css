@@ -1,0 +1,35 @@
+
+.contextmenu.hide { display: none; }
+.menu-overlay { background: rgba(0,0,0,0.2); position: fixed; z-index: 300; left: 0; top: 0; right: 0; bottom: 0; }
+.contextmenu { position: absolute; }
+.contextmenu .context-menu { z-index: 301; position: relative; padding: 5px 0; }
+.contextmenu .context-menu ul { list-style: none; margin: 0; padding: 0; }
+.contextmenu .context-menu li { display: block; justify-content: space-between; }
+
+.contextmenu a { 
+    display: block; 
+    margin: 0 5px;
+    padding: 5px;
+}
+
+.contextmenu a i {
+    display: inline-block;
+    width: 21px;
+}
+
+.contextmenu .border-top a
+{
+   border-top: 1px solid #ffa500; }
+
+.contextmenu a:hover {
+    background: rgba(255, 165, 0, 0.2);
+    color: white;
+}
+
+.context-cursor {
+    cursor: help !important;
+}
+
+.move-cursor {
+    cursor: move !important;
+}

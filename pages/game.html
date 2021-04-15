@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Sit down and play</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
+        <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/bootstrap.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/backgrounds.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/notifications.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/leaflet.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/contextmenu.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/scoring.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/question.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/game-dices.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/game-preferences.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/media/assets/css/lobby.css">
+
+        <script src="/media/assets/js/jquery.min.js?version=1"></script>
+        <script src="/media/assets/js/jquery-ui.min.js?version=1"></script>
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+    </head>
+
+
+    <body class="bg-game">
+
+        <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
+
+            <!-- Left Navigation -->
+            <div class="taskbar">
+                <div class="icons">
+                    <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
+                    <a class="icon taskbar-turn longevent" data-phase="longevent" title="Long Event Phase">&nbsp;</a>
+                    <a class="icon taskbar-turn move" data-phase="movement" title="Movement/Hazard Phase">&nbsp;</a>
+                    <a class="icon taskbar-turn site" data-phase="site" title="Site Phase">&nbsp;</a>
+                    <a class="icon taskbar-turn eotdiscard" data-phase="eotdiscard" title="End-of-Turn Discard Phase">&nbsp;</a>
+                    <a class="icon taskbar-turn eot" data-phase="eot" title="End your turn and start next player's turn.">&nbsp;</a>
+                    <a class="icon startphase act cursor-default hidden" id="startphase_turn" data-phase="start" title="Draft Phase">&nbsp;</a>
+                    <div class="task_overlay"></div>
+                </div>
+            </div>
+
+            <div class="player-selector-box">
+                <div class="player_selector fl blue-box ">
+                    <div id="player_selector"></div> <span><i class="fa fa-clock-o"></i></span><span title="Duration of this game" id="game_time">00:00</span></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="card-bar blue-box">
+                <div class="icons" id="card_counter">
+                    <a id="icon_bar_victory" class="icon victory context-cursor" title="Look at victory pile. Right click to edit score sheet"><span class="size">0</span></a>
+                    <a id="icon_hand" class="icon hand act context-cursor" title="Look at hand cards. Right click to reveal cards to opponent"><span class="size">0</span></a>
+                    <a id="icon_bar_playdeck" class="icon playdeck context-cursor" title="Look at remaining playdeck. Right click to shuffle"><span class="size">0</span></a>
+                    <a id="icon_bar_discardpile" class="icon discardpile" title="Look at discard pile"><span class="size">0</span></a>
+                    <a id="icon_bar_sideboard" class="icon sideboard " title="Look at sideboard"><span class="size">0</span></a>
+                </div>
+            </div>
+
+            <div class="card-hands blue-box" id="playercard_hand">
+                <div class="card-hands-sizer">
+                    Always ask to resolve to
+                    <i class="fa fa-plus-circle card-hands-sizer-plus" title="increase hand size" aria-hidden="true"></i>
+                    <span id="card-hand-size-limit" class="card-hands-sizer-size">8</span>
+                    <i class="fa fa-minus-circle card-hands-sizer-minus" title="decrease hand size" aria-hidden="true"></i>
+                    cards with each turn
+                </div>
+                <div class="hand-card-actions">
+                    <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice"></div>
+                    <div class="card-hand card-draw">
+                        <a href="#" class="card-icon" id="draw_card" title="Draw a new card">&nbsp;</a>
+                        <div class="hidden" id="draw_onlyGetTopCard"></div>
+                    </div>
+                </div>
+                <div id="playercard_hand_container"></div>
+                <div id="card-hand-tpl" class="hidden">
+                    <div class="card-hand" id="card_icon_nr_{uuid1}" data-uuid="{uuid2}" data-card-type="{type}" draggable="true">
+                        <img decoding="async" src="/media/assets/images/black.png" data-id="{card-code}" class="card-icon">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table full-height">
+            <div class="area area-opponent" data-opponent-id="opp1">
+                <div class="row" id="opponent_table">
+
+                    <!-- STAGING AREA -->
+                    <div class="staging-area staging-area-opponent">
+                        <div class="staging-area-resources fr rot180" id="staging_area_resources_opponent"></div>
+                        <div class="staging-area-hazard fr staging-area-droppable rot180" id="staging_area_hazards_opponent"></div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="area area-player" data-turn-phase="">
+                <div class="row">
+                    <!-- STAGING AREA -->
+                    <div class="staging-area staging-area-player" id="staging-area-player">
+                        <div class="staging-area-resources staging-area-area fl" id="staging_area_resources_player">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="staging-area-hazard staging-area-area fl" id="staging_area_hazards_player">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <!-- main table area for playing -->
+                    <div class="companies center-text" id="player_companies">
+                        <div class="company tableCell emptyContainer create-new-company" id="create_new_company">
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view_card_list_container" class="hidden">
+            <div class="view-card-list-container blue-box">
+                <div class="container-title-bar">
+                    <div class="container-title-bar-title fl"></div>
+                    <div class="container-title-bar-divider hideOnOffer fl">&nbsp;&dash;&nbsp;</div>
+                    <div class="container-title-bar-reveal hideOnOffer fl"><a href="#" title="show to your opponent" data-type="">reveal to opp.</a></div>
+                    <div class="container-title-bar-shuffle hideOnOffer fr">CLOSE & SHUFFLE</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="container-data"></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        
+        <div id="scoring-card" class="hidden scoring-card">
+            <div class="menu-overlay"></div>
+            <div class="view-score-container blue-box">
+                <div class="view-score-card fl">
+                    <img src="/media/assets/images/cards/backside.jpg" data-image-path="" data-image-backside="backside.jpg">
+                </div>
+                <div class="container-data fl">
+                    <h2>Score Card</h2>
+                    <select class="score-type" name="type">
+                        <option value="">Select Scoring Category</option>
+                        <option value="stage">Stage Points</option>
+                        <option value="character">Character Points</option>
+                        <option value="ally">Ally Points</option>
+                        <option value="item">Item Points</option>
+                        <option value="faction">Faction Points</option>
+                        <option value="kill">Kill Points</option>
+                        <option value="misc">Misc Points</option>
+                    </select>
+                    
+                    <select class="score-points" name="points">
+                        <option value="-10">-10 Points</option>
+                        <option value="-9">-9 Points</option>
+                        <option value="-8">-8 Points</option>
+                        <option value="-7">-7 Points</option>
+                        <option value="-6">-6 Points</option>
+                        <option value="-5">-5 Points</option>
+                        <option value="-4">-4 Points</option>
+                        <option value="-3">-3 Points</option>
+                        <option value="-2">-2 Points</option>
+                        <option value="-1">-1 Points</option>
+                        <option value="0" selected>0 Points</option>
+                        <option value="1">1 Points</option>
+                        <option value="2">2 Points</option>
+                        <option value="3">3 Points</option>
+                        <option value="4">4 Points</option>
+                        <option value="5">5 Points</option>
+                        <option value="6">6 Points</option>
+                        <option value="7">7 Points</option>
+                        <option value="8">8 Points</option>
+                        <option value="9">9 Points</option>
+                        <option value="10">10 Points</option>
+                    </select>
+                    
+                    <input type="button" class="button" value="Score card">
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div id="scoring-sheet" class="hidden scoring-sheet">
+            <div class="menu-overlay hidden"></div>
+            <div class="view-score-container blue-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>You</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-score-type="stage">
+                            <th>Stage Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="character">
+                            <th>Character Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="ally">
+                            <th>Ally Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="item">
+                            <th>Item Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="faction">
+                            <th>Faction Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="kill">
+                            <th>Kill Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-score-type="misc">
+                            <th>Misc. Points</th>
+                            <td data-player="self">
+                                <a href="#" data-score-action="increase" title="increase"><i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i></a>
+                                <span>0</span>
+                                <a href="#" data-score-action="decrease" title="decrease"><i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr data-score-type="total" class="score-total">
+                            <th>Total</th>
+                            <th class="score-total" data-player="self">0</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="text-right">
+                                <input type="button" class="button buttonCancel" value="Cancel">
+                                <input type="button" class="button buttonUpdate" value="Update score">
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="view-score-victory-container" id="view-score-sheet-card-list">
+                <div class="view-card-list-container blue-box">
+                    <div class="container-title-bar">
+                        <div class="container-title-bar-title text-center">Your Victory Pile</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="container-data"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="lidles-eye">
+            <img src="/media/assets/images/splash-eye.png" title="Waiting...">
+        </div>
+
+        <script type="text/javascript" nonce="START">
+            const g_sDisplayName = "{TPL_DISPLAYNAME}";
+            const g_lTimeJoined = {TPL_TIME};
+            const g_sRoom = "{TPL_ROOM}";
+            const g_sUserId = "{TPL_USER_ID}";
+            const g_sApiKey = "{TPL_API_KEY}";
+            const g_sLobbyToken = "{TPL_LOBBY_TOKEN}";
+        </script>
+
+        <script src="/media/client/socket.io.js"></script>
+        <script src="/media/client/game/libraries.js?version=1"></script>
+        <script src="/media/client/game/meccg-api.js?version=1"></script>
+        <script src="/media/client/question.js?version=1"></script>
+        <script src="/media/client/game/dice.js?version=1"></script>
+        <script src="/media/client/game/added-cards-monitor.js?version=1"></script>
+        <script src="/media/client/game/chat.js?version=1"></script>
+        <script src="/media/client/game/preferences.js?version=1"></script>
+        <script src="/media/client/game/notify.js?version=1"></script>
+        <script src="/media/client/game/cardlist.js?version=1"></script>
+        <script src="/media/client/game/scoring.js?version=1"></script>
+        <script src="/media/client/game/renderer.js?version=1"></script>
+        <script src="/media/client/game/mapwindow.js?version=1"></script>
+        <script src="/media/client/game/player-selector.js?version=1"></script>
+        <script src="/media/client/game/contextmenu.js?version=1"></script>
+        <script src="/media/client/game/game-staging-area.js?version=1"></script>
+        <script src="/media/client/game/game-companies.js?version=1"></script>
+        <script src="/media/client/game/card-preview.js?version=1"></script>
+        <script src="/media/client/game/game-taskbarcards.js?version=1"></script>
+        <script src="/media/client/game/game-tabletop.js?version=1"></script>
+        <script src="/media/client/game/handcards-draggable.js?version=1"></script>
+        <script src="/media/client/game/gamebuilder.js?version=1"></script>
+        <script src="/media/client/game/shortcuts.js?version=1"></script>
+        <script src="/media/client/game/highlight-card.js?version=1"></script>
+        <script src="/media/client/game/lobby.js?version=1"></script>
+        
+    </body>
+</html>

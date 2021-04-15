@@ -1,0 +1,70 @@
+
+body { text-align: center; }
+
+.text-center
+{
+    text-align: center;
+}
+h1 { margin-top: 20px; }
+form { margin: 20px 0 20px 0; }
+
+form > .fields { display: inline-block; width: 30%; margin-right: 10px; }
+
+.blue-box 
+{
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+    min-width: 50%;
+    display: inline-block;
+}
+
+form > .fields > .field { width: 100%;}
+
+textarea { height: 200px; }
+
+.button {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    margin: 20px;
+}
+
+.input[type="button"]:hover {
+    background-color: #a8cea4;
+}
+
+#sideboard, #pool { color: black; }
+#notfound p { text-align: left !important;}
+
+input[type="text"] { width: 80%; display: block; margin: 0 auto; }
+
+.hidden { display: none !important; }
+#res { display: block; margin: 5px 20px; max-height: 150px; overflow: auto; }
+label {
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+    text-align: left;
+}       
+span.red { color: lightpink; font-weight: bold; }
+span.green { color: lightgreen; }
+
+button.button.red { background: lightpink; }
+label.inline { display: inline; }
+
+#cnupdate input[type="text"] {
+    margin-bottom: 10px;
+}
+
+#cnupdate #awaiting { margin: 20px; }

@@ -1,0 +1,96 @@
+.blue-box 
+{
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+    margin: 5px 10px;
+    padding: 5px;
+}
+
+#set_list {
+    position: absolute;
+    left: 10px;
+    top: 60px;
+    width: 300px;
+}
+
+#card_list {
+
+    position: relative;
+    margin-left: 340px;
+    display: block;
+    margin-top: 60px;
+    padding: 5px;
+}
+
+.card-secondary-caption 
+{
+    text-transform: uppercase;
+}
+
+.hidden { display: none;}
+
+.set,
+.card-secondary-caption {
+    cursor: pointer;
+}
+
+.card img {
+    max-width: 300px;
+}
+
+.card .image {
+    float: left;
+}
+
+.card .details {
+    display: block;
+    margin-left: 330px;
+}
+
+.details textarea,
+.details select,
+.details input[type="text"] {
+    background: no-repeat;
+    border: 0;
+    border-bottom: 2px solid #e5e6e7;
+    color: white;
+    margin-bottom: 5px;
+    display: inline-block;
+    max-width: 70%;
+}
+
+textarea {
+
+    display: block !important;
+    max-width: 90% !important;
+    width: 100%;
+}
+
+.detail label {
+    display: inline-block;
+    margin-right: 6px;
+    padding-top: 6px;
+    width: 18%;
+
+}
+
+.details textarea {
+    height: 150px;
+}
+
+
+#set_editor {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-size: 16px;
+}
+.editor-div { display: inline-block; }
+
+.set,
+.set > div,
+.editor-div { cursor: pointer;}
+
+.set:hover,
+.editor-div:hover { color: yellow; }

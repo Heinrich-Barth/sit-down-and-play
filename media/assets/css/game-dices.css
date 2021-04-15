@@ -1,0 +1,28 @@
+
+
+#dice-content-tpl { display: none; }
+#dice_roll { position: absolute; z-index: 600; top: 10%; width: 98%; }
+#dice_roll .dice-result-list {     position: relative; margin: 0 auto; width: 250px; }
+#dice_roll .dice-content { text-align: center; color: white; padding: 10px; font-size: 0.9em; margin-bottom: 10px; display: inline-block; }
+#dice_roll span.who  { color: #ffa500; }
+#dice_roll span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
+#dice_roll span.dice-info { font-style: italic; }
+
+.dice-result-list img.dice-icon { filter: invert(100%); width: 30px; }
+.dice-result-list img.dice-image { margin-right: 10px; width: 32px; }
+
+#dice_roll .dice-line-countdown 
+{   
+    animation: dice-line 2.5s linear forwards;
+    height: 2px;
+    background: white;
+    width: 1%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+@keyframes dice-line {
+    from { width: 0%; }
+    to { width: 100%; }
+}

@@ -1,0 +1,169 @@
+#result {
+    padding-bottom: 200px;
+}
+
+#linklist ul {
+    display: inline;
+    float: left;
+}
+
+.linklist li {
+    display: block;
+    width: auto;
+}
+
+.clear { clear: both; float: none; }
+h1 { display: none; }
+
+#result table {
+    width: 100%;
+    max-width: 800px;
+    margin-left: 5px;
+}
+
+#result .image {
+    margin-right: 5px;
+    width: 300px;
+    height: 430px;
+}
+
+#result img.preview {
+    width: 300px;
+    max-height: 421px;
+}
+body.addtodeck #result img.preview {
+    width: 200px;
+}
+
+body.addtodeck .list_left { margin-left: 230px }
+
+body.addtodeck #result .image {
+    width: 200px;
+    height: 282px;
+}
+  .decklist .fl {
+    float: none !important;
+  }
+  .decklist div.w48 {
+    width: 100%;
+  }
+
+.category .image .actions
+{
+    visibility: hidden;
+    position: absolute;
+    background: rgba(0,0,0, 0.6);
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.category .image .actions a
+{
+    width: 100%;
+    display: block;
+    height: 64px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.category .image .actions
+{
+    padding-left: 100px;    
+}
+.category .image:hover .actions
+{
+visibility: visible;
+}
+
+.actions  .icon_add_pool 
+{ 
+    background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
+}
+.actions a.icon_add_pool:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat; 
+}
+
+.actions a.icon_add_deck:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck-hover.png") -10px 0px no-repeat; 
+}
+.actions a.icon_add_deck 
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat; 
+}
+
+.actions a.icon_add_sideboard:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat; 
+}
+.actions a.icon_add_sideboard 
+{ 
+    background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat; 
+}
+
+.category .image div.actions[data-count="0"] {
+    visibility: visible;
+    background: rgba(0,0,0,0.4);
+}
+
+.category .image div.actions[data-count="0"] a {
+    display: none;
+}
+
+.list_left {
+    margin-left: 330px;
+}
+
+.decklist {
+    position: relative;
+    width: 300px;
+    padding: 10px;
+    display: inline-block;
+    float: left;
+    margin-left: 5px;   
+}
+div.linklist {
+    display: block;
+    width: 100%;
+}
+
+div.category 
+{
+    float: left;
+}
+div.count_bubble {
+    right: 5px;
+    top: 5px;
+    color: #fff;
+    position: absolute;
+    border-radius: 10px;
+    background: #ffa500;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 1em;
+}
+
+.deckbuilding .filters {
+    display: inline-block;
+    margin-bottom: 10px; display: inline-block;
+}
+.deckbuilding form { margin: 0;}
+.deckbuilding .filters .field 
+{
+    width: 175px;
+}
+
+.deckbuilding-summary {
+    padding: 5px 10px;
+    position: fixed;
+    right: 2px;
+    top: 2px;
+    font-size: 10px;
+    line-height: 13px;
+    z-index: 100;
+}
+.deckbuilding-summary span { width: 20px; display: inline-block; text-align: right; padding-right: 10px; }

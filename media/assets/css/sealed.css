@@ -1,0 +1,47 @@
+.decklist {
+    padding: 10px 5px;
+    text-align: center;
+    position: fixed;
+    top: 20px;
+    left: 2px;
+}
+
+h2 {
+    padding: 0 5px;
+    margin-bottom: 10px; 
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#result_text {
+    margin-left: 10px;
+    width: 190px;
+    margin-top: 10px;
+
+}
+
+#save_disk {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+#result img { width: 250px; margin-right: 5px; }
+.index { text-align: left; padding-left: 5px; }
+
+.result-container-sealed h1 {
+    display: block;
+    background-color: rgba(255,255,255,0.5);
+    line-height: 2em;
+    text-align: right;
+    padding-right: 10%;
+    color: #000;
+    border-radius: 5px;
+}
+.list_left { margin-left: 210px; }
+
+input[type="button"] {
+    color: #000;
+}
+
+body {
+    padding-top: 20px;
+}

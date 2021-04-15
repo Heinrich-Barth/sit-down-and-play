@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sit down and await permission</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/media/assets/css/join-game.css" />
+    <link rel="stylesheet" href="/media/assets/css/question.css" />
+    <script src="/media/assets/js/jquery.min.js"></script>
+    
+    <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+</head>
+
+<body class="bgbagend">
+
+    <div class="blue-box join-game" id="awaiting" data-room="{room}" data-id="{id}">
+        <h1>Get Ready</h1>
+        <div class="deck_name white">
+            <h3>...The host will let you in soon ...</h3>
+            <img src="/media/assets/images/loading.gif" width="100" alt="loading">
+        </div>
+    </div>
+    <script src="/media/client/question.js"></script>
+    <script src="/media/client/lobby.js"></script>
+</body>
+
+</html>

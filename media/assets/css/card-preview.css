@@ -1,0 +1,39 @@
+.preview-container div
+{
+    position: fixed;
+    background-color: black;
+    box-shadow: 0px 3px 6px 4px #000;
+    z-index: 1001;
+
+    max-height: 50vw;
+    height: 50%;
+    display: inline;
+}
+
+.preview-container img 
+{
+    max-height: 100%;
+}
+
+
+.preview-zoom .preview-container img {
+    width: 100%;
+    max-width: 420px;
+    max-height: 800px;
+}
+
+.preview-left {
+    left: 10px;
+}
+
+.preview-bottom {
+    bottom: 10px;
+}
+.preview-top { top: 10px; }
+.preview-right {
+    right: 10px;
+}
+
+.on-drag-event-generic .preview-container {
+    display: none;
+}

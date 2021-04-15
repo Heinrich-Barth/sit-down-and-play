@@ -1,0 +1,236 @@
+.bgbagend
+{
+    background: url("/media/assets/images/poster_nature.jpg") no-repeat center center fixed;
+}
+
+.join-game {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    cursor: default;
+    width: 900px;
+    text-align: center;
+}
+
+.join-game, 
+.join-game input {
+    font-size: 9pt;
+}
+
+
+body {
+    letter-spacing: 0.025em;
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-weight: 300;
+    line-height: 1.75em;
+    color: #ffa500;
+    letter-spacing: 0.025em;
+}
+
+.join-game h1, 
+.join-game h2, 
+.join-game h3, 
+.join-game h4, 
+.join-game h5, 
+.join-game h6 {
+    font-weight: 300;
+    color: inherit;
+    color: inherit;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.join-game h2 {
+    font-size: 2.25em;
+    line-height: 1.25em;
+}
+
+input[type="button"],
+.join-game input[type="submit"],
+.join-game input[type="reset"],
+.join-game .button,
+.join-game button {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+}
+
+input[type="button"]:hover {
+    background-color: #a8cea4;
+}
+
+input[type="button"]:active {
+    background-color: #88bc82;
+}
+
+.join-game form {
+    margin: 0 0 2em 0;
+}
+
+.join-game form > .fields {
+    display: block;    
+}
+
+.join-game input[type="text"] {
+    background-color: #ffffff;
+}
+
+.question-game h3 { text-transform: uppercase; }
+
+.join-game form > .fields > .field {
+    padding: 0.5em;
+    width: 17%;
+    display: inline-flex;
+}
+
+.join-game h1 { font-size: 2em; text-align: center; margin-bottom: 10px; }
+
+.join-game input[type="text"] {
+    color: #39454b;
+    display: block;
+    width: 100%;
+    padding: 0.65em 0.75em;
+    border: solid 2px #e5e6e7;
+    border-radius: 0.5em;
+    outline: none;
+}
+
+.join-game input[type="text"]:focus
+{
+    border-color: #9ac8e9;
+}
+
+.join-game input[type="text"]
+{
+    line-height: 1.35em;
+}
+
+.join-game .pos-rel {
+    position: relative;
+}
+
+.join-game.bgblue {
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+.fl { float: left; }
+.clearfix {
+    display: block;
+    clear: both;
+    float: none;
+}
+
+.join-game .hidden { display: none !important; }
+
+.w50 .fields {
+    width: 260px;
+    padding-right: 20px;
+    display: inline-block;
+}
+
+.blue-box {
+
+background: rgba(39,56,76,0.82);
+border-radius: 5px;
+box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+
+    padding: 20px;
+}
+.join-game .green { color: green; }
+.join-game .white { color: #fff; }
+.join-game .hidden { display: none; }
+.join-game .field { display: block; }
+.join-game form > .fields > .field { width: 100%; }
+.join-game input { width: 400px !important; }
+
+.join-game label {
+    font-size: 1.2em;
+    color: white;
+    padding: 5px;
+    width: 100px;
+}
+.join-game input.w100 { margin: 10px auto; }
+
+.fl { float: left; }
+.clear { clear: both; }
+.hidden { display: none !important; }
+.colLeft { width: 200px;  text-align: left;}
+
+.cookie_notice a,
+.cookie_notice a:hover,
+.game h3 { color: #ff0; }
+
+textarea 
+{
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 100px;
+    font-size: 10px;
+}
+#choose_deck { margin: 0 auto; }
+
+.join-game .button-small
+{
+    margin-left: 20px;
+    width: 200px !important;
+}
+
+.cookie_notice { color: white; }
+
+.deck-fields {
+    width: 570px;
+    display: inline-block;
+}
+.deck-list 
+{
+    width: 300px;
+    text-align: left;
+    margin: 0;
+    float: right;
+    margin-top: 10px;
+}
+.deck-clear {
+    clear: both;    
+}
+
+.challenge-deck 
+{
+    display: block;
+    padding: 0 5px;
+    border-radius: 5px;
+}
+
+.challenge-deck:hover {
+    cursor: pointer;
+    background: rgba(255,255,255,0.4);
+    color: #ff0;
+}
+
+.deck-list h2 {
+    font-size: 1.3em;
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+#invalid-cards-info-result ul { list-style-type: none; }

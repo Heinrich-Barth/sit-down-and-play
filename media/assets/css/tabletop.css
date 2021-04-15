@@ -1,0 +1,883 @@
+
+body {
+    padding: 0px;
+    margin: 0;
+    background-color: #3d4b5c;
+    user-select: none;
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow: auto;
+}
+
+.full-height { height: 100%; }
+.blue-box 
+{
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+.padR5 { padding-right: 5px; }
+a { color: #ffa500; text-decoration: none; }
+a:hover { color: #ff0; }
+
+.pos-rel { position: relative; }
+.taskbar
+{
+    position: fixed;
+    left: 0;
+    bottom: 350px;     
+    width: 40px;
+    border-radius: 5px;
+    background: rgba(39,56,76,0.82);
+    box-shadow: 15px 5px 20px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+
+.taskbar .task_overlay { display: none; }
+.taskbar.turn-opponent .task_overlay
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    bottom: 0;
+    border-radius: 5px;
+    right: 0px;
+    background: rgba(0,0,0,0.5);
+}
+
+.is-admin .taskbar.turn-opponent .task_overlay { display: none; }
+
+.icon.bt { border-top: 1px solid black; }
+.icon.bb { border-bottom: 1px solid black; }
+.icons {
+    width: 100%;
+    
+}
+.icon { width: 32px; height: 32px; display: block; }
+.icons a,
+.icons a:hover { display: block; cursor: pointer; margin-top: 5px; background-size: 32px 32px !important;     }
+
+.card-bar .icon
+{
+    height: 50px;
+    color: white;
+    font-size: 12px;
+}
+.card-bar .icon span.count
+{
+    padding-left: 2px;
+}
+
+.card-bar .icons a.backside
+{
+    background: url("/media/assets/images/cards/backside.jpg") 0 0 no-repeat; 
+    background-size: 31px 50px !important;  
+}
+
+.icons a.orga 
+{ 
+    background: url("/media/assets/images/icons/icon-orga.png") 0 0 no-repeat; 
+} 
+.icons a.orga.act, 
+.icons a.orga:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-orga-hover.png") 0 0 no-repeat; 
+}
+.icons a.startphase 
+{ 
+    background: url("/media/assets/images/icons/icon-game-start.png") 0 0 no-repeat; 
+} 
+.icons a.startphase.act, 
+.icons a.startphase:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-game-start-hover.png") 0 0 no-repeat; 
+}
+.icons a.site
+{ 
+    background: url("/media/assets/images/icons/icon-site.png") 0 0 no-repeat; 
+} 
+.icons a.site.act,
+.icons a.site:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-site-hover.png") 0 0 no-repeat; 
+}
+
+.icons a.move
+{ 
+    background: url("/media/assets/images/icons/icon-movement.png") 0 0 no-repeat; 
+} 
+.icons a.move.act, 
+.icons a.move:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-movement-hover.png") 0 0 no-repeat; 
+}
+.icons a.eot
+{ 
+    background: url("/media/assets/images/icons/icon-eot.png") 0 0 no-repeat; 
+} 
+.icons a.eot.act,
+.icons a.eot:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-eot-hover.png") 0 0 no-repeat; 
+}
+
+.icons a.eotdiscard
+{ 
+    background: url("/media/assets/images/icons/eot-discard.png") 0 0 no-repeat; 
+} 
+.icons a.eotdiscard.act,
+.icons a.eotdiscard:hover 
+{ 
+    background: url("/media/assets/images/icons/eot-discard-hover.png") 0 0 no-repeat; 
+}
+
+.icons a.longevent
+{ 
+    background: url("/media/assets/images/icons/longevent.png") 0 0 no-repeat; 
+} 
+.icons a.longevent.act,
+.icons a.longevent:hover 
+{ 
+    background: url("/media/assets/images/icons/longevent-hover.png") 0 0 no-repeat; 
+}
+
+
+
+
+.icons a.sideboard.act,
+.icons a.sideboard:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat; 
+}
+.icons a.sideboard 
+{ 
+    background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat; 
+}
+
+.icons a.onoffer.act,
+.icons a.onoffer:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-offer-hover.png") 0 12px no-repeat; 
+}
+.icons a.onoffer
+{ 
+    background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat; 
+}
+
+.icons a.discardpile.act,
+.icons a.discardpile:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat; 
+}
+.icons a.discardpile
+{ 
+    background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat; 
+}
+.icons a.victory.act,
+.icons a.victory:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-crown-hover.png") 0 12px no-repeat; 
+}
+.icons a.victory
+{ 
+    background: url("/media/assets/images/icons/icon-crown.png") 0 12px no-repeat; 
+}
+
+.icons a.hand.act,
+.icons a.hand:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat; 
+}
+.icons .hand 
+{ 
+    background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
+}
+
+#player_selector i { margin-right: 5px; padding-left: 17px; font-style: normal; }
+
+.player-handcard-count { background: url("/media/assets/images/icons/icon-hand-small.png") 0 0px no-repeat; }
+.player-playdeck-count { background: url("/media/assets/images/icons/icon-playdeck-small.png") 0 0px no-repeat;  }
+
+.cur .player-handcard-count { background: url("/media/assets/images/icons/icon-hand-small-hover.png") 0 0px no-repeat; }
+.cur .player-playdeck-count { background: url("/media/assets/images/icons/icon-playdeck-small-hover.png") 0 0px no-repeat;  }
+
+.icons a.playdeck.act,
+.icons a.playdeck:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 12px no-repeat; 
+}
+.icons a.playdeck 
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat; 
+}
+
+.location-icon-image
+{
+    position: absolute;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    opacity: 0.5;
+    z-index: 100;
+    cursor: pointer;
+}
+
+.location-icon-image:hover
+{
+    cursor: pointer;
+    opacity: 1;
+}
+
+.location-icon
+{
+    top: 0px;
+    background: url("/media/assets/images/icons/icon-location-area.png") 0 0px no-repeat; 
+}
+.location-icon:hover
+{
+    background: url("/media/assets/images/icons/icon-location-area-hover.png") 0 0px no-repeat; 
+}
+.location-reveal
+{
+    bottom: 10px;
+    background: url("/media/assets/images/icons/icon-eye.png") 0 0px no-repeat; 
+}
+.location-reveal:hover
+{
+    background: url("/media/assets/images/icons/icon-eye-hover.png") 0 0px no-repeat; 
+}
+
+
+.table { position: relative; width: 100%; }
+.table .area { width: 100%; }
+.table .area-opponent{ position: relative; min-height: 48%; }
+
+.table .area-player{position: relative; min-height: 48%;}
+
+img.card-icon { 
+    width: 57px;
+    height: 80px;
+}
+.fl { float: left; }
+.clear { float: none; clear: both; }
+.company-host,
+.company { 
+    padding-right: 20px; 
+    min-width: 200px; 
+    height: 100%; 
+    min-width: 60px !important;
+}
+
+.area-player .card-bar { bottom: 0; }
+
+.card-bar {
+    position: fixed;
+    z-index: 100;
+    width: 40px;
+    bottom: 5px;
+    height: 320px;
+}
+
+.table .area-opponent .ui-draggable-dragging { transform: rotate(180deg); }
+
+.card-bar a:hover { color: #ffa500; }
+.card-bar a { text-align: center; color: white;}
+
+.hand span, .card-bar a span { padding: 1px; }
+
+.rot90, .tapped { transform: rotate(90deg); }
+.rot180, .wounded { transform: rotate(180deg); }
+.rot270 { transform: rotate(270deg); }
+
+.card-hands {
+    position: fixed;
+    left: 50px;
+    bottom: 5px;
+    z-index: 400;
+    padding: 5px;
+    max-width: 580px;
+    min-width: 200px;
+    min-height: 84px;
+}
+.card-hands .card-generic,
+.card-hands .card-hand {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    min-height: 60px;
+}
+
+.card-hands .card-hand:hover img
+{
+    opacity: 0.8;
+}
+.card-hands .card-hand.card-draw:hover img
+{
+    opacity: 0.6;
+}
+
+.card-hands .card-hand:hover .draw
+{
+    color: #ff0;
+}
+.card-hands .card-hand
+{
+    cursor: move;
+}
+.card-hands .card-hand .draw
+{
+    position: absolute; left: 9px; top: 13px; color: #ffa500; text-transform: uppercase; font-size: 12px;
+}
+
+
+.on-drag-event-generic #playercard_hand {
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.emptyContainer {
+    width: 300px;
+    height: 100px;
+    border: 2px dashed transparent;
+}
+
+#view_card_list_container
+{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0, 0.6);
+    z-index: 1000;
+}
+
+#view-score-sheet-card-list .container-data { padding: 10px; }
+#view-score-sheet-card-list .card-hand,
+#view_card_list_container .view-card-list-container .card-hand {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+#view_card_list_container .view-card-list-container
+{
+    padding: 10px;
+    z-index: 1001;
+    position: fixed;
+    max-width: 710px;
+    left: 50px;
+}
+
+#view_card_list_container .container-data
+{
+    overflow-y: auto;
+    width: 100%;
+    min-height: 104px;
+    max-height: 510px;
+}
+
+#view_card_list_container .view-card-list-container.view-hand
+{
+    bottom: 200px;
+}
+#view_card_list_container .view-card-list-container.view-sideboard
+{
+    bottom: 160px;
+}
+#view_card_list_container .view-card-list-container.view-playdeck
+{
+    bottom: 107px;
+}
+#view_card_list_container .view-card-list-container.view-discard
+{
+    bottom: 215px;
+}
+#view_card_list_container .view-card-list-container.view-victory
+{
+    bottom: 300px;
+}
+.view-card-list-actions.icons
+{
+    padding: 5px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    position: absolute;
+    left:0;
+    display: none;
+    top:0;
+    width:100%;
+}
+#view_card_list_container .view-card-list-container a,
+#view_card_list_container .view-card-list-container a:hover
+{
+    background-size: 21px 21px !important;   
+}
+#view_card_list_container .view-card-list-container .card-hand:hover .view-card-list-actions.icons
+{
+    display: inline-block;
+}
+
+#view_card_list_container .view-sideboard .card-hand:hover  a.sideboard
+{
+    display: none;
+}
+
+#view_card_list_container .view-hand.offer .card-hand:hover  a.hand
+{
+    display: none;
+}
+
+#view_card_list_container .view-discard .card-hand:hover  a.discardpile
+{
+    display: none;
+}
+#view_card_list_container .view-playdeck .card-hand:hover  a.playdeck
+{
+    display: none;
+}
+
+#view_card_list_container .view-card-list-actions a 
+{
+    background-position-y: 0;
+    float: left;
+    width: 21px;
+    display: inline;
+}
+.container-title-bar {
+    padding-bottom: 10px;
+    color: #ff0;
+    cursor: default;
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+.container-title-bar-shuffle
+{
+    cursor: pointer;
+    visibility: hidden;
+}
+#view_card_list_container .view-playdeck .container-title-bar-shuffle
+{
+    visibility: visible;
+}
+.container-title-bar-shuffle:hover{
+    color: #ffa500;
+}
+
+.create-new-company {
+    background: rgba(0,0,0,0.3);
+    height: 100%;
+    width: 60px !important;
+    border: 3px dashed #000;
+    border-radius: 5px;
+    max-width: 60px !important;
+    min-height: 270px;
+    visibility: hidden;
+}
+
+.pad10 { padding: 10px; }
+
+.company-site-list
+{
+    height: 100px;
+    max-height: 100px;
+    
+    min-width: 72px;
+    padding: 5px;
+}
+
+.company-character
+{
+    border: 3px dashed transparent;
+}
+
+.companies .company
+{
+    margin-right: 20px;
+    border-radius: 20px;
+    
+}
+
+
+.companies .company:hover { background: rgba(255,255,255,0.15); }
+.companies .company .company-character:hover { background: rgba(255,255,255,0.3); border-radius: 10px; }
+.company-site-list { border-bottom: 3px dashed black; }
+
+.staging-area 
+{
+    flex: 1 20%;
+}
+
+.companies {
+    white-space: nowrap;
+    flex: 1 79%;
+}
+
+.row {
+    padding: 0 10px 0 50px;
+}
+
+.staging-area-area
+{
+    min-width: 70px; 
+    min-height: 80px;
+}
+
+.staging-area .card { float: left; margin-left: 2px; }
+.staging-area .card img.card-icon { height: 70px; }
+
+.company-characters-add
+{
+    float: right;
+    width: 50px;
+    display: none;
+    max-height: 100%;
+    display: inline-block;
+    margin-left: 10px;
+    height: 100px;
+}
+
+body.on-drag-event-character .area-player .company-characters-add 
+{
+    display: inline-block;
+    background-image: url(/media/assets/images/icon-company-join.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 60px;
+    height: 80px;
+    margin: 10px;
+}
+/*
+.on-drag-event-generic .icons .drop-accept-generic,
+body.on-drag-event-hazard .area-opponent .company-character-host,
+body.on-drag-event-hazard .area-opponent .site-target,
+body.on-drag-event-hazard .area-player .staging-area-player,
+body.on-drag-event-resource .area-player .staging-area-player,
+body.on-drag-event-resource .area-player  .company-character-host,
+body.on-drag-event-resource .icons a.victory,
+body.on-drag-event-character .area-player .company-characters-add,
+body.on-drag-event-character .area-player .company-character-host,
+body.on-drag-event-character .area-player .create-new-company,
+*/
+
+body.on-drag-event-hazard .area-opponent .company-character-host,
+body.on-drag-event-hazard .area-opponent .site-regions,
+body.on-drag-event-generic .area-opponent .site-target,
+body.on-drag-event-generic .area-player .ui-droppable-active,
+body.on-drag-event-generic .card-bar .ui-droppable-active
+{
+    background-color: rgba(0,0,0,0.3) !important;
+    border: 3px dashed #000 !important;
+    border-radius: 5px !important;
+    z-index: 900;
+}
+
+body.on-drag-event-generic .area-player .company-character-host
+{
+    z-index: 900;
+}
+
+body.on-drag-event-character .area-player .company-character-influenced .company-character-host
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+body.on-drag-event-generic .card-hands { z-index: 100; }
+
+body.on-drag-event-resource  .area-player .company-character-host .card img,
+body.on-drag-event-character .area-player .company-character-host .card img
+{
+    opacity: 0.7;
+}
+
+body.on-drag-event-character .area-player .create-new-company
+{
+    background-image: url(/media/assets/images/icon-company-new.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    visibility: visible;
+    min-height: 130px;
+}
+
+
+body.on-drag-event-generic .card-bar .on-drag-over,
+body.on-drag-event-generic .area .on-drag-over {
+    background-color: rgba(101, 152, 81, 0.6) !important
+}
+
+.icons a { border: 3px solid transparent; }
+
+.icons a.sideboard.ui-droppable-active
+{ 
+    background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 12px no-repeat; 
+}
+
+.icons a.discardpile.ui-droppable-active
+{ 
+    background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 12px no-repeat; 
+}
+
+.icons a.playdeck.ui-droppable-active
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 12px no-repeat; 
+}
+
+.icons a.hand.ui-droppable-active
+{ 
+    background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat; 
+}
+
+.location-reveal.hide,
+.side_panel.hide,
+.map_view_layer.hide {
+    display: none !important;
+}
+.map_view_layer {
+    background: rgba(0,0,0, 0.7);
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+}
+
+.state_tapped img { transform: rotate(90deg);    }
+.state_tapped_fixed img { transform: rotate(90deg);    }
+.state_wounded img { transform: rotate(180deg);    }
+.state_rot270 img { transform: rotate(-90deg);    }
+
+.company-character-reosurces,
+.company-character-reosurces .card,
+.company-character-host { position: relative; }
+
+.chatbox-wrapper {
+    position: fixed;
+    right: 5px;
+    top: 5px;
+}
+.chatbox-wrapper.chat-icon {     z-index: 200;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    top: 40px;}
+.chatbox .chattext { 
+    width: 286px !important;
+    font-size: 0.6em;
+    line-height: 1.35em;
+    color: #39454b;
+    display: block;
+    padding: 0.65em 0.75em;
+    border: solid 2px #e5e6e7;
+    border-radius: 0.5em;
+    outline: none;
+}
+.chatbox .chatmessages {
+    display: block;
+    width: 291px !important;
+    height: 53px;
+    overflow-y: auto;
+    border: 0;
+    line-break: normal; 
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.chat-icon .icons {
+    width: 20px;
+    padding: 0;
+}
+.chat-icon .chat
+{ 
+    background: url("/media/assets/images/icons/icon-chat.png") 0 0 no-repeat; 
+} 
+.chat-icon .chat.act,
+.chat-icon .chat:hover
+{ 
+    background: url("/media/assets/images/icons/icon-chat-hover.png") 0 0 no-repeat; 
+} 
+
+.chatbox .chatmessages b { color: #ffa500; }
+
+.company-character-reosurces {  margin-top: -60px; min-height: 84px; }
+.company-character-reosurces .card { margin-top: -60px; z-index: 101; max-height: 80px; }
+.company-character-reosurces .card:nth-child(1) { margin-top: 0px; }
+.company-character-reosurces .card:nth-child(1) { margin-left: 30px; }
+.company-character-reosurces .card:nth-child(2) { margin-left: 60px; }
+.company-character-reosurces .card:nth-child(3) { margin-left: 90px; }
+.company-character-reosurces .card:nth-child(4) { margin-left: 120px; }
+.company-character-reosurces .card:nth-child(5) { margin-left: 150px; }
+.company-character-reosurces .card:nth-child(6) { margin-left: 180px; }
+.company-character-reosurces .card:nth-child(7) { margin-left: 210px; }
+.company-character-reosurces .card:nth-child(8) { margin-left: 240px; }
+.company-character-reosurces .card:nth-child(9) { margin-left: 270px; }
+.company-character-reosurces .card:nth-child(10) { margin-left: 300px; }
+.company-character-reosurces .card:nth-child(11) { margin-left: 330px; }
+.company-character-reosurces .card:nth-child(12) { margin-left: 360px; }
+
+.site-regions .card,
+.site-onguard .card { display: inline-block; margin-left: -30px; }
+.site-regions .card:nth-child(1),
+.site-onguard .card:nth-child(1) { margin-left: 0px; }
+.site-onguard .card { transform: rotate(180deg); }
+
+/* .company-character-reosurces.hosts_nothing { margin-top: 0px; } */
+.area-opponent .hiddenToOpponent { display: none !important; }
+
+.glowing { animation: glow 2s infinite alternate; }
+.card-highlight { animation: glowGreen linear 1s 2 forwards; }
+@keyframes glowGreen {
+    0% {
+      box-shadow: 0 0 10px -10px #099b04;
+    }
+    50% {
+        box-shadow: 0 0 10px 10px #099b04;
+    }
+    99% {
+        box-shadow: 0 0 10px -10px #099b04;
+    }
+    100% {
+        box-shadow: none;
+    }
+  }
+@keyframes glow {
+    from {
+      box-shadow: 0 0 10px -10px #ffa500;
+    }
+    to {
+      box-shadow: 0 0 10px 10px #ffa500;
+    }
+}
+div.card:hover img { box-shadow: 0px 0px 10px 0px #000; }
+
+.glowing-green { 
+    animation-name: greenglow;
+    animation-duration: 4s;
+}
+
+@keyframes greenglow {
+  0% { box-shadow: 0 0 5px -5px #005600; }
+  50% { box-shadow: 0 0 5px 5px #005600; }
+  100% { box-shadow: 0 0 5px -5px #005600; }
+}
+
+.card-dice { background: url("/media/assets/images/icons/icon-dices.png") 0 -0 no-repeat;  }
+.card-dice:hover { background: url("/media/assets/images/icons/icon-dices-hover.png") 0 0 no-repeat; }
+
+#chatbox.hide { visibility: hidden; }
+
+.player_selector { padding: 5px; }
+.player_selector span.game_time { font-size: 0.8em; }
+#player_selector { display: inline-block; }
+.player_selector { height: 20px;  }
+
+.player-selector-box { position: fixed; top: 0px; left: 0px; min-width: 100px; padding: 5px; color: white; z-index: 400; }
+.player-selector-box a { display: inline-block;min-width: 10px; color: white; padding-right: 10px; }
+.player-selector-box a.cur { color: #ffa500; }
+.player-selector-box a.act { font-weight: bold; }
+.player-selector-box span { min-width: 20px; min-height: 20px; display: inline-block; border-radius: 5px 40px 5px; }
+.player-selector-box span.indicator-green { background: #BADA55; }
+.player-selector-box span.indicator-red { background: #d94f4f;   }
+.player-selector-box span.indicator-grey { background: grey; }
+
+div#opponent_table .company { transform: rotate(180deg); }
+
+.staging-area.staging-area-opponent { padding-top: 50px; }
+
+#view_card_list_container .view-card-list-container .icons a.onoffer { display: none; }
+#view_card_list_container .view-card-list-container.offered .icons a { display: none; }
+#view_card_list_container .view-card-list-container.offer .icons a.onoffer { display: block; }
+#view_card_list_container .view-card-list-container.offered .container-title-bar { visibility: hidden; }
+#view_card_list_container .view-card-list-container.offer .hideOnOffer { visibility: hidden; }
+#view_card_list_container .view-card-list-container.offer img.card-icon { opacity: 0.4; }
+#view_card_list_container .view-card-list-container.offer img.on-offer-orevealed { opacity: 1; }
+
+#playercard_hand_container {
+    display: inline-block;
+    margin-left: 60px;
+    max-width: 515px;
+    height: 100%;
+}
+.hand-card-actions {
+    width: 60px;
+    position: fixed;
+    bottom: 13px;
+    height: 80px;
+    overflow: hidden;
+}
+.card-generic.card-dice 
+{
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    max-height: 30px;
+    min-height: 30px;
+}
+#draw_card
+{
+    display: block;
+    height: 40px;
+    margin-top: 4px;
+    background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
+}
+#draw_card:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
+.hosts_nothing { display: none !important; }
+
+#lidles-eye { z-index: 401;position: absolute;left: 0;top: 0;bottom: 0;right: 0;text-align: center;background: rgba(0,0,0,0.9); }
+#lidles-eye img { margin-top: 20%; }
+
+#card_counter div.pos-rel { position: relative; }
+#card_counter div.pos-rel:hover .hidden { display: block; }
+
+
+.map-window {
+    z-index: 900;
+    position: fixed;
+}
+
+.map-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.map-view {
+    position: fixed;
+    left: 2%;
+    top: 2%;
+    width: 96%;
+    height: 96%;
+}
+
+.card-hands .card-hands-sizer
+{
+    color: #fff;
+    font-size: 10px;
+    padding: 5px 10px;
+    text-align: right;
+}
+
+
+.card-hands-sizer-size { font-weight: bold; }
+
+.card-hands-sizer i {
+    color: #ffa500;
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+.card-hands-sizer i:hover {
+    cursor: pointer;
+    color: #fff;
+}

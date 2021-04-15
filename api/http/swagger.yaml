@@ -1,0 +1,443 @@
+swagger: "2.0"
+info:
+  description: "HTML Endpoints"
+  version: "1.0.0"
+  title: "Sit down and play"
+  license:
+    name: "See project's license file"
+
+tags:
+- name: "Card Data"
+  description: "Card data files"
+- name: "Statics"
+  description: "Static files"
+- name: "Map"
+  description: "Map files and data"
+- name: "Game"
+  description: "Game related endpoints"
+  
+schemes:
+- "https"
+
+paths:
+  /play/{room}:
+    get:
+      summary: "Play an actual game"
+      description: "A login redirect to ./login will happen for deck selection if necessary"
+      tags: 
+        - "Game"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "General error page"
+
+  /play/{room}/login:
+    get:
+      tags: 
+        - "Game"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "General error page"
+          
+  /play/{room}/login/check:
+    post:
+      tags: 
+        - "Game"
+      summary: "Check if the given deck is valid (all codes are available) and if the room is not yet too crowded"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The deck candidate json"
+        required: true
+        schema:
+          type: "object"
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      consumes:
+      - "application/json"
+      produces:
+      - "text/html"
+      responses:
+        "302":
+          description: "Either redirect to the `/play/{room}` if all is ok or to `/error/login`"
+  /play/{room}/lobby:
+    get:
+      tags: 
+        - "Game"
+      summary: "Waiting screen"
+      description: "Waits until the game's host has granted or rejected access to the game"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "Waiting Room"
+  /play/{room}/waiting/{token}:
+    get:
+      tags: 
+        - "Game"
+      summary: "Get a list of all login requests to this game"
+      description: ""
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      - name: "token"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's token, only known to the game's host html."
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON list"
+        "401":
+          description: "Token is invalid"
+  /play/{room}/invite/{id}/{token}:
+    post:
+      tags: 
+        - "Game"
+      summary: "Grant a player access to the game"
+      description: "Only available to the game's host"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      - name: "id"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the players unique id"
+      - name: "token"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's token, only known to the game's host html."
+      produces:
+      - "application/json"
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: "Token is invalid"
+  /play/{room}/reject/{id}/{token}:
+    post:
+      tags: 
+        - "Game"
+      summary: "Reject player's join request"
+      description: "Only available to the game's host"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      - name: "id"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the players unique id"
+      - name: "token"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's token, only known to the game's host html."
+      produces:
+      - "application/json"
+      responses:
+        "204":
+          description: ""
+        "401":
+          description: "Token is invalid"
+  /play/{room}/status/{id}:
+    post:
+      tags: 
+        - "Game"
+      summary: "Check if join request has been granted or rejected"
+      description: "Regularly requested by a player in the lobby"
+      parameters:
+      - name: "room"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the game's name"
+      - name: "id"
+        required: true
+        in: "path"
+        type: "string"
+        description: "the players unique id who initiated the join request"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: JSON map with <br> `status`=denied|ok|waiting <br> `room`={room}
+  /data/decks/check:
+    post:
+      tags: 
+        - "Game"
+      summary: "Check if the given deck is valid (all codes are available)"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The deck candidate json"
+        required: true
+        schema:
+          type: "object"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: JSON map with <br> `valid`=true|false <br> `codes`=[{invalid_code}]}
+  /data/decks:
+    post:
+      tags: 
+        - "Game"
+      summary: "Get a list of all available decks (challenge decks etc.) and their contents"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON map"
+  /games:
+    get:
+      tags: 
+        - "Game"
+      summary: "Get the list of games"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON list"
+  /data/list/images:
+    get:
+      tags: 
+      - "Card Data"
+      - "Map"
+      summary: "Get the available images in a code=image type hash map"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON with root keys `images` and `flipped`"
+  /data/list/sites:
+    get:
+      tags: 
+      - "Card Data"
+      - "Map"
+      summary: "Get the available regios and sites in a code=image type hash map"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON with root keys `site` and `region`"
+  /data/list/map:
+    get:
+      tags: 
+      - "Card Data"
+      - "Map"
+      summary: "Provide all available regions and their sites"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON map with root keys <br>
+            `map` - Region map with regions and their sites <br>
+            `images` - A card code based hash map of all images"
+  /data/list/cards:
+    get:
+      tags: 
+      - "Card Data"
+      - "Map"
+      - "Game"
+      summary: "Provide all available cards for the game"
+      description: "A map and image list will be derrived from this data."
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON array"
+  /map/underdeeps:
+    get:
+      tags: 
+      - "Map"
+      summary: "Get the underdeeps map html file"
+      description: ""
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "Html file"
+  /map/regions:
+    get:
+      tags: 
+      - "Map"
+      summary: "Get the regions map html file and either select starting location or plan movement to target site. This functionality requires the map to be opened in an IFRAME, because it will post a message to the parent window (see renderer.js for full details)"
+      description: ""
+      parameters:
+      - name: "code"
+        in: "query"
+        description: "If set, it is used as the company's starting location and the movement to the target site can be planned. If not set, the map allows to pick the starting location and closed thereafter."
+        required: false
+        type: "string"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "Html file"
+  /about:        
+    get:
+      tags: 
+      - "Statics"
+      summary: "Get the about page"
+      description: "The abouts page with descriptions and 3rd party license information"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "The page"
+  /:        
+    get:
+      tags: 
+      - "Game"
+      - "Statics"
+      summary: "The welcome screen"
+      description: "Page with a text box to start your own game and a list of running games to join one"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "The page"
+  /ping:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Get media asset file"
+      description: "Used to provide all media files (css, js etc.)"
+      produces:
+      - "text/plain"
+      responses:
+        "200":
+          description: "replies woth 'pong'"
+  /blank:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Get media asset file"
+      description: "Used to provide all media files (css, js etc.)"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "Empty html file with black background"
+  /error:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Show error page"
+      description: "This endpoint also clears the cookies (joined, room)"
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "General error page"
+  /error/{type}:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Show error page"
+      description: "This endpoint also clears the cookies (joined, room)"
+      parameters:
+      - name: "type"
+        required: true
+        in: "path"
+        type: "string"
+        enum: [denied, login, https-required]
+        description: >
+            Error Type:
+            * `denied` - User is not allowed to join a running game
+            * `required` - User tried to access a game via HTTP
+            * `login` - Login failed, e.g. due to cookie restrictions
+      produces:
+      - "text/html"
+      responses:
+        "200":
+          description: "General error page"
+  /health:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Get some health statistics such as cpu load and memory usage "
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Health data"
+  /dump:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Create a json dump of all games"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Data"
+  
+  /media/{media-path}:
+    get:
+      tags: 
+      - "Statics"
+      summary: "Get media asset file"
+      description: "Used to provide all media files (css, js etc.)"
+      produces:
+      - "application/octet-stream"
+      responses:
+        "200":
+          description: "File content"
+        "404":
+          description: "Home page html"
+      parameters:
+      - name: "media-path"
+        in: "path"
+        description: "the requested path is mapped to the /media folder"
+        required: true
+        type: "string"
