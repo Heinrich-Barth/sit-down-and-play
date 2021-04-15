@@ -24,7 +24,7 @@ Here are some essential features of this project:
 
 ## Watch the Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XFPFwfsEJSg" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Watch the Demo](https://img.youtube.com/vi/XFPFwfsEJSg/0.jpg)](https://www.youtube.com/embed/XFPFwfsEJSg)
 
 ## Preparations
 
