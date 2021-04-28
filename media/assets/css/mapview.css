@@ -264,3 +264,7 @@ label {
     }
 }
 
+#found_sites img.site-is-tapped {
+    opacity: 0.5;
+    transform: rotate(180deg);
+}

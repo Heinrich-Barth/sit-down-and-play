@@ -1,22 +1,22 @@
 
-function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
+function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview) 
 {
     var CardList = _CardList;
     var CardPreview = _CardPreview;
     var MeccgApi = _MeccgApi;
-        
-    function getViewContainer()
+
+    function getViewContainer() 
     {
         let elem = document.getElementById("view_card_list_container");
         return jQuery(elem);
     }
-    
-    function createCardContainer(code, uuid, type, bShowCardPreview)
+
+    function createCardContainer(code, uuid, type, bShowCardPreview) 
     {
         let _img = CardList.getImage(code);
         let sCode = CardList.getSafeCode(code);
 
-        if (!bShowCardPreview)
+        if (!bShowCardPreview) 
         {
             _img = "/media/assets/images/cards/backside.jpg";
             sCode = "";
@@ -33,9 +33,8 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
             </div>
         </div>`;
     }
-    
-    
-    function createListHtml(vsList, bRevealPreview)
+
+    function createListHtml(vsList, bRevealPreview) 
     {
         if (typeof bRevealPreview === "undefined")
             bRevealPreview = true;
@@ -47,44 +46,44 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
         return sHtml;
     }
 
-    function insertHtmlIntoContainer(jContainer,sHtml, type, sTitle)
+    function insertHtmlIntoContainer(jContainer, sHtml, type, sTitle)
     {
         var container = jContainer.find(".view-card-list-container");
         var containerTitle = jContainer.find(".container-title-bar-title");
         var elem = container.find(".container-data");
 
         if (type !== "")
-            container.addClass("view-"+type);
-            
+            container.addClass("view-" + type);
+
         elem.html(sHtml);
 
         if (sTitle !== "")
             containerTitle.html(sTitle);
 
-        jContainer.find(".container-title-bar-reveal a").attr("data-type", type);                
+        jContainer.find(".container-title-bar-reveal a").attr("data-type", type);
         return elem;
     }
-    
-    function insertHtml(sHtml, type, sTitle)
+
+    function insertHtml(sHtml, type, sTitle) 
     {
         return insertHtmlIntoContainer(getViewContainer(), sHtml, type, sTitle);
     }
 
-    var TaskBarCards = { };
+    var TaskBarCards = {};
 
-    TaskBarCards.moveTo = function(_uuid, _target)
+    TaskBarCards.moveTo = function (_uuid, _target) 
     {
         const params = {
-            uuid : _uuid,
-            target : _target,
-            drawTop : _target === "hand"
+            uuid: _uuid,
+            target: _target,
+            drawTop: _target === "hand"
         };
 
         MeccgApi.send("/game/card/move", params);
         return true;
     };
-    
-    TaskBarCards.onShowList = function(jData, sTitle, bICanSeeIt)
+
+    TaskBarCards.onShowList = function (jData, sTitle, bICanSeeIt) 
     {
         TaskBarCards.hideList();
 
@@ -94,7 +93,7 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
         var type = jData.type;
         var vsList = jData.list;
 
-        if (vsList === null || typeof vsList === "undefined" || vsList.length === 0)
+        if (vsList === null || typeof vsList === "undefined" || vsList.length === 0) 
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "no cards to display in " + type }));
             return null;
@@ -107,104 +106,103 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
         var elem = insertHtml(sHtml, type, sTitle + type.toUpperCase());
 
         /** I myself should not see my own offering cards so only the opponent knows it */
-        if (bICanSeeIt)
+        if (bICanSeeIt) 
         {
-            elem.find(".card-hand").hover(function()
+            elem.find(".card-hand").hover(function () 
             {
                 TaskBarCards.onShowOnHover(jQuery(this), true);
-            }, 
-            function()
-            {
+            },
+            function () {
                 TaskBarCards.onShowOnHover(null, false);
             });
         }
         return elem;
     };
-    
-    TaskBarCards.flipCards = function(jContainer)
+
+    TaskBarCards.flipCards = function (jContainer) 
     {
-        jContainer.find("img.card-icon").each(function()
+        jContainer.find("img.card-icon").each(function () 
         {
             let jImage = jQuery(this);
-            if (jImage.attr("data-image-backside").indexOf("backside.jpg") !== -1)
-            {
+            if (jImage.attr("data-image-backside").indexOf("backside.jpg") !== -1) {
                 let sSrc = jImage.attr("src");
                 jImage.attr("src", jImage.attr("data-image-backside"));
                 jImage.attr("data-image-backside", sSrc);
             }
-        }); 
+        });
     };
-    
-    TaskBarCards.onShowOnOfferReveal = function(sUuid)
+
+    TaskBarCards.onShowOnOfferReveal = function (sUuid) 
     {
         let jImage = getViewContainer().find("div.view-card-list-container").find(".container-data").find('div[data-uuid="' + sUuid + '"]').find("img");
-        if (jImage.attr("data-image-backside").indexOf("backside.jpg") === -1)
-        {
+        if (jImage.length > 0 && jImage.attr("data-image-backside").indexOf("backside.jpg") === -1) {
             let sSrc = jImage.attr("src");
             jImage.attr("src", jImage.attr("data-image-backside"));
             jImage.attr("data-image-backside", sSrc);
         }
     };
-    
-    TaskBarCards.onShowOnOfferRemove = function(sUuid)
+
+    TaskBarCards.onShowOnOfferRemove = function (sUuid) 
     {
         let cardDiv = getViewContainer().find(".container-data").find('div[data-uuid="' + sUuid + '"]');
-        console.log(cardDiv);
-        cardDiv.addClass("hiddenVisibility");
+        if (cardDiv.length > 0)
+            cardDiv.addClass("hiddenVisibility");
     };
-    
-    TaskBarCards.onShowOnOffer = function(bIsMe, jData)
+
+    TaskBarCards.onShowOnOffer = function (bIsMe, jData) 
     {
         let bICanSee = !Preferences.offerBlindly();
         let elem = TaskBarCards.onShowList(jData, bIsMe ? "Offer to show cards from " : "Opponents card from ", bICanSee);
         if (elem === null)
             return false;
 
-        if (bIsMe)
+        if (bIsMe) 
         {
-            elem.find(".card-hand a").click(function(evt) 
+            elem.find(".card-hand a").each(function () 
             {
-                evt.preventDefault();
-                evt.stopPropagation();
-                TaskBarCards.onClickCardIcon(true, jQuery(this));
-                return false;
+                this.onclick = (e) => {
+                    TaskBarCards.onClickCardIcon(true, jQuery(e.target));
+                    e.stopPropagation();
+                    return false;
+                };
             });
         }
         else
             TaskBarCards.flipCards(elem);
-        
+
         let jContainer = getViewContainer();
 
         if (bIsMe)
             jContainer.find(".view-card-list-container").addClass("offer");
         else
             jContainer.find(".view-card-list-container").addClass("offered");
-        
+
         jContainer.removeClass("hidden");
         return true;
     };
-    
-    TaskBarCards.onShow = function(bIsMe, jData)
-    {       
+
+    TaskBarCards.onShow = function (jData) 
+    {
         let bICanSee = !Preferences.offerBlindly();
         let elem = TaskBarCards.onShowList(jData, "Looking at your ", bICanSee);
         if (elem === null)
             return false;
 
-        elem.find(".card-hand a").click(function(evt) 
+        elem.find(".card-hand a").each(function () 
         {
-            evt.preventDefault();
-            evt.stopPropagation();
-            TaskBarCards.onClickCardIcon(false, jQuery(this));
-            return false;
+            this.onclick = (e) => {
+                TaskBarCards.onClickCardIcon(false, jQuery(e.target));
+                e.stopPropagation();
+                return false;
+            }
         });
-        
+
         getViewContainer().removeClass("hidden");
         return true;
     };
-    
-    TaskBarCards.onShowVictorySheet = function(vsList)
-    {       
+
+    TaskBarCards.onShowVictorySheet = function (vsList) 
+    {
         if (vsList === null || typeof vsList === "undefined" || vsList.length === 0)
             return false;
 
@@ -214,46 +212,46 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
             return false;
 
         var elem = insertHtmlIntoContainer(jQuery("#view-score-sheet-card-list"), sHtml, type, "");
-        elem.find(".card-hand").hover(function()
+        elem.find(".card-hand").hover(function () 
         {
             TaskBarCards.onShowOnHover(jQuery(this), true);
-        }, 
-        function()
+        },
+        function () 
         {
             TaskBarCards.onShowOnHover(null, false);
         });
-        
+
         return true;
     };
 
-    TaskBarCards.onShowOnHover = function(jThis, bHover)
+    TaskBarCards.onShowOnHover = function (jThis, bHover) 
     {
         if (bHover)
             CardPreview.show(jThis.find("img.card-icon").attr("src"), false, true);
         else
             CardPreview.hide(false, true);
     };
-    
-    TaskBarCards.onClickCardIcon = function(isOffer, jLink)
+
+    TaskBarCards.onClickCardIcon = function (isOffer, jLink) 
     {
         const target = jLink.attr("data-move-to");
         const cardDiv = jLink.parent().parent();
         let sUuid = cardDiv.attr("data-uuid");
-        
+
         if (target === "offer") // offer the card
         {
-            MeccgApi.send("/game/view-cards/offer-reveal", { uuid : sUuid });
+            MeccgApi.send("/game/view-cards/offer-reveal", { uuid: sUuid });
             jLink.parent().parent().find("img.card-icon").addClass("on-offer-orevealed");
             return;
         }
-        
+
         cardDiv.addClass("hiddenVisibility");
         TaskBarCards.moveTo(sUuid, target);
-        
-        if (isOffer)
+
+        if (isOffer) 
         {
-            MeccgApi.send("/game/view-cards/offer-remove", { uuid : sUuid });
-      
+            MeccgApi.send("/game/view-cards/offer-remove", { uuid: sUuid });
+
             let jHand = jQuery("#playercard_hand_container");
             let jRes = jHand.find("#card_icon_nr_" + sUuid);
             if (jRes.length === 1)
@@ -261,22 +259,19 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
         }
     },
 
-    TaskBarCards.show = function(evt, type)
+    TaskBarCards.show = function (type) 
     {
-        evt.preventDefault();
-        evt.stopPropagation();
-
         MeccgApi.send("/game/view-cards/list", type);
     };
 
-    TaskBarCards.hideOffer = function()
+    TaskBarCards.hideOffer = function () 
     {
         var jViewContainer = getViewContainer();
         if (!jViewContainer.hasClass("hidden"))
             TaskBarCards.hideListContainer(jViewContainer, jViewContainer.find(".view-card-list-container"));
     }
 
-    TaskBarCards.hideListContainer = function(jViewContainer, jContainer)
+    TaskBarCards.hideListContainer = function (jViewContainer, jContainer) 
     {
         if (!jViewContainer.hasClass("hidden"))
             jViewContainer.addClass("hidden");
@@ -295,12 +290,12 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
             jContainer.removeClass("offer");
     };
 
-            
-    TaskBarCards.hideList = function()
+
+    TaskBarCards.hideList = function () 
     {
         var jViewContainer = getViewContainer();
         if (jViewContainer.hasClass("hidden"))
-            return;
+            return false;
 
         var jContainer = jViewContainer.find(".view-card-list-container");
 
@@ -310,20 +305,23 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
         TaskBarCards.hideListContainer(jViewContainer, jContainer);
 
         if (isOfferred)
-            MeccgApi.send("/game/view-cards/list/close", { offered : true });
+            MeccgApi.send("/game/view-cards/list/close", { offered: true });
         else if (isOffer)
-            MeccgApi.send("/game/view-cards/list/close", { offered : false });
+            MeccgApi.send("/game/view-cards/list/close", { offered: false });
+
+        return false;
     };
-    
-    TaskBarCards.onClickContainerShuffle = function()
+
+    TaskBarCards.onClickContainerShuffle = function () 
     {
         TaskBarCards.hideList();
         TaskBarCards.shufflePlaydeck();
+        return false;
     };
-    
-    TaskBarCards.onRevealToOpponent = function(type)
+
+    TaskBarCards.onRevealToOpponent = function (type) 
     {
-        switch (type)
+        switch (type) 
         {
             case "sideboard":
             case "discard":
@@ -334,190 +332,172 @@ function createAndInit_TaskBarCards(_CardList, _MeccgApi, _CardPreview)
 
             default:
                 break;
-        }        
+        }
     };
-    
-    TaskBarCards.onClickIconHand = function(jElem)
+
+    TaskBarCards.onClickIconHand = function () 
     {
-        if (jElem.hasClass("act"))
+        let jElem = jQuery("#icon_hand")
+        if (jElem.hasClass("act")) 
         {
             jQuery("#playercard_hand").addClass("hidden");
             jElem.removeClass("act");
         }
-        else
+        else 
         {
             jQuery("#playercard_hand").removeClass("hidden");
             jElem.addClass("act");
         }
     };
-    
+
     {
         var jView = getViewContainer();
-        jView.click(function(evt)
-        {
-            evt.preventDefault();
-            evt.stopPropagation();
+        jView[0].onclick = TaskBarCards.hideList;
 
-            TaskBarCards.hideList();
-            return false;
-        });
+        jView.find(".container-title-bar-shuffle")[0].onclick = TaskBarCards.onClickContainerShuffle;
 
-        jView.find(".container-title-bar-shuffle").click(function(evt)
+        jView.find(".container-title-bar-reveal a").each(function () 
         {
-            evt.preventDefault();
-            evt.stopPropagation();
-            TaskBarCards.onClickContainerShuffle();
-            return false;
-        });
-        
-        jView.find(".container-title-bar-reveal a").click(function(evt)
-        {
-            TaskBarCards.hideList();
-            TaskBarCards.onRevealToOpponent(jQuery(this).attr("data-type"));
+            this.onclick = (e) => {
+                const _data = jQuery(e.target).attr("data-type")
+                TaskBarCards.hideList();
+                TaskBarCards.onRevealToOpponent(_data);
+                e.stopPropagation();
+                return false;
+            }
             
-            evt.preventDefault();
-            evt.stopPropagation();
-            return false;
         });
 
     }
-    
-    jQuery("#icon_hand").click(function(evt)
-    {
-        evt.preventDefault();
-        evt.stopPropagation();
 
-        TaskBarCards.onClickIconHand(jQuery(this));
-    });
-    
-    jQuery("#icon_hand").contextmenu(function(evt)
-    {
-        evt.preventDefault();
-        evt.stopPropagation();
+    jQuery("#icon_hand")[0].onclick = (e) => {
+        TaskBarCards.onClickIconHand();
+        e.stopPropagation();
+        return false;
+    }
 
+    jQuery("#icon_hand")[0].oncontextmenu = () => {
+    
         TaskBarCards.onRevealToOpponent("hand");
-    });
+        return false;
+    };
 
 
-    jQuery(".card-dice").click(function() 
-    {
+    jQuery(".card-dice")[0].onclick = (e) => {
         MeccgApi.send("/game/roll-dices", "");
+        e.stopPropagation();
         return false;
-    });
+    };
 
 
-    jQuery(".card-bar .sideboard").click(function(evt)
+    jQuery(".card-bar .sideboard")[0].onclick = (e) => 
     {
-        TaskBarCards.show(evt, "sideboard");
+        TaskBarCards.show("sideboard");
+        e.stopPropagation();
         return false;
-    });
+    };
 
-    jQuery(".card-bar .victory").click(function(evt)
+    jQuery(".card-bar .victory")[0].onclick = (e) => 
     {
-        TaskBarCards.show(evt, "victory");
+        TaskBarCards.show("victory");
+        e.stopPropagation();
         return false;
-    });
-    
-    jQuery(".card-bar .victory").contextmenu(function(e) 
+    };
+
+    jQuery(".card-bar .victory")[0].oncontextmenu = (e) => 
     {
         MeccgApi.send("/game/score/show", "");
+        e.stopPropagation();
+        return false;
+    };
 
-        e.preventDefault();
-        return false;
-    });
-    
-    jQuery(".card-bar .discardpile").click(function(evt)
+    jQuery(".card-bar .discardpile")[0].onclick = (e) => 
     {
-        TaskBarCards.show(evt, "discard");
+        TaskBarCards.show("discard");
+        e.stopPropagation();
         return false;
-    });
-    
-    jQuery(".card-bar .playdeck").click(function(evt)
+    };
+
+    jQuery(".card-bar .playdeck")[0].onclick = (e) =>  
     {
-        TaskBarCards.show(evt, "playdeck");
+        TaskBarCards.show("playdeck");
+        e.stopPropagation();
         return false;
-    });
-    
-    jQuery(".card-bar .discardpile").contextmenu(function(e) 
+    };
+
+    jQuery(".card-bar .discardpile")[0].oncontextmenu = (e) => 
     {
         TaskBarCards.shuffleDiscardpile();
-
-        e.preventDefault();
+        e.stopPropagation();
         return false;
-    });
-    
-    jQuery(".card-bar .playdeck").contextmenu(function(e) 
+    };
+
+    jQuery(".card-bar .playdeck")[0].oncontextmenu = (e) => 
     {
         TaskBarCards.shufflePlaydeck();
-
-        e.preventDefault();
+        e.stopPropagation();
         return false;
-    });
-       
+    };
+
     /**
      * Shuffle playdeck
      * @return {void}
      */
-    TaskBarCards.shufflePlaydeck = function()
+    TaskBarCards.shufflePlaydeck = function () 
     {
         MeccgApi.send("/game/view-cards/shuffle", { target: "playdeck" });
         document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Playdeck shuffled." }));
     };
 
-    TaskBarCards.shuffleDiscardpile = function()
+    TaskBarCards.shuffleDiscardpile = function () 
     {
         MeccgApi.send("/game/view-cards/shuffle", { target: "discardpile" });
     };
-    
-    
-    TaskBarCards.onTurnClick = function(jThis)
+
+
+    TaskBarCards.onTurnClick = function (jThis) 
     {
-        if (!jThis.hasClass("act"))
-        {
+        if (!jThis.hasClass("act")) {
             var sPhase = jThis.attr("data-phase");
             MeccgApi.send("/game/phase/set", sPhase);
         }
-        
+
         return false;
     };
-    
-    jQuery(".taskbar .taskbar-turn").click(function(e)
+
+    jQuery(".taskbar .taskbar-turn").each(function()
     {
-        e.preventDefault();
-        return TaskBarCards.onTurnClick(jQuery(this));
+        this.onclick = (e) => 
+        {
+            e.stopPropagation();
+            return TaskBarCards.onTurnClick(jQuery(e.target));
+        };
     });
-    
+
     return {
 
-        onShowVictorySheet : function(listCards)
-        {            
+        onShowVictorySheet: function (listCards) {
             TaskBarCards.onShowVictorySheet(listCards);
         },
 
-        onShow : function(bIsMe, jData)
-        {
-            TaskBarCards.onShow(bIsMe, jData);
+        onShow: function (bIsMe, jData) {
+            TaskBarCards.onShow(jData);
         },
 
-        onShowOnOffer : function(bIsMe, jData)
-        {
+        onShowOnOffer: function (bIsMe, jData) {
             TaskBarCards.onShowOnOffer(bIsMe, jData);
         },
 
-        onShowOnOfferReveal : function(uuid)
-        {
+        onShowOnOfferReveal: function (uuid) {
             TaskBarCards.onShowOnOfferReveal(uuid)
         },
-        onShowOnOfferRemove : function(uuid)
-        {
+        onShowOnOfferRemove: function (uuid) {
             TaskBarCards.onShowOnOfferRemove(uuid)
         },
 
-        hideOffer : function()
-        {
+        hideOffer: function () {
             TaskBarCards.hideOffer();
         }
 
     };
 }
-            

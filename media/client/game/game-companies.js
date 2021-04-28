@@ -97,7 +97,6 @@ function createCompanyManager(_CardList, _MeccgApi, _CardPreview, _HandCardsDrag
             let jChar1 = jQuery("<div>", {
                 class: "company-character-reosurces company-character-reosurces-empty"
             });
-            jChar1.attr("data-hosted", "0");
             jCharContainer.append(jChar1);
         }
         
@@ -458,7 +457,7 @@ function createCompanyManager(_CardList, _MeccgApi, _CardPreview, _HandCardsDrag
 
             if (!bIsMe)
             {
-                jQuery(elemContainer).find(".card").each(function()
+                elemContainer.find(".card").each(function()
                 {
                     let jThis = jQuery(this);
                     let sType = jThis.attr("data-card-type");
@@ -889,6 +888,13 @@ function createCompanyManager(_CardList, _MeccgApi, _CardPreview, _HandCardsDrag
             {
                 if (jQuery(this).attr("id") !== "create_new_company")
                     INSTANCE.onRemoveEmptyCompaniesCheckChars(jQuery(this).find(".company-characters"));
+            });
+
+            jQuery("#player_companies .company-character-reosurces").each(function ()
+            {
+                let jThis = jQuery(this);
+                if (!jThis.hasClass("hosts_nothing") && jThis.find(".card").length === 0)
+                    jThis.addClass("hosts_nothing");
             });
         },
 

@@ -58,6 +58,10 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score)
             Game.started = 0;
         },
 
+        getTappedSites : function(userid)
+        {
+            return Game._playboardManager.GetTappedSites(userid);
+        },
 
         players: {
 

@@ -197,6 +197,22 @@ function newInstance()
                 return typeof DECKS._siteMap[playerId] !== "undefined" && typeof DECKS._siteMap[playerId][code] !== "undefined";
         },
 
+        _getTappedSites : function(playerId)
+        {
+            if (typeof playerId === "undefined" || playerId === "")
+            {
+                console.log("invalid player id");
+                return { };
+            }
+            else if (typeof DECKS._siteMap[playerId] === "undefined")
+            {
+                console.log("Player does not have site map");
+                return { };
+            }
+            else
+                return  DECKS._siteMap[playerId];
+        },
+
         _setCardState : function(uuid, nState)
         {
             if (typeof DECKS._cardMap[uuid] === "undefined")
@@ -249,6 +265,11 @@ function newInstance()
         siteIsTapped : function(playerId, code)
         {
             return this._siteIsTapped(playerId, code);
+        },
+
+        getTappedSites : function(playerId)
+        {
+            return this._getTappedSites(playerId);
         },
         
         readyCard : function(uuid)

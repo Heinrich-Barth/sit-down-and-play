@@ -74,6 +74,22 @@ const ROOM_MANAGER = {
         return []; 
     },
 
+    getTappedSites : function(room, userid)
+    {
+        if (room === undefined || userid === undefined || room === "" || userid === "")
+        {
+            console.log("invalid input.");
+            return { };
+        }
+        if (ROOM_MANAGER._rooms[room] == undefined)
+        {
+            console.log("room does not exist: " + room);
+            return { };
+        }
+        else
+            return ROOM_MANAGER._rooms[room].game.getTappedSites(userid);
+    },
+
     updatePlayerToken : function(room, userid)
     {
         if (ROOM_MANAGER._rooms[room] == undefined || ROOM_MANAGER._rooms[room].players[userid] === undefined)

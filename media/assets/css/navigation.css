@@ -1,0 +1,30 @@
+body .navigation {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0;
+    padding: 5px 10px;
+
+    font-size: 10px;
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgb(0 0 0 / 40%), inset 0 0 0 1px rgb(255 255 255 / 10%);
+    max-width: 80%;
+    display: block;
+    text-align: left;
+    padding: 20px;
+    color: white;
+}
+
+.navigation a:hover {
+    color: #ffa500;
+}
+
+.navigation a,
+.navigation a:active, 
+.navigation a:visited 
+{
+    color: #ff0;
+    text-transform: uppercase;
+    text-decoration: none;
+}

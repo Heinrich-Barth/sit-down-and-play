@@ -279,9 +279,8 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
             return HandCardsDraggable._locationMessageId;
         },
         
-        onLocationSelectClick : function(jThis, companyUuid)
+        onLocationSelectClick : function(sCode, companyUuid)
         {
-            const sCode = HandCardsDraggable.getStartingLocation(jThis.closest(".company-site-list"));
             const data = {
                 company : companyUuid,
                 code : sCode,
@@ -295,7 +294,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         {
             if (jThis.closest(".company-site-list").find(".site-target img").length === 0)
                 document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please organize movement first." }));
-            else if (!resolveHandSizeFirst())
+            else /*if (!resolveHandSizeFirst())*/
                 MeccgApi.send("/game/company/location/reveal", {companyUuid: companyUuid});
         },
         
@@ -322,14 +321,34 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                 });
             });
             
-            jCompany.find(".location-select").click(function (evt)
-            {
-                HandCardsDraggable.onLocationSelectClick(jQuery(this), companyUuid);
+            jCompany.find(".location-select").each(function () {
+
+                let jThis = jQuery(this);
+                jThis.attr("data-company-uuid", companyUuid);
+                jThis[0].onclick = (e) => 
+                {
+                    const _this = jQuery(this);
+                    const _companyUuid = _this.attr("data-company-uuid");
+                    const sCode = HandCardsDraggable.getStartingLocation(_this.closest(".company-site-list"))
+                    HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid);
+                    e.stopPropagation();
+                    return false;
+                }
             });
             
-            jCompany.find(".location-reveal").click(function (evt)
+            jCompany.find(".location-reveal").each( function() 
             {
-                HandCardsDraggable.onLocationRevealClick(jQuery(this), companyUuid);
+                let jThis = jQuery(this);
+                jThis.attr("data-company-uuid", companyUuid);
+                jThis[0].onclick = (e) => 
+                {
+                    const _this = jQuery(this);
+                    const _companyUuid = _this.attr("data-company-uuid");
+                    HandCardsDraggable.onLocationRevealClick(_this, _companyUuid);
+                    e.stopPropagation();
+                    return false;
+                };
+
             });
         },
         
@@ -829,15 +848,19 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         }
     }
 
-    jQuery("#playercard_hand .card-hands-sizer-plus").click(function()
+    jQuery("#playercard_hand .card-hands-sizer-plus")[0].onclick = (e) =>
     {
         onHandSizeLimitUpdate(1);
-    });
+        e.stopPropagation();
+        return false;
+    };
     
-    jQuery("#playercard_hand .card-hands-sizer-minus").click(function()
+    jQuery("#playercard_hand .card-hands-sizer-minus")[0].onclick = (e) =>
     {
         onHandSizeLimitUpdate(-1);
-    });
+        e.stopPropagation();
+        return false;
+    };
 
     return HandCardsDraggable;
 }

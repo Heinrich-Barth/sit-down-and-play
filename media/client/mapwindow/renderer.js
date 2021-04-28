@@ -34,19 +34,53 @@ function unbindAndRemove(jElement)
 
 let g_isInit = false;
 
-jQuery(document).ready(function ()
-{
-    if (g_isInit)
-        return;
+const MapInstanceRenderer = {
 
-    g_isInit = true;
-
-    /**
-     * load map data file and init everything else
-     */
-    jQuery.get("/data/list/map", { }, function(data)
+    sendResultStart : function (e, sCode, sLocationType)
     {
-        MapBuilder.factory.create(data, g_sImageCDNUrl);
+        parent.postMessage({
+            type : "set",
+            start: sCode,
+            regions: [],
+            target: "",
+        }, "*");
+    },
+
+    sendResultMovement : function(sCodeStart, vsRegions, sCodeTarget)
+    {
+        if (sCodeStart === undefined || sCodeStart === "")
+            this.cancel();
+        else if (typeof sCodeTarget === "undefined" || sCodeTarget === "" || typeof vsRegions === "undefined" || vsRegions.length === 0)
+            this.cancel();
+        else
+        {
+            parent.postMessage({
+                type : "set",
+                start: sCodeStart,
+                regions: vsRegions,
+                target: sCodeTarget,
+            }, "*");
+        }
+    },
+
+    cancel : function()
+    {
+        parent.postMessage("/cancel", { });
+    },
+
+    chooseStartSite : function()
+    {
+        MapBuilder.onChooseLocationStart(MapInstanceRenderer.sendResultStart);
+    },
+
+    onChooseLocationMovement : function(startCode)
+    {
+        MapBuilder.onChooseLocationMovement(startCode, MapInstanceRenderer.sendResultMovement, MapInstanceRenderer.cancel);
+    },
+
+    onInit : function(data, tapped)
+    {
+        MapBuilder.factory.create(data, g_sImageCDNUrl, tapped);
 
         let sCode = "";
         let query = window.location.search;
@@ -56,39 +90,30 @@ jQuery(document).ready(function ()
             sCode = decodeURI(query.substring(pos+1));
 
         if (sCode === "")
-        {
-            MapBuilder.onChooseLocationStart(function (e, sCode, sLocationType)
-            {
-                parent.postMessage({
-                    type : "set",
-                    start: sCode,
-                    regions: [],
-                    target: "",
-                }, "*");
-            });
-        }
+            MapInstanceRenderer.chooseStartSite();
         else
+            MapInstanceRenderer.onChooseLocationMovement(sCode);
+
+        g_isInit = true;
+    }
+
+
+};
+
+jQuery(document).ready(function ()
+{
+    if (g_isInit)
+        return;
+
+    jQuery.get("/data/list/sites-tapped", { }, function(tapped)
+    {
+        jQuery.get("/data/list/map", { }, function(data)
         {
-            MapBuilder.onChooseLocationMovement(sCode, function (sCodeStart, vsRegions, sCodeTarget)
-            {
-                if (sCodeTarget === "")
-                    parent.postMessage("/cancel", { });
-                else
-                {
-                    parent.postMessage({
-                        type : "set",
-                        start: sCodeStart,
-                        regions: vsRegions,
-                        target: sCodeTarget,
-                    }, "*");
-                }
-            },
-            function ()
-            {
-                parent.postMessage({ type : "cancel" }, "*");
-            });
-        }
+            MapInstanceRenderer.onInit(data, tapped);
+        });
     });
+
+    
 });
 
 function onKeyUp(ev)

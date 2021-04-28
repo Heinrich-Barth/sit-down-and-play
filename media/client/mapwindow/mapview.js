@@ -5,6 +5,7 @@ const MapBuilder =
     
     CardList : null,
     CardPreview: null,
+    jTappedSites : { },
     jMap : {},
     jMapSiteRegion : {},
     jMarkerRegions : {},
@@ -16,6 +17,11 @@ const MapBuilder =
     minZoom: 3,
     maxZoom: 6,
     
+    isSiteTapped : function(code)
+    {
+        return MapBuilder.jTappedSites[code] !== undefined;
+    },
+
     getAdditionalAlignKeys : function()
     { 
         return ["fallenwizard", "fallenlord", "lord", "grey", "dragonlord", "warlord", "elflord", "atanilord", "dwarflord"]; 
@@ -474,11 +480,11 @@ const MapBuilder =
             return map;
         },
         
-        create : function(jMap, sImageCDNUrl)
+        create : function(jMap, sImageCDNUrl, jTappedSites)
         {           
             MapBuilder.CardPreview = CardPreview;
             MapBuilder.CardList = new CardList(jMap.images, null, true, false, sImageCDNUrl);
-            MapBuilder.factory.doCreate(jMap.map);
+            MapBuilder.factory.doCreate(jMap.map, jTappedSites);
         },
         
         destroy : function()
@@ -582,12 +588,15 @@ const MapBuilder =
         /**
          * Create a new Instance of the map
          */
-        doCreate : function(jMap)
+        doCreate : function(jMap, jTappedSites)
         {
             /**
              * load map data
              */
             MapBuilder.jMap = jMap;
+
+            if (jTappedSites !== undefined)
+                MapBuilder.jTappedSites = jTappedSites;
             
             this.createSiteCodeRegionList(jMap);
 
@@ -598,8 +607,8 @@ const MapBuilder =
 
            // MapBuilder.factory.buildMap();
             
-            jQuery("#movement_accept").click(MapBuilder.events.onAccept);
-            jQuery("#movement_cancel").click(MapBuilder.events.onCancel);
+            document.getElementById("movement_accept").onclick = MapBuilder.events.onAccept;
+            document.getElementById("movement_cancel").onclick = MapBuilder.events.onCancel;
         }
     },
         
@@ -1205,12 +1214,13 @@ const MapCreator = {
         MapCreator.fillSiteList();
     },
     
-    createImage : function(code, isSite)
+    createImage : function(code, isSite, isTapped)
     {
         const sType = isSite ? "site" : "location";
+        const sTapped = isTapped !== undefined && isTapped ? ' class="site-is-tapped" ' : "";
         const sTitle = this.removeQuotes(code) + " (" + sType + ")";
         const sUrl = isSite ? MapBuilder.CardList.getImageSite(code) : MapBuilder.CardList.getImageRegion(code);
-        return `<img src="${sUrl}" data-code="${code}" data-location-type="${sType}" title="${sTitle}">`;
+        return `<img src="${sUrl}" ${sTapped} data-code="${code}" data-location-type="${sType}" title="${sTitle}">`;
     },
     
     removeQuotes : function(sImage)
@@ -1339,10 +1349,7 @@ const MapCreator = {
         jElem.attr("title", "Click to remove");
         
         MapBuilder.CardPreview.initMapViewCard(jElem);
-        jElem.click(function(e)
-        {
-            unbindAndRemove(jQuery(this));
-        });
+        jElem[0].onclick = (e) => { unbindAndRemove(jQuery(e.target)) };
     },
     
     scrollToCardInList : function(sTitle)
@@ -1370,8 +1377,14 @@ const MapCreator = {
         if (typeof MapCreator._temp === "undefined")
             return;
         
+        let _isTapped;
         for (var _card of MapCreator._temp)
-            jTarget.append(MapCreator.createImage(_card["code"], _card["site"]));
+        {
+            _isTapped = MapBuilder.isSiteTapped(_card["code"]);
+            jTarget.append(MapCreator.createImage(_card["code"], _card["site"], _isTapped));
+
+        }
+            
         
         delete MapCreator._temp;
 

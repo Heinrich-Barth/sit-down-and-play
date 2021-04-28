@@ -116,5 +116,6 @@ PlayerSelector.prototype.onLoadOpponentView = function(e)
     }
 
     e.preventDefault();
+    e.stopPropagation();
     return false;
 };

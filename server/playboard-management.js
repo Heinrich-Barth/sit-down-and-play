@@ -1322,6 +1322,11 @@ let PlayBoardManagement = function(_Decks, _listAgents)
     {
         return PLAYBOARD_MANAGER.decks.siteIsTapped(playerId, code);
     };
+
+    PLAYBOARD_MANAGER.GetTappedSites = function(playerId)
+    {
+        return PLAYBOARD_MANAGER.decks.getTappedSites(playerId);
+    };
     
     PLAYBOARD_MANAGER.SetCardState = function(uuid, nState)
     {

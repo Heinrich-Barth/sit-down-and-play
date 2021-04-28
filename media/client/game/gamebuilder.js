@@ -195,19 +195,13 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _MeccgA
         initRestEndpoints : function()
         {            
             
-            jQuery("#draw_card").click(function(evt)
+            jQuery("#draw_card")[0].onclick = (e) =>
             {
                 MeccgApi.send("/game/card/draw/single");
-                
-                evt.preventDefault();
+                e.stopPropagation();
                 return false;
-            });
-            /*
-            jQuery("#draw_onlyGetTopCard").click(function(evt)
-            {
-                MeccgApi.send("/game/card/get-top-card-from-hand");
-            });
-            */
+            };
+
             MeccgApi.addListener("/game/card/draw", function(bIsMe, jData)
             {
                 if (bIsMe)

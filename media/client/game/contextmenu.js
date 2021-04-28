@@ -30,7 +30,7 @@ const ContextMenu = {
 
         jLink.attr("href", "#");
         jLink.attr("data-action", item.action);
-        jLink.click(ContextMenu.callbacks.generic);
+        jLink[0].onclick = ContextMenu.callbacks.generic;
 
         let jCont = jQuery("<li>", {
             class: item.classes
@@ -212,7 +212,8 @@ const ContextMenu = {
         generic : function(e)
         {
             e.preventDefault();
-
+            e.stopPropagation();
+            
             let jMenu = jQuery("#contextmenu");
                 
             /* execute the callback */
@@ -320,7 +321,7 @@ const ContextMenu = {
         jCont.html(`<div class="menu-overlay"></div><nav class="context-menu blue-box"></nav>`);
         jQuery("body").append(jCont);
 
-        jQuery("#contextmenu .menu-overlay").click(ContextMenu.callbacks.hide);
+        jQuery("#contextmenu .menu-overlay")[0].onclick = ContextMenu.callbacks.hide;
     },
 
     onReady : function()

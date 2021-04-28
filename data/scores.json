@@ -1,0 +1,51 @@
+{
+    "categories": [
+        {
+            "id": "score_stage",
+            "value":  "stage",
+            "label": "Stage Points",
+            "default": false
+        },
+        {
+            "id": "score_character",
+            "value":  "character",
+            "label": "Character Points",
+            "default": false
+        },
+        {
+            "id": "score_ally",
+            "value":  "ally",
+            "label": "Ally Points",
+            "default": false
+        },
+        {
+            "id": "score_item",
+            "value":  "item",
+            "label": "Item Points",
+            "default": false
+        },
+        {
+            "id": "score_faction",
+            "value":  "faction",
+            "label": "Faction Points",
+            "default": false
+        },
+        {
+            "id": "score_kill",
+            "value":  "kill",
+            "label": "Kill Points",
+            "default": false
+        },
+        {
+            "id": "score_misc",
+            "value":  "misc",
+            "label": "Misc. Points",
+            "default": true
+        }
+    ],
+
+    "points": {
+        "min": -3,
+        "max": 7
+    }
+}

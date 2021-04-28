@@ -129,21 +129,35 @@
 
 #scoring-sheet input.buttonCancel { background-color: #c32222; }
 #scoring-sheet input.buttonCancel:hover { background-color: #dc2600; }
+#scoring-sheet table { border-spacing: 0;}
+#scoring-sheet tbody tr:hover {
+    background-color: rgba(255,255,255,0.1);
+}
 
 .scoring-card select.req {
     border: 2px solid red;
     animation: glowRed linear 1s 1 forwards; 
 }
 
-.scoring-card select {
-    padding: 0.65em 0.75em;
-    border-radius: 5px;
-    outline: none;
-    display: block;
-    text-decoration: none;
-    margin-bottom: 10px;
-    width: 100%;
+.scoring-card .score-type 
+{
+    width: 200px;
+    float: left;
+    text-align: left;
+    color: #fff;
+    line-height: 1.5em;
 }
+.scoring-card .score_label:hover {
+    background-color: rgba(255, 165, 0, 0.5);
+    border-radius: 5px;
+}
+.scoring-card .score_label,
+.scoring-card .score_label label,
+.scoring-card .score_label input
+{
+    cursor: pointer;
+}
+
 
 @keyframes glowRed 
 {

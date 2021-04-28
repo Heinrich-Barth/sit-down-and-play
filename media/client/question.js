@@ -53,9 +53,7 @@ return '<div class="hidden" id="question_box" data-game=""> \
         onOk : function()
         {
             let roomId = jQuery("#question_box").attr("data-game");
-            
             QuestionBox.close();
-
             _callbackOk(roomId);
         }
 
@@ -72,9 +70,9 @@ return '<div class="hidden" id="question_box" data-game=""> \
 
     jQuery("body").append(getTemplate(sTitle, sInfo, sLabelOk, sLabelCancel));
     
-    jQuery("#question_box").click(QuestionBox.close);
-    jQuery("#q_cancel").click(QuestionBox.close);   
-    jQuery("#q_ok").click(QuestionBox.onOk);
+    document.getElementById("question_box").onclick = QuestionBox.close;
+    document.getElementById("q_cancel").onclick = QuestionBox.close;
+    document.getElementById("q_ok").onclick = QuestionBox.onOk;
 
     return QuestionBox;
 }
