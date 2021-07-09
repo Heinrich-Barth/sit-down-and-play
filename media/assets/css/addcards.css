@@ -1,0 +1,37 @@
+.add-cards-box 
+{
+    position: fixed;
+    left: 20%;
+    width: 60%;
+    top: 10%;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+    z-index: 402;
+}
+
+#add-cards-wrapper .config-panel-overlay { z-index: 401; }
+.add-cards-box textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.add-cards-box input.buttonCancel { background-color: #c32222; }
+.add-cards-box input.buttonCancel:hover { background-color: #dc2600; }
+.add-cards-box h2 { text-align: center; color: #ffa500; }
+.add-cards-box .button {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    background-color: #a8cea4;
+}

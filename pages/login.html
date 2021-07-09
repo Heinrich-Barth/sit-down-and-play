@@ -31,7 +31,6 @@
 
                     <input type="button" class="button-small" name="start" id="host" value="Join Game" />
                 </div>
-                <input type="file" class="hidden" id="choose_deck_upload" value="Choose" />
                 <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
             </div>
 
@@ -71,7 +70,8 @@
             <div class="deck-clear"></div>
             <div class="fields " id="dosubmit">
                 <div class="field">
-                    <input type="button" name="start" id="choose_deck" value="Load .meccg file" />
+                    <input type="file" class="invisible" id="choose_deck_upload" value="Choose" />
+                    <label class="button" for="choose_deck_upload">Load file</label>
                 </div>
             </div>
             
@@ -82,6 +82,7 @@
     </div>
     
     <script src="/media/client/game/notify.js"></script>
+    <script src="/media/client/game/libraries.js"></script>
     <script src="/media/client/login.js"></script>
 </body>
 

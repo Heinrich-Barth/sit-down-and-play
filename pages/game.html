@@ -17,8 +17,9 @@
         <link rel="stylesheet" href="/media/assets/css/question.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/game-dices.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/game-preferences.css?version=1" />
-        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/media/assets/css/lobby.css">
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/media/assets/css/lobby.css" />
+        <link rel="stylesheet" href="/media/assets/css/addcards.css" />
 
         <script src="/media/assets/js/jquery.min.js?version=1"></script>
         <script src="/media/assets/js/jquery-ui.min.js?version=1"></script>
@@ -30,7 +31,6 @@
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
 
-            <!-- Left Navigation -->
             <div class="taskbar">
                 <div class="icons">
                     <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
@@ -76,11 +76,6 @@
                     </div>
                 </div>
                 <div id="playercard_hand_container"></div>
-                <div id="card-hand-tpl" class="hidden">
-                    <div class="card-hand" id="card_icon_nr_{uuid1}" data-uuid="{uuid2}" data-card-type="{type}" draggable="true">
-                        <img decoding="async" src="/media/assets/images/black.png" data-id="{card-code}" class="card-icon">
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -153,6 +148,7 @@
         <script src="/media/client/game/libraries.js?version=1"></script>
         <script src="/media/client/game/meccg-api.js?version=1"></script>
         <script src="/media/client/question.js?version=1"></script>
+        <script src="/media/client/game/addcards.js?version=1"></script>
         <script src="/media/client/game/dice.js?version=1"></script>
         <script src="/media/client/game/added-cards-monitor.js?version=1"></script>
         <script src="/media/client/game/chat.js?version=1"></script>
@@ -174,6 +170,7 @@
         <script src="/media/client/game/shortcuts.js?version=1"></script>
         <script src="/media/client/game/highlight-card.js?version=1"></script>
         <script src="/media/client/game/lobby.js?version=1"></script>
+        <script src="/media/client/onready.js"></script>
         
     </body>
 </html>

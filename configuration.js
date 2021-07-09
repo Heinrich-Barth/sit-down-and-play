@@ -20,7 +20,7 @@ function loadConfig(sLocalConfig)
         "port": process.env.PORT || 8080,
         "image_domain" : process.env.DOMAIN,
         "image_path" : process.env.IMAGE_PATH,
-        "imageExpires": 8640000,
+        "imageExpires": 3600, //8640000,
         "maxRooms" : process.env.ROOMS,
         "maxPlayersPerRoom" : process.env.PLAYER,
         "cspReportUri" : "",

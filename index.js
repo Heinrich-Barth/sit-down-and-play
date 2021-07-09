@@ -10,6 +10,7 @@ const fs = require('fs');
  * Your custom config file will be preferred (if available!).
  */
 const g_pConfig = require("./configuration.js").load(__dirname + "/data/config.json", process.env.NODE_ENV);
+const g_pEventManager = require("./eventmanager.js");
 
 let HTTP_SERVER = {
 
@@ -28,35 +29,46 @@ let HTTP_SERVER = {
         maxPlayersPerRoom : g_pConfig.maxPlayersPerRoom() || 10,
 
         csp_image_domain : g_pConfig.imageDomain() || "",
-        csp_report_uri : g_pConfig.cspReportUri() || ""
+        csp_report_uri : g_pConfig.cspReportUri() || "",
+
+        expiresDate : new Date(Date.now()).toUTCString(),
+        expiresTime : Date.now(),
+        cacheDate : 0
     },
 
     _userManagement : null,
     _roomManager : null,
-    _cards : null
+    _cards : null,
+    _io : null
 };
 
-HTTP_SERVER._cards = require("./server/cards.js");
+HTTP_SERVER.environment.cacheDate = new Date(Date.now() + (HTTP_SERVER.environment.imageExpires * 1000)).toUTCString();
+HTTP_SERVER._cards = require("./plugins/cards.js");
 HTTP_SERVER._cards.load(g_pConfig.cardUrl());
+
+require("./plugins/events.js").registerEvents(g_pEventManager);
+
+HTTP_SERVER._roomManager = require("./game-server/room-manager.js").create(
+{
+    createSecret : () => HTTP_SERVER.createSecret(),
+    getSocketId : () => { return HTTP_SERVER._io; }
+}, 
+__dirname + "/pages/game.html", 
+HTTP_SERVER._cards.getAgents, 
+g_pEventManager, 
+{
+    getCardType : HTTP_SERVER._cards.getCardType
+});
+
 
 /**
  * Validates Deck send by user prior Login
  */
-HTTP_SERVER._userManagement = require("./server/lobby-manager.js");
+HTTP_SERVER._userManagement = require("./game-server/lobby-manager.js");
 HTTP_SERVER._userManagement.setup(HTTP_SERVER._cards);
-
-HTTP_SERVER._roomManager = require("./server/room-manager.js").create({
-    createSecret : function()
-    {
-        return HTTP_SERVER.createSecret();
-    },
-    getSocketId : function()
-    {
-        return HTTP_SERVER._io;
-    }
-
-}, __dirname, HTTP_SERVER._cards.getAgents);
-
+ 
+HTTP_SERVER._authenticationManagement = require("./game-server/authentication.js");
+HTTP_SERVER._authenticationManagement.setUserManager(HTTP_SERVER._roomManager);
 
 /**
  * Create server
@@ -64,20 +76,20 @@ HTTP_SERVER._roomManager = require("./server/room-manager.js").create({
 const g_pExpress = require('express');
 
 HTTP_SERVER._server = g_pExpress();
-HTTP_SERVER._server.use(require('cookie-parser')());
-HTTP_SERVER._http = require('http').createServer(HTTP_SERVER._server);
+
+(function()
+{
+    HTTP_SERVER._server.use(require('cookie-parser')());
+    HTTP_SERVER._server.use(g_pExpress.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+    HTTP_SERVER._server.use(g_pExpress.json()); // for parsing application/json
+
+    HTTP_SERVER._server.disable('x-powered-by');
+    HTTP_SERVER._http = require('http').createServer(HTTP_SERVER._server);
+})();
 
 const PLUGINS = {
-    decklist : require("./plugins/decklist.js").load(require("./server/decklist.js"), __dirname)
+    decklist : require("./plugins/decklist.js").load(require("./game-server/decklist.js"), __dirname)
 };
-
-
-
-HTTP_SERVER.isHttps = function(req)
-{
-    // return !HTTP_SERVER.environment.isProduction || req.protocol === "https";
-    return true;
-}
 
 /**
  * Check if the input is valid and alphanumeric
@@ -106,7 +118,7 @@ HTTP_SERVER.generateUuid = function ()
 
 HTTP_SERVER.getContentSecurityPolicyMegaAdditionals = function()
 {
-    let jEntries = {
+    const jEntries = {
         "script-src": "'self' 'nonce-START'",
         "img-src": "'self' " + HTTP_SERVER.environment.csp_image_domain,
         "report-uri": HTTP_SERVER.environment.csp_report_uri
@@ -128,10 +140,10 @@ HTTP_SERVER.getContentSecurityPolicyMegaAdditionals = function()
  */
 HTTP_SERVER.createSecret = function () 
 {
-    var salt1 = HTTP_SERVER.generateUuid() + Math.floor(Math.random() * Math.floor(1000)) + 1;
-    var salt2 = HTTP_SERVER.generateUuid() + Math.floor(Math.random() * Math.floor(1000)) + 1;
-    const getHash = (x, HASH_SALT_1, HASH_SALT_2) => require('crypto').createHash('sha256').update(HASH_SALT_1 + x + HASH_SALT_2 + "0", 'utf8').digest('hex');
-    return getHash(HTTP_SERVER.generateUuid(), salt1, salt2);
+    const salt1 = HTTP_SERVER.generateUuid() + Math.floor(Math.random() * Math.floor(1000)) + 1;
+    const salt2 = HTTP_SERVER.generateUuid() + Math.floor(Math.random() * Math.floor(1000)) + 1;
+    const x = salt1 + salt2 + HTTP_SERVER.generateUuid() + "0";
+    return require('crypto').createHash('sha256').update(x, 'utf8').digest('hex');
 };
 
 
@@ -139,12 +151,10 @@ HTTP_SERVER.createSecret = function ()
  * Once the server is up and running,
  * init the game module
  */
-HTTP_SERVER.onListen = function () {
-
+HTTP_SERVER.onListen = function () 
+{
     HTTP_SERVER._io = require('socket.io')(HTTP_SERVER._http);
     HTTP_SERVER._io.on('connection', HTTP_SERVER.onIoConnection);
-
-    HTTP_SERVER._authenticationManagement = require("./server/authentication.js").create(HTTP_SERVER._roomManager);
 };
 
 /**
@@ -155,7 +165,7 @@ HTTP_SERVER.onListen = function () {
 HTTP_SERVER.expireResponse = function(res)
 {
     res.setHeader("Cache-Control", "no-store");
-    res.setHeader("Expires", new Date(Date.now()).toUTCString());
+    res.setHeader("Expires", HTTP_SERVER.environment.expiresDate);
     return res;
 }
 
@@ -167,7 +177,7 @@ HTTP_SERVER.expireResponse = function(res)
 HTTP_SERVER.cacheResponse = function(res)
 {
     res.setHeader("Cache-Control", "public, max-age=" + HTTP_SERVER.environment.imageExpires);
-    res.setHeader("Expires", new Date(Date.now() + (HTTP_SERVER.environment.imageExpires * 1000)).toUTCString());
+    res.setHeader("Expires", HTTP_SERVER.environment.cacheDate);
     return res;
 }
 
@@ -176,30 +186,40 @@ HTTP_SERVER.cacheResponse = function(res)
  */
 HTTP_SERVER.shutdown = function () 
 {
-    console.log(" ");
-    console.log("Shutting down game server.");
+    console.log("\nShutting down game server.");
 
-    if (this._io !== null) try {
-            console.log("- shutdown IO http server.");
-            this._io.httpServer.close();
+    try 
+    {
+        console.log("- shutdown IO http server.");
+        HTTP_SERVER._io.httpServer.close();
+    }
+    catch (e) 
+    {
+        console.error(e);
+    }
 
-            console.log("- shutdown IO.");
-            this._io.close();
+    try 
+    {
+        console.log("- shutdown IO.");
+        HTTP_SERVER._io.close();
+    }
+    catch (e) 
+    {
+        console.error(e);
+    }
 
-            this._io = null;
-        }
-        catch (errIgnore) {
+    try 
+    {
+        console.log("- shutdown server.");
+        HTTP_SERVER._serverListener.close();
+    }
+    catch (e) 
+    {
+        console.error(e);
+    }
 
-        }
-
-    if (HTTP_SERVER._serverListener !== null) try {
-            console.log("- shutdown server.");
-            HTTP_SERVER._serverListener.close();
-            HTTP_SERVER._serverListener = null;
-        }
-        catch (errIgnore) {
-
-        }
+    HTTP_SERVER._io = null;
+    HTTP_SERVER._serverListener = null;
 
     console.log("- stop application.");
     process.exit(0);
@@ -233,14 +253,15 @@ HTTP_SERVER.sameOrigin = function(req)
  * @param {Object} req 
  * @returns 
  */
-HTTP_SERVER.validateCookies = function (res, req) {
-
+HTTP_SERVER.validateCookies = function (res, req) 
+{
     /** no cookies available */
     if (req.cookies.userId === undefined ||
         req.cookies.room === undefined ||
         req.cookies.userId.length !== HTTP_SERVER.environment.uuid_tpl.length ||
         req.cookies.joined === undefined || req.cookies.joined < HTTP_SERVER.environment.startupTime) 
     {
+        console.log("cookies appear to be nonexistent");
         HTTP_SERVER.clearCookies(res);
         return false;
     }
@@ -261,20 +282,32 @@ HTTP_SERVER.validateCookies = function (res, req) {
  * 
  * @param {Object} res 
  */
-HTTP_SERVER.clearCookies = function (res) {
+HTTP_SERVER.clearCookies = function (res) 
+{
     res.clearCookie('userId');
     res.clearCookie('joined');
     res.clearCookie('room');
 };
 
 /**
- * All media can be used with static routes
+ * These are the JS game files. Avoid caching.
  */
-HTTP_SERVER._server.use("/media/", g_pExpress.static("media/", {
+HTTP_SERVER._server.use("/media/client", g_pExpress.static("game-client"));
+
+/* All media can be used with static routes */
+HTTP_SERVER._server.use("/media/assets", g_pExpress.static("media/assets", 
+{
     etag: true,
     maxage: HTTP_SERVER.environment.imageExpires * 1000
 }));
 
+/* Map images should be cached */
+HTTP_SERVER._server.use("/media/maps", g_pExpress.static("media/maps", 
+{
+    etag: true,
+    maxage: HTTP_SERVER.environment.imageExpires * 1000
+}));
+  
 /**
  * This is a blank (black) page. Necessary for in-game default page
  */
@@ -292,6 +325,16 @@ HTTP_SERVER._server.use("/map/underdeeps", g_pExpress.static(__dirname + "/pages
     etag: true,
     maxage: HTTP_SERVER.environment.imageExpires
 }));
+
+if (!HTTP_SERVER.environment.isProduction)
+{
+    HTTP_SERVER._server.use("/api", g_pExpress.static(__dirname + "/api/http"));
+    HTTP_SERVER._server.use("/api/swagger.css", g_pExpress.static(__dirname + "/api/swagger.css"));
+    HTTP_SERVER._server.use("/api/swagger.js", g_pExpress.static(__dirname + "/api/swagger.js"));
+    HTTP_SERVER._server.use("/api/client", g_pExpress.static(__dirname + "/api/game-client"));
+    HTTP_SERVER._server.use("/api/server", g_pExpress.static(__dirname + "/api/game-client"));    
+}
+
 
 /**
  * Show Region Map.
@@ -314,6 +357,24 @@ HTTP_SERVER.onRequestRegionMapHtml = function ()
     return HTTP_SERVER._mapHtml;
 };
 
+HTTP_SERVER.onGetTappedSites = function (cookies)
+{
+    try
+    {
+        if (cookies !== undefined && cookies.room !== undefined && cookies.userId !== undefined)
+            return HTTP_SERVER._roomManager.getTappedSites(cookies.room, cookies.userId);
+    }
+    catch(e)
+    {
+        console.log(e);
+    }express
+
+    return { };
+};
+
+/**
+ * Region Map. Importantly, this must not be cached!
+ */
 HTTP_SERVER._server.get("/map/regions", function (req, res) 
 {
     res.setHeader('Content-Type', 'text/html');
@@ -331,7 +392,7 @@ HTTP_SERVER._server.get("/ping", function (req, res)
 });
  
 /**
- * Show list of available images
+ * Show list of available images. 
  */
 HTTP_SERVER._server.get("/data/list/images", function (req, res) 
 {
@@ -349,6 +410,29 @@ HTTP_SERVER._server.get("/data/list/sites", function (req, res)
 });
 
 /**
+ * This allows dynamic scoring categories. Can be cached, because it will not change.
+ */
+HTTP_SERVER._server.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", 
+{
+    etag: true,
+    maxage: HTTP_SERVER.environment.imageExpires
+}));
+
+/**
+ * Get a list of tapped sites. This endpoint requiers cookie information. If these are not available,
+ * the endpoint returns an empty map object.
+ */
+HTTP_SERVER._server.get("/data/list/sites-tapped", function (req, res) 
+{
+    const data = HTTP_SERVER.onGetTappedSites(req.cookies);
+
+    res.setHeader('Content-Type', 'application/json'); 
+    HTTP_SERVER.expireResponse(res).send( data ).status(200);    
+});
+        
+
+
+/**
  * Provide the cards
  */
  HTTP_SERVER._server.get("/data/list/cards", function (req, res) {
@@ -362,6 +446,11 @@ HTTP_SERVER._server.get("/data/list/sites", function (req, res)
 HTTP_SERVER._server.get("/data/list/map", function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     HTTP_SERVER.cacheResponse(res).send(HTTP_SERVER._cards.getMapdata()).status(200);
+});
+
+HTTP_SERVER._server.get("/data/list/filters", function (req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    HTTP_SERVER.expireResponse(res).send(HTTP_SERVER._cards.getFilters()).status(200);
 });
 
 /**
@@ -453,20 +542,19 @@ HTTP_SERVER._server.get("/play/:room/login", function (req, res)
 {
     HTTP_SERVER.clearCookies(res);
 
-    /**
-     * assert the room is valid
-     */
+    /* assert the room is valid */
     if (!HTTP_SERVER.isAlphaNumeric(req.params.room))
     {
         res.redirect("/error/error-invalid-room-name.html");
-        return;
     }
+    else
+    {
+        const sUser = req.cookies.username === undefined ? "" : req.cookies.username;
+        let sHtml = fs.readFileSync(__dirname + "/pages/login.html", 'utf8');
 
-    let sUser = req.cookies.username === undefined ? "" : req.cookies.username;
-    let sHtml = fs.readFileSync(__dirname + "/pages/login.html", 'utf8');
-
-    res.setHeader('Content-Type', 'text/html');
-    HTTP_SERVER.expireResponse(res).send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
+        res.setHeader('Content-Type', 'text/html');
+        HTTP_SERVER.expireResponse(res).send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
+    }
 });
 
 /**
@@ -513,9 +601,6 @@ HTTP_SERVER.validateUserNameInjection = function(input)
         return input;
 }
 
-const bodyParser = require('body-parser');
-HTTP_SERVER._server.use(bodyParser.urlencoded({ extended: true }));
-
 /**
  * Check if the deck is valid.
  */
@@ -524,7 +609,7 @@ HTTP_SERVER._server.post("/data/decks/check", function (req, res)
     let bChecked = false;
     let vsUnknown = [];
 
-    const jData = req.body.data.cards;
+    const jData = req.body;
     const nSize = jData.length;
 
     for (let i = 0; i < nSize; i++)
@@ -602,6 +687,7 @@ HTTP_SERVER._server.post("/play/:room/login/check", function (req, res)
     }
     catch (e) 
     {
+        console.log(e);
         HTTP_SERVER.expireResponse(res).redirect("/error/login");
     }
 });
@@ -625,7 +711,8 @@ HTTP_SERVER._server.get("/play/:room/lobby", function (req, res) {
     }
 
     /* if player is admin or accepted, simply redirect to game room */
-    if (HTTP_SERVER._roomManager.isAccepted(req.params.room, req.cookies.userId)) {
+    if (HTTP_SERVER._roomManager.isAccepted(req.params.room, req.cookies.userId)) 
+    {
         res.redirect("/play/" + req.params.room);
     }
     else 
@@ -644,8 +731,13 @@ HTTP_SERVER._server.get("/play/:room/waiting/:token", function (req, res)
 {
     if (HTTP_SERVER._roomManager.isGameHost(req.params.room, req.params.token))
     {
+        let data = {
+            waiting: HTTP_SERVER._roomManager.getWaitingList(req.params.room),
+            players : HTTP_SERVER._roomManager.getPlayerList(req.params.room)
+        }
+
         res.setHeader('Content-Type', 'application/json');
-        HTTP_SERVER.expireResponse(res).send(HTTP_SERVER._roomManager.getWaitingList(req.params.room)).status(200);
+        HTTP_SERVER.expireResponse(res).send(data).status(200);
     }
     else
         res.sendStatus(401);
@@ -674,8 +766,23 @@ HTTP_SERVER._server.post("/play/:room/invite/:id/:token", function (req, res)
  {
     if (HTTP_SERVER._roomManager.isGameHost(req.params.room, req.params.token))
     {
-        console.log("rejected");
         HTTP_SERVER._roomManager.rejectEntry(req.params.room, req.params.id);
+        HTTP_SERVER.expireResponse(res).sendStatus(204);
+    }
+    else
+        res.sendStatus(401);
+});
+
+
+/**
+ * Reject player access to table
+ */
+HTTP_SERVER._server.post("/play/:room/remove/:id/:token", function (req, res) 
+{
+    if (HTTP_SERVER._roomManager.isGameHost(req.params.room, req.params.token))
+    {
+        console.log("remove payer from game");
+        HTTP_SERVER._roomManager.removePlayerFromGame(req.params.room, req.params.id);
         HTTP_SERVER.expireResponse(res).sendStatus(204);
     }
     else
@@ -725,12 +832,7 @@ HTTP_SERVER._server.get("/play/:room/status/:id", function (req, res) {
  */
 HTTP_SERVER._server.get("/play/:room", function (req, res) 
 {
-    if (!HTTP_SERVER.isHttps(req))
-    {
-        res.redirect("/error/error-https-required");
-        return;
-    }
-    else if (!HTTP_SERVER.isAlphaNumeric(req.params.room))
+    if (!HTTP_SERVER.isAlphaNumeric(req.params.room))
     {
         res.redirect("/error/error-invalid-room-name.html");
         return;
@@ -815,18 +917,15 @@ HTTP_SERVER._server.get("/rules/:rule", function (req, res)
     }
     
     res.sendFile(__dirname + "/pages/rules-" + page + ".html");
- });
+});
 
 HTTP_SERVER.onIoConnection = function (socket) 
 {
-    console.log("New connection " + socket.id);
-
     socket.auth = false;
     socket.userid = "";
     socket.username = "";
 
-    if (HTTP_SERVER._authenticationManagement !== null)
-        HTTP_SERVER._authenticationManagement.triggerAuthenticationProcess(socket);
+    HTTP_SERVER._authenticationManagement.triggerAuthenticationProcess(socket);
 
     /**
      * The disconnect event may have 2 consequnces
@@ -838,7 +937,6 @@ HTTP_SERVER.onIoConnection = function (socket)
         if (!socket.auth) 
         {
             console.log("Disconnected unauthenticated session " + socket.id);
-            return;
         }
         else 
         {
@@ -872,15 +970,39 @@ HTTP_SERVER.onIoConnection = function (socket)
 };
 
 
-// 404
 HTTP_SERVER._server.use(function(req, res, next) 
 {
-    res.redirect("/");
+    res.status(404);
+    res.format({
+      html: function () {
+        res.sendFile(__dirname + "/pages/error-404.html");
+      },
+      json: function () {
+        res.json({ error: 'Not found' })
+      },
+      default: function () {
+        res.type('txt').send('Not found')
+      }
+    })
 });
   
 // 500 - Any server error
-HTTP_SERVER._server.use(function(err, req, res, next) {
-    res.redirect("/");
+HTTP_SERVER._server.use(function(err, req, res, next) 
+{
+    console.log(err);
+
+    res.status(500);
+    res.format({
+      html: function () {
+        res.sendFile(__dirname + "/pages/error-500.html");
+      },
+      json: function () {
+        res.json({ error: "Something went wrong" })
+      },
+      default: function () {
+        res.type('txt').send("Something went wrong")
+      }
+    });
 });
 
 /**
@@ -888,12 +1010,6 @@ HTTP_SERVER._server.use(function(err, req, res, next) {
  */
 process.on('SIGTERM', HTTP_SERVER.shutdown);
 process.on('SIGINT', HTTP_SERVER.shutdown);
-
-/**
- * start http server finally
- */
-if (HTTP_SERVER.environment.isProduction)
-    console.log("is production server");
 
 console.log("Server started at port " + HTTP_SERVER.environment.port);
 HTTP_SERVER._serverListener = HTTP_SERVER._http.listen(HTTP_SERVER.environment.port, HTTP_SERVER.onListen);
@@ -904,36 +1020,3 @@ HTTP_SERVER._serverListener.on('clientError', (err, socket) =>
     socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-HTTP_SERVER.keepAliveUrl = "";
-
-HTTP_SERVER.onKeepAlive = function()
-{
-    console.log("Send keep-alive to " + process.env.THIS_URL);
-    const https = require('https');
-
-    https.get(process.env.THIS_URL, (res) => 
-    {
-        let body = "";
-    
-        res.on("data", (chunk) => 
-        {
-            body += chunk;
-        });
-    
-        res.on("end", () => 
-        {
-            console.log(body);
-        });
-    
-    }).on("error", (error) => 
-    {
-        console.error(error.message);
-    });
-}
-
-if (process.env.THIS_URL !== undefined)
-{
-    HTTP_SERVER.onKeepAlive();
-    HTTP_SERVER.keepAliveUrl = process.env.THIS_URL;
-    setInterval(HTTP_SERVER.onKeepAlive, 1000 * 60 * 20);
-}

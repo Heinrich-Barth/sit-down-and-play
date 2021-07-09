@@ -881,3 +881,5 @@ div#opponent_table .company { transform: rotate(180deg); }
     cursor: pointer;
     color: #fff;
 }
+
+body.on-show-map-window .location-icon { display: none; }

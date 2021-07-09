@@ -61,3 +61,11 @@
 .question-game input#q_cancel { background-color: #c32222; }
 .question-game input#q_cancel:hover { background-color: #dc2600; }
 .question-game .question-answers input { width: 80% !important;}
+.question-fake-hide {
+    position: absolute;
+    left: 0;
+    width: 10px;
+    height: 20px;
+    top: 0;
+    opacity: 0;
+}

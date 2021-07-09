@@ -1,7 +1,7 @@
 {
-    "image_domain" : "https://my-cdn.com",
+    "image_domain" : "https://localhost",
     
-    "image_path" : "/img/cards/",
+    "image_path" : "https://localhost/img/cards/",
 
     "imageExpires": 8640000,
 
@@ -11,5 +11,5 @@
 
     "cspReportUri" : "",
 
-    "cardsUrl" : "https://my-cdn.com/data/cards"
+    "cardsUrl" : "https://localhost/data/cards"
 }

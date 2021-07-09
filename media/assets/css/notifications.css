@@ -4,17 +4,11 @@
     top: 60px;
     right: 45%;
     padding: 20px;
+    z-index: 600;
 }
 
-.success
-{
-    background: #98c593;
-}
-
-.failure{
-    background: rgb(195,34,34);
-
-}
+.success { background: #98c593; }
+.failure{ background: rgb(195,34,34); }
   
 .notify
 {  
@@ -30,13 +24,14 @@
     box-sizing:border-box;
     position: relative;
     margin-bottom: 20px;
+    
 }
 
 .notification-text { display: block; }
 .notification-text i { margin-right: 10px; }
 .notification-line-countdown 
 {   
-    animation: notification-line 2s linear forwards;
+    animation: notification-line 3s linear forwards;
     height: 2px;
     background: white;
     width: 1%;

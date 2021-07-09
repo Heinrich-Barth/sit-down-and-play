@@ -8,7 +8,7 @@
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self';">
 
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
-
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/media/assets/css/notifications.css" />
         <link rel="stylesheet" href="/media/assets/css/about.css" />
         <link rel="stylesheet" href="/media/assets/css/home.css" />
@@ -17,7 +17,20 @@
     </head>
     <body>
         <div class="content">
-            <div class="blue-box join-game" id="login">
+            <noscript>
+                <div class="blue-box join-game" id="login">
+            
+                    <h1>Sorry...</h1>
+                    
+                    <div>
+                        <div class="enter-room-input-container">
+                            <p class="center">Please enable JavaScript to play.</p>
+                        </div>
+                    </div>
+    
+                </div>
+            </noscript>
+            <div class="blue-box join-game hidden" id="login">
             
                 <h1>Start a Game</h1>
                 
@@ -43,7 +56,7 @@
             
                 <h2>Join a Table</h2>
                 <p class="center">Click on a game to join</p>
-                <div class="game_list"></div>
+                <div class="game_list" id="game_list"></div>
 
             </div>
         </div>
@@ -52,5 +65,6 @@
 
         <script src="/media/client/game/notify.js"></script>
         <script src="/media/client/home.js"></script>
+        <script src="/media/client/onready.js"></script>
     </body>
 </html>

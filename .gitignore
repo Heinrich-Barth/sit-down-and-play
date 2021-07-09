@@ -15,3 +15,4 @@ data/map-positions.json
 media/maps/*
 
 pages/rules-*.html
+keepalive.js

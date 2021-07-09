@@ -18,7 +18,7 @@ tags:
   
 schemes:
 - "https"
-
+- "http"
 paths:
   /play/{room}:
     get:
@@ -280,6 +280,17 @@ paths:
           description: "JSON map with root keys <br>
             `map` - Region map with regions and their sites <br>
             `images` - A card code based hash map of all images"
+  /data/list/filters:
+    get:
+      tags:
+      - "Card Data"
+      summary: "Provide all available regions and their sites"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "JSON map"
   /data/list/cards:
     get:
       tags: 
