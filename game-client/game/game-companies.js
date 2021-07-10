@@ -364,7 +364,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
             let pCheckForCardsPlayed = new CheckForCardsPlayed("ingamecard_");
             pCheckForCardsPlayed.loadBefore(jOnGuardContainer);
 
-            for (var i = 0; i < cardList.length; i++)
+            const len = cardList.length;
+            for (var i = 0; i < len; i++)
                 this.onAttachCardToCompanySitesElement(jOnGuardContainer, cardList[i], bAllowContextMenu, isPlayersCompany);
 
             pCheckForCardsPlayed.loadAfter(jOnGuardContainer);
@@ -384,7 +385,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
             else
                 CardPreview.initOnGuard(pCard, true, false);
 
-            INSTANCE.initSingleCardEvent(pCard, isPlayersCompany);
+            INSTANCE.initSingleCardEvent(pCard, true);
             
             if (bAllowContextMenu)
                 ContextMenu.initContextMenuGeneric(pCard);
@@ -488,7 +489,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
                 else
                     CardPreview.init(div, true, bIsMe);
 
-                INSTANCE.initSingleCardEvent(div, bIsMe);
+                INSTANCE.initSingleCardEvent(div, false);
             });
 
             if (!existsAlready && bIsMe)
@@ -506,12 +507,14 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
             return true;
         },
 
-        initSingleCardEvent : function(pCardDiv)
+        initSingleCardEvent : function(pCardDiv, isOnGuardCard)
         {
-            let isCharacter = pCardDiv.getAttribute("data-card-type") === "character";
-            
+            if (pCardDiv === null)
+                return;
+
             pCardDiv.setAttribute("data-location", "inplay");
-            if (!isCharacter)
+
+            if (isOnGuardCard || pCardDiv.getAttribute("data-card-type") !== "character")
                 _HandCardsDraggable.initOnCardResource(pCardDiv);
             else
                 _HandCardsDraggable.initOnCardCharacter(pCardDiv);

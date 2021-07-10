@@ -6,7 +6,7 @@
  * and also removes it after some time 
  * 
  */
-class HighlightElement {
+ class HighlightElement {
 
     constructor() { }
 
@@ -21,7 +21,7 @@ class HighlightElement {
         if (sCompanyId === "")
             return false;
 
-        let jCompany = document.getElementById("company_" + _id);
+        let jCompany = document.getElementById("company_" + sCompanyId);
 
         /** avoid duplicate events */
         if (jCompany === null || jCompany.classList.contains("glowing-green"))

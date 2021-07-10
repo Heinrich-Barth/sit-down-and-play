@@ -19,7 +19,7 @@ class CheckForCardsPlayed {
      */
     getCards(pContainer)
     {
-        return this.getCardsFromList(pContainer.querySelectorAll("img"));
+        return pContainer === null ? [] : this.getCardsFromList(pContainer.querySelectorAll("img"));
     }
 
     getCardsFromList(list)

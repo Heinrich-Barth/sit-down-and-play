@@ -270,7 +270,8 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         _locationMessageId : 0,
 
         /**
-         * Get the company path
+         * Get the company path. This will fail for onguard cards, but it is ok, because it will simply return an empty data
+         * object
          * 
          * @param {JQuery} jCardContainer
          * @returns {createHandCardsDraggable.HandCardsDraggable.getCompanyPath.handcards-draggableAnonym$0}
@@ -278,6 +279,8 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         getCompanyPath : function(pCardContainer)
         {
             let pCompanyCharacter = DomUtils.closestByClass(pCardContainer, "company-character");
+
+            const character_uuid = pCompanyCharacter === null ? "" : pCompanyCharacter.getAttribute("data-character-uuid")
 
             /**
              * this character is either host or influenced
@@ -299,7 +302,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
             }
 
             return {
-                character_uuid : pCompanyCharacter.getAttribute("data-character-uuid"),
+                character_uuid : character_uuid,
                 company_uuid : companySourceId === null ? "" : companySourceId,
                 is_host : isHostCharacter,
                 parent_character_uuid : parentCharacterUuid
@@ -402,6 +405,9 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         
         initOnCardCharacter : function(cardDiv)
         {
+            if (cardDiv === null)
+                return;
+
             const isHost = this.getCompanyPath(cardDiv).is_host;
             if (isHost) // if this character is a host, he/she may accept characters under direct influence
             {
@@ -552,7 +558,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
          */
         initDraggableCard : function(pCardContainer)
         {
-            let sAllow = pCardContainer.getAttribute("draggable");
+            let sAllow = pCardContainer === null ? null : pCardContainer.getAttribute("draggable");
             if (sAllow === null || sAllow !== "true")
                 return;
             
