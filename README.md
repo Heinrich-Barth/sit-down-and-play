@@ -4,6 +4,10 @@ This project allows you to play MECCG or similar.
 
 *Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. This is not affiliated with Middle-earth Enterprises or Iron Crown Enterprises.*
 
+## Watch a Demo
+
+[![Watch Demo](https://img.youtube.com/vi/XFPFwfsEJSg/0.jpg)](https://www.youtube.com/watch?v=XFPFwfsEJSg)
+
 ## Introduction
 
 This project aims to provide an easy way to setup and maintain a card game server to allow you and your friends to play your favourite card game online.
