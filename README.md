@@ -344,7 +344,6 @@ The following third-party libraries. Be aware of their respective licenses.
 
 * Node.JS - Socket.io 4.0.0 (MIT License)
 * Node.JS - Express 4.17.1 (MIT License)
-* Node.JS - Express body-parser 1.19.0 (MIT License)
 * Node.JS - Express cookie-parser 1.4.5 (MIT License)
 * jQuery 3.5.1 (MIT License)
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)
