@@ -356,6 +356,7 @@ img.card-icon {
     right: 0;
     background-color: rgba(0,0,0, 0.6);
     z-index: 1000;
+    cursor: pointer;
 }
 
 #view-score-sheet-card-list .container-data { padding: 10px; }
@@ -393,6 +394,7 @@ img.card-icon {
 #view_card_list_container .view-card-list-container.view-playdeck
 {
     bottom: 107px;
+    cursor: default;
 }
 #view_card_list_container .view-card-list-container.view-discard
 {
@@ -850,6 +852,7 @@ div#opponent_table .company { transform: rotate(180deg); }
     right: 0;
     bottom: 0;
     background-color: rgba(0,0,0,0.8);
+    cursor: pointer;
 }
 
 .map-view {

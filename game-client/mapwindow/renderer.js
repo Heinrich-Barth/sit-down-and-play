@@ -47,7 +47,7 @@ const MapInstanceRenderer = {
 
     onInit : function(data, tapped)
     {
-        MapBuilder.factory.create(data, g_sImageCDNUrl, tapped);
+        MapBuilder.factory.create(data, tapped);
 
         let sCode = "";
         let query = window.location.search;

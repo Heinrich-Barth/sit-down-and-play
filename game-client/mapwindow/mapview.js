@@ -480,10 +480,10 @@ const MapBuilder =
             return map;
         },
         
-        create : function(jMap, sImageCDNUrl, jTappedSites)
+        create : function(jMap, jTappedSites)
         {           
             MapBuilder.CardPreview = CardPreview;
-            MapBuilder.CardList = new CardList(jMap.images, null, true, false, sImageCDNUrl);
+            MapBuilder.CardList = new CardList(jMap.images, []);
             MapBuilder.factory.doCreate(jMap.map, jTappedSites);
         },
         
@@ -1147,27 +1147,34 @@ const MapCreator = {
         MapCreator.fillSiteList();
     },
 
-    lazyloadImages : function()
+    lazyloadImageClasses : function(sSelector)
     {
-        setTimeout(function()
-        {
-            const list = document.querySelectorAll("img.site-image");
-            if (list === null || list.length === 0)
-                return;
+        const list = document.querySelectorAll(sSelector);
+        if (list === null || list.length === 0)
+            return;
 
-            const len = list.length;
-            for (let i = 0; i < len; i++)
+        const len = list.length;
+        for (let i = 0; i < len; i++)
+        {
+            const _src = list[i].getAttribute("data-src");
+            if (_src !== undefined && _src !== null && _src !== "")
             {
                 list[i].setAttribute("src", list[i].getAttribute("data-src"));
-                list[i].setAttribute("class", "");
+                list[i].setAttribute("data-src", "");
             }
-        }, 250);
+        }
+    },
+    
+    lazyloadImages : function()
+    {
+        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-image"), 150);
+        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-is-tapped"), 150);
     },
     
     createImage : function(code, isSite, isTapped)
     {
         const sType = isSite ? "site" : "location";
-        const sTapped = isTapped !== undefined && isTapped ? ' class="site-is-tapped" ' : "site-image";
+        const sTapped = isTapped !== undefined && isTapped ? 'site-is-tapped' : "site-image";
         const sTitle = this.removeQuotes(code) + " (" + sType + ")";
         const sUrl = isSite ? MapBuilder.CardList.getImageSite(code) : MapBuilder.CardList.getImageRegion(code);
         

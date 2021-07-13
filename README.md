@@ -4,6 +4,10 @@ This project allows you to play MECCG or similar.
 
 *Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. This is not affiliated with Middle-earth Enterprises or Iron Crown Enterprises.*
 
+## Watch a Demo
+
+[![Watch Demo](https://img.youtube.com/vi/XFPFwfsEJSg/0.jpg)](https://www.youtube.com/watch?v=XFPFwfsEJSg)
+
 ## Introduction
 
 This project aims to provide an easy way to setup and maintain a card game server to allow you and your friends to play your favourite card game online.
@@ -340,6 +344,7 @@ The following third-party libraries. Be aware of their respective licenses.
 
 * Node.JS - Socket.io 4.0.0 (MIT License)
 * Node.JS - Express 4.17.1 (MIT License)
+* Node.JS - Express body-parser 1.19.0 (MIT License)
 * Node.JS - Express cookie-parser 1.4.5 (MIT License)
 * jQuery 3.5.1 (MIT License)
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)

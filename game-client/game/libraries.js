@@ -86,6 +86,17 @@ class DomUtils extends MeccgUtils {
     {
         return DomUtils.findParentByClass(node, sClass);
     }
+    
+    static closestByType(node, type)
+    {
+        if (node === null || node === undefined || type === undefined || type === "")
+            return null;
+
+        if (node.nodeName !== undefined && node.nodeName.toLowerCase() === type)
+            return node;
+        else
+            return DomUtils.closestByType(node.parentNode, type);
+    }
 
     static findParentByClass(node, sClass)
     {
@@ -127,60 +138,16 @@ class DomUtils extends MeccgUtils {
     {
         DomUtils.removeNode(node);
     }
-}
 
-const ResolveHandSizeFirst = { };
-
-ResolveHandSizeFirst.countHandCards = function()
-{
-    return ArrayList(document.getElementById("playercard_hand_container")).findByClassName("card-hand").size();
-};
-
-ResolveHandSizeFirst.getAllowed = function()
-{
-    try
+    static hide(node)
     {
-        return parseInt(document.getElementById("card-hand-size-limit").innerHTML)
-    }
-    catch (err)
-    {
-
+        if (node !== null)
+            node.style.display = "none";
     }
 
-    return 100;
-};
-
-ResolveHandSizeFirst.createMessage = function(nAllowed, nSize)
-{
-    let sMessage;
-    const nDiff = nAllowed - nSize;
-    if (nDiff > 0)
-        sMessage = "Please draw " + nDiff + " cards";
-    else
-        sMessage = "Please discard " + (nDiff*-1) + " cards";
-
-    return sMessage;
-};
-
-/**
- * Check if the player has to resolve their hand size first (send a notification also)
- * 
- * @returns booean
- */
-const resolveHandSizeFirst = function()
-{
-    try
+    static show(node)
     {
-        const nAllowed = ResolveHandSizeFirst.getAllowed();
-        const nSize = ResolveHandSizeFirst.countHandCards();
-        
-        if (nAllowed > 0 && nSize !== nAllowed) 
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": ResolveHandSizeFirst.createMessage(nAllowed, nSize) }));
-    }
-    catch (e)
-    {
-        MeccgUtils.logError(e);
+        if (node !== null)
+            node.style.display = "block";
     }
 }
-
-document.body.addEventListener("meccg-check-handsize", resolveHandSizeFirst, false);

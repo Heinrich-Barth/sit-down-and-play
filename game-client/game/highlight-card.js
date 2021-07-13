@@ -6,7 +6,7 @@
  * and also removes it after some time 
  * 
  */
- class HighlightElement {
+class HighlightElement {
 
     constructor() { }
 

@@ -1,30 +1,9 @@
 
 const fs = require('fs');
+const UTILS = require("../meccg-utils");
+const Game = require("./index.js");
 
-let HTTP_SERVER = null;
-
-/**
- * Create a new ROOM object
- * 
- * @param {String} room 
- * @param {Object} APIS 
- * @returns 
- */
-function _newRoom(room)
-{
-    const APIS = require("./index.js").requestNew(HTTP_SERVER.getSocketId(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider);
-
-    return {
-        secret: HTTP_SERVER.createSecret(),
-        lobbyToken : HTTP_SERVER.createSecret(),
-        created: Date.now(),
-        game: APIS.game,
-        api: APIS.api,
-        chat: APIS.chat,
-        players: {},
-        name: room
-    };
-}
+let fnSocketIo = function() { return null; }
 
 /**
  * Create a new room if necessary
@@ -37,7 +16,7 @@ const _createRoom = function(room)
         return false;
     else
     {
-        ROOM_MANAGER._rooms[room] = _newRoom(room);
+        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider);
         return true;
     }
 };
@@ -67,7 +46,7 @@ const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
 const ROOM_MANAGER = {
 
     _rooms: {},
-
+    gamePageHtml : "",
     _eventManager : null,
 
     stats : {
@@ -533,7 +512,7 @@ const ROOM_MANAGER = {
             
     },
 
-    loadGamePage: function (room, userId, username, lTimeJoined, sHtmlCsp, cardImageCDNUrl) {
+    loadGamePage: function (room, userId, username, lTimeJoined) {
 
         if (ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].players[userId] === undefined)
             return "";
@@ -542,17 +521,13 @@ const ROOM_MANAGER = {
         let sToken = ROOM_MANAGER.updatePlayerToken(room, userId);
         let sLobbyToken = ROOM_MANAGER._rooms[room].players[userId].admin ? ROOM_MANAGER._rooms[room].lobbyToken : "";
 
-        let sHtml = fs.readFileSync(ROOM_MANAGER.__dirname, 'utf8');
-        return sHtml.replace("{TPL_DISPLAYNAME}", username)
+        return ROOM_MANAGER.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
             .replace("{TPL_LOBBY_TOKEN}", sLobbyToken)
             .replace("{TPL_USER_ID}", userId)
             .replace("{TPL_API_KEY}", sSecret)
-            .replace("{TPL_CSP}", sHtmlCsp)
-            .replace("{TPL_CSP_X}", sHtmlCsp)
-            .replace("{TPL_JOINED_TIMESTAMP}", sToken)
-            .replace("{IMAGE_CDN_URL}", cardImageCDNUrl);
+            .replace("{TPL_JOINED_TIMESTAMP}", sToken);
     },
 
     /**
@@ -571,10 +546,10 @@ const ROOM_MANAGER = {
     }
 };
 
-exports.create = function (_HTTP_SERVER, sGameHtmlPageUri, __agentList, _eventManager, __gameCardProvider)
+exports.create = function (_fnSocketIo, sGameHtmlPageUri, __agentList, _eventManager, __gameCardProvider)
 {
-    HTTP_SERVER = _HTTP_SERVER;
-    ROOM_MANAGER.__dirname = sGameHtmlPageUri;
+    fnSocketIo = _fnSocketIo;
+    ROOM_MANAGER.gamePageHtml = sGameHtmlPageUri;
     ROOM_MANAGER._eventManager = _eventManager;
     ROOM_MANAGER.gameCardProvider = __gameCardProvider;
     ROOM_MANAGER.getAgentList = __agentList;

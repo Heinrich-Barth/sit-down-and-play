@@ -201,7 +201,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
         initRestEndpoints : function()
         {            
-            
             document.getElementById("draw_card").onclick = (e) =>
             {
                 MeccgApi.send("/game/card/draw/single");
@@ -237,7 +236,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
             
             MeccgApi.addListener("/game/view-cards/reveal/list", (bIsMe, jData) => g_Game.TaskBarCards.onShowOnOffer(bIsMe, jData));
-            MeccgApi.addListener("/game/view-cards/list/close", (bIsMe, jData) => g_Game.TaskBarCards.hideOffer());
+            MeccgApi.addListener("/game/view-cards/list/close", () => g_Game.TaskBarCards.hideOffer());
             
             MeccgApi.addListener("/game/view-cards/reveal/reveal", function(bIsMe, jData)
             {

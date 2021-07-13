@@ -231,7 +231,7 @@ paths:
       responses:
         "200":
           description: "JSON map"
-  /games:
+  /data/games:
     get:
       tags: 
         - "Game"
@@ -421,7 +421,7 @@ paths:
       responses:
         "200":
           description: "Health data"
-  /dump:
+  /data/dump:
     get:
       tags: 
       - "Statics"

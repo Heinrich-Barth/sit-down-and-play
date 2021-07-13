@@ -1,16 +1,5 @@
 
 
-exports.game = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider)
-{
-    /**
-     * todo: use quest list
-     */
-    return new GameInstance(_MeccgApi, 
-                            _Chat, 
-                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider), 
-                            require("./scores.js").create(),
-                            _eventManager);
-}
 
 var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager)
 {
@@ -1214,3 +1203,11 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
     return Game;
 }
 
+exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider)
+{
+    return new GameInstance(_MeccgApi, 
+                            _Chat, 
+                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider), 
+                            require("./scores.js").create(),
+                            _eventManager);
+}

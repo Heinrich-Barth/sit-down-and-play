@@ -276,6 +276,7 @@ const onCheckCardCodes = function()
 
 (function () {
 
+
     const sUserName = document.getElementById("user").value;
     if (sUserName === "")
         document.getElementById("user").focus();
@@ -291,11 +292,7 @@ const onCheckCardCodes = function()
 
     document.getElementById("host").onclick = onCheckCardCodes;
 
-    fetch("/data/decks").then((response) => 
-    {
-        if (response.status === 200)
-            response.json().then(onLoadDecks);
-    })
+    fetch("/data/decks").then((response) => response.json().then(onLoadDecks))
     .catch((err) => 
     {
         console.log(err);

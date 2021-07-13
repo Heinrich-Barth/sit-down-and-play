@@ -1,20 +1,5 @@
-module.exports = 
-{
-    requestNew : function(io, room, _agentList, _eventManager, _gameCardProvider)
-    {
-        console.log("Setting up game " + room);
 
-        let pAPI = new GameAPI(io, room);
-        let pChat = new Chat(pAPI);
-        let pGame = require("./game.js").game(pAPI, pChat, _agentList, _eventManager, _gameCardProvider);
-
-        return {
-            game: pGame, 
-            api: pAPI, 
-            chat: pChat, 
-        };
-    }
-};   
+const UTILS = require("../meccg-utils");
 
 class GameAPI {
 
@@ -171,3 +156,25 @@ class Chat {
         });
     }
 };
+
+const Game = require("./game.js");
+
+exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider)
+{
+    console.log("Setting up game " + room);
+
+    let pAPI = new GameAPI(io, room);
+    let pChat = new Chat(pAPI);
+    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider);
+
+    return {
+        secret: UTILS.createSecret(),
+        lobbyToken : UTILS.createSecret(),
+        created: Date.now(),
+        game: pGame, 
+        api: pAPI, 
+        chat: pChat, 
+        players: {},
+        name: room
+    };
+}; 

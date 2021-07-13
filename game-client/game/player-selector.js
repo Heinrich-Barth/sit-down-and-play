@@ -28,10 +28,10 @@ PlayerSelector.prototype.player2Hex = function (sInput)
 PlayerSelector.prototype.updateHandSize = function(username, nCount, nCountPlaydeck)
 {
     if (typeof nCount === "undefined")
-        nCount = "-";
+        nCount = "?";
 
     if (typeof nCountPlaydeck === "undefined")
-        nCountPlaydeck = "-";
+        nCountPlaydeck = "?";
     
     let pContainer = document.getElementById("player_selector_" + this.player2Hex(username));
     if (pContainer !== null)

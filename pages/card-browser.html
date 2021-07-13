@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <title>Build a Deck</title>
+        <title>Browse Cards</title>
 
         <link rel="stylesheet" href="/media/assets/css/main.css" />
         <link rel="stylesheet" href="/media/assets/css/deckbuilder.css" />
@@ -14,38 +14,21 @@
         <h1>Displaying <span id="size">0</span> card(s)</h1>
 
         <div class="result_container" id="result_container">
-
             <div class="">
-                
                 <div id="linklist" class="linklist fl"></div>
                 <div class="">
                     <div id="result"></div>
                     <div class="clear"></div>
                 </div>
-                
             </div>
-
         </div>
 
         <div id="tpl" class="hidden">
-
             <div class="characters" id="tplDefault">
                 <div class="fl image" id="{gindex}" >
                     <div class="image_overlay" >
                         <img src="/media/assets/images/cards/notfound-generic.jpg" data-hide="/media/assets/images/cards/notfound-generic.jpg" data-src="{img}" class="preview" decoding="async">
                     </div>
-                    <div class="actions" data-index="{index}" id="count_{cindex}" data-count="{count}">
-                        <a href="#" class="link_add icon_add_pool" title="add to starting pool"  data-target="pool">
-                            &nbsp;
-                        </a>
-                        <a href="#" class="link_add icon_add_deck" title="add to deck"  data-target="{data-target}">
-                            &nbsp;
-                        </a>
-                        <a href="#" class="link_add icon_add_sideboard" title="add to sideboard" data-target="sb">
-                            &nbsp;
-                        </a>
-                    </div>
-                    <div class="count_bubble">{count2}</div>
                 </div>
             </div>
         </div>
@@ -54,9 +37,11 @@
         <script src="/media/client/game/notify.js"></script>
         <script src="/media/client/game/cardlist.js"></script>
         <script src="/media/client/deckbuilder/quantities.js"></script>
-        <script src="/media/client/deckbuilder/decklist.js"></script>
         <script src="/media/client/deckbuilder/cards-meta.js"></script>
+        <!-- 
+        <script src="/media/client/deckbuilder/decklist.js"></script>
         <script src="/media/client/deckbuilder/deckbuilder-api.js"></script>
+        -->
         <script src="/media/client/deckbuilder/view-cards.js"></script>
         <script src="/media/client/deckbuilder/searchbar.js"></script>
         <script src="/media/client/deckbuilder/searchresult.js"></script>

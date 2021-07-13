@@ -1,5 +1,5 @@
 
-function loadConfig(sLocalConfig)
+const loadConfig = function(sLocalConfig)
 {
     try
     {
@@ -28,59 +28,56 @@ function loadConfig(sLocalConfig)
     }
 }
 
-module.exports = {
-    
-    load : function (sLocalConfig, NODE_ENV)
+const isProd = process.env.NODE_ENV === "production";
+
+const Configuration = {
+
+    pConfig : loadConfig(__dirname + "/data/config.json"),
+
+    port : function()
     {
-        const isProd = NODE_ENV === "production";
+        return this.pConfig.port;
+    },
 
-        let jConfig = loadConfig(sLocalConfig);
-        return {
+    maxRooms : function()
+    {
+        return this.pConfig.maxRooms;
+    },
 
-            port : function()
-            {
-                return jConfig.port;
-            },
+    maxPlayersPerRoom : function()
+    {
+        return this.pConfig.maxPlayersPerRoom;
+    },
+    
+    isProduction : function()
+    {
+        return isProd;
+    },
 
-            maxRooms : function()
-            {
-                return jConfig.maxRooms;
-            },
+    imageExpires : function()
+    {
+        return this.pConfig.imageExpires;
+    },
 
-            maxPlayersPerRoom : function()
-            {
-                return jConfig.maxPlayersPerRoom;
-            },
-            
-            isProduction : function()
-            {
-                return isProd;
-            },
+    imageUrl : function()
+    {
+        return this.pConfig.image_path;
+    },
 
-            imageExpires : function()
-            {
-                return jConfig.imageExpires;
-            },
+    imageDomain : function()
+    {
+        return this.pConfig.image_domain;
+    },
 
-            imageUrl : function()
-            {
-                return jConfig.image_path;
-            },
+    cspReportUri : function()
+    {
+        return this.pConfig.cspReportUri;
+    },
 
-            imageDomain : function()
-            {
-                return jConfig.image_domain;
-            },
-
-            cspReportUri : function()
-            {
-                return jConfig.cspReportUri;
-            },
-
-            cardUrl : function()
-            {
-                return jConfig.cardsUrl;
-            }
-        }
+    cardUrl : function()
+    {
+        return this.pConfig.cardsUrl;
     }
 };
+
+module.exports = Configuration;

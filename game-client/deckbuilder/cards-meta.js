@@ -14,7 +14,6 @@ CreateCardsMeta.prototype._listType = [ ];
 CreateCardsMeta.prototype._listHazardTypes = [ ];
 CreateCardsMeta.prototype._listNonHazardTypes = [ ];
 CreateCardsMeta.prototype._titleBasedIndices = { };
-CreateCardsMeta.prototype._raw = { };
    
 Quantities.prototype.add = function(sTitle, nQuantity)
 {
@@ -39,18 +38,18 @@ Quantities.prototype.hasTypeLimitation = function(type)
     return typeof this._type[type] !== "undefined";
 };
 
-CreateCardsMeta.prototype.createCardCodeList = function () 
+CreateCardsMeta.prototype.createCardCodeList = function (cards) 
 {
-    for (var card of this._raw)
+    for (var card of cards)
         this._titleBasedIndices[card.code] = card.index;
 };
 
-CreateCardsMeta.prototype.updateSecondaries = function () 
+CreateCardsMeta.prototype.updateSecondaries = function (cards) 
 {
     var _secondaries = [];
     var _secondariesCards = {};
 
-    for (var card of this._raw) 
+    for (var card of cards) 
     {
         card.Secondary = unifySecondaries(card.Secondary);
 
@@ -70,12 +69,12 @@ CreateCardsMeta.prototype.updateSecondaries = function ()
     }
 };
 
-CreateCardsMeta.prototype.updateAlign = function () 
+CreateCardsMeta.prototype.updateAlign = function (cards) 
 {
     var _secondaries = [];
     var _secondariesCards = {};
 
-    for (var card of this._raw) {
+    for (var card of cards) {
         if (_secondaries.indexOf(card.alignment) === -1) {
             _secondariesCards[card.alignment] = [];
             _secondaries.push(card.alignment);
@@ -90,13 +89,13 @@ CreateCardsMeta.prototype.updateAlign = function ()
         this._listAlignments[_secondary] = _secondariesCards[_secondary];
 };
 
-CreateCardsMeta.prototype.updateTypes = function () 
+CreateCardsMeta.prototype.updateTypes = function (cards) 
 {
     var _secondaries = [];
     var _secondariesCards = {};
 
     var _type;
-    for (var card of this._raw) {
+    for (var card of cards) {
         _type = card.type;
         if (_secondaries.indexOf(_type) === -1) {
             _secondariesCards[_type] = [];
@@ -113,19 +112,19 @@ CreateCardsMeta.prototype.updateTypes = function ()
 };
 
 
-CreateCardsMeta.prototype.addIndices = function () 
+CreateCardsMeta.prototype.addIndices = function (cards) 
 {
     var index = -1;
-    for (var card of this._raw) {
+    for (var card of cards) {
         index++;
         card.index = index;
     }
 },
 
 
-CreateCardsMeta.prototype.updateHazardOrResource = function () 
+CreateCardsMeta.prototype.updateHazardOrResource = function (cards) 
 {
-    for (var card of this._raw) {
+    for (var card of cards) {
         _category = card.type;
         if (_category === "Region" || _category === "Site")
             continue;
@@ -152,18 +151,13 @@ CreateCardsMeta.prototype.saveMeta = function ()
     return meta;
 };
     
-CreateCardsMeta.prototype.init = function (jsonRaw) 
+CreateCardsMeta.prototype.init = function (cards) 
 {
-    this._raw = jsonRaw;
-    this.addIndices();
-    this.updateSecondaries();
-    this.updateAlign();
-    this.updateTypes();
-    this.updateHazardOrResource();
-    this.createCardCodeList();
-
-    let _res = this._raw;
-
-    delete this._raw;
+    this.addIndices(cards);
+    this.updateSecondaries(cards);
+    this.updateAlign(cards);
+    this.updateTypes(cards);
+    this.updateHazardOrResource(cards);
+    this.createCardCodeList(cards);
     return this.saveMeta();
 };

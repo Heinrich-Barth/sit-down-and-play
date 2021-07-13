@@ -171,11 +171,6 @@ const DeckbuilderApi =
         
         return size;
     },
-    
-    init : function()
-    {
-        this._count = 0;
-    }
 }
 
 async function onSaveDeck()
@@ -201,3 +196,4 @@ async function onSaveDeck()
 {
     document.getElementById("save_deck").onclick = onSaveDeck;
 })();
+

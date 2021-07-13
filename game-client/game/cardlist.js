@@ -1,30 +1,50 @@
+const CardListSanatizeUrl = function(sImageCDNUrl)
+{
+    if (sImageCDNUrl === undefined || sImageCDNUrl === "")
+        return "";
+
+    sImageCDNUrl = sImageCDNUrl.trim();
+    if (sImageCDNUrl === "/")
+        sImageCDNUrl = "";
+    else if (sImageCDNUrl.endsWith("/"))
+        sImageCDNUrl = sImageCDNUrl.substring(0, sImageCDNUrl.length-1);
+
+    return sImageCDNUrl;
+}
 
 /**
  * Card Image Files
  * 
  * @param {json} jsonCardList 
  */
-function CardList(imageList, flipList, useImagesDC, useImagesIC, sImageCDNUrl) 
+function CardList(images, quests, useImagesDC, useImagesIC) 
 { 
-    this._list = imageList;
-    this._fliped = flipList === undefined || flipList === null ? {} : flipList;
-    this._useImagesDC = useImagesDC !== undefined ? useImagesDC : false;
-    this._useImagesIC = useImagesIC !== undefined ? useImagesIC : false;
+    this._list = images === undefined ? null : images;
+    this._fliped = quests === undefined ? [] : quests;
+    this._useImagesDC = useImagesDC === undefined ? true : useImagesDC;
+    this._useImagesIC = useImagesIC === undefined ? false : useImagesIC;
+
     this._imageBacksideDefault = "/media/assets/images/cards/backside.jpg";
     this._imageNotFound = "/media/assets/images/cards/notfound-generic.jpg";
     this._imageNotFoundRegion = "/media/assets/images/cards/notfound-region.jpg";
     this._imageNotFoundSite = "/media/assets/images/cards/notfound-site.jpg";
-
     this._imageCDNUrl = "";
-    if (typeof sImageCDNUrl !== "undefined" && sImageCDNUrl !== "")
-    {
-        sImageCDNUrl = sImageCDNUrl.trim();
-        if (sImageCDNUrl === "/")
-            sImageCDNUrl = "";
-        else if (sImageCDNUrl.endsWith("/"))
-            sImageCDNUrl = sImageCDNUrl.substring(0, sImageCDNUrl.length-1);
 
-        this._imageCDNUrl = sImageCDNUrl;
+    const pThat = this;
+
+    fetch("/data/image-cdn").then((response) => response.text().then((val) => pThat._imageCDNUrl = CardListSanatizeUrl(val)));
+    
+    if (this._list === null)
+    {
+        fetch("/data/list/images").then((response) => 
+        {
+            response.json().then((cards) => {
+                pThat._list = cards.images;
+                if (cards.fliped !== undefined)
+                    pThat._fliped = cards.fliped;
+            });
+        })
+        .catch(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch image list." })));
     }
 }
 
