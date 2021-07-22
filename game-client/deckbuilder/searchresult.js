@@ -11,7 +11,13 @@ const CardData =
     }
 };
 
+
 var SearchResult = {
+
+    inserted : false,
+
+    pCurrentObserver : null,
+    pCurrentObserverElement : null,
 
     getResultSize : function(vnIndicesCharacters)
     {
@@ -26,6 +32,15 @@ var SearchResult = {
     {
         SearchResult.displayResult(e.detail);
     },
+
+    insertEmptySearch : function()
+    {
+        const div = document.createElement("div");
+        div.setAttribute("class", "bgblue empty_result");
+        div.innerHTML = "No matches found.";
+
+        document.getElementById("result").appendChild(div);
+    },
         
     displayResult : function(vnIndicesCharacters)
     {
@@ -38,7 +53,10 @@ var SearchResult = {
         document.getElementById("size").innerHTML = nSize;
 
         if (nSize === 0)
+        {
+            this.insertEmptySearch();
             return;
+        }
 
         for (var key in vnIndicesCharacters)
         {
@@ -56,7 +74,7 @@ var SearchResult = {
             for (let _index = 0; _index < _size; _index++)
             {
                 const _entry = document.createElement("div");
-                _entry.setAttribute("class", "fl image");
+                _entry.setAttribute("class", "fl image hidden");
                 _entry.setAttribute("id", vnIndicesCharacters[key][_index]);
 
                 const pJson = ViewCards.config.jsonData[vnIndicesCharacters[key][_index]];
@@ -66,6 +84,7 @@ var SearchResult = {
                     const _image = document.createElement("img");
                     _image.setAttribute("src", "/media/assets/images/cards/notfound-generic.jpg");
                     _image.setAttribute("data-src", getImageUrlByCode(CardData.get(pJson, "code", "")));
+                    _image.setAttribute("title", CardData.get(pJson, "code", ""));
                     _image.setAttribute("class", "preview");
                     _image.setAttribute("decoding", "async");
 
@@ -122,6 +141,22 @@ var SearchResult = {
                 _div.appendChild(_entry);
             }
 
+            {
+                const elemI = document.createElement("i");
+                elemI.setAttribute("class", "fa bgblue fa-share fa-6");
+                elemI.setAttribute("aria-hidden", "true");
+                elemI.setAttribute("title", "Scroll to top");
+                elemI.onclick = () =>  window.scrollTo({ top: 0, behavior: 'smooth' });      
+
+                const _elem = document.createElement("div");
+                _elem.setAttribute("class", "clear result-end-of-list");
+                _elem.appendChild(elemI);
+                
+                _div.appendChild(_elem);
+            }
+
+            _div.appendChild
+
             document.getElementById("result").appendChild(_div);
         }
 
@@ -131,15 +166,18 @@ var SearchResult = {
             const _tmp = document.getElementById("linklist").querySelector("a.linklist");
             if (_tmp !== null)
                 _tmp.click();
+            else
+            {
+                const elem = document.getElementById("result").querySelector(".category");
+                if (elem !== null)
+                    SearchResult.makeImagesVisible(elem.getAttribute("data-id"));
+            }
         }, 10);        
     },
 
     displayResultLinkList : function(vnIndicesCharacters)
     {
         DomUtils.empty(document.getElementById("linklist"));
-
-        if (vnIndicesCharacters.length === 0)
-            return;
 
         let listTypes = [];
         for (let key in vnIndicesCharacters)
@@ -153,7 +191,7 @@ var SearchResult = {
         let sHtmlOther = document.createElement("ul");
         let sHtmlCreature = document.createElement("ul");
         
-        for (var key of listTypes)
+        for (let key of listTypes)
         {
             switch (key.toLowerCase())
             {
@@ -187,21 +225,23 @@ var SearchResult = {
         }
 
         const linklist = document.getElementById("linklist");
-        
-        if (sHtmlEvent.hasChildNodes() && sHtmlEvent.childElementCount > 1)
+        if (sHtmlEvent.hasChildNodes())
             linklist.appendChild(sHtmlEvent);
 
-        if (sHtmlItem.hasChildNodes() && sHtmlItem.childElementCount > 1)
+        if (sHtmlItem.hasChildNodes())
             linklist.appendChild(sHtmlItem);
 
-        if (sHtmlChars.hasChildNodes() && sHtmlChars.childElementCount > 1)
+        if (sHtmlChars.hasChildNodes())
             linklist.appendChild(sHtmlChars);
 
-        if (sHtmlCreature.hasChildNodes() && sHtmlCreature.childElementCount > 1)
+        if (sHtmlCreature.hasChildNodes())
             linklist.appendChild(sHtmlCreature);
 
-        if (sHtmlOther.hasChildNodes() && sHtmlOther.childElementCount > 1)
+        if (sHtmlOther.hasChildNodes())
             linklist.appendChild(sHtmlOther);
+
+        if (linklist.childElementCount < 2)
+            DomUtils.empty(linklist);
         
         let _tmp = document.createElement("div");
         _tmp.setAttribute("class", "clear");
@@ -324,18 +364,102 @@ var SearchResult = {
 
     makeImagesVisible : function(sId)
     {
-        console.log(sId);
-        ArrayList(document.getElementById("result")).findByClassName("preview").each((elem) => elem.setAttribute("src", elem.getAttribute("data-hide")));
         ArrayList(document.getElementById("result")).findByClassName("category").each(function(pTable)
         {
             if (sId === undefined || sId === pTable.getAttribute("data-id"))
             {
+                SearchResult.removeObserver();
+                
                 pTable.classList.remove("hidden");
-                ArrayList(pTable).findByClassName("preview").each((elem) => elem.setAttribute("src", elem.getAttribute("data-src")));
+
+                if (pTable.querySelector(".image.hidden") !== null)
+                    SearchResult.createObserver(pTable);
             }
         });
     },
+
+
+
+    removeObserver : function()
+    {
+        if (SearchResult.pCurrentObserver !== null)
+        {
+            SearchResult.pCurrentObserver.disconnect();
+            SearchResult.pCurrentObserver = null;
+        }
+
+        SearchResult.pCurrentObserverElement = null;
+        DomUtils.remove(document.getElementById("help_observer"));
+    },
+
+    createObserver : function(pElement)
+    {
+        SearchResult.insertIntersector();
+        SearchResult.pCurrentObserverElement = pElement;
+
+        SearchResult.pCurrentObserver = new IntersectionObserver(SearchResult.onObserving);
+
+        SearchResult.pCurrentObserver.observe(document.getElementById("help_observer"));
+    },
+
+    onObserving : function(entries)
+    {
+        if (entries[0].intersectionRatio <= 0 || SearchResult.pCurrentObserverElement === null) 
+            return;
+
+        const list = SearchResult.pCurrentObserverElement.querySelectorAll(".image.hidden");
+        if (list === null || list.length === 0)
+        {
+            SearchResult.removeObserver();
+            return;
+        }
+
+        let len = list.length;
+        if (len > 20)
+            len = 20;
+
+        for (let i = 0; i < len; i++)
+        {
+            let elem = list[i];
+            const _img = elem.querySelector("img.preview")
+            _img.setAttribute("src", _img.getAttribute("data-src"));
+            elem.classList.remove("hidden");
+        }
+    },
+
+    insertIntersector : function()
+    {
+        if (document.getElementById("help_observer") !== null)
+            return;
+
+        const div = document.createElement("div");
+        div.setAttribute("id", "help_observer");
+        div.innerHTML = "<p>&nbsp;</p>";
+
+        document.getElementById("result").parentNode.appendChild(div);
+
+    },
+
+    insertScrollTop : function()
+    {
+        const elemI = document.createElement("i");
+        elemI.setAttribute("class", "fa fa-arrow-up");
+        elemI.setAttribute("aria-hidden", "true");
+        elemI.setAttribute("title", "Scroll to top");
+        elemI.onclick = () =>  window.scrollTo({ top: 0, behavior: 'smooth' });        
+
+        const div = document.createElement("div");
+        div.setAttribute("id", "scroll_top");
+        div.setAttribute("class", "scroll_top bgblue");
+        div.appendChild(elemI);
+        document.body.appendChild(div);
+    }
 };
+
+(function()
+{
+    SearchResult.insertScrollTop();
+})();
 
 document.body.addEventListener("meccg-deckbuilder-displayresult", SearchResult.onDisplayResult, false);
 document.body.addEventListener("meccg-deckbuilder-updatecardresultlistcount", SearchResult.updateCardResultListCount, false);

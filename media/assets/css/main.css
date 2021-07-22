@@ -248,6 +248,7 @@ input[type="search"],
 input[type="url"],
 select {
     line-height: 1.35em;
+    background: #fff;
 }
 
 
@@ -305,15 +306,6 @@ table tbody tr:hover
     top: 10px;
     
   }
-
-.navigation  
-{
-    display: none;
-    margin-top: 30px;
-    padding: 30px;
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 5px;
-}  
 
 #header
 {

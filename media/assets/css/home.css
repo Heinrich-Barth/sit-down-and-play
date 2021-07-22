@@ -85,14 +85,3 @@ a, a:active, a:visited {
 }
 
 a:hover { color: #ffa500; }
-
-body .navigation
-{
-  position: fixed;
-  right: 0;
-  top: 0;
-  text-align: 0;
-  margin: 0;
-  padding: 5px 10px;
-  font-size: 10px;
-}

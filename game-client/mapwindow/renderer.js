@@ -1,24 +1,41 @@
 
 let g_isInit = false;
 
+const SelectedMovement = function(codeStart, regions, codeTarget)
+{
+    if (regions === undefined)
+        regions = [];
+
+    if (codeTarget === undefined)
+        codeTarget = "";
+
+    return {
+        start : codeStart,
+        regions: regions,
+        target: codeTarget
+    }
+};
+
 const MapInstanceRenderer = {
 
-    sendResultStart : function (e, sCode, sLocationType)
-    {
-        parent.postMessage({
-            type : "set",
-            start: sCode,
-            regions: [],
-            target: "",
-        }, "*");
-    },
+    _isMovementSelection : true,
 
-    sendResultMovement : function(sCodeStart, vsRegions, sCodeTarget)
+    sendResultMovement : function (e)
     {
-        if (sCodeStart === undefined || sCodeStart === "")
-            this.cancel();
-        else if (typeof sCodeTarget === "undefined" || sCodeTarget === "" || typeof vsRegions === "undefined" || vsRegions.length === 0)
-            this.cancel();
+        const sCodeStart = e.detail.start;
+        const vsRegions = e.detail.regions;
+        const sCodeTarget = e.detail.target;
+
+        if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0))
+        {
+            console.log("invalid1");
+            MapInstanceRenderer.cancel();
+        }
+        else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "")
+        {
+            console.log("invalid2");
+            MapInstanceRenderer.cancel();
+        }
         else
         {
             parent.postMessage({
@@ -35,16 +52,6 @@ const MapInstanceRenderer = {
         parent.postMessage("/cancel", { });
     },
 
-    chooseStartSite : function()
-    {
-        MapBuilder.onChooseLocationStart(MapInstanceRenderer.sendResultStart);
-    },
-
-    onChooseLocationMovement : function(startCode)
-    {
-        MapBuilder.onChooseLocationMovement(startCode, MapInstanceRenderer.sendResultMovement, MapInstanceRenderer.cancel);
-    },
-
     onInit : function(data, tapped)
     {
         MapBuilder.factory.create(data, tapped);
@@ -56,10 +63,8 @@ const MapInstanceRenderer = {
         if (pos !== -1)
             sCode = decodeURI(query.substring(pos+1));
 
-        if (sCode === "")
-            MapInstanceRenderer.chooseStartSite();
-        else
-            MapInstanceRenderer.onChooseLocationMovement(sCode);
+        MapInstanceRenderer._isMovementSelection = sCode !== "";
+        document.body.dispatchEvent(new CustomEvent("meccg-map-load-location", { "detail": sCode }));
 
         g_isInit = true;
     }
@@ -125,6 +130,8 @@ function onKeyUp(ev)
 }
 
 document.body.addEventListener("keyup", onKeyUp, false);
+document.body.addEventListener("meccg-map-selected-movement", MapInstanceRenderer.sendResultMovement, false);
+document.body.addEventListener("meccg-map-cancel", MapInstanceRenderer.cancel, false);
 
 (function() 
 {

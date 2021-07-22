@@ -29,7 +29,10 @@ h1 { display: none; }
 
 #result img.preview {
     width: 300px;
+    min-height: 420px;
     max-height: 421px;
+    background: url("/media/assets/images/cards/backside.jpg") 0 0 no-repeat;
+    background-size: contain;
 }
 body.addtodeck #result img.preview {
     width: 200px;
@@ -161,9 +164,47 @@ div.count_bubble {
     padding: 5px 10px;
     position: fixed;
     right: 2px;
-    top: 2px;
+    top: 35px;
     font-size: 10px;
     line-height: 13px;
     z-index: 100;
 }
 .deckbuilding-summary span { width: 20px; display: inline-block; text-align: right; padding-right: 10px; }
+
+.scroll_top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.scroll_top i {
+    padding: 15px;
+    cursor: pointer;
+    font-size: 2em;
+}
+
+.scroll_top:hover i {
+    color: #fff;
+}
+
+.empty_result {
+    padding: 30px;
+    text-align: center;
+    font-size: 30px;
+    width: 50%;
+    margin: 30px auto;
+    color: #fff;
+}
+
+.result-end-of-list {
+    text-align: center;
+    font-size: 2em;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.result-end-of-list i {
+    padding: 20px;
+    transform: rotate(-90deg);
+    cursor: pointer;
+}

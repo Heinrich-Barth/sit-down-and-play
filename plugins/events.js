@@ -1,6 +1,8 @@
 
-
-
+const navigationEntry = function(url, label)
+{
+    return { url: url, label: label };
+};
 
 function _register(pEventManager)
 {
@@ -10,7 +12,15 @@ function _register(pEventManager)
     {
         const SampleList = ["AmonHen", "Anduin", "Arnor", "Baranduin", "Beleriand", "Bree", "Bruinen", "Erebor", "EredLuin", "EredMithrin", "EredNimrais", "Eriador", "Esgaroth", "Fangorn", "Gondor", "GreatEastRoad", "Harad", "HelmsDeep", "Isengard", "Khazaddum", "Lothlorien", "Mirkwood", "MistyMountains", "Mordor", "MountDoom", "NorthSouthRoad", "Numenor", "Rhovanion", "Rhun", "Rivendell", "Rohan", "TheShire", "Weathertop"]
         SampleList.forEach((e) => targetList.push(e));
-        console.log("Sample rooms loaded");
+        console.log("Sample room names loaded: " + SampleList.length);
+    });
+
+    pEventManager.addEvent("main-navigation", function(targetList)
+    {
+        targetList.push(navigationEntry("/cards", "Card Browser"));
+        targetList.push(navigationEntry("/deckbuilder", "Deckbuilder"));
+        targetList.push(navigationEntry("/", "Play a game"));
+        targetList.push(navigationEntry("/about", "About"));
     });
 }
 

@@ -263,6 +263,8 @@ a:hover { color: #ff0; }
 img.card-icon { 
     width: 57px;
     height: 80px;
+    background: url("/media/assets/images/cards/backside.jpg") 0 0 no-repeat;
+    background-size: contain;
 }
 .fl { float: left; }
 .clear { float: none; clear: both; }
@@ -554,18 +556,6 @@ body.on-drag-event-character .area-player .company-characters-add
     height: 80px;
     margin: 10px;
 }
-/*
-.on-drag-event-generic .icons .drop-accept-generic,
-body.on-drag-event-hazard .area-opponent .company-character-host,
-body.on-drag-event-hazard .area-opponent .site-target,
-body.on-drag-event-hazard .area-player .staging-area-player,
-body.on-drag-event-resource .area-player .staging-area-player,
-body.on-drag-event-resource .area-player  .company-character-host,
-body.on-drag-event-resource .icons a.victory,
-body.on-drag-event-character .area-player .company-characters-add,
-body.on-drag-event-character .area-player .company-character-host,
-body.on-drag-event-character .area-player .create-new-company,
-*/
 
 body.on-drag-event-hazard .area-opponent .company-character-host,
 body.on-drag-event-hazard .area-opponent .site-regions,
@@ -604,7 +594,6 @@ body.on-drag-event-character .area-player .create-new-company
     background-repeat: no-repeat;
     background-position: center;
     visibility: visible;
-    min-height: 130px;
 }
 
 
@@ -886,3 +875,13 @@ div#opponent_table .company { transform: rotate(180deg); }
 }
 
 body.on-show-map-window .location-icon { display: none; }
+
+.container-caption {
+    white-space: normal;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    text-align: left;
+    padding: 5px;
+    color: #fff;
+}
+

@@ -45,6 +45,48 @@ function isUnderdeep(card) {
     return card.text !== "" && card.text.indexOf("Adjacent Site") === 0;
 }
 
+const getRemovableKeysArray = function()
+{
+    return [
+        "Artist",
+        "DCpath",
+        "Gear",
+        "GoldRing",
+        "GreaterItem",
+        "Haven",
+        "Hoard",
+        "Home",
+        "Information",
+        "MajorItem",
+        "MinorItem",
+        "Non",
+        "Path",
+        "Playable",
+        "Precise",
+        "RPath",
+        "Race",
+        "Rarity",
+        "Region",
+        "Site",
+        "Specific",
+        "errata",
+        "erratum",
+        "extras",
+        "flip-title",
+        "full_set",
+        "gccgSet",
+        "released",
+        "title-du",
+        "title-es",
+        "title-fn",
+        "title-fr",
+        "title-gr",
+        "title-it",
+        "title-jp",
+        "trimCode"
+    ];
+};
+
 const MAPDATA = 
 {
     replaceMapSiteCodes: function (jMapData, jCards) 
@@ -402,6 +444,40 @@ const MAPDATA =
 
         return jMapData;
     },
+
+    createSiteCodeRegionList : function(jMap)
+    {
+        let jMapSiteRegion = {};
+        
+        var _keys;
+        var _region;
+        
+        for (let _regionCode in jMap)
+        {
+            _region = jMap[_regionCode];
+            if (_region.area === undefined)
+                continue;
+
+            for (var _site in jMap[_regionCode].sites)
+            {
+                _region = jMap[_regionCode].sites[_site];
+                _keys = Object.keys(_region);
+                if (_keys === null)
+                    continue;
+
+                let len = _keys.length;
+                for (let i = 0; i < len; i++)
+                {
+                    let _key = _keys[i];
+                    if (_key !== "area" && _key !== "underdeep")
+                        jMapSiteRegion[_region[_key].code] = _regionCode;
+                }
+            }
+        }
+
+        return jMapSiteRegion;
+    },
+    
 }
 
 const CARDS = {
@@ -426,7 +502,8 @@ const CARDS = {
         }
     },
 
-    removeQuotes: function (sCode) {
+    removeQuotes: function (sCode) 
+    {
         if (sCode.indexOf('"') === -1)
             return sCode;
         else
@@ -504,13 +581,15 @@ const CARDS = {
         }
 
         const nSize = missingSide.length;
+
+        console.log("\t-Quests identified: " + (nQuests - nSize));
         for (let i = 0; i < nSize; i++)
         {
             delete list[missingSide[i]];
-            console.log("removing missing quest " + missingSide[i] + " from quest list.");
+            console.log("\t-removing missing quest " + missingSide[i] + " from quest list.");
         }
 
-        console.log((nQuests - nSize) + " quests identified.");
+        console.log("\t-missing quest removed: " + nSize);
         CARDS._questList = list;
     },
 
@@ -539,8 +618,8 @@ const CARDS = {
             list[_code] = data;
         }
 
-        console.log(CARDS._errataIC.length + " IC errata images.");
-        console.log(CARDS._errataDC.length + " DC errata images.");
+        console.log("\t-IC errata images available: " + CARDS._errataIC.length);
+        console.log("\t-DC errata images available: " + CARDS._errataDC.length);
 
         CARDS._imageList = list;
         CARDS._siteList = sites;
@@ -566,6 +645,7 @@ const CARDS = {
     {
         let jPos = this.loadJson("./data/map-positions.json");
         CARDS._mapdata = MAPDATA.create(CARDS._raw, jPos);
+        CARDS._mapregions = MAPDATA.createSiteCodeRegionList(CARDS._mapdata);
     },
 
     temp : function (jMap)
@@ -590,7 +670,7 @@ const CARDS = {
 
     removeUnusedFields : function()
     {
-        let vsUnused = ["Artist", "DCpath", "Gear", "GoldRing", "GreaterItem", "Haven", "Hoard", "Home", "Information", "Information", "MajorItem", "MinorItem", "Non", "Path", "Playable", "Precise", "RPath", "Race", "Rarity", "Region", "Site", "errata", "erratum", "flip-title", "full_set", "gccgSet", "title-du", "title-es", "title-fn", "title-fr", "title-gr", "title-it", "title-jp"];
+        const vsUnused = getRemovableKeysArray();
 
         let rem = 0;
         for (var card of this._raw) 
@@ -605,7 +685,8 @@ const CARDS = {
             });
         }
 
-        console.log(rem + " properties removed from cards.");
+        if (rem > 0)
+            console.log("\t-properties removed from cards: " + rem);
     },
 
     removeFlavourText : function()
@@ -637,7 +718,8 @@ const CARDS = {
             card.text = sText;
         }
 
-        console.log(rem + " flavour texts removed from cards.");
+        if (rem > 0)
+            console.log("\t-flavour texts removed from cards: " + rem);
     },
 
     removeUnwantedCards : function(_raw)
@@ -645,7 +727,7 @@ const CARDS = {
         let count = 0;
         for (let i = _raw.length - 1; i >= 0; i--)
         {
-            if (_raw[i].trimCode === "(UL)")
+            if (_raw[i].set_code === "MEUL" || _raw[i].code.indexOf(" AL (") !== -1)
             {
                 _raw.splice(i, 1);
                 count++;
@@ -653,16 +735,47 @@ const CARDS = {
         }
 
         if (count > 0)
-            console.log(count + " cards removed.");
+            console.log("\t- cards removed: " + count);
 
         return _raw;
     },
 
+    integrityCheck : function(_raw)
+    {
+        let invalids = { };
+
+        const addInvalid = function(card, field)
+        {
+            if (card[field] !== "" || card[field] === undefined)
+                return;
+
+            if (invalids[card.code] === undefined)
+                invalids[card.code] = [field];
+            else
+                invalids[card.code].push(field);
+        }
+
+        for (let card of this._raw) 
+        {
+            if (card.code === "")
+                continue;
+
+            addInvalid(card, "ImageName");
+            addInvalid(card, "title");
+            addInvalid(card, "normalizedtitle");
+        }
+
+        console.error("\t-invalid card(s) found: " + Object.keys(invalids).length);
+    },
+
     setup : function(_raw)
     {
+        console.log("Setting up cards data.");
+
         CARDS._raw = this.removeUnwantedCards(_raw);
 
         this.stripQuotes();
+        this.integrityCheck();
         this.sort();
         this.addIndices();
         this.identifyQuests();
@@ -677,6 +790,8 @@ const CARDS = {
         CARDS._errataIC = null;
         CARDS._errataDC = null;
         CARDS._filters = new CardsMeta(CARDS._raw);
+
+        console.log("Cards setup done.");
     },
 
     _filters: { },
@@ -705,7 +820,6 @@ const CardDataProvider = {
     {
         try 
         {
-            console.log("Setting up cards data.");
             CARDS.setup(JSON.parse(body));
         } 
         catch (error) 
@@ -744,12 +858,8 @@ const CardDataProvider = {
     load : function(cardsUrl) 
     {
         if (CardDataProvider.loadLocally("./data/cards-raw.json"))
-        {
-            console.log("Successfully data loaded card data from local file.");
-            return;
-        }
-        
-        if (cardsUrl !== undefined && cardsUrl !== "")
+            console.log("Successfully loaded card data from local file.");
+        else if (cardsUrl !== undefined && cardsUrl !== "")
             CardDataProvider.loadFromUrl(cardsUrl);
         else
             console.log("Invalid cards url " + cardsUrl);
@@ -842,6 +952,7 @@ exports.getMapdata = function()
 {
     return {
         map : CARDS._mapdata,
+        mapregions : CARDS._mapregions,
         images : CARDS._imageList
     };
 };

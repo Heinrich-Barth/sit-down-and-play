@@ -43,7 +43,8 @@ let HTTP_SERVER = {
     _roomManager : null,
     _cards : null,
     _io : null,
-    _sampleRooms : []
+    _sampleRooms : [],
+    _navigation : []
 };
 
 HTTP_SERVER.getSocketIo = function()
@@ -81,6 +82,8 @@ const getHtmlCspPage = function(page)
     HTTP_SERVER._authenticationManagement.setUserManager(HTTP_SERVER._roomManager);
 
     g_pEventManager.trigger("add-sample-rooms", HTTP_SERVER._sampleRooms);
+
+    g_pEventManager.trigger("main-navigation", HTTP_SERVER._navigation);
 
 })();
 
@@ -344,6 +347,11 @@ HTTP_SERVER._server.get("/data/list/sites", (req, res) => HTTP_SERVER.cacheRespo
 HTTP_SERVER._server.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", HTTP_SERVER.cacheResponseHeader));
 
 /**
+ * Get the navigation
+ */
+HTTP_SERVER._server.get("/data/navigation", (req, res) => HTTP_SERVER.cacheResponse(res, "application/json").send(HTTP_SERVER._navigation).status(200));
+
+/**
  * Get a list of tapped sites. This endpoint requiers cookie information. If these are not available,
  * the endpoint returns an empty map object.
  */
@@ -430,13 +438,9 @@ HTTP_SERVER._server.get("/data/decks", (req, res) => HTTP_SERVER.cacheResponse(r
 HTTP_SERVER._server.get("/data/image-cdn", (req, res) => HTTP_SERVER.cacheResponse(res, "text/plain").send(HTTP_SERVER.environment.imageCDN).status(200));
 
 /**
- * Home Page
+ * Home Page redirects to "/play"
  */
-HTTP_SERVER._server.get("/", function (req, res) 
-{
-    HTTP_SERVER.clearCookies(res);
-    HTTP_SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/home.html");
-});
+HTTP_SERVER._server.get("/", (req, res) => res.redirect("/play"));
 
 /**
  * About Page
@@ -470,7 +474,15 @@ HTTP_SERVER._server.post("/data/decks/check", function (req, res)
         codes : vsUnknown
     }).status(200);
 });
-                
+             
+/**
+ * Home Page
+ */
+HTTP_SERVER._server.get("/play", function (req, res) 
+{
+    HTTP_SERVER.clearCookies(res);
+    HTTP_SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/home.html");
+});   
       
 /**
  * Perform the login and set all necessary cookies.

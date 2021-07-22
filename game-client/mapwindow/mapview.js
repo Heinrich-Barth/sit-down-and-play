@@ -27,36 +27,6 @@ const MapBuilder =
         return ["fallenwizard", "fallenlord", "lord", "grey", "dragonlord", "warlord", "elflord", "atanilord", "dwarflord"]; 
     },
     
-    config : {
-        hero : true,
-        minion : true,
-        balrog : false,
-        fallenwizard : true,
-        heavenOnly : false,
-        minor : false,
-        major : false,
-        greater : false,
-        information : false,
-        rings : false,
-        
-        getHero() { return MapBuilder.config.hero; },
-        getMinion() { return MapBuilder.config.minion; },
-        getBalrog() { return MapBuilder.config.balrog; },
-        getFallenWizard() { return MapBuilder.config.fallenwizard; }
-    },
-    
-    updateConfig : function(bHero, bMinion, bBalrog, bFallenwizard)
-    {
-        MapBuilder.config.hero = true === bHero;
-        MapBuilder.config.minion = true === bMinion;
-        MapBuilder.config.balrog = true === bBalrog;
-        MapBuilder.config.fallenwizard = true === bFallenwizard;
-    },
-    
-    clearMarker : function()
-    {
-    },
-    
     MARKER : {
         region : null,
         free : null,
@@ -119,63 +89,12 @@ const MapBuilder =
         return null;
     },
     
-    getPlayableText : function(regionTitle, siteTitle, jSiteCard, isSiteCard)
+    getPlayableText : function(regionTitle, siteTitle, isSiteCard)
     {
-        function getPlayable(title, jSite, sClass)
-        {
-            var sRes = title + " Site";
-            var sPlayable = "";
-            
-            if (jSite.hoard === true)
-                sRes += " (Hoard)";
-            
-            sRes += " [" + jSite.hold + "]";
-            
-            if (jSite.minor === true)
-                sPlayable += "<br>Minor Items";
-
-            if (jSite.major === true)
-                sPlayable += "<br>Major Items";
-
-            if (jSite.greater === true)
-                sPlayable += "<br>Greater Items";
-
-            if (jSite.rings === true)
-                sPlayable += "<br>Gold Rings";
-
-            if (jSite.information === true)
-                sPlayable += "<br>Information";
-                
-            return "<td class=\"" + sClass + "\">"+sRes+"<br>"+sPlayable+"</td>";
-        }
-        
-        function createResult(title, isUnderdeep, hero, minion, balrog)
-        {
-            var sHtml = "<b>" + title + "</b>" + (isUnderdeep ? " (Underdeep)" : "") + "<br>";
-            return sHtml + "<table class=\"site_leaflet\"><tr valign=\"top\">" + hero + minion + balrog + "</tr></table>";
-        }
-        
-        function createAlignText(jSiteCard)
-        {
-            return {
-                hero : !MapBuilder.config.hero || jSiteCard === null || typeof jSiteCard.hero === "undefined" ? "" : getPlayable("Heros", jSiteCard.hero, "td_hero"),
-                minion : !MapBuilder.config.minion || jSiteCard === null || typeof jSiteCard.minion === "undefined" ? "" : getPlayable("Minion", jSiteCard.minion, "td_minion"),
-                balrog : !MapBuilder.config.balrog || jSiteCard === null || typeof jSiteCard.balrog === "undefined" ? "" : getPlayable("Balrog", jSiteCard.balrog, "td_balrog"),
-                isUnderdeep : jSiteCard === null || typeof jSiteCard["underdeep"] === "undefined" ? false : jSiteCard.underdeep
-            };
-        }
-        
         if (isSiteCard)
-        {        
-            var res = createAlignText(jSiteCard);
-            return createResult(siteTitle, res.isUnderdeep, res.hero, res.minion, res.balrog);
-        }
+            return `<b>${siteTitle}</b>`;
         else
-        {
-            var type = typeof jSiteCard["region_type"] === "undefined" ? "" : " (" + jSiteCard["region_type"] + ")";
-            var title = regionTitle + type;
-            return createResult(title, false, "", "", "");    
-        }
+            return `<b>${regionTitle}</b>`;
     },
     
     getTargetMakerJson : function(region, site, jSiteCard)
@@ -273,7 +192,7 @@ const MapBuilder =
             _marker = this.getSiteHoldMarker(this.jMap[region].sites[site]);
         }
 
-        var markerText = this.getPlayableText(region, site, jSiteCard, isSiteCard);
+        var markerText = this.getPlayableText(region, site, isSiteCard);
         jMarkers[id] = createMarker(markerText, lat, lon, _marker, site);
         return jMarkers[id];
     },
@@ -317,24 +236,28 @@ const MapBuilder =
      */
     getSiteByCode : function(sCode)
     {
-        var _keys = MapBuilder.getAdditionalAlignKeys();
-        var _site;
-        for (var key in this.jMap)
-        {
-            for (var _siteKey in this.jMap[key].sites)
-            {
-                _site = this.jMap[key].sites[_siteKey];
-                if (typeof _site.hero !== "undefined" && _site.hero["code"] === sCode)
-                    return _site.hero;
-                else if (typeof _site.minion !== "undefined" && _site.minion["code"] === sCode)
-                    return _site.minion;
-                else if (typeof _site.balrog !== "undefined" && _site.balrog["code"] === sCode)
-                    return _site.balrog;
+        if (sCode === "")
+            return null;
 
-                for(var i = 0; i < _keys.length; i++)
+        let _keys, _key;
+        let _site;
+        let len;
+
+        for (let _region in this.jMap)
+        {
+            for (let _siteKey in this.jMap[_region].sites)
+            {
+                if (sCode.indexOf(_siteKey) !== 0)
+                    continue;
+
+                _site = this.jMap[_region].sites[_siteKey];
+                _keys = Object.keys(_site);
+                len = _keys.length;
+                for (let i = 0; i < len; i++)
                 {
-                    if (typeof _site[_keys[i]] !== "undefined" && _site[_keys[i]]["code"] === sCode)
-                        return _site[_keys[i]];
+                    _key = _keys[i];
+                    if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
+                        return _site[_key];
                 }
             }
         }
@@ -404,12 +327,6 @@ const MapBuilder =
         }
 
     },
-    
-    onReady : function()
-    {
-        // callback function for map creator tool
-    },
-    
     
     onCreate : function(data)
     {
@@ -484,7 +401,7 @@ const MapBuilder =
         {           
             MapBuilder.CardPreview = CardPreview;
             MapBuilder.CardList = new CardList(jMap.images, []);
-            MapBuilder.factory.doCreate(jMap.map, jTappedSites);
+            MapBuilder.factory.doCreate(jMap.map, jTappedSites, jMap.mapregions);
         },
         
         destroy : function()
@@ -510,7 +427,6 @@ const MapBuilder =
             }
             
             MapBuilder.events.onDestroy();
-            MapBuilder.clearMarker();
         },
         
         destroyMarker : function(jMarkers)
@@ -547,48 +463,13 @@ const MapBuilder =
             /**
              * allow callback
              */
-            MapBuilder.onReady();
+            document.body.dispatchEvent(new CustomEvent("meccg-map-initcreator", { "detail": "" }))
         },
         
-        createSiteCodeRegionList : function(jMap)
-        {
-            MapBuilder.jMapSiteRegion = {};
-            
-            var _keys = MapBuilder.getAdditionalAlignKeys();
-            var _region;
-            var _regionCode = "";
-            
-            for (var key in jMap)
-            {
-                _region = jMap[key];
-                if (typeof _region.area === "undefined")
-                    continue;
-
-                _regionCode = key;
-                for (var _site in jMap[key].sites)
-                {
-                    _region = jMap[key].sites[_site];
-                    
-                    if (typeof _region.hero !== "undefined")
-                       MapBuilder.jMapSiteRegion[_region.hero.code] = _regionCode;
-                    if (typeof _region.minion !== "undefined")
-                       MapBuilder.jMapSiteRegion[_region.minion.code] = _regionCode;
-                    if (typeof _region.balrog !== "undefined")
-                       MapBuilder.jMapSiteRegion[_region.balrog.code] = _regionCode;
-                    
-                    for(var i = 0; i < _keys.length; i++)
-                    {
-                        if (typeof _region[_keys[i]] !== "undefined")
-                            MapBuilder.jMapSiteRegion[_region[_keys[i]].code] = _regionCode;
-                    }
-                }
-            }
-        },
-    
         /**
          * Create a new Instance of the map
          */
-        doCreate : function(jMap, jTappedSites)
+        doCreate : function(jMap, jTappedSites, mapregions)
         {
             /**
              * load map data
@@ -597,16 +478,14 @@ const MapBuilder =
 
             if (jTappedSites !== undefined)
                 MapBuilder.jTappedSites = jTappedSites;
-            
-            this.createSiteCodeRegionList(jMap);
+
+            MapBuilder.jMapSiteRegion = mapregions;
 
             /**
              * create position marker
              */
             MapBuilder.factory.createPositionMarker();
 
-           // MapBuilder.factory.buildMap();
-            
             document.getElementById("movement_accept").onclick = MapBuilder.events.onAccept;
             document.getElementById("movement_cancel").onclick = MapBuilder.events.onCancel;
         }
@@ -629,23 +508,7 @@ const MapBuilder =
             _marker.addTo(MapBuilder.instanceLeafletjsMap);
         }
     },
-    
-    allowSite : function(jSite)
-    {
-        if (MapBuilder.config.minor && !jSite["minor"])
-            return false;
-        else if (MapBuilder.config.major && !jSite["major"])
-            return false;
-        else if (MapBuilder.config.greater && !jSite["greater"])
-            return false;
-        else if (MapBuilder.config.rings && !jSite["rings"])
-            return false;
-        else if (MapBuilder.config.information && !jSite["information"])
-            return false;
         
-        return true;
-    },
-    
     events : {
         
         denyRegionClick : true,
@@ -661,7 +524,7 @@ const MapBuilder =
             this.hideVisibleSites();
             this.showSitesInRegion(regionCode);
             
-            this.onRegionClickCallback(regionCode);
+            document.body.dispatchEvent(new CustomEvent("meccg-map-regionclick", { "detail": regionCode }));
         },
         
         onSiteMarkerClick : function(sSiteTitle)
@@ -711,16 +574,6 @@ const MapBuilder =
                 _show = false;
                 _jSite = MapBuilder.jMap[regionCode].sites[key];
                 
-                if (MapBuilder.config.hero && typeof _jSite.hero !== "undefined")
-                    _show = _show || MapBuilder.allowSite(_jSite.hero);
-                if (MapBuilder.config.minion && typeof _jSite.minion !== "undefined")
-                    _show = _show || MapBuilder.allowSite(_jSite.minion);
-                if (MapBuilder.config.fallenwizard && typeof _jSite.fallenwizard !== "undefined")
-                    _show = _show || MapBuilder.allowSite(_jSite.fallenwizard);
-                if (MapBuilder.config.balrog && typeof _jSite.balrog !== "undefined")
-                    _show = _show || MapBuilder.allowSite(_jSite.balrog);
-
-                if (_show)
                 {
                     jSites[key].addTo(MapBuilder.instanceLeafletjsMap);
                     vsList.push(key);
@@ -741,37 +594,45 @@ const MapBuilder =
         
         onDestroy : function()
         {
+            document.querySelector(".map_view_layer").classList.add("hide");
+            DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
+            DomUtils.removeAllChildNodes(document.getElementById("map"));
         },
         
-        onRegionClickCallback : function(regionCode)
-        {
-        },
         
         onAccept : function()
         {
             const jRes = MapCreator.getMovementSites();
-            if (jRes.target === "")
-                return;
-
-            if (MapBuilder.events.onCallback !== null)
+            if (jRes.target !== "")
+            {
                 MapBuilder.events.onCallback(jRes.start, jRes.regions, jRes.target);
-            
-            MapBuilder.factory.destroy();
+                MapBuilder.factory.destroy();
+            }
         },
         
         onCancel : function()
         {
             MapBuilder.factory.destroy();
-            
-            if (MapBuilder.events.onCancelCallback !== null)
-                MapBuilder.events.onCancelCallback();
+            MapBuilder.events.onCancelCallback();
         },
         
-        onCancelCallback : null,
-        onSideCardClick : null,
-        onCallback : null
+        onCancelCallback : () => document.body.dispatchEvent(new CustomEvent("meccg-map-cancel", { "detail": "" })),
+        
+        onSideCardClick : function(sCode, sLocationType)
+        {
+            if (sLocationType === "site")
+                MapCreator.setTargetSite(sCode);
+            else if (sLocationType === "location")
+                MapCreator.addRegionLocation(sCode);
+        },
+
+        onCallback : function(start, regions, target)
+        {
+            if (start !== "")
+                document.body.dispatchEvent(new CustomEvent("meccg-map-selected-movement", { "detail": SelectedMovement(start, regions, target) }));
+        }
     },
-    
+
     loadMovementList : function(sStartLocationCode)
     {
         DomUtils.empty(document.getElementById("site_movement").querySelector("div.site-list"));
@@ -798,28 +659,7 @@ const MapBuilder =
         return true;
     },
     
-    /**
-     * Open this mapview to simply select a starting position
-     * 
-     * @param {function} funcCallback Callback on site click
-     * @return {void}
-     */
-    onChooseLocationStart : function(funcCallback)
-    {
-        MapBuilder.events.onDestroy = () => DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
-
-        if (!MapBuilder.loadMovementList(""))
-        {
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot load start map" }));
-            return;
-        }
-        
-        this.onChooseLocationGeneric(funcCallback);
-
-        MapBuilder.events.onDestroy = () => document.querySelector(".map_view_layer").classList.add("hide");
-    },
-    
-    onChooseLocationGeneric : function(funcCallback)
+    onChooseLocationGeneric : function()
     {
         DomUtils.removeNode(document.getElementById("map_view_layer_loading"));
             
@@ -827,60 +667,37 @@ const MapBuilder =
         DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
 
         MapBuilder.factory.buildMap();
-        MapBuilder.events.onSideCardClick = funcCallback;
     },
     
     /**
      * Open map view to allow for complex movement
      * @param {String} sStartSiteCode Start Location
-     * @param {function} funcCallback Callback
      * @return {void}
      */
-    onChooseLocationMovement : function(sStartSiteCode, funcCallback, funcCancel)
+    onChooseLocationMovement : function(e)
     {
-        MapBuilder.events.onDestroy = function() { };
+        let sStartSiteCode = e.detail;
+        if (sStartSiteCode === undefined)
+            sStartSiteCode = "";
+
         if (!MapBuilder.loadMovementList(sStartSiteCode))
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot load movement map" }));
             return;
         }
 
-        this.onChooseLocationGeneric(funcCallback);
+        MapBuilder.onChooseLocationGeneric();
+        MapBuilder.events.denyRegionClick = sStartSiteCode === "";
 
-        MapBuilder.events.onSideCardClick = MapBuilder.onClickMovement; //funcCallback;
-        MapBuilder.events.onCallback = funcCallback;
-        MapBuilder.events.onCancelCallback = funcCancel;
-        MapBuilder.events.denyRegionClick = false;
-        
-        MapBuilder.events.onDestroy = function()
+        if (sStartSiteCode === "")
+            MapBuilder.events.onSideCardClick = (sCode) => MapBuilder.events.onCallback(sCode, [], "");
+        else
         {
-            ArrayList(document).findByClassName("map_view_layer").each((e) => e.classList.add("hide"));
-            DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
-            DomUtils.removeAllChildNodes(document.getElementById("map"));
-        };
-        
-        if (sStartSiteCode !== "")
-        {
-            var sRegionTitle = MapBuilder.jMapSiteRegion[sStartSiteCode];
+            const sRegionTitle = MapBuilder.jMapSiteRegion[sStartSiteCode];
             MapBuilder.jMarkerRegions[sRegionTitle].fire('click');
         }
-    },
-    
-    onClickMovement : function(e, sCode, sLocationType)
-    {
-        if (sLocationType === "site")
-        {
-            MapCreator.setTargetSite(sCode);
-        }
-        else if (sLocationType === "location")
-        {
-            MapCreator.addRegionLocation(sCode);
-        }
-    }
-    
-    
+    }, 
 };
-
 
 const MapCreator = {
     
@@ -919,11 +736,9 @@ const MapCreator = {
      */ 
     getCurrentRegion : function()
     {
-        var yourSelect = document.getElementById("region");
+        const yourSelect = document.getElementById("region");
         return yourSelect.options[ yourSelect.selectedIndex ].value;
     },
-
-    _initDone : false,
 
     insertSearchTemplate : function()
     {
@@ -1085,27 +900,20 @@ const MapCreator = {
         if (typeof this._temp === "undefined")
             this._temp = [];
         
-        if (typeof j.hero !== "undefined" && MapBuilder.config.hero)
-        {
-            if (MapBuilder.allowSite(j.hero))
-                this._temp.push(createEntry(j.hero));
-        }
-        if (typeof j.minion !== "undefined" && MapBuilder.config.minion)
-        {
-            if (MapBuilder.allowSite(j.minion))
-                this._temp.push(createEntry(j.minion));
-        }
-        if (typeof j.balrog !== "undefined" && MapBuilder.config.balrog)
-        {
-            if (MapBuilder.allowSite(j.balrog))
-                this._temp.push(createEntry(j.balrog));
-        }
+        if (typeof j.hero !== "undefined")
+            this._temp.push(createEntry(j.hero));
+
+        if (typeof j.minion !== "undefined")
+            this._temp.push(createEntry(j.minion));
+
+        if (typeof j.balrog !== "undefined")
+            this._temp.push(createEntry(j.balrog));
         
         let keys = MapBuilder.getAdditionalAlignKeys();
         var len = keys.length;
         for(var i = 0; i < len; i++)
         {
-            if (typeof j[keys[i]] !== "undefined" && MapBuilder.allowSite(j[keys[i]]))
+            if (typeof j[keys[i]] !== "undefined")
                 this._temp.push(createEntry(j[keys[i]]));
         }
     },
@@ -1167,8 +975,8 @@ const MapCreator = {
     
     lazyloadImages : function()
     {
-        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-image"), 150);
-        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-is-tapped"), 150);
+        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-image"), 50);
+        setTimeout(() => MapCreator.lazyloadImageClasses("img.site-is-tapped"), 50);
     },
     
     createImage : function(code, isSite, isTapped)
@@ -1177,10 +985,11 @@ const MapCreator = {
         const sTapped = isTapped !== undefined && isTapped ? 'site-is-tapped' : "site-image";
         const sTitle = this.removeQuotes(code) + " (" + sType + ")";
         const sUrl = isSite ? MapBuilder.CardList.getImageSite(code) : MapBuilder.CardList.getImageRegion(code);
+        const cssIsReady = MapBuilder.CardList.isReady() ? "" : "cardlist_require_reload";
         
         const img = document.createElement("img");
         img.setAttribute("decoding", "async");
-        img.setAttribute("class", sTapped);
+        img.setAttribute("class", sTapped + " " + cssIsReady);
         img.setAttribute("data-src", sUrl);
         img.setAttribute("src", "/media/assets/images/cards/backside-region.jpeg");
         img.setAttribute("data-code", code);
@@ -1362,7 +1171,7 @@ const MapCreator = {
                 const sLocationType = e.target.getAttribute("data-location-type") || "";
                 
                 if (!MapBuilder.events.denyRegionClick || "location" !== sLocationType)
-                    MapBuilder.events.onSideCardClick(e, sCode, sLocationType);
+                    MapBuilder.events.onSideCardClick(sCode, sLocationType);
             });
         }
         
@@ -1374,14 +1183,10 @@ const MapCreator = {
     
     
     ignoreMarkerClickOnce : false,
-    
-    onReady : function()
-    {
         
-    },
-    
-    onRegionClickCallback : function(regionCode)
+    onRegionClickCallback : function(e)
     {
+        const regionCode = e.detail;
         var elemSites = document.getElementById("region");
         for (var i = 0; i < elemSites.options.length; ++i) 
         {
@@ -1396,6 +1201,6 @@ const MapCreator = {
     }
 };
 
-
-MapBuilder.onReady = MapCreator.init;
-MapBuilder.events.onRegionClickCallback = MapCreator.onRegionClickCallback;
+document.body.addEventListener("meccg-map-initcreator", MapCreator.init, false);
+document.body.addEventListener("meccg-map-regionclick", MapCreator.onRegionClickCallback, false);
+document.body.addEventListener("meccg-map-load-location", MapBuilder.onChooseLocationMovement, false);

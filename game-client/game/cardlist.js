@@ -29,10 +29,25 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     this._imageNotFoundRegion = "/media/assets/images/cards/notfound-region.jpg";
     this._imageNotFoundSite = "/media/assets/images/cards/notfound-site.jpg";
     this._imageCDNUrl = "";
+    this._isReady = false;
 
     const pThat = this;
 
-    fetch("/data/image-cdn").then((response) => response.text().then((val) => pThat._imageCDNUrl = CardListSanatizeUrl(val)));
+    fetch("/data/image-cdn").then((response) => response.text().then((val) => {
+        pThat._imageCDNUrl = CardListSanatizeUrl(val);
+        pThat._isReady = true;
+
+        /** this is necssary to avoid a speed race if this module is loaded later.  */
+        const list = document.getElementsByClassName("cardlist_require_reload");
+        const len = list === null ? 0 : list.length;
+        for (let i = 0; i < len; i++)
+        {
+            let _elem = list[i];
+            let srcAttr = _elem.getAttribute("data-src") === null || _elem.getAttribute("data-src") === "" ? "src" : "data-src";
+            let src = _elem.getAttribute(srcAttr);
+            _elem.setAttribute(srcAttr, pThat._imageCDNUrl + src);
+        }
+    }));
     
     if (this._list === null)
     {
@@ -47,6 +62,11 @@ function CardList(images, quests, useImagesDC, useImagesIC)
         .catch(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch image list." })));
     }
 }
+
+CardList.prototype.isReady = function() 
+{
+    return this._isReady;
+};
 
 CardList.prototype.getImage = function(code) 
 {
