@@ -1,11 +1,10 @@
 
 
-function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _ContextMenu)
+function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 {
     const CardList = _CardList;
     const CardPreview = _CardPreview;
     const HandCardsDraggable = _HandCardsDraggable;
-    const ContextMenu = _ContextMenu;
 
     const CARDID_PREFIX = "ingamecard_";
 
@@ -388,7 +387,10 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
             INSTANCE.initSingleCardEvent(pCard, true);
             
             if (bAllowContextMenu)
-                ContextMenu.initContextMenuGeneric(pCard);
+            {
+                console.log("generic")
+                document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: CARDID_PREFIX + card.uuid }} ));
+            }
             
             if (card.revealed || typeof card.revealed === "undefined")
                 INSTANCE.revealCard(pCard.querySelector("img"));
@@ -497,8 +499,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
                 HandCardsDraggable.initOnCompany(elemContainer);
             }
 
-            ArrayList(elemList).find("div.card").each(ContextMenu.initContextMenuGeneric);
-
+            ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id") }} )));
             elemContainer.classList.remove("hiddenVisibility");
 
             pCheckForCardsPlayed.loadAfter(elemContainer);
@@ -540,7 +541,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
             var jSiteContaienr = companyElem.querySelector(".sites");
             ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(INSTANCE.revealLocation);
             ArrayList(jSiteContaienr).find(".site-target .card-icon").each(INSTANCE.revealLocation);
-            ArrayList(companyElem).find(".company-site-list .location-reveal").each((e) => e.classList.remove("hide"));
+            ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
         },
 
         isPlayersCompany : function(pCompany)
@@ -584,7 +585,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
                     ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
                 
                 if (bIsPlayer)
-                    ContextMenu.initContextMenuSite(companyElem.querySelector(".site-current img.card-icon"), code);
+                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, start: true, code: code }} ));
             }
 
             if (target !== "")
@@ -598,9 +599,9 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable, _Con
                 pContainerTarget.appendChild(createLocationCard(code, img, bIsPlayer));
                 
                 if (!bIsPlayer)
-                    ContextMenu.initContextMenuSiteArrive(company, pContainerTarget.querySelector("img"));
+                    document.body.dispatchEvent(new CustomEvent('meccg-context-site-arrive', { detail: { id: "company_" + company, company: company, code: code }} ));
                 else
-                    ContextMenu.initContextMenuSite(pContainerTarget.querySelector(".card img"), code);
+                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, start: false, code: code }} ));
                 
                 if (target_tapped)
                     ArrayList(pContainerTarget).find(".card").each((e) => e.classList.add("state_tapped"));

@@ -1,9 +1,8 @@
 
-function createStagingArea(_CardList, _CardPreview, _ContextMenu)
+function createStagingArea(_CardList, _CardPreview)
 {
     var CardList = _CardList;
     var CardPreview = _CardPreview;
-    var ContextMenu = _ContextMenu;
        
     const stagingarea = {
         
@@ -125,7 +124,7 @@ function createStagingArea(_CardList, _CardPreview, _ContextMenu)
 
             CheckForCardsPlayed.markCard(id);
     
-            ContextMenu.initContextMenuGeneric(document.getElementById(id));
+            document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: id }} ));
             return id;
         }
     };

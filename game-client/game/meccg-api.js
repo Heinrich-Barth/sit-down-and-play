@@ -160,7 +160,7 @@ const MeccgApi =
         if (MeccgApi._callbackReconnect !== null)
             MeccgApi._callbackReconnect();
     },
-    
+
     onDocumentReady : function()
     {
         this.addListener("/game/set-player-names", this.setUserNames);
@@ -295,3 +295,4 @@ const MeccgApi =
 };
 
 document.body.addEventListener("meccg-query-end-game", MeccgApi.queryEndGame, false);
+document.body.addEventListener("meccg-api-init", () => MeccgApi.onDocumentReady(), false);

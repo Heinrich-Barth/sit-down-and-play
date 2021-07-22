@@ -129,9 +129,12 @@ class DomUtils extends MeccgUtils {
      
     static removeNode(node)
     {
-        DomUtils.removeAllChildNodes(node);
-        if (node !== null)
-            node.parentNode.removeChild(node);
+        if (node !== undefined && node !== null)
+        {
+            DomUtils.removeAllChildNodes(node);
+            if (node !== undefined && node.parentNode !== undefined && node.parentNode !== null)
+                node.parentNode.removeChild(node);
+        }
     }
 
     static remove(node)

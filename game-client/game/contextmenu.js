@@ -78,9 +78,17 @@ const ContextMenu = {
      * @param {DOM Object} elem 
      * @param {String} code 
      */
-    initContextMenuSite : function(elem, code)
+    initContextMenuSite : function(e)
     {
-        if (elem === null || typeof elem === "undefined" || typeof code === "undefined" || code === "")
+        const code = e.detail.code;
+        const company = document.getElementById(e.detail.id);
+        if (company === null)
+            return;
+
+        const sQuery = e.detail.start ? ".site-current img.card-icon" : ".site-target img.card-icon";
+        const elem = company.querySelector(sQuery);
+
+        if (elem === null || code === undefined || code === "")
             return;
         
         elem.setAttribute("data-context-code", code);
@@ -88,9 +96,12 @@ const ContextMenu = {
         elem.classList.add("context-cursor");
     },
 
-    initContextMenuSiteArrive : function(companyId, pCard)
+    initContextMenuSiteArrive : function(e)
     {
-        if (pCard === null || companyId === "")
+        const companyId = e.detail.company;
+        const company = document.getElementById(e.detail.id);
+        const pCard = company === null ? null : company.querySelector(".site-target img.card-icon");
+        if (pCard === null || companyId === "" || companyId === undefined)
             return;
 
         pCard.setAttribute("data-contextmenu-site-arrive-company", companyId);
@@ -98,9 +109,14 @@ const ContextMenu = {
         pCard.classList.add("context-cursor");
     },
 
-    initContextMenuGeneric : function(elem)
+    initContextMenuGeneric : function(e)
     {
-        if (elem != null)
+        const elemDiv = document.getElementById(e.detail.id);
+        if (elemDiv === null)
+            return;
+
+        const elem = elemDiv.querySelector("img");
+        if (elem !== null)
         {
             elem.oncontextmenu = ContextMenu.contextActions.onContextGeneric;
             elem.classList.add("context-cursor");
@@ -352,27 +368,7 @@ const ContextMenu = {
     }
 };
 
-class ContextMenuInterface {
-
-    constructor()
-    {
-    }
-
-    initContextMenuGeneric(elem)
-    {
-        ContextMenu.initContextMenuGeneric(elem);
-    }
-
-    initContextMenuSite(elem, code) 
-    {
-        ContextMenu.initContextMenuSite(elem, code);
-    }
-
-    initContextMenuSiteArrive(company, elemContainer)
-    {
-        ContextMenu.initContextMenuSiteArrive(company, elemContainer);
-    }
-}
-
 document.body.addEventListener("meccg-init-ready", ContextMenu.onReady, false);
-       
+document.body.addEventListener("meccg-context-site", ContextMenu.initContextMenuSite, false);
+document.body.addEventListener("meccg-context-site-arrive", ContextMenu.initContextMenuSiteArrive, false);
+document.body.addEventListener("meccg-context-generic", ContextMenu.initContextMenuGeneric, false);

@@ -27,34 +27,32 @@ class CreateHandCardsDraggableUtils {
     {
         jElem.find(".ui-draggable").each(function()
         {
-            jQuery(this).draggable("destroy");
+            CreateHandCardsDraggableUtils.removeElementDraggable(jQuery(this));
         });
         
         jElem.find(".ui-droppable").each(function()
         {
-            jQuery(this).droppable('destroy');
+            CreateHandCardsDraggableUtils.removeElementDroppable(jQuery(this));
         });
         
-        DomUtils.removeNode(jElem);
+        DomUtils.removeNode(jElem.get(0));
     }
-
-    /**
-     * 
-     * @param {jQuery} jElem
-     * @return {undefined}
-     */
-    static removeDraggable(jElem)
-    {   
+    
+    static removeElementDroppable(jElem)
+    {
         try
         {
-            if (jElem.hasClass("ui-draggable"))
-                jElem.removeClass('ui-draggable').draggable("destroy");
+            if (jElem.hasClass("ui-droppable"))
+                jElem.removeClass('ui-droppable').droppable('destroy');
         }
         catch(e)
         {
             MeccgUtils.logError(e);
         }
-    
+    }
+
+    static removeElementDraggable(jElem)
+    {
         try
         {
             if (jElem.hasClass("ui-droppable"))
@@ -65,6 +63,17 @@ class CreateHandCardsDraggableUtils {
             MeccgUtils.logError(e);
         }
 
+    }
+
+    /**
+     * 
+     * @param {jQuery} jElem
+     * @return {undefined}
+     */
+    static removeDraggable(jElem)
+    {   
+        CreateHandCardsDraggableUtils.removeElementDraggable(jElem);
+        CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
         DomUtils.removeNode(jElem.get(0));
     }
 
