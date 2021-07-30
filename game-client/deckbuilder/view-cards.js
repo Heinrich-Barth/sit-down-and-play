@@ -58,16 +58,14 @@ const ViewCards =
                 _limit = -1;
 
             card["count"] = _limit;
+            card["limit"] = _limit;
         }
     },
     
     _getCardByCode : function(code)
     {
         if (typeof ViewCards.config.cardIndices[code] === "undefined")
-        {
-            console.log("Cannot find " + code);
             return null;
-        }
         else
             return ViewCards.config.cardIndices[code];
     },
@@ -102,32 +100,29 @@ const ViewCards =
         
         if (typeof ViewCards.config.vsCodeIndices[code] === "undefined")
         {
-            console.log("ViewCards.config.vsCodeIndices not set");
+            console.log("ViewCards.config.vsCodeIndices not set for " + code);
             return null;
         };
 
         var index = ViewCards.config.vsCodeIndices[code];
         if (typeof ViewCards.config.jsonData[index] === "undefined")
         {
-            console.log("no card at index " + index);
+            console.log("no card at index " + index + " for " + code);
             return null;
         }
 
         if (ViewCards.config.jsonData[index]["code"] === code)
             return ViewCards.config.jsonData[index];
-        
-        return this.iterateThrooughCards(code);
+        else
+            return this.iterateThrooughCards(code);
     },
     
     iterateThrooughCards : function(code)
     {
-        for (var _card of ViewCards.config.jsonData) 
+        for (let _card of ViewCards.config.jsonData) 
         {
             if (_card["code"] === code)
-            {
-                console.log("alternative found " + code + " in ");
                 return _card;
-            }
         }
 
         return null;
@@ -142,7 +137,6 @@ const ViewCards =
         ViewCards.config.vsTypesResource = [];
         ViewCards.config.vsCodeIndices = json["code-indices"];
         
-        var _type;
         for (var _type in json["secondaries"])
         {
             ViewCards.config.vsType.push(_type);
@@ -254,6 +248,11 @@ const ViewCards =
 
         this.setReduced(jReduced);
         this._updateMap();
+        this.resetCounter();
+    },
+
+    resetCounter : function()
+    {
         this.resetAvail(ViewCards.config.jsonData);
     },
     
@@ -264,7 +263,8 @@ const ViewCards =
 
         ViewCards.config.jLimis = {};
         let _code;
-        for (var i = 0; i < jData.length; i++)
+        const _len = jData.length;
+        for (var i = 0; i < _len; i++)
         {
             _code = jData[i];
             if (_code === "")

@@ -248,12 +248,19 @@ var SearchResult = {
         linklist.appendChild(_tmp);
     },
             
-    updateCardResultListCount : function(e)
+    updateCardResultListCount : function(index, count)
     {
-        const index = e.detail;
-        var elem = document.getElementById("count_" + index);
+        const pDiv = document.getElementById("" + index);
+        if (pDiv === null)
+            return;
+
+        let elem = pDiv.querySelector(".actions");
         if (elem !== null)
-            elem.setAttribute("data-count", ViewCards.config.jsonData[index].count);
+            elem.setAttribute("data-count", count);
+
+        elem = pDiv.querySelector(".count_bubble");
+        if (elem !== null)
+            elem.innerHTML = count;
     },
 
     onClickLinkAddTo : function(e)
@@ -265,46 +272,16 @@ var SearchResult = {
         const sTargetDeck = pLink.getAttribute("data-target");
         const pDiv = DomUtils.closestByType(pLink, "div");
         const nIndex = parseInt(pDiv.getAttribute("data-index"));
-        const sCount = pDiv.getAttribute("data-count");
 
-        if (sCount === "" || sCount === "0")
-        {
-            console.log("nothing left");
-            return false;
-        }
-                    
-        if (DeckList.addToDeckIndex(nIndex, sTargetDeck))
-        {
-            SearchResult.updateCardCount(nIndex, -1);
-            
-            let _cnt = parseInt(sCount) - 1;
-            pDiv.setAttribute("data-count", _cnt);
-            
-            let jBubble = pDiv.parentNode.querySelector(".count_bubble");
-            if (jBubble !== null)
-            {
-                jBubble.innerHTML = _cnt;
-                if (_cnt === 0 && !jBubble.classList.contains("hidden"))
-                    jBubble.classList.add("hidden");
-            }
-            
-            DeckList.calculateAndUpdateDeckCounters();
-        }
-        
+        document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": { index : nIndex, target: sTargetDeck } }));
         return false;
     },
 
-    onUpdateCardCount : function(e)
+    onUpdateCardResultListCount(e)
     {
-        SearchResult.updateCardCount(e.detail.index, e.detail.count);
+        SearchResult.updateCardResultListCount(e.detail.index, e.detail.count);
     },
-
-    updateCardCount : function(index, count)
-    {
-        var pCard = ViewCards.getCardByIndex(index);
-        if (pCard !== null)
-            pCard.count += count;
-    },
+    
 
     extractTableHead : function(sTplHtml)
     {
@@ -377,8 +354,6 @@ var SearchResult = {
             }
         });
     },
-
-
 
     removeObserver : function()
     {
@@ -462,5 +437,4 @@ var SearchResult = {
 })();
 
 document.body.addEventListener("meccg-deckbuilder-displayresult", SearchResult.onDisplayResult, false);
-document.body.addEventListener("meccg-deckbuilder-updatecardresultlistcount", SearchResult.updateCardResultListCount, false);
-document.body.addEventListener("meccg-deckbuilder-updatecardcount", SearchResult.onUpdateCardCount, false);
+document.body.addEventListener("meccg-deckbuilder-update-bubble", SearchResult.onUpdateCardResultListCount, false);

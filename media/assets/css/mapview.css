@@ -1,6 +1,10 @@
 html, body {
     font-family:Arial;  
 }
+body
+{
+    background: #000 !important;
+}
 
 #map_view_layer_loading
 {
@@ -10,6 +14,7 @@ html, body {
     letter-spacing: 5px;
     display: block;
 }
+
 .blue-box 
 {
     background: rgba(39,56,76,0.82);
@@ -17,165 +22,80 @@ html, body {
 }
 
 #map {
-    width: 800px;
-    height: 600px;
-    margin-right: 0px;
-    padding-right: 0;
-    display: inline-block;
-}
-
-.map{
-    border-radius: 5px;
-    width: 1020px;
-    height: 750px;
+    position: fixed !important; 
+    width: 100% !important; 
+    height: 100% !important; 
+    top: 0px !important; 
+    left: 0px !important; 
     display: block;
 }
 
-.map-full #map {
-    width: 100%;
-    height: 99%;
-    display: inline-block;
-}
-
-.map-full .map-inline {
-    width: 80%;
-    height: 99%;
-    display: inline-block;
-}
-
-.map-full div.side_panel {
-    width: 200px;
-    max-height: 97%;
-    height: 97%;
-}
-
-
-.map-full .map
-{
-    width: 99%;
-    height: 99%;
-    display: inline-block;
-}
-
-.underdeeps-map.map,
-.underdeeps-map #map {
-    width: 90%;
-    height: 90%;
-    display: block;
-}
-
-.underdeeps-map .map-inline
-{
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-body.bgblack,
-body.underdeeps-map
-{
-    background: #000 !important;
-}
-
-body.underdeeps-map{ margin-top: 20px; }
-
-.map-inline { display: inline-block; }
 .mapview { text-align: center;}
 
-.form {
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    height: 400px;
+select,
+input { display: block;   }
+
+input { border: 1px solid transparent; margin-bottom: 5px; background-color: #ffffff; }
+input.next { border: 1px solid  #ffa500; }
+
+select { margin-bottom: 0.65em; }
+
+table.site_leaflet td { padding: 5px; }
+table.site_leaflet td:nth-child(even) { background-color: lightgrey; }
+
+
+.field {
+    width: 280px;
+    display: block;
+    color: #fff;
 }
 
-.form select,
-.form input { display: block;   }
-
-.form input { border: 1px solid transparent; margin-bottom: 5px; }
-.form input.next { border: 1px solid  #ffa500; }
-
-.form select { margin-bottom: 20px; margin-top: 20px; }
-.field { color: white; }
-
-
-table.site_leaflet td
-{
-    padding: 5px;
-}
-
-table.site_leaflet td:nth-child(even) {
-  background-color: lightgrey;
-}
-
-
-form {
-    margin: 0 0 2em 0;
-}
-
-select
-{
-    -webkit-appearance: none;
-   -moz-appearance: none;
-}
-
-form > .fields {
-    display: block;    
-}
-
-input {
-    background-color: #ffffff;
-}
-
-form > .fields > .field {
-    padding: 0.5em;
-    width: 17%;
-    display: inline-flex;
-
-}
-
-select{ margin-bottom: 0.65em;}
-input[type="text"],
+input,
 select,
 textarea {
     color: #39454b;
     display: block;
-    width: 100%;
+    width: 240px;
     padding: 0.65em 0.75em;
     border: solid 2px #e5e6e7;
     border-radius: 0.5em;
     outline: none;
 }
-label { font-size: 0.7em; }
-.mapchooser {
-    text-align: center;
+
+.map-search,
+.mapchooser,
+#site_movement,
+.side-panel-sites-in-region 
+{
+    position: absolute;
+    top: 20px;
 }
 
-div.side_panel {
+.side-panel-sites-in-region 
+{
     width: 200px;
-    max-height: 600px;
-    display: inline-block;
+    right: 20px;
     overflow: auto;
+    max-height: 95%;
 }
+
+#site_movement { 
+    width: auto; 
+    height: 135px; 
+    right: 240px;
+}
+
 .side_panel img { max-width: 80px; margin-right: 2px;  }
 .site-list img { height: 80px; }
+
 .fl {float: left;}
 
-.map-title {
-    color: #ffa500;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    display: block;
-    text-align: center;
-}
-#site_movement { display: block; width: 100%; height: 135px; }
 .clear { clear: both; }
 
 .cursor-pointer { cursor: pointer; }
 .cursor-remove img { cursor: no-drop; }
 
 .padl10 { padding-left: 10px; }
-.site-list img { margin-right: 5px; }
 
 #found_sites { 
     text-align: left;
@@ -184,95 +104,50 @@ div.side_panel {
     padding-bottom: 10px;
 }
 
+.map-title,
 .hide{ display: none !important; }
 
-#site_movement { padding-top: 10px; }
-.card-box { padding: 10px 5px; min-height: 90px; height: 90px; margin-right: 10px; min-width: 60px; }
+.card-box {
+    padding: 5px;
+    margin-right: 5px;
+}
 .map-action-image { padding: 6px 10px;  text-align: center; opacity: 0.5;}
 .map-action-image:hover { opacity: 1;}
-.clear { clear: both; float: none; }
 
 div.panel-buttons { width: 70px; }
-.map-search { padding: 5px;}
+
 .map-title { margin: 10px 0;}
 .mapchooser {
-    position: fixed;
-    right: 45px;
-    z-index: 900;
-    width: 300px;
+    right: 20px;
     background: rgba(39,56,76,1);
-    top: 15px;
+    padding: 10px 25px 10px 10px;
+    z-index: 500;
 }
 
-form > .fields > .field
-{
-    padding: 0.5em;
-    width: 90%;
-    display: block;
-    text-align: left;
-}
-
-form input[type="text"]
-{
-    width: 246px;
-}
-
-
-.mapchooser input[type="checkbox"] {
-    visibility: hidden;
-    display: none;
-}
-
-label {
-    cursor: pointer;
-    display: block;
-    font-size: 1em;
-    margin: 10px 0;
-}
-    
-.map {
-    margin-top: 0;
-}
-
-.mapchooser h2 {
-    display: block;
-    font-size: 1em;
-    text-transform: uppercase;
-    color: #ffa500;
-    margin: 15px 0 0 0;
-}
-.mapchooser form > .fields > .field.padding10 {
-    padding-left: 10px;
-}
 #found_sites img { width: 80px; height: 112px; }
-@media only screen and (min-width: 1500px) 
-{
-
-    .map 
-    {
-        width: 1450px;
-        margin: 20px;
-        height: 750px;
-    }
-
-    .map-inline.fl 
-    {
-        float: none;
-    }
-
-    div.side_panel.fr {
-        position: absolute;
-        right: 10px;
-        width: 200px;
-    }
-
-    #map {
-        width: 1450px;
-        height: 750px;
-    }
-}
 
 #found_sites img.site-is-tapped {
     opacity: 0.5;
     transform: rotate(180deg);
+}
+
+.movement-icon {
+    margin-top: 20px;
+    margin-right: 5px;
+}
+.movement-icon img {
+    width: 30px;
+    margin: 0;
+}
+.map-search {
+    padding: 5px;
+    color: #ffa500;
+    right: 20px;
+    z-index: 501;
+}
+
+.caption {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 10px;
 }

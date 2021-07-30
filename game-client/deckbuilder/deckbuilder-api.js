@@ -5,8 +5,23 @@ const DeckbuilderApi =
 
     _deck : { },
 
+    onAdd : function(e)
+    {
+        const sTarget = e.detail.target;
+        const pCard = ViewCards.config.jsonData[e.detail.index];
+        if (DeckbuilderApi.add(sTarget, pCard))
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-decklist", { "detail": e.detail })); /** update the deck list view */
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-update-bubble", { "detail": { index: e.detail.index, count: pCard.count } })); /** update the deck list view */
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-update-summary", { "detail": { } })); /** update the deck list view */
+        }
+    },
+
     add : function(sTarget, jsonCard)
     {
+        if (jsonCard === null || jsonCard === undefined)
+            return;
+
         if (this._deck[sTarget] === undefined)
             this._deck[sTarget] = { };
 
@@ -19,22 +34,42 @@ const DeckbuilderApi =
                 count : 1
             }
         }
-        else
-            this._deck[sTarget][jsonCard.code].count++;
+        else if (this._deck[sTarget][jsonCard.code].count > jsonCard.limit)
+            return;
+
+        this._deck[sTarget][jsonCard.code].count++;
+
+        if (jsonCard.count > 0)
+            jsonCard.count--;
 
         return true;
     },
-    
-    remove : function(sTarget, code)
+
+    onRemove : function(e)
     {
-        if (this._deck[sTarget] === undefined || this._deck[sTarget][code] === undefined)
+        const sTarget = e.detail.target;
+        const pCard = ViewCards.config.jsonData[e.detail.index];
+        if (DeckbuilderApi.remove(sTarget, pCard))
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-update-bubble", { "detail": { index: e.detail.index, count: pCard.count } })); /** update the deck list view */
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-update-summary", { "detail": { } })); /** update the deck list view */
+        }
+    },
+    
+    remove : function(sTarget, jsonCard)
+    {
+        const code = jsonCard.code
+        if (this._deck[sTarget] === undefined || this._deck[sTarget][jsonCard.code] === undefined)
             return false;
 
-        if (this._deck[sTarget][code].count === 1)
-            delete this._deck[sTarget][code];
+        if (this._deck[sTarget][jsonCard.code].count === 1)
+            delete this._deck[sTarget][jsonCard.code];
         else
-            this._deck[sTarget][code].count--;
-            
+            this._deck[sTarget][jsonCard.code].count--;
+           
+        if (jsonCard.count < jsonCard.limit)
+            jsonCard.count++;
+
         return true;
     },
     
@@ -85,6 +120,24 @@ const DeckbuilderApi =
     loadDeckName : function()
     {
         return "";
+    },
+
+    onLoadDeck : function(e)
+    {
+        if (e === undefined)
+            return;
+
+        const jDeck = e.detail;
+        if (jDeck !== undefined)
+        {
+            DeckbuilderApi._deck = {};
+            DeckbuilderApi._count = 0;
+
+            /** necessary to update the counters again to remove previous deck stats */
+            DeckList.removeExisting();
+            ViewCards.resetCounter();
+            DeckbuilderApi.initAddCards(jDeck);
+        }
     },
     
     initAddCards : function(cards)
@@ -187,13 +240,21 @@ async function onSaveDeck()
             }
         ]
     });
+    
     const writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(DeckbuilderApi._deck));
+    await writable.write(JSON.stringify(DeckbuilderApi._deck, null, "\t"));
     await writable.close();
+
+    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Deck saved." }));
 }
 
+/**             
+ */
 (function()
 {
     document.getElementById("save_deck").onclick = onSaveDeck;
 })();
 
+document.body.addEventListener("meccg-deckbuilder-load-deck", DeckbuilderApi.onLoadDeck, false);
+document.body.addEventListener("meccg-deckbuilder-add-to-deck", DeckbuilderApi.onAdd, false);
+document.body.addEventListener("meccg-deckbuilder-remove-from-deck", DeckbuilderApi.onRemove, false);

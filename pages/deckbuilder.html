@@ -5,22 +5,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
         <title>Build a Deck</title>
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
 
         <link rel="stylesheet" href="/media/assets/css/main.css" />
         <link rel="stylesheet" href="/media/assets/css/deckbuilder.css" />
+        <link rel="stylesheet" href="/media/assets/css/notifications.css?version=1" />
     </head>
-    <body class="bgnature deckbuilding" data-image-cdn="">
+    <body class="bgnature deckbuilding drop-file" id="drop_zone" data-image-cdn="">
 
-        <h1>Displaying <span id="size">0</span> card(s)</h1>
+        <h1 class="on-drag-hide">Displaying <span id="size">0</span> card(s)</h1>
 
-        <div class="result_container" id="result_container">
+        <div class="result_container on-drag-hide" id="result_container">
 
             <div class="">
                 
                 <div id="linklist" class="linklist fl"></div>
-                <div class="">
-                    <div id="result"></div>
-                    <div class="clear"></div>
+                <div class="clearAfter">
+                    <div id="result">
+                        <div class="builder-hint">
+                            <div class="bgblue builder-hint-content">
+                                <h2><i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Getting Started</h2>
+                                <p>Either use the <span class="builder-white"><i class="fa fa-filter" aria-hidden="true"></i> filters</span> to create your deck<br><br>
+                                or <span class="builder-white"><i class="fa fa-bullseye" aria-hidden="true"></i> drag</span> a previously saved deck <span class="builder-white">file into this window</span> to continue editing.</p>
+
+                                <p>You can <i class="fa fa-floppy-o" aria-hidden="true"></i> save anytime and continue later as well.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
@@ -60,7 +73,11 @@
         <script src="/media/client/deckbuilder/view-cards.js"></script>
         <script src="/media/client/deckbuilder/searchbar.js"></script>
         <script src="/media/client/deckbuilder/searchresult.js"></script>
+        <script src="/media/client/deckbuilder/dropfile.js"></script>
         <script src="/media/client/deckbuilder/app.js"></script>
+        <script src="/media/client/navigation.js"></script>
         <script src="/media/client/onready.js"></script>
+
+        
     </body>
 </html>

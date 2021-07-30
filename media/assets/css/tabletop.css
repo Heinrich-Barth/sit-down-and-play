@@ -822,7 +822,7 @@ div#opponent_table .company { transform: rotate(180deg); }
 #draw_card:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
 .hosts_nothing { display: none !important; }
 
-#lidles-eye { z-index: 401;position: absolute;left: 0;top: 0;bottom: 0;right: 0;text-align: center;background: rgba(0,0,0,0.9); }
+#lidles-eye { z-index: 601; position: absolute;left: 0;top: 0;bottom: 0;right: 0;text-align: center;background: rgba(0,0,0,0.9); }
 #lidles-eye img { margin-top: 20%; }
 
 #card_counter div.pos-rel { position: relative; }

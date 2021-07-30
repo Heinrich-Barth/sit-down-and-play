@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>Sit down and play</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        
+        <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
         <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=1" />
@@ -20,6 +20,8 @@
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/media/assets/css/lobby.css" />
         <link rel="stylesheet" href="/media/assets/css/addcards.css" />
+        <link rel="stylesheet" href="/media/assets/css/ingame-draggable-tips.css" />
+        
 
         <script src="/media/assets/js/jquery.min.js?version=1"></script>
         <script src="/media/assets/js/jquery-ui.min.js?version=1"></script>
@@ -27,7 +29,7 @@
     </head>
 
 
-    <body class="bg-game">
+    <body class="bg-game" data-is-game="true">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
 
@@ -109,9 +111,7 @@
 
                     <!-- main table area for playing -->
                     <div class="companies center-text" id="player_companies">
-                        <div class="company tableCell emptyContainer create-new-company" id="create_new_company">
-                            <div class="clear"></div>
-                        </div>
+                        <div class="company tableCell emptyContainer create-new-company" id="create_new_company"></div>
                     </div>
                 </div>
             </div>
@@ -171,6 +171,7 @@
         <script src="/media/client/game/game-tabletop.js?version=1"></script>
         <script src="/media/client/game/shortcuts.js?version=1"></script>
         <script src="/media/client/game/resolvehandsize.js"></script>
+        <script src="/media/client/game/introtip.js"></script>
         <script src="/media/client/onready.js"></script>
     </body>
 </html>

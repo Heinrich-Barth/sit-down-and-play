@@ -137,31 +137,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }
 
             
-            setTimeout(function()
-            { 
-                DomUtils.removeNode(document.getElementById("lidles-eye"));
-                createQuestionBox(function()
-                {
-                    /** 
-                     * this is evil, but if we just open a new window via javscript, the new window will send constant messages 
-                     * and will interfere with the mapwindow message event handler. Therefore, this should reduce the overall 
-                     * workload on this app
-                     */
-                    const div = document.createElement("div");
-                    div.setAttribute("id", "question-fake-hide");
-                    div.setAttribute("class", "question-fake-hide");
-                    div.innerHTML = `<a id="question-fake-hide-a" href="https://meet.jit.si/${g_sRoom}" target="_blank">Audio Chat</a>`;
-                    document.body.appendChild(div);
-                    document.getElementById("question-fake-hide-a").click();
-                    DomUtils.removeNode(document.getElementById("question-fake-hide"));
-                }, 
-                "Do you want to join the audio chat?", 
-                "The chat will open in a new window and you have to actively confirm to join the meeting there.<br><br>You can join via the main menu as well anytime later.", 
-                "Join audio", 
-                "Do not join",
-                "question-voice-icon").show("");
-
-            }, 1500);
+            setTimeout(() => DomUtils.removeNode(document.getElementById("lidles-eye")), 1500);
         },
         
         onAddCardToStagingArea : function(bIsMe, cardCode, uuid, target, type, state, revealed)

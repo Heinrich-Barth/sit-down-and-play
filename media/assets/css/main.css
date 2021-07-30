@@ -5,35 +5,24 @@
     Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
-html, body, div, span, applet, object,
-iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
-pre, a, abbr, acronym, address, big, cite,
-code, del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var, b,
-u, i, center, dl, dt, dd, ol, ul, li, fieldset,
-form, label, legend, table, caption, tbody,
-tfoot, thead, tr, th, td, article, aside,
-canvas, details, embed, figure, figcaption,
-footer, header, hgroup, menu, nav, output, ruby,
-section, summary, time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
+div, h1, h2, h3, h4, h5, h6, p, blockquote,img, small, strong, b, ul, li, form, label, table, caption, tbody, tfoot, thead, tr, th, td, footer, header, nav {
     font: inherit;
     cursor: default;
 }
-
-a {
-    cursor: pointer;
+html, body
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 12px;
+    cursor: default;
 }
 
-
-body, input, textarea, select {
-    font-size: 9pt;
+input, textarea, select {
+    font-size: inherit
 }
 
-ol, ul {
+ul {
     list-style: none;
 }
 
@@ -81,12 +70,10 @@ strong, b {
     color: inherit;
 }
 
-em, i {
-    font-style: italic;
-}
-
 a {
-    color: #ffa500; text-decoration: none;
+    color: #ffa500; 
+    text-decoration: none;
+    cursor: pointer;
 }
 
 
@@ -117,31 +104,8 @@ button {
     text-decoration: none;
 }
 
-
-input[type="button"].down.anchored,
-input[type="submit"].down.anchored,
-input[type="reset"].down.anchored,
-.button.down.anchored,
-button.down.anchored {
-    bottom: 0;
-    border-bottom: 0;
-    border-radius: 3em 3em 0 0;
-    height: 4.5em;
-    margin-left: -2.5em;
-}
-
-input[type="button"].anchored,
-input[type="submit"].anchored,
-input[type="reset"].anchored,
-.button.anchored,
-button.anchored {
-    position: absolute;
-    left: 50%;
-}
-
 input[type="button"]:hover,
 input[type="submit"]:hover,
-input[type="reset"]:hover,
 .button:hover,
 button:hover {
     background-color: #a8cea4;
@@ -155,43 +119,10 @@ button:active {
     background-color: #88bc82;
 }
 
-input[type="button"].style2,
-input[type="submit"].style2,
-input[type="reset"].style2,
-.button.style2,
-button.style2 {
-    background-color: transparent;
-    border: solid 2px #e5e6e7;
-    color: inherit;
-}
-
-input[type="button"].style2:hover,
-input[type="submit"].style2:hover,
-input[type="reset"].style2:hover,
-.button.style2:hover,
-button.style2:hover {
-    background-color: rgba(229, 230, 231, 0.25);
-}
-
-input[type="button"].style2:active,
-input[type="submit"].style2:active,
-input[type="reset"].style2:active,
-.button.style2:active,
-button.style2:active {
-    background-color: rgba(229, 230, 231, 0.375);
-}
-
 /* Form */
 
 form {
     margin: 0 0 2em 0;
-}
-
-select
-{
-    -webkit-appearance: none;
-   -moz-appearance: none;
-   
 }
 
 form > .fields {
@@ -213,11 +144,6 @@ select{ margin-bottom: 0.65em;}
 h1 { font-size: 2em; text-align: center; margin-bottom: 10px; }
 
 input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="tel"],
-input[type="search"],
-input[type="url"],
 select,
 textarea {
     color: #39454b;
@@ -230,39 +156,17 @@ textarea {
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-input[type="search"]:focus,
-input[type="url"]:focus,
 select:focus,
 textarea:focus {
     border-color: #9ac8e9;
 }
 
 input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="tel"],
 input[type="search"],
-input[type="url"],
 select {
     line-height: 1.35em;
     background: #fff;
 }
-
-
-/* Sections/Article */
-
-header {
-    margin-bottom: 1em;
-}
-
-header p {
-    display: block;
-    margin: 1em 0 0 0;
-    padding: 0 0 0.5em 0;
-} 
 
 .bgwallpaper {
     background: #0f171e;
@@ -295,60 +199,11 @@ table tbody tr:hover
 }
 
 
-.header-burger {
-    display: inline-block;
-    cursor: pointer;
-  }
-  .header-burger ,
-#header {
-    position: fixed;
-    right: 10px;
-    top: 10px;
-    
-  }
-
-#header
-{
-    position: fixed;
-    right: 10px;
-    top: 10px;
-    z-index: 1000;
-}
 nav a{ display: block;}
 nav a:hover
 {
     background-color: #efefef;
     color: #000;
-}
-
-#header:hover .navigation
-{
-    display: block;
-}
-
-.bar1, .bar2, .bar3 {
-width: 35px;
-height: 5px;
-background-color: #333;
-margin: 6px 0;
-transition: 0.4s;
-}
-
-/* Rotate first bar */
-.header:hover .bar1 {
--webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
-transform: rotate(-45deg) translate(-9px, 6px) ;
-}
-
-/* Fade out the second bar */
-.header:hover .bar2 {
-opacity: 0;
-}
-
-/* Rotate last bar */
-.header:hover .bar3 {
--webkit-transform: rotate(45deg) translate(-8px, -8px) ;
-transform: rotate(45deg) translate(-8px, -8px) ;
 }
 
 #result table { display: none; }
@@ -529,22 +384,6 @@ td.w100 { width: 100px; }
 .icon_add_deck:hover
 {
     background: url("/media/assets/images/icon_add_deck-hover.png") 0 5px no-repeat;
-}
-.icon_remove
-{
-    background: url("/media/assets/images/remove.png") 0 0 no-repeat;
-}
-.icon_remove:hover
-{
-    background: url("/media/assets/images/remove-hover.png") 0 0 no-repeat;
-}
-.icon_add
-{
-    background: url("/media/assets/images/add.png") 0 0 no-repeat;
-}
-.icon_add:hover
-{
-    background: url("/media/assets/images/add-hover.png") 0 0 no-repeat;
 }
 .icon_add_pool
 {

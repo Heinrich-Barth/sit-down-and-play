@@ -12,6 +12,7 @@
     width: auto;
 }
 
+.clearAfter::after,
 .clear { clear: both; float: none; }
 h1 { display: none; }
 
@@ -208,3 +209,42 @@ div.count_bubble {
     transform: rotate(-90deg);
     cursor: pointer;
 }
+
+.on-drag-over {
+    background: #98c593 !important;
+}
+
+.on-drag-over .deckbuilding-summary,
+.on-drag-over .navigation,
+.on-drag-over .on-drag-hide { visibility: hidden; }
+
+.on-drop-info { 
+    display: none; 
+    position: fixed;
+    top: 40%;
+    left: 40%;
+    padding: 20px;
+    font-size: 2em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.5em;
+}
+
+.on-drag-over .on-drop-info { display: block; }
+#help_observer { float: left;}
+
+.decklist .action a { color: #ffa500; }
+.decklist .action a:hover { color:  #fff; }
+
+.builder-hint {
+    padding-top: 100px;
+}
+
+.builder-hint-content {
+    max-width: 300px; 
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+span.builder-white { color: #fff !important; font-weight: bold;}

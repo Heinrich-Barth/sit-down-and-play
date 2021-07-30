@@ -77,7 +77,7 @@ const SearchBar = {
             return;
 
         const elem = document.createElement("div");
-        elem.setAttribute("class", "pos-rel bgblue filters");
+        elem.setAttribute("class", "pos-rel bgblue filters on-drag-hide");
         elem.setAttribute("id", "searchbar");
         elem.innerHTML = `
             <form method="post" action="#">

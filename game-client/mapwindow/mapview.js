@@ -156,10 +156,13 @@ const MapBuilder =
                 elem.on('click', function (e) 
                 {
                     MapBuilder.events.onSiteMarkerClick(sSiteTitle);
-                    MapBuilder.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], MapBuilder.clickZoomLevel);
+                    let nZoom = MapBuilder.instanceLeafletjsMap.getZoom();
+                    if (nZoom < MapBuilder.clickZoomLevel)
+                        nZoom = MapBuilder.clickZoomLevel;
+                    MapBuilder.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], nZoom);
                 });
             }
-
+            
             elem.region = region;
 
             if (site !== "")
@@ -389,7 +392,7 @@ const MapBuilder =
             let lat = 77.29788306692042;
             let lng = -107.138671875;
 
-            let nZoom = MapBuilder.maxZoom - (window.location.search.indexOf("fullscreen=") === -1 ? 2 :  1);
+            let nZoom = MapBuilder.maxZoom - 1;
             
             L.tileLayer('/media/maps/regions/{z}/tile_{x}_{y}.jpg').addTo(map);
             map.setView(L.latLng(lat, lng), nZoom);
@@ -494,7 +497,11 @@ const MapBuilder =
     onClickRegionMarker : function(e)
     {
         MapBuilder.events.onRegionClick(e.target.region);
-        MapBuilder.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], MapBuilder.clickZoomLevel);
+
+        let nZoom = MapBuilder.instanceLeafletjsMap.getZoom();
+        if (nZoom < MapBuilder.clickZoomLevel)
+            nZoom = MapBuilder.clickZoomLevel;
+        MapBuilder.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], nZoom);
     },
     
     showRegionMarker : function()
@@ -665,7 +672,7 @@ const MapBuilder =
             
         document.querySelector(".map_view_layer").classList.remove("hide");
         DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
-
+        document.getElementById("found_sites").innerHTML = '<span class="caption">Click on any region marker and<br>choose a starting site</span>';
         MapBuilder.factory.buildMap();
     },
     
@@ -746,67 +753,40 @@ const MapCreator = {
         if (_list !== null && _list.length > 0)
             return;
 
-        const div = document.createElement("div");
-        div.setAttribute("class", "blue-box mapchooser hide");
-
-        div.innerHTML = `<form method="post" action="#">
-                <div class="fields" style="margin: 0px;">
-
-                    <div class="field">
-                        <select id="region" name="region">
-                            <option value="">Select Region</option>
-                        </select>
-                    </div>
-
-                    <div class="field hide">
-                        <select id="sitelist" name="region">
-                            <option value="">Select Site</option>
-                        </select>
-                    </div>
-
-                    <div class="field"><input type="text" name="card_text" id="card_text" placeholder="Search site/region title" /></div>
-
-                    <div class="field padding10">
-                        <h2>Alignment</h2>
-                        <input type="checkbox" id="show_hero" name="hero" value="hero">
-                        <label for="show_hero"><i class="fa fa-toggle-off" aria-hidden="true"></i> Hero Sites</label>
-
-                        <input type="checkbox" id="show_minion" name="hero" value="hero">
-                        <label for="show_minion"><i class="fa fa-toggle-off" aria-hidden="true"></i> Minion Sites</label>
-
-                        <input type="checkbox" id="show_balrog" name="hero" value="hero">
-                        <label for="show_balrog"><i class="fa fa-toggle-off" aria-hidden="true"></i> Balrog Sites</label>
-
-                        <h2>Playable Items</h2>
-                        <input type="checkbox" id="show_minor" name="hero" value="hero">
-                        <label for="show_minor"><i class="fa fa-toggle-off" aria-hidden="true"></i> Minor</label>
-
-                        <input type="checkbox" id="show_major" name="hero" value="hero">
-                        <label for="show_major"><i class="fa fa-toggle-off" aria-hidden="true"></i> Major</label>
-
-                        <input type="checkbox" id="show_greater" name="hero" value="hero">
-                        <label for="show_greater"><i class="fa fa-toggle-off" aria-hidden="true"></i> Greater</label>
-
-                        <input type="checkbox" id="show_rings" name="hero" value="hero">
-                        <label for="show_rings"><i class="fa fa-toggle-off" aria-hidden="true"></i> Rings</label>
-
-                        <input type="checkbox" id="show_info" name="hero" value="hero">
-                        <label for="show_info"><i class="fa fa-toggle-off" aria-hidden="true"></i> Info</label>
-                    </div>
-
-                </div>
-            </form>`;
-
+        let div = document.createElement("div");
+        div.setAttribute("class", "map-search cursor-pointer fr blue-box");
+        div.innerHTML = '<i class="fa fa-search" aria-hidden="true" title="Click to see search options"></i>';
+        div.onclick = MapCreator.toggleSearchTemplatePane;
         document.body.appendChild(div);
 
-        document.querySelector(".map-search").onclick = function(e)
-        {
-            let jElem = document.querySelector(".mapchooser");
-            if (jElem.classList.contains("hide"))
-                jElem.classList.remove("hide");
-            else
-                jElem.classList.add("hide");
-        };
+        div = document.createElement("div");
+        div.setAttribute("class", "blue-box mapchooser hide");
+
+        div.innerHTML = `<div class="field"><input type="text" name="card_text" id="card_text" placeholder="Search site/region title" /></div>
+                        <div class="field">
+                            <select id="region" name="region">
+                                <option value="">Select Region</option>
+                            </select>
+                        </div>
+                        <div class="field hide"><select id="sitelist" name="region"><option value="">Select Site</option></select></div>`;
+
+        document.body.appendChild(div);
+    },
+
+    hideSearchTemplatePane : function()
+    {
+        let jElem = document.querySelector(".mapchooser");
+        if (!jElem.classList.contains("hide"))
+            jElem.classList.add("hide");
+    },
+
+    toggleSearchTemplatePane : function()
+    {
+        let jElem = document.querySelector(".mapchooser");
+        if (jElem.classList.contains("hide"))
+            jElem.classList.remove("hide");
+        else
+            jElem.classList.add("hide");
     },
     
     init : function()
@@ -852,6 +832,7 @@ const MapCreator = {
                 MapBuilder.jMarkerRegions[sRegionTitle].fire('click');
             
             MapCreator.ignoreMarkerClickOnce = false;
+            MapCreator.hideSearchTemplatePane();
         };     
         
         var textBox = document.getElementById("card_text");
@@ -1149,6 +1130,7 @@ const MapCreator = {
     fillSiteList : function()
     {
         DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
+        MapCreator.hideSearchTemplatePane();
 
         if (typeof MapCreator._temp === "undefined")
             return;
