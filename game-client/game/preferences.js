@@ -38,7 +38,7 @@ const Preferences = {
 
         _showRule : function(val)
         {
-            MapWindow.showRules(val.replace("rule_", ""));
+            MapWindow.showRules(val.replace("rules_", ""));
         }
     },
 
@@ -239,7 +239,7 @@ const Preferences = {
         Preferences.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", Preferences.callbacks._gameAudio);
         Preferences.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", Preferences.callbacks._endGame);
 
-        Preferences.addConfigAction("rules_wizard", "The Wizards", false, "fa-eye", Preferences.callbacks._showRule);
+        Preferences.addConfigAction("rules_wizards", "The Wizards", false, "fa-eye", Preferences.callbacks._showRule);
         Preferences.addConfigAction("rules_dragons", "The Dragons", false, "fa-eye", Preferences.callbacks._showRule);
         Preferences.addConfigAction("rules_dark-minions", "Dark Minions", false, "fa-eye", Preferences.callbacks._showRule);
         Preferences.addConfigAction("rules_lidless-eye", "Lidless Eye", false, "fa-eye", Preferences.callbacks._showRule);

@@ -20,6 +20,8 @@ function _register(pEventManager)
         targetList.push(navigationEntry("/cards", "Card Browser"));
         targetList.push(navigationEntry("/deckbuilder", "Deckbuilder"));
         targetList.push(navigationEntry("/", "Play a game"));
+        targetList.push(navigationEntry("/map/regions", "Region Map"));
+        targetList.push(navigationEntry("/map/underdeeps", "Underdeeps Map"));
         targetList.push(navigationEntry("/about", "About"));
     });
 }

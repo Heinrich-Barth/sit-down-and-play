@@ -1,12 +1,3 @@
-
-module.exports = 
-{
-    setupDecks : function() 
-    {
-        return newInstance();
-    }
-};
-
 var CARD_STATE = 
 {
     ready : 0,
@@ -22,20 +13,14 @@ let GAME_TYPE = {
     arda : 2
 }
 
-function newInstance()
+function newInstance(nType)
 {
-
-    function getGameType()
-    {
-        return GAME_TYPE.multiplayer;
-    }
-
     /**
      * This manages the decks of given players
      */
     const DECKS = {
 
-        _gameType : getGameType(),
+        _gameType : nType,
 
         _uuid_count : 0,
 
@@ -309,3 +294,9 @@ function newInstance()
     
     return DECKS;
 }
+
+exports.setupDecks = function() 
+{
+    return newInstance(GAME_TYPE.multiplayer);
+};
+
