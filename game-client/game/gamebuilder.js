@@ -137,7 +137,12 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }
 
             
-            setTimeout(() => DomUtils.removeNode(document.getElementById("lidles-eye")), 1500);
+            setTimeout(() => {
+
+                DomUtils.removeNode(document.getElementById("lidles-eye"))
+                document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
+                
+            }, 1500);
         },
         
         onAddCardToStagingArea : function(bIsMe, cardCode, uuid, target, type, state, revealed)

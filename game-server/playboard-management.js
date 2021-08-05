@@ -1,16 +1,4 @@
 
-module.exports = 
-{
-    /**
-     * Create a new Game
-     * @param {Array} _agentList 
-     * @returns 
-     */
-    setup : function(_agentList, _eventManager, _gameCardProvider) 
-    {
-        return new PlayBoardManagement(require("./deck-manager.js").setupDecks(), _agentList, _eventManager, _gameCardProvider);
-    }
-};
 
 function isValidTarget(target)
 {
@@ -190,15 +178,14 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
      */
     PLAYBOARD_MANAGER.AddDeck = function(playerId, jsonDeck)
     {
-        if (!PLAYBOARD_MANAGER.decks.addDeck(playerId, jsonDeck, PLAYBOARD_MANAGER.agents, PLAYBOARD_MANAGER.gameCardProvider))
-            return false;
+        PLAYBOARD_MANAGER.decks.addDeck(playerId, jsonDeck, PLAYBOARD_MANAGER.agents, PLAYBOARD_MANAGER.gameCardProvider);
 
         PLAYBOARD_MANAGER.stagingareas[playerId] = {
             resources : [],
             hazards : []
         };
 
-        PLAYBOARD_MANAGER._eventManager.trigger("on-deck-added", playerId, jsonDeck, PLAYBOARD_MANAGER.data)
+        PLAYBOARD_MANAGER._eventManager.trigger("on-deck-added", playerId, jsonDeck, PLAYBOARD_MANAGER.decks)
         return true;
     };
 
@@ -215,7 +202,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
     PLAYBOARD_MANAGER.GetCardsInHand = function(playerId)
     {
-        var pDeck = PLAYBOARD_MANAGER.decks.getCards.hand(playerId);
+        var pDeck = PLAYBOARD_MANAGER.decks.getCards().hand(playerId);
         if (pDeck === null)
             return [];
         else
@@ -233,7 +220,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         var res = [];
 
         var _card;
-        var list = PLAYBOARD_MANAGER.decks.getCards.hand(playerId);
+        var list = PLAYBOARD_MANAGER.decks.getCards().hand(playerId);
         for (var i = 0; i < list.length && i < nCount; i++)
         {
             _card = PLAYBOARD_MANAGER.decks.getFullPlayerCard(list[i]);
@@ -249,7 +236,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         let _uuid = "";
         if (bOnlyGetTopCard)
         {
-            const list = PLAYBOARD_MANAGER.decks.getCards.hand(playerId);
+            const list = PLAYBOARD_MANAGER.decks.getCards().hand(playerId);
             if (list.length > 0)
                 _uuid = list[0];
         }
@@ -279,27 +266,27 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
         hand : function(playerId)
         {
-            return PLAYBOARD_MANAGER.decks.getCards.hand(playerId).length;
+            return PLAYBOARD_MANAGER.decks.getCards().hand(playerId).length;
         },
 
         playdeck : function(playerId)
         {
-            return PLAYBOARD_MANAGER.decks.getCards.playdeck(playerId).length;
+            return PLAYBOARD_MANAGER.decks.getCards().playdeck(playerId).length;
         },
 
         sideboard : function(playerId)
         {
-            return PLAYBOARD_MANAGER.decks.getCards.sideboard(playerId).length;
+            return PLAYBOARD_MANAGER.decks.getCards().sideboard(playerId).length;
         },
 
         discard : function(playerId)
         {
-            return PLAYBOARD_MANAGER.decks.getCards.discardpile(playerId).length;
+            return PLAYBOARD_MANAGER.decks.getCards().discardpile(playerId).length;
         },
 
         victory : function(playerId)
         {
-            return PLAYBOARD_MANAGER.decks.getCards.victory(playerId).length;
+            return PLAYBOARD_MANAGER.decks.getCards().victory(playerId).length;
         }
     };
 
@@ -340,26 +327,26 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
     PLAYBOARD_MANAGER.GetCardsInSideboard = function(playerId)
     {
-        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards.sideboard(playerId));
+        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards().sideboard(playerId));
     };
 
     PLAYBOARD_MANAGER.GetCardsInDiscardpile = function(playerId)
     {
-        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards.discardpile(playerId));
+        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards().discardpile(playerId));
     };
 
     PLAYBOARD_MANAGER.GetCardsInPlaydeck = function(playerId)
     {
-        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards.playdeck(playerId));
+        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards().playdeck(playerId));
     };
     PLAYBOARD_MANAGER.GetCardsInVictory = function(playerId)
     {
-        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards.victory(playerId));
+        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards().victory(playerId));
     };
 
     PLAYBOARD_MANAGER.GetCardsInHand = function(playerId)
     {
-        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards.hand(playerId));
+        return this.getCardList(PLAYBOARD_MANAGER.decks.getCards().hand(playerId));
     };
 
     /**
@@ -585,11 +572,11 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
         
         // remove chard from deck 
-        var bRemoved = pDeck.pop.fromHand(uuid) || 
-                       pDeck.pop.fromSideboard(uuid) || 
-                       pDeck.pop.fromPlaydeck(uuid) || 
-                       pDeck.pop.fromDiscardpile(uuid) ||
-                       pDeck.pop.fromVictory(uuid);
+        var bRemoved = pDeck.pop().fromHand(uuid) || 
+                       pDeck.pop().fromSideboard(uuid) || 
+                       pDeck.pop().fromPlaydeck(uuid) || 
+                       pDeck.pop().fromDiscardpile(uuid) ||
+                       pDeck.pop().fromVictory(uuid);
         if (bRemoved)
             return true;
 
@@ -1013,7 +1000,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             jCard = PLAYBOARD_MANAGER.GetCardByUuid(_uuid);
             pDeck = jCard === null ? null : PLAYBOARD_MANAGER.decks.getPlayerDeck(jCard.owner);
             if (pDeck !== null)
-                pDeck.push.toDiscardpile(_uuid);
+                pDeck.push().toDiscardpile(_uuid);
         }
 
         PLAYBOARD_MANAGER.companies[companyUuid].sites = [];
@@ -1042,7 +1029,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             pDeck = jCard === null ? null : PLAYBOARD_MANAGER.decks.getPlayerDeck(jCard.owner);
             if (pDeck !== null)
             {
-                pDeck.push.toDiscardpile(_uuid);
+                pDeck.push().toDiscardpile(_uuid);
                 vsSites.splice(i, 1);
                 return true;
             }
@@ -1099,7 +1086,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         const companyId = PLAYBOARD_MANAGER.obtainUniqueCompanyId(playerId);
         if (source === "hand")
         {
-            pDeck.pop.fromHand(uuid);
+            pDeck.pop().fromHand(uuid);
         }
         else
         {
@@ -1138,7 +1125,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
         if (source === "hand")
         {
-            pDeck.pop.fromHand(uuid);
+            pDeck.pop().fromHand(uuid);
 
             PLAYBOARD_MANAGER.companies[companyId].characters.push({ uuid: uuid, influenced : [] });
             PLAYBOARD_MANAGER.characters[uuid] = createNewCharacter(companyId, uuid);
@@ -1201,9 +1188,9 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             return false;
 
         if (type === "victory")
-            return pDeck.push.toVictory(uuid);
+            return pDeck.push().toVictory(uuid);
         else if (type === "discard")
-            return pDeck.push.toDiscardpile(uuid);
+            return pDeck.push().toDiscardpile(uuid);
         else
             return false;
     };
@@ -1237,17 +1224,17 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         switch(target)
         {
             case "victory":
-                return pDeck.push.toVictory(uuid);
+                return pDeck.push().toVictory(uuid);
 
             case "sideboard":
-                return pDeck.push.toSideboard(uuid);
+                return pDeck.push().toSideboard(uuid);
 
             case "discardpile":
             case "discard":
-                return pDeck.push.toDiscardpile(uuid);
+                return pDeck.push().toDiscardpile(uuid);
 
             case "playdeck":
-                return pDeck.push.toPlaydeck(uuid);
+                return pDeck.push().toPlaydeck(uuid);
 
             case "hand":
                 {
@@ -1259,7 +1246,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
                     }
                 }
                 
-                return pDeck.push.toHand(uuid);
+                return pDeck.push().toHand(uuid);
 
             default:
                 console.log("Unknown target " + target);
@@ -1303,7 +1290,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         if (pDeck === null)
             return null;
 
-        pDeck.pop.fromHand(_uuid);
+        pDeck.pop().fromHand(_uuid);
         return card;
     };
 
@@ -1468,20 +1455,20 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             switch(target)
             {
                 case "victory":
-                    return pDeck.push.toVictory(cardUuid);
+                    return pDeck.push().toVictory(cardUuid);
 
                 case "sideboard":
-                    return pDeck.push.toSideboard(cardUuid);
+                    return pDeck.push().toSideboard(cardUuid);
 
                 case "discardpile":
                 case "discard":
-                    return pDeck.push.toDiscardpile(cardUuid);
+                    return pDeck.push().toDiscardpile(cardUuid);
 
                 case "playdeck":
-                    return pDeck.push.toPlaydeck(cardUuid);
+                    return pDeck.push().toPlaydeck(cardUuid);
 
                 case "hand":
-                    return pDeck.push.toHand(cardUuid);
+                    return pDeck.push().toHand(cardUuid);
 
                 default:
                     console.log("Unknown target " + target);
@@ -1576,3 +1563,17 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
     
     return PLAYBOARD_MANAGER;
 }
+
+const DeckManagerDefault = require("./deckmanager-default");
+const DeckManagerArda = require("./deckmanager-arda");
+
+/**
+ * Create a new Game
+ * @param {Array} _agentList 
+ * @returns 
+ */
+ exports.setup = function(_agentList, _eventManager, _gameCardProvider, isArda) 
+ {
+     const pDeckManager = isArda ? new DeckManagerArda() : new DeckManagerDefault();
+     return new PlayBoardManagement(pDeckManager, _agentList, _eventManager, _gameCardProvider);
+ };

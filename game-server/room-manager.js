@@ -10,13 +10,14 @@ let fnSocketIo = function() { return null; }
  * @param {String} room 
  * @returns TRUE if the romm has been created, FALSE if it already existed
  */
-const _createRoom = function(room) 
+const _createRoom = function(room, isArda, userId) 
 {
     if (ROOM_MANAGER._rooms[room] !== undefined)
         return false;
     else
     {
-        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider);
+        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda);
+        ROOM_MANAGER._rooms[room].game.setGameAdminUser(userId);
         return true;
     }
 };
@@ -490,9 +491,13 @@ const ROOM_MANAGER = {
      * @param {JSON} jDeck 
      * @returns Timestamp when joined
      */
-    addToLobby: function (room, userId, displayname, jDeck) 
+    addToLobby: function (room, userId, displayname, jDeck, isArda) 
     {
-        let isFirst = _createRoom(room);
+        let isFirst = _createRoom(room, isArda, userId);       
+        
+        if (isArda)
+            ROOM_MANAGER._eventManager.trigger("arda-prepare-deck", ROOM_MANAGER.gameCardProvider, jDeck, isFirst);
+
         let lNow = Date.now();
         ROOM_MANAGER._rooms[room].players[userId] = createPlayer(displayname, jDeck, isFirst, lNow);
 

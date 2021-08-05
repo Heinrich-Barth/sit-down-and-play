@@ -159,13 +159,13 @@ class Chat {
 
 const Game = require("./game.js");
 
-exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider)
+exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda)
 {
     console.log("Setting up game " + room);
 
     let pAPI = new GameAPI(io, room);
     let pChat = new Chat(pAPI);
-    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider);
+    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider, isArda);
 
     return {
         secret: UTILS.createSecret(),

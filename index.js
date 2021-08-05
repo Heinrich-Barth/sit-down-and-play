@@ -367,19 +367,19 @@ SERVER.instance.get("/", (req, res) => res.redirect("/play"));
   * About Page
   */
 SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
- 
-/**
- * Home
- */
-SERVER.instance.get("/play", function (req, res) 
+
 {
-    SERVER.clearCookies(res);
-    SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/home.html");
-});
+    const GamePlayRouteHandlerDefault = require("./game-play-standard");
+    new GamePlayRouteHandlerDefault(SERVER, "/play", "home.html", "login.html", "lobby.html").setupRoutes();
+
+    const GamePlayRouteHandlerArda = require("./game-play-arda");
+    new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login.html", "lobby.html").setupRoutes();
+}
+
+require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
 
 require("./game-rules").setup(SERVER, g_pExpress);
-require("./game-default").setup(SERVER);
-require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
+
 
 /**
  * Health Endpoint

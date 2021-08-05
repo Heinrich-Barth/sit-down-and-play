@@ -1,0 +1,48 @@
+
+
+.arda-hand-wrapper {
+    position: fixed;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.arda-hand-container {
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.arda-hand-container i { cursor: pointer; color: #ffa500; }
+.arda-hand-container i:hover { color: #fff; }
+
+.arda-card-hands { 
+    position: fixed;
+    right: 10px;
+    z-index: 400;
+    padding: 5px;
+    max-width: 580px;
+    min-width: 200px;
+    min-height: 84px;
+}
+
+div#arda_characters_hand { top: 100px; }
+div#arda_minors_hand { top: 220px; }
+div#arda_mps_hand { bottom: 10px; }
+
+.arda-card-hands-sizer {
+    color: #fff;
+    font-size: 10px;
+    padding: 5px 10px;
+    text-align: right;
+}
+.arda-card-hands-sizer strong { color: #ffa500; }
+
+.arda-inline { display: inline-block}
+.arda-card-hands .arda-card-hand,
+.arda-card-hands .card-hand {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    min-height: 60px;
+}

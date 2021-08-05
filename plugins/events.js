@@ -4,6 +4,8 @@ const navigationEntry = function(url, label)
     return { url: url, label: label };
 };
 
+const Arda = require("./game-arda");
+
 function _register(pEventManager)
 {
     console.log("register custom events");
@@ -24,6 +26,10 @@ function _register(pEventManager)
         targetList.push(navigationEntry("/map/underdeeps", "Underdeeps Map"));
         targetList.push(navigationEntry("/about", "About"));
     });
+
+    pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
+    pEventManager.addEvent("arda-on-deck-added", (playerId, PLAYBOARD_MANAGER) => Arda.onDeckAdded(playerId, PLAYBOARD_MANAGER));
+
 }
 
 function __ignore()

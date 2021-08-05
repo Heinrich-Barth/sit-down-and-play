@@ -1,14 +1,24 @@
 
 
+/**
+ * Add ARDA specific routes
+ * 
+ * @param {Object} Game 
+ */
+const setupArdaSpecials = function(Game)
+{
+    require("./game-arda").setupArdaSpecials(Game);
+}
 
-var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager)
+var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager, isArda)
 {
     const Game =
     {
         _playboardManager: _playboardManager,
         scoring : _score,
         _eventManager : _eventManager,
-
+        _isArda : isArda,
+        _adminUser : "",
         apis : {
             chat : _Chat,
             meccgApi : _MeccgApi
@@ -1146,8 +1156,13 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
         {
             var card = Game._playboardManager.GetFirstCompanyCharacterCardByCompanyId(uuid);
             return card !== null ? card.code : sDefault;
-        }
+        },
 
+        setGameAdminUser : function(id)
+        {
+            if (id !== undefined && id !== "" && Game._adminUser === "")
+                Game._adminUser = id;
+        }
     };
 
     Game.apis.meccgApi.addListener("/game/card/state/set", Game.callbacks.card.onGameCardStateSet); //xxx
@@ -1200,14 +1215,18 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
     Game._eventManager.trigger("register-game-endpoints", Game.apis.meccgApi);
 
+    if (isArda)
+        setupArdaSpecials(Game);
+
     return Game;
 }
 
-exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider)
+exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda)
 {
     return new GameInstance(_MeccgApi, 
                             _Chat, 
-                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider), 
+                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider, isArda), 
                             require("./scores.js").create(),
-                            _eventManager);
+                            _eventManager,
+                            isArda);
 }

@@ -68,7 +68,9 @@ const CardDataProvider = {
 }
 
 
-exports.validateDeck = (jDeck) => DeckValidator.validate(jDeck, CardRepository);
+exports.validateDeck = (jDeck) => DeckValidator.validate(jDeck);
+
+exports.validateDeckArda = (jDeck) => DeckValidator.validateArda(jDeck, CardRepository);
 
 exports.load = (cardsUrl) => CardDataProvider.load(cardsUrl);
 

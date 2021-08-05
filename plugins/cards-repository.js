@@ -64,6 +64,7 @@ const getRemovableKeysArray = function()
 const CARDS = {
 
     _raw : {},
+    _cards : {},
 
     getCards : function()
     {
@@ -126,8 +127,9 @@ const CARDS = {
 
     prepareArda : function()
     {
-        for (let card of this._raw) 
-            card.Mind = toInt(card.Mind);
+        this._cards = {};
+        for (let card of this._raw)
+            this._cards[card.code] = card;
     },
 
     removeUnusedFields : function()
@@ -260,6 +262,11 @@ const CARDS = {
         return code === undefined || code === "" || CARDS._types[code] === undefined ? "" : CARDS._types[code];
     },
 
+    getCardByCode : function(code)
+    {
+        return code === undefined || code === "" || CARDS._cards[code] === undefined ? null : CARDS._cards[code];
+    },
+
     isCardAvailable : function(code)
     {
         return code !== undefined && code !== "" && CARDS._types[code] !== undefined;
@@ -282,3 +289,5 @@ exports.getCards = () => CARDS.getCards();
 exports.isCardAvailable = (code) => CARDS.isCardAvailable(code);
 
 exports.getCardType = (code) => CARDS.getCardType(code);
+
+exports.getCardByCode = (code) => CARDS.getCardByCode(code);
