@@ -31,12 +31,12 @@ class Deck extends DeckCommons {
 
     shuffle()
     {
-        this.playdeck = this.shuffleAny(this.playdeck);
+        this.shuffleAny(this.playdeck);
     }
 
     shuffleDiscardpile()
     {
-        this.discardPile = this.shuffleAny(this.discardPile);
+        this.shuffleAny(this.discardPile);
     }
 
     isEmptyPlaydeck()
@@ -44,21 +44,21 @@ class Deck extends DeckCommons {
         return this.playdeck.length === 0;
     }
 
-    moveDiscardIntoPlaydeck()
+    moveList(listSource, listTarget)
     {
         // move discardpile into playdeck and reshuffle
-        if (this.playdeck.length === 0)
+        if (listSource.length > 0)
         {
-            for (let i = 0; i < this.discardPile.length; i++)
-                this.playdeck.push(this.discardPile[i]);
-                                    
-            this.discardPile = [];
-            this.shuffle();
-
-            console.log("moved discard pile into playdeck again");
+            for (let i = 0; i < listSource.length; i++)
+                listTarget.push(listSource[i]);
+                   
+            listSource.splice(0, listSource.length)
+            this.shuffleAny(listSource);
+            return true;
         }
+        else
+            return false;
     }
-
     
     /**
      * Add cards to the game AFTER all decks have been registered already,
@@ -101,7 +101,13 @@ class Deck extends DeckCommons {
 
     draw()
     {
-        return this.transferCard(this.playdeck.length, this.handCards);
+        if (this.playdeck.length === 0 && this.discardPile.length > 0)
+        {
+            this.moveList(this.discardPile, this.playdeck);
+            this.shuffleAny(this.playdeck);
+        }
+
+        return this.transferCard(this.playdeck, this.handCards);
     }
 
     popTopCard()
@@ -269,36 +275,7 @@ class Deck extends DeckCommons {
             }
         }
     }
-    /*
-    get()
-    {
-        const deck = this;
-        return {
-
-            hand : function()
-            {
-                return deck.handCards;
-            },
-            discardpile : function()
-            {
-                return deck.discardPile;
-            },
-            playdeck : function()
-            {
-                return deck.playdeck;
-            },
-            victory : function()
-            {
-                return deck.victory;
-            },
-            sideboard : function()
-            {
-                return deck.sideboard;
-            }
-        }
-    }
-    */
-
+    
     addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
     {
         const MAX_CARDS_PER_DECK = this.getMaxDeckSize();

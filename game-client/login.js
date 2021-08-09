@@ -20,12 +20,16 @@ const populateField = function(jDeck, sId, bClear)
         document.getElementById(sId).value = "";
 
     if (jDeck === undefined)
+    {
+        console.log("is undefined");
         return;
+    }
 
     let sVal = document.getElementById(sId).value;
     for(let k in jDeck) 
         sVal += "\n" + jDeck[k].count + " " + k;
 
+    console.log("add " + sId);
     document.getElementById(sId).value = sVal.trim();
 };
 
@@ -35,10 +39,14 @@ const populateDeck = function(jData)
         return;
 
     populateField(jData.resources, "resources", true);
+    populateField(jData.resource, "resources", false);
+
     populateField(jData.hazards, "hazards", true);
+    populateField(jData.hazard, "hazards", false);
 
     populateField(jData.avatar, "characters", true);
     populateField(jData.chars, "characters", false);
+    populateField(jData.character, "characters", false);
 
     populateField(jData.sideboard, "sideboard", true);
     populateField(jData.pool, "pool", true);
@@ -311,3 +319,5 @@ const onCheckCardCodes = function()
     }
 
 })();
+
+document.body.addEventListener("meccg-file-dropped", (e) => populateDeck(e.detail), false);

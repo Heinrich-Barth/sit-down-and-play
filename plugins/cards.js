@@ -89,3 +89,5 @@ exports.getImageList = () => ImageList.getList();
 exports.getSiteList = () => CardsMap.getSiteList();
 
 exports.getMapdata = () => CardsMap.getMapdata(ImageList.getImages());
+
+exports.getCardMind = (code) => CardRepository.getCardMind(code);

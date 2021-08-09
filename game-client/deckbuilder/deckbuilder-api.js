@@ -20,7 +20,7 @@ const DeckbuilderApi =
     add : function(sTarget, jsonCard)
     {
         if (jsonCard === null || jsonCard === undefined)
-            return;
+            return false;
 
         if (this._deck[sTarget] === undefined)
             this._deck[sTarget] = { };
@@ -35,9 +35,9 @@ const DeckbuilderApi =
             }
         }
         else if (this._deck[sTarget][jsonCard.code].count > jsonCard.limit)
-            return;
-
-        this._deck[sTarget][jsonCard.code].count++;
+            return false;
+        else
+           this._deck[sTarget][jsonCard.code].count++;
 
         if (jsonCard.count > 0)
             jsonCard.count--;

@@ -246,10 +246,7 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             if (pDeck !== null)
             {
                 if (pDeck.isEmptyPlaydeck())
-                {
                     PLAYBOARD_MANAGER.decks.clearPlayerSites(playerId);
-                    pDeck.moveDiscardIntoPlaydeck();
-                }
 
                 _uuid = pDeck.draw();
             }
@@ -292,6 +289,9 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
     PLAYBOARD_MANAGER.getCardList = function(vsList)
     {
+        if (vsList === null || vsList === undefined)
+            return [];
+            
         var _newList = [ ];
 
         for (var i = 0; i < vsList.length; i++)

@@ -267,6 +267,23 @@ const CARDS = {
         return code === undefined || code === "" || CARDS._cards[code] === undefined ? null : CARDS._cards[code];
     },
 
+    getCardMind : function(code)
+    {
+
+        try
+        {
+            const card = CARDS.getCardByCode(code);
+            if (card !== null && card.Mind !== undefined)
+                return parseInt(card.Mind);
+        }
+        catch (eIgnore)
+        {
+
+        }
+
+        return -1;
+    },
+
     isCardAvailable : function(code)
     {
         return code !== undefined && code !== "" && CARDS._types[code] !== undefined;
@@ -291,3 +308,5 @@ exports.isCardAvailable = (code) => CARDS.isCardAvailable(code);
 exports.getCardType = (code) => CARDS.getCardType(code);
 
 exports.getCardByCode = (code) => CARDS.getCardByCode(code);
+
+exports.getCardMind = (code) => CARDS.getCardMind(code);

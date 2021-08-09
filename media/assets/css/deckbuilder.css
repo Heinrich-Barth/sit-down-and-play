@@ -210,27 +210,6 @@ div.count_bubble {
     cursor: pointer;
 }
 
-.on-drag-over {
-    background: #98c593 !important;
-}
-
-.on-drag-over .deckbuilding-summary,
-.on-drag-over .navigation,
-.on-drag-over .on-drag-hide { visibility: hidden; }
-
-.on-drop-info { 
-    display: none; 
-    position: fixed;
-    top: 40%;
-    left: 40%;
-    padding: 20px;
-    font-size: 2em;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 1.5em;
-}
-
-.on-drag-over .on-drop-info { display: block; }
 #help_observer { float: left;}
 
 .decklist .action a { color: #ffa500; }

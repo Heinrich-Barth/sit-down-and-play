@@ -1,5 +1,4 @@
 
-/*
 const DropZone = {
 
     dragenter : function(e) 
@@ -27,7 +26,7 @@ const DropZone = {
         try
         {
             let json = JSON.parse(sText);
-            
+            document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": json }));
         }
         catch (e)
         {
@@ -54,8 +53,19 @@ const DropZone = {
         }
     },
 
+    addCss : function()
+    {
+        /** add CSS  */
+        const link = document.createElement("link");
+        link.setAttribute("rel", "stylesheet");
+        link.setAttribute("type", "text/css");
+        link.setAttribute("href","/media/assets/css/dropfile.css");
+        document.head.appendChild(link);
+    },
+
     init : function()
     {
+        this.addCss();
         const elem = document.body;
 
         elem.ondragover = DropZone.dragenter;
@@ -82,5 +92,4 @@ const DropZone = {
     }
 };
 
-*/
-document.body.addEventListener("meccg-file-dropped", (e) => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-load-deck", { "detail": e.detail })), false);
+DropZone.init();

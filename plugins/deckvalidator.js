@@ -57,6 +57,13 @@ const extractCharacters = function(jDeck, pCardRepository)
     });
 };
 
+const extractCharactersSpecial = function(jDeck, pCardRepository)
+{
+    return res = extractBySecondary(jDeck, pCardRepository, function(card) 
+    {
+        return card.type !== undefined && card.code === "Fram Framson (TD)";
+    });
+};
 
 const extractCharactersMindMin7 = function(jDeck, pCardRepository)
 {
@@ -132,6 +139,7 @@ exports.validateArda = function(jDeck, pCardRepository)
 
         jDeck.minors = extractMinorItems(jDeck.playdeck, pCardRepository);
         jDeck.mps = extractMarshallingPoints(jDeck.playdeck, pCardRepository);
+        jDeck.chars_special = extractCharactersSpecial(jDeck.playdeck, pCardRepository);
         jDeck.chars_mind7 = extractCharactersMindMin7(jDeck.playdeck, pCardRepository);
         jDeck.chars_others = extractCharacters(jDeck.playdeck, pCardRepository);
     }

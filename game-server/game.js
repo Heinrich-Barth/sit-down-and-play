@@ -28,6 +28,11 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
         started : null,
 
+        isArda : function()
+        {
+            return this._isArda;
+        },
+
         /**
          * Send a new card to the FRONTEND GUI hand list
          * @param {String} player
@@ -728,13 +733,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                 onCharacterReceiveCard: function (userid, socket, obj)
                 {
-                    /** deprecated */
-                    /*
-                    var sourceCharacter = obj.ownerUuid;
-                    var targetCharacter = obj.targetUuid;
-                    var cardUuid = obj.card;
-                    */
-                    return false; // Game._playboardManager.CharacterTransferCard(sourceCharacter, targetCharacter, cardUuid, userid);
+                    return false;
                 },
 
                 onCharacterJoinCharacter: function (userid, socket, data)

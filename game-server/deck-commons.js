@@ -91,13 +91,18 @@ class DeckCommons {
             inputList.splice(_index, 1);
         }
 
-        return _newList;
+        const len = _newList.length; 
+        for (let i = 0; i < len; i++)
+            inputList.push(_newList[i]);
     }
 
     transferCard(listPlaydeck, listTarget)
     {
         if (listPlaydeck.length === 0)
+        {
+            console.log("no cards in source list");
             return "";
+        }
 
         const _id = listPlaydeck[0];
 
@@ -106,6 +111,23 @@ class DeckCommons {
 
         return _id;
     }
+
+    transferCardToTop(listPlaydeck, listTarget)
+    {
+        if (listPlaydeck.length === 0)
+        {
+            console.log("no cards in source list");
+            return "";
+        }
+
+        const _id = listPlaydeck[0];
+
+        listTarget.unshift(_id);
+        listPlaydeck.splice(0,1);
+
+        return _id;
+    }
+    
 
     popTopCardFrom(listPlaydeck)
     {

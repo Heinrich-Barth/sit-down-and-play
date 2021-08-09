@@ -8,11 +8,15 @@ class HandManagerArda extends HandManager
         super(pDecks);
     }
 
-    handSecond(playerId)
+    handMinorItems(playerId)
     {
-        return this.getCardPils(playerId, "handCardsSecond");
+        return this.getCardPils(playerId, "handMinorItems");
     }
 
+    handMarshallingPoints(playerId)
+    {
+        return this.getCardPils(playerId, "handCardsMP");
+    }
 }
 
 

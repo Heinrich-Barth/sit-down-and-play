@@ -525,13 +525,14 @@ const ROOM_MANAGER = {
         let sSecret = ROOM_MANAGER._rooms[room].secret;
         let sToken = ROOM_MANAGER.updatePlayerToken(room, userId);
         let sLobbyToken = ROOM_MANAGER._rooms[room].players[userId].admin ? ROOM_MANAGER._rooms[room].lobbyToken : "";
-
+        const isArda = ROOM_MANAGER._rooms[room].game.isArda() ? "true" : "false";
         return ROOM_MANAGER.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
             .replace("{TPL_LOBBY_TOKEN}", sLobbyToken)
             .replace("{TPL_USER_ID}", userId)
             .replace("{TPL_API_KEY}", sSecret)
+            .replace("{TPL_IS_ARDA}", isArda)
             .replace("{TPL_JOINED_TIMESTAMP}", sToken);
     },
 

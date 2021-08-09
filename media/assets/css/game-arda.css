@@ -8,12 +8,12 @@
 }
 
 .arda-hand-container {
-    padding: 5px;
-    text-align: center;
+    text-align: right;
     margin-bottom: 5px;
 }
 
-.arda-hand-container i { cursor: pointer; color: #ffa500; }
+.arda-hand-container i { cursor: pointer; color: #ffa500; padding: 5px; min-width: 20px;
+    text-align: center; }
 .arda-hand-container i:hover { color: #fff; }
 
 .arda-card-hands { 
@@ -46,3 +46,38 @@ div#arda_mps_hand { bottom: 10px; }
     width: 60px;
     min-height: 60px;
 }
+
+.arda-actions img {
+    border: 1px solid #000;
+    width: 20px;
+    position: absolute;
+    cursor: pointer;
+    right: 5px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 5px;
+}
+
+.arda-actions img:nth-child(1) 
+{
+    bottom: 10px;
+}
+.arda-actions img:nth-child(2) 
+{
+    top: 10px;
+}
+.arda-actions img:hover 
+{
+    background-color: #ffa500;
+
+}
+
+.arda-card-draw
+{
+    display: block;
+    height: 40px;
+    width: 60px;
+    cursor: pointer;
+    margin-top: 4px;
+    background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
+}
+.arda-card-draw:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }

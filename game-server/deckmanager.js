@@ -60,6 +60,11 @@ class DeckManager {
         
         return true;
     }
+
+    getPlayers()
+    {
+        return Object.keys(this._deck);
+    }
     
     saveCurrentGame()
     {
@@ -88,6 +93,7 @@ class DeckManager {
         deck.addDeck(jsonDeck, listAgents, this._cardMap, gameCardProvider);
         deck.shuffle();
         this._deck[playerId] = deck;
+        return deck;
     }
 
     deckCount()
