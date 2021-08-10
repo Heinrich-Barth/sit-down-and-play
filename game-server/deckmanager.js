@@ -134,7 +134,7 @@ class DeckManager {
             return false;
 
         this._cardMap[uuid].revealed = !this._cardMap[uuid].revealed;
-        return DthisECKS._cardMap[uuid].revealed;
+        return this._cardMap[uuid].revealed;
     }
     
     _clearSitesTappedByPlaer(playerId)

@@ -1,6 +1,37 @@
 
-.bg-game { background: url("/media/assets/images/poster_default.jpg") no-repeat center center fixed; }
+
+.bg-nature
 .bgnature
 {
-    background: url("/media/assets/images/poster_nature.jpg") no-repeat center center fixed;
+    background: url("/media/assets/backgrounds/nature.jpg") no-repeat center center fixed;
+}
+
+.bg-woods {
+    background: url("/media/assets/backgrounds/woods.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+.bg-willow {
+    background: url("/media/assets/backgrounds/willow.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+.bg-game,
+.bg-eagle {
+    background: url("/media/assets/backgrounds/eagle.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+.bg-river {
+    background: url("/media/assets/backgrounds/river.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+.bg-default { background: url("/media/assets/backgrounds/default.jpg") no-repeat center center fixed; background-size: cover; }
+
+.bg-rocks {
+    background: url("/media/assets/backgrounds/rocks.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.bg-nature
+{
+    background: url("/media/assets/backgrounds/nature.jpg") no-repeat center center fixed;
+    background-size: cover;
 }

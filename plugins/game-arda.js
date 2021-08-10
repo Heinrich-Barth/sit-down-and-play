@@ -4,26 +4,66 @@ const createCardEntry = function(jTarget, sName)
     jTarget[sName] = 1;
 };
 
-const addAvatarsToPool = function(jDeck)
+const addAvatarsToPoolAndSideboard = function(jDeck)
 {
     jDeck.pool = { };
+    jDeck.sideboard = { };
 
     createCardEntry(jDeck.pool, "Alatar [H] (TW)");
     createCardEntry(jDeck.pool, "Gandalf [H] (TW)");
     createCardEntry(jDeck.pool, "Pallando [H] (TW)");
     createCardEntry(jDeck.pool, "Radagast [H] (TW)");
     createCardEntry(jDeck.pool, "Saruman [H] (TW)");
+
+    createCardEntry(jDeck.sideboard, "Alatar [F] (WH)");
+    createCardEntry(jDeck.sideboard, "Gandalf [F] (WH)");
+    createCardEntry(jDeck.sideboard, "Pallando [F] (WH)");
+    createCardEntry(jDeck.sideboard, "Radagast [F] (WH)");
+    createCardEntry(jDeck.sideboard, "Saruman [F] (WH)");
 };
 
-const organizeArdaCards = function(jDeck)
+addRingwraithsToPoolAndSideboard = function(jDeck)
 {
+    jDeck.pool = { };
     jDeck.sideboard = { };
-};
 
-const clearNonPool = function(jDeck)
+    createCardEntry(jDeck.pool, "Akhôrahil the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Adûnaphel the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Dwar the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Hoarmûrath the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Indûr the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Khamûl the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "Ren the Ringwraith (LE)");
+    createCardEntry(jDeck.pool, "The Witch-king (LE)");
+    createCardEntry(jDeck.pool, "Ûvatha the Ringwraith (LE)");
+}
+
+const isHeroDeck = function(pGameCardProvider, jDeck)
 {
-    jDeck.sideboard = {};
-    jDeck.playdeck = {};
+    if (jDeck === undefined)
+        return true;
+
+    let nHeros = 0;
+    let nMinions = 0;
+
+    for(let k in jDeck)
+    {
+        count = jDeck[k];
+        if (count === 0)
+            continue;
+
+        _code = k.replace(/"/g, '');
+        let card = _code === "" ? null : pGameCardProvider.getCardByCode(_code);
+        if (card === null || card.alignment === undefined)
+            continue;
+
+        if ("Minion" === card.alignment)
+            nMinions++;
+        else if ("Hero" === card.alignment)
+            nHeros++;
+    }
+
+    return nHeros >= nMinions;
 };
 
 /**
@@ -39,13 +79,17 @@ exports.prepareDeck = function(pGameCardProvider, jDeck, keepOthers)
         return;
 
     /** make sure the avatars are available to all players */
-    addAvatarsToPool(jDeck);
+    if (isHeroDeck(pGameCardProvider, jDeck.playdeck))
+        addAvatarsToPoolAndSideboard(jDeck);
+    else
+    {
+        addRingwraithsToPoolAndSideboard(jDeck);
+        jDeck.sideboard = { };
+    }
 
     /** only the first player should have the valid arda deck */
     if (!keepOthers)
-        clearNonPool(jDeck);
-    else
-        organizeArdaCards(jDeck);
+        jDeck.playdeck = {};
 };
 
 exports.onDeckAdded = function(playerId, PLAYBOARD_MANAGER)

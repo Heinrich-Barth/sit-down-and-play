@@ -262,6 +262,7 @@ function createScoringApp(_CardList)
             {
                 sheet.classList.add("hidden");
                 ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
+                ArrayList(document).findByClassName("arda-card-hands").each((e) => e.classList.add("hidden"));
             }
         },
         

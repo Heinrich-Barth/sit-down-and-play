@@ -1,5 +1,4 @@
 
-
 exports.setupArdaSpecials = function(Game)
 {
     Game.ardaActions = { };
@@ -56,6 +55,41 @@ exports.setupArdaSpecials = function(Game)
 
     Game.callbacks.arda = { 
 
+        onRecycle : function(userid, socket, obj)
+        {
+            const deck = Game._playboardManager.decks.getAdminDeck();
+            let isMinor = false;
+
+            if (obj.type === "minor")
+            {
+                deck.recycleMinorItems();
+                Game.apis.chat.send(userid, "recycled all minor items");
+                isMinor = true;
+            }
+            else if (obj.type === "charackters")
+            {
+                deck.recycleCharacter();
+                Game.apis.chat.send(userid, "recycled all characters");
+            }
+            else
+                return;
+            
+            for (let i = 0; i < 4; i++)
+            {
+                const uuid = isMinor ? deck.drawCardMinorItems() : deck.drawCardCharacter();
+                if (uuid === "")
+                    continue;
+                    
+                const card = Game._playboardManager.decks.getFullPlayerCard(uuid);
+                if (card !== null)
+                {
+                    const data = {uuid:uuid, code:card.code, hand:obj.type, clear : i == 0};
+                    Game.apis.meccgApi.publish("/game/arda/draw", userid, data);
+                    Game.apis.chat.send(userid, "drew common card " + card.code);
+                }
+            }
+        },
+
         onAssignCharacters : function(userid)
         {
             Game.ardaActions.assignOpeningChars7(Game);
@@ -82,15 +116,29 @@ exports.setupArdaSpecials = function(Game)
                 uuid = deck.drawCardMarshallingPoints();
             else if (type === "charackters")
                 uuid = deck.drawCardCharacter();
+            else
+                return;
 
             if (uuid === "")
+            {
+                let sDeck = "There are no cards left in the ";
+                if (type === "mps")
+                    sDeck += "marshalling points deck";
+                else if (type === "minor")
+                    sDeck += "minor items offering deck";
+                else
+                    sDeck += "roving characters deck";
+
+                Game.apis.meccgApi.publish("/game/notification", userid, { type: "warning", message: sDeck } );
                 return;
+            }
+                
 
             const card = Game._playboardManager.decks.getFullPlayerCard(uuid);
             if (card === null)
                 return;
             
-            const data = {uuid:uuid, code:card.code, hand:obj.type};
+            const data = {uuid:uuid, code:card.code, hand:obj.type, clear : false};
             Game.apis.meccgApi.publish("/game/arda/draw", userid, data);
             Game.apis.chat.send(userid, "drew 1 " + obj.type + " item card");
         },
@@ -150,6 +198,7 @@ exports.setupArdaSpecials = function(Game)
     Game.apis.meccgApi.addListener("/game/arda/hands", Game.callbacks.arda.onGetHandMinorItems);
     Game.apis.meccgApi.addListener("/game/arda/from-hand", Game.callbacks.arda.onMoveArdaHandCard);
     Game.apis.meccgApi.addListener("/game/arda/draw", Game.callbacks.arda.onDrawCard);
+    Game.apis.meccgApi.addListener("/game/arda/recycle", Game.callbacks.arda.onRecycle);
     Game.apis.meccgApi.addListener("/game/arda/assign-characters", Game.callbacks.arda.onAssignCharacters);
     
 }

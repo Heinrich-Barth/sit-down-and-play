@@ -34,9 +34,9 @@ class Deck extends DeckDefault {
 
         this.copyIds(this.handCards, this.typesCharacters);
 
-        nSize = this.add(jsonDeck["minors"], this.playdeckMinorItems, _cardMap, [], gameCardProvider);
-        this.copyIds(this.playdeckMinorItems, this.typesMinors);
-        this.shuffleAnyTimes(this.playdeckMinorItems, 3);
+        /** minor items will be drawn to hand on startup */
+        nSize = this.add(jsonDeck["minors"], this.handMinorItems, _cardMap, [], gameCardProvider);
+        this.copyIds(this.handMinorItems, this.typesMinors);
 
         console.log("Added " + nSize + " minor items");
         
@@ -81,10 +81,7 @@ class Deck extends DeckDefault {
     {
         const nLen = listSource.length;
         for (let i = 0; i < nLen; i++)
-        {
-            console.log("copy id");
             listTarget.push(listSource[i]);
-        }
     }
 
     shuffleAnyTimes(list, nTimes)
@@ -141,6 +138,20 @@ class Deck extends DeckDefault {
         }
 
         return this.transferCard(this.playdeckCharacters, this.handCardsCharacters);
+    }
+
+    recycleMinorItems()
+    {
+        this.moveList(this.discardPileMinorItems, this.playdeckMinorItems);
+        this.moveList(this.handMinorItems, this.playdeckMinorItems);
+        this.shuffleAny(this.playdeckMinorItems);
+    }
+
+    recycleCharacter()
+    {
+        this.moveList(this.discardPileCharacters, this.playdeckCharacters);
+        this.moveList(this.handCardsCharacters, this.playdeckCharacters);
+        this.shuffleAny(this.playdeckCharacters);
     }
 
     addSpecialCharacers()

@@ -77,6 +77,7 @@ const getHtmlCspPage = function(page)
     {
         getCardType : SERVER.cards.getCardType,
         getCardMind : SERVER.cards.getCardMind,
+        getCardByCode : SERVER.cards.getCardByCode,
     });
     
     SERVER.authenticationManagement = require("./game-server/authentication.js");

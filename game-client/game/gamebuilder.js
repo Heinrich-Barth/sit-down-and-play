@@ -483,8 +483,17 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
             
             MeccgApi.addListener("/game/rejoin/immediately", (bIsMe, jData) => GameBuilder.restoreBoard(jData));
+
+            MeccgApi.addListener("/game/notification", (bIsMe, jData) => 
+            {
+                if (jData.type === "warning")
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": jData.message }));
+                else if (jData.type === "error")
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": jData.message }));
+                else if (jData.type === "success")
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": jData.message }));
+            });
         },
-        
                                 
         queryConnectionStatus : function()
         {
