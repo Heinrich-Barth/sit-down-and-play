@@ -532,13 +532,14 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                             else if (receivingCharacter.company_uuid !== donatingCharacter.character_uuid)
                                 drawDonatingCompanyId = donatingCharacter.character_uuid;
 
-                            if (elemDraggable.getAttribute("data-card-type") === "resource")
+                            const draggableType = elemDraggable.getAttribute("data-card-type");
+                            if (draggableType === "resource")
                             {
                                 const pThis = this;
                                 CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
                                 HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, false);
                             }
-                            else if (ui.draggable.getAttribute.attr("data-card-type") === "hazard")
+                            else if (draggableType === "hazard")
                             {
                                 const pThis = this;
                                 CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);

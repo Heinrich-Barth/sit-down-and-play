@@ -12,36 +12,13 @@ let fnSocketIo = function() { return null; }
  */
 const _createRoom = function(room, isArda, userId) 
 {
-    if (ROOM_MANAGER._rooms[room] !== undefined)
-        return false;
-    else
+    if (ROOM_MANAGER._rooms[room] === undefined)
     {
         ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda);
         ROOM_MANAGER._rooms[room].game.setGameAdminUser(userId);
-        return true;
     }
-};
 
-/**
- * Create a new player object
- * @param {String} displayname 
- * @param {JSON} jDeck 
- * @param {Boolean} isAdmin 
- * @param {Number} timeAdded 
- * @returns 
- */
-const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
-{
-    return {
-        name: displayname,
-        deck: jDeck,
-        admin: isAdmin,
-        waiting: !isAdmin,
-        timestamp: timeAdded,
-        joined: false,
-        socket: null,
-        player_access_token_once : Date.now()
-    }
+    return ROOM_MANAGER._rooms[room];
 };
 
 const ROOM_MANAGER = {
@@ -143,6 +120,7 @@ const ROOM_MANAGER = {
 
             jRoom = {
                 room : room,
+                arda : pRoom.game.isArda(),
                 created : new Date(pRoom.created).toUTCString(),
                 players : []
             }
@@ -493,19 +471,25 @@ const ROOM_MANAGER = {
      */
     addToLobby: function (room, userId, displayname, jDeck, isArda) 
     {
-        let isFirst = _createRoom(room, isArda, userId);       
-        
-        if (isArda)
+        const pRoom = _createRoom(room, isArda, userId);
+        const isFirst = pRoom.isEmpty();
+        if (isFirst)
+            console.log("first player");
+        else
+            console.log("not first player");
+            
+        if (pRoom.game.isArda())
             ROOM_MANAGER._eventManager.trigger("arda-prepare-deck", ROOM_MANAGER.gameCardProvider, jDeck, isFirst);
 
-        let lNow = Date.now();
-        ROOM_MANAGER._rooms[room].players[userId] = createPlayer(displayname, jDeck, isFirst, lNow);
-
+        const lNow = Date.now();
+        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow);
         return lNow;
     },
 
-    updateEntryTime: function (room, userId) {
-        if (ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].players[userId] !== undefined) {
+    updateEntryTime: function (room, userId) 
+    {
+        if (ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].players[userId] !== undefined) 
+        {
             let lNow = Date.now();
             ROOM_MANAGER._rooms[room].players[userId].timestamp = lNow;
             return lNow;

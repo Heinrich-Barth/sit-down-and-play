@@ -232,6 +232,11 @@ class Deck extends DeckDefault {
                 return res.to(uuid, deck.playdeck);
         };
 
+        res.toPlaydeckSpecific = function(uuid)
+        {
+            return res.to(uuid, deck.playdeck);
+        };
+
         res.toHand = function(uuid)
         {
             if (deck.isTypeCharacter(uuid))

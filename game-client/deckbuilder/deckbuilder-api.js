@@ -5,6 +5,13 @@ const DeckbuilderApi =
 
     _deck : { },
 
+    DECK_SIDEBOARD : "sideboard",
+    DECK_CHARACTER : "character",
+    DECK_RESOURCE: "resource",
+    DECK_HAZARD: "hazard",
+    DECK_AVATAR : "avatar",
+    DECK_POOL : "pool",
+
     onAdd : function(e)
     {
         const sTarget = e.detail.target;
@@ -75,29 +82,29 @@ const DeckbuilderApi =
     
     addToPool : function(code)
     {
-        return this.add("pool", code);
+        return this.add(DeckbuilderApi.DECK_POOL, code);
     },
 
     addToDeckHazard : function(code)
     {
-        return this.add("hazard", code);
+        return this.add(DeckbuilderApi.DECK_HAZARD, code);
     },
     addToDeckResources : function(code)
     {
-        return this.add("resource", code);
+        return this.add(DeckbuilderApi.DECK_RESOURCE, code);
     },
     addToDeckCharacters : function(code)
     {
-        return this.add("character", code);
+        return this.add(DeckbuilderApi.DECK_CHARACTER, code);
     },
     addToDeckAvatar : function(code)
     {
-        return this.add("avatar", code);
+        return this.add(DeckbuilderApi.DECK_AVATAR, code);
     },
 
     addToSideboard : function(code)
     {
-        return this.add("sb", code);
+        return this.add(DeckbuilderApi.DECK_SIDEBOARD, code);
     },
     
     onRetreiveDeckName : function(name)
@@ -148,89 +155,108 @@ const DeckbuilderApi =
             if (card.type === "Character")
             {
                 if (card.Secondary === "Character")
-                    DeckbuilderApi.onInitAddCard(card, count, "chars");
-                else if (card.Secondary === "Avatar")
-                    DeckbuilderApi.onInitAddCard(card, count, "avatar");
+                    DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_CHARACTER);
+                else if (card.Secondary === DeckbuilderApi.DECK_AVATAR)
+                    DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_AVATAR);
                 else
-                    DeckbuilderApi.onInitAddCard(card, count, "sb");
+                    DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
             }
             else if (card.type === "Resource")
-                DeckbuilderApi.onInitAddCard(card, count, "resource");
+                DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_RESOURCE);
             else if (card.type === "Hazard")
-                DeckbuilderApi.onInitAddCard(card, count, "hazard");
+                DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_HAZARD);
             else
-                DeckbuilderApi.onInitAddCard(card, count, "sb");
+                DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
         }
 
         var size = cards["size"];
         var count, card;
-        for (var key in cards["pool"])
+        for (var key in cards[DeckbuilderApi.DECK_POOL])
         {
-            count = cards["pool"][key].count;
+            count = cards[DeckbuilderApi.DECK_POOL][key].count;
             
             card = ViewCards.getCardFromCardCode(key);
             if (card === null)
                 Notify.error("Cannot get pool card from code " + key);
             else
-                this.onInitAddCard(card, count, "pool");
+                this.onInitAddCard(card, count, DeckbuilderApi.DECK_POOL);
         }
         
-        for (var key in cards["resources"])
+        for (var key in cards[DeckbuilderApi.DECK_RESOURCE])
         {
-            count = cards["resources"][key].count;
+            count = cards[DeckbuilderApi.DECK_RESOURCE][key].count;
             card = ViewCards.getCardFromCardCode(key);
             if (card === null)
                 Notify.error("Cannot get resource card from code " + key);
             else
                 doAddCard(card, count);
         }
-        for (var key in cards["hazards"])
+        for (var key in cards[DeckbuilderApi.DECK_HAZARD])
         {
-            count = cards["hazards"][key].count;
+            count = cards[DeckbuilderApi.DECK_HAZARD][key].count;
             card = ViewCards.getCardFromCardCode(key);
             if (card === null)
                 Notify.error("Cannot get hazard card from code " + key);
             else
                 doAddCard(card, count);
         }
-        for (var key in cards["chars"])
+        for (var key in cards[DeckbuilderApi.DECK_CHARACTER])
         {
-            count = cards["chars"][key].count;
+            count = cards[DeckbuilderApi.DECK_CHARACTER][key].count;
             card = ViewCards.getCardFromCardCode(key);
             if (card === null)
                 Notify.error("Cannot get character card from code " + key);
             else
                 doAddCard(card, count);
         }
-        for (var key in cards["avatar"])
+        for (var key in cards[DeckbuilderApi.DECK_AVATAR])
         {
-            count = cards["avatar"][key].count;
+            count = cards[DeckbuilderApi.DECK_AVATAR][key].count;
             card = ViewCards.getCardFromCardCode(key);
             if (card === null)
                 Notify.error("Cannot get avatar card from code " + key);
             else
-                this.onInitAddCard(card, count, "avatar")
+                this.onInitAddCard(card, count, DeckbuilderApi.DECK_AVATAR)
         }
         
-        for (var key in cards["sideboard"])
+        for (var key in cards[DeckbuilderApi.DECK_SIDEBOARD])
         {
-            count = cards["sideboard"][key].count;
+            count = cards[DeckbuilderApi.DECK_SIDEBOARD][key].count;
             card = ViewCards.getCardFromCardCode(key);
             if (card === null) 
                 Notify.error("Cannot get sideboard card from code " + key);
             else            
-                this.onInitAddCard(card, count, "sb")
+                this.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD)
         }
         
         return size;
     },
 }
 
+let g_bKeyIsCtrl = false;
+
+document.addEventListener('keyup', (e) => g_bKeyIsCtrl = false);
+document.addEventListener('keydown', function(e)
+{
+    if (e.keyCode == 17) 
+    {
+        e.preventDefault();
+        g_bKeyIsCtrl = true;
+    }
+
+	if (e.keyCode == 83 && g_bKeyIsCtrl)
+    {
+        g_bKeyIsCtrl = false;
+        e.preventDefault();
+        onSaveDeck();
+	}
+});
+
 async function onSaveDeck()
 {
     const fileHandle = await window.showSaveFilePicker({
         excludeAcceptAllOption: true,
-        multiple: false,          
+        multiple: false,
         types: [
             {
                 description: "Deck Files",

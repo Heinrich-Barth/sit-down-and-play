@@ -160,13 +160,15 @@ box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
 .join-game .hidden { display: none; }
 .join-game .field { display: block; }
 .join-game form > .fields > .field { width: 100%; }
-.join-game input { width: 400px !important; }
+.join-game input[type="text"] { width: 400px !important; }
 
 .join-game label {
     font-size: 1.2em;
     color: white;
     padding: 5px;
     width: 100px;
+    cursor: pointer;
+    user-select: none;
 }
 .join-game input.w100 { margin: 10px auto; }
 
@@ -179,15 +181,14 @@ box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
 .cookie_notice a:hover,
 .game h3 { color: #ff0; }
 
-textarea 
-{
+textarea {
     width: 100%;
     margin-top: 10px;
-    margin-bottom: 10px;
-    height: 100px;
+    height: 55px;
     font-size: 10px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.8);
 }
-#choose_deck { margin: 0 auto; }
 
 .join-game .button-small
 {
@@ -216,8 +217,9 @@ textarea
 .challenge-deck 
 {
     display: block;
-    padding: 0 5px;
+    padding: 0 30px;
     border-radius: 5px;
+    
 }
 
 .challenge-deck:hover {
@@ -226,12 +228,37 @@ textarea
     color: #ff0;
 }
 
-.deck-list h2 {
-    font-size: 1.3em;
-    text-align: center;
-    margin-top: 0;
-    padding-top: 0;
-}
-
 #invalid-cards-info-result ul { list-style-type: none; }
 .invisible{ visibility: hidden;}
+
+.deck-group
+{
+    margin-bottom: 20px;
+}
+
+.deck-group input { display: none; }
+
+.deck-list label {
+    font-size: 1.3em;
+    margin-top: 0;
+    padding-top: 0;
+    cursor: pointer;
+    color: #ffa500;
+    display: block;
+    width: 100%;
+}
+.deck-list { user-select: none; }
+.deck-list label:hover { color: #ff0; }
+
+input:not(:checked) ~ .challenge-deck { display: none };
+.deck-group div:last-child {     border-bottom: 1px dotted red; }
+
+.deck-list .title {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #ff0;
+}
+
+.arda-text { text-align: left; margin-left: 113px;}

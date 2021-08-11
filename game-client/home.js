@@ -36,8 +36,9 @@ const onResult = function(data)
     {
         let _room = value.room;
         let _players = value.players.sort().join(", ");
+        let _context = value.arda ? "arda" : "play";
 
-        sHtml += `<li><a href="/play/${_room}" title="Click to join this game">${_room}</a> (${_players})</li>`;
+        sHtml += `<li><a href="/${_context}/${_room}" title="Click to join this game">${_room}</a> (${_players})</li>`;
         existing.push(_room);
     });
 

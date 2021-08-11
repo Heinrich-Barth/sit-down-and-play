@@ -81,9 +81,10 @@ let Arda = {
         this.addCss();
         this.insertArdaContainer();
 
+        const bAllowRecyling = this.isAdraAdmin();
         this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false).classList.remove("hidden");
-        this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, true).classList.remove("hidden");
-        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, true);
+        this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling).classList.remove("hidden");
+        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling);
 
         this.getOpeningHands();
 
@@ -105,11 +106,15 @@ let Arda = {
         this.insertMp(div, "fa-shield", "Minor Item Offerings", "minor", "arda_minors", "");
         this.insertMp(div, "fa-trophy", "Marshalling Points", "mps", "arda_mps", "");
 
-        if (g_sLobbyToken !== "")
+        if (this.isAdraAdmin())
             this.insertOnceAction(div, "fa-users", "Assign random characters", "randomchars", "arda_ranom", "Assign random characters");
 
-
         document.body.appendChild(div);
+    },
+
+    isAdraAdmin : function()
+    {
+        return g_sLobbyToken !== "";
     },
 
     insertPlayerSelectIndicator : function()
@@ -326,7 +331,7 @@ let Arda = {
             containerId = "arda_hand_container_minor";
         else if (bIsMe && jData.hand === "mps")
             containerId = "arda_hand_container_mps";
-        else if (bIsMe && jData.hand === "charackters")
+        else if (jData.hand === "charackters")
             containerId = "arda_hand_container_charackters";
 
         const container = containerId === "" ? null : document.getElementById(containerId);
@@ -353,7 +358,7 @@ if (g_isArda !== undefined && g_isArda === true)
     MeccgApi.addListener("/game/arda/hand/minor", (bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
     MeccgApi.addListener("/game/arda/hand/characters", (bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(jData.list));
-    MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));
+    MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
 }
 else

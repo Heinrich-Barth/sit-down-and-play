@@ -150,7 +150,7 @@ var DeckList =
             return false;
         
         sCode = pCard.index;
-        if (sTargetDeck === "sb")
+        if (sTargetDeck === "sideboard")
             this.addCardGeneric(pCard, sCode, "sideboard");
         else if (sTargetDeck === "avatar")
             this.addCardToChars(pCard, sCode, true);
@@ -200,8 +200,7 @@ var DeckList =
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");
-            categoryContainer.querySelector(".result").appendChild(this.getCardDeckToAddHtml(pCard, index, targetType));
-            
+            this.sortInto(categoryContainer.querySelector(".result"), this.getCardDeckToAddHtml(pCard, index, targetType), pCard.code);
             this.updateDeckLink(targetType + "_" + index);
         }
         else
@@ -247,7 +246,7 @@ var DeckList =
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");
-            categoryContainer.querySelector(".result").appendChild(this.getCardDeckToAddHtml(pCard, index, targetType));
+            this.sortInto(categoryContainer.querySelector(".result"), this.getCardDeckToAddHtml(pCard, index, targetType), pCard.code);
             this.updateDeckLink(targetType + "_" + index);
         }
         else
@@ -287,7 +286,7 @@ var DeckList =
             if (sHtml === "-" || sHtml === "")
                 DomUtils.empty(elem);
 
-            elem.appendChild(this.getCardDeckToAddHtml(pCard, index, pref));
+            this.sortInto(elem, this.getCardDeckToAddHtml(pCard, index, pref), pCard.code);
             this.updateDeckLink(pref + "_" + index);
         }
         else /* already an entry available, so simply increase the counter */
@@ -299,6 +298,31 @@ var DeckList =
             
         this.updateCount("count_" + pref);
     },
+
+    sortInto : function(elemContainer, pNewElement, title)
+    {
+        let nRes;
+        let thisTitle;
+        let elem;
+        const list = elemContainer.querySelectorAll("div");
+        const len = list.length;
+        for (let i = 0; i < len; i++)
+        {
+            elem = list[i];
+            thisTitle = elem.getAttribute("data-code");
+            nRes = thisTitle !== undefined && title.localeCompare(thisTitle) < 0;
+            if (nRes)
+            {
+                elemContainer.insertBefore(pNewElement, elem)
+                return;
+            }
+        }
+
+        if (len === 0)
+            elemContainer.prepend(pNewElement);
+        else
+            elemContainer.appendChild(pNewElement);
+    },
     
     getCardDeckToAddHtml : function(pCard, index, pref)
     {
@@ -306,6 +330,7 @@ var DeckList =
         div.setAttribute("id", pref + "_" + index);
         div.setAttribute("class", "dflex card_of_deck_construct");
         div.setAttribute("data-index", index);
+        div.setAttribute("data-code", pCard.code);
         div.innerHTML = `<span class="action"  data-is-deck="${pref}">
             <a href="#" class="deck_add icon_add" title="increase">
                 <i class="fa fa-plus-circle" aria-hidden="true" title="Add to deck"></i>

@@ -21,7 +21,7 @@
 
     <div class="blue-box join-game on-drag-hide" id="login">
 
-        <h1>Make Yourself Known</h1>
+        <h1>Who are you to the others?</h1>
 
         <form method="post" action="#">
             <div class="fields">
@@ -32,6 +32,7 @@
                     <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Join Game</button>
 
                 </div>
+                <p class="arda-text"><input type="checkbox" id="toggle_isarda" value="isArda" name="isArda"><label for="toggle_isarda">This game will be an <b>Arda</b> game</label></p>
                 <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
             </div>
 
@@ -59,9 +60,6 @@
                     <div class="fields" style="margin: 0px;">
                         <div class="field"><textarea id="pool" class="card-type" placeholder="Paste Pool here"></textarea></div>
                     </div>
-                    <div class="fields" style="margin: 0px;">
-                        <div class="field"><textarea id="sideboard_fw" class="card-type" placeholder="Paste FC-DC-SB here"></textarea></div>
-                    </div>      
                 </div>          
                 <div class="deck-list">
                     <div class="deck-list-entries"></div>
@@ -69,13 +67,6 @@
                 <div class="deck-clear"></div>
             </div>
             <div class="deck-clear"></div>
-            <div class="fields " id="dosubmit">
-                <div class="field">
-                    <input type="file" class="invisible" id="choose_deck_upload" value="Choose" />
-                    <label class="button" for="choose_deck_upload">Load file</label>
-                </div>
-            </div>
-            
         </form>
         <form method="post" action="#" class="hidden" id="form">
             <textarea name="data"></textarea>

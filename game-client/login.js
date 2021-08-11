@@ -20,16 +20,12 @@ const populateField = function(jDeck, sId, bClear)
         document.getElementById(sId).value = "";
 
     if (jDeck === undefined)
-    {
-        console.log("is undefined");
         return;
-    }
 
     let sVal = document.getElementById(sId).value;
     for(let k in jDeck) 
         sVal += "\n" + jDeck[k].count + " " + k;
 
-    console.log("add " + sId);
     document.getElementById(sId).value = sVal.trim();
 };
 
@@ -158,15 +154,18 @@ const onLoadDecks = function(data)
 {
     g_jDecks = data;
 
-    let sHtml = "";
+    let sHtml = `<div class="title">Choose your deck</div>`;
 
     for (let i = 0; i < g_jDecks.length; i++)
     {
-        sHtml += `<div class="deck-group"><h2>${g_jDecks[i].name}</h2>`
+        sHtml += `<div class="deck-group">
+                    <input type="checkbox" id="toggle_${i}" value="" name="toggle_${i}" ${i===0 ? 'checked' : ''}>
+                    <label for="toggle_${i}" class="fa fa-chevron-down"> ${g_jDecks[i].name}</label>`;
+
         for (let key in g_jDecks[i].decks)
             sHtml += `<div class="challenge-deck" data-deck-list="${i}" data-deck-id="${key}">${key}</div>`;
-
-        sHtml += "<br></div>"
+           
+        sHtml += "</div>"
     }
 
     document.querySelector(".deck-list-entries").innerHTML = sHtml;
@@ -175,6 +174,9 @@ const onLoadDecks = function(data)
 
         let sKey = e.target.getAttribute("data-deck-id");
         let nArray = parseInt(e.target.getAttribute("data-deck-list"));
+
+        if (document.getElementById("toggle_isarda").checked)
+            delete document.getElementById("toggle_isarda").click();
 
         populateDeck(g_jDecks[nArray].decks[sKey]);
     });
@@ -232,7 +234,8 @@ const onPerformLogin = function()
         deck: jDeck
     });
 
-    document.getElementById("form").setAttribute("action", sUrl + "/check");
+    let sUrlTarget = !document.getElementById("toggle_isarda").checked ? sUrl : sUrl.replace("/play/", "/arda/");
+    document.getElementById("form").setAttribute("action", sUrlTarget + "/check");   
     document.getElementById("form").submit();
 };
 
@@ -291,12 +294,6 @@ const onCheckCardCodes = function()
     else
         document.getElementById("user").value = sUserName;
    
-    document.getElementById('choose_deck_upload').onchange = function() {
-              
-        const fr = new FileReader();
-        fr.onload = () => populateDeck(JSON.parse(fr.result));
-        fr.readAsText(this.files[0]);
-    };
 
     document.getElementById("host").onclick = onCheckCardCodes;
 

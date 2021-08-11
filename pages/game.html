@@ -8,6 +8,7 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
         <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=1" />
+        <link rel="stylesheet" href="/media/assets/css/game-mapview.css" />
         <link rel="stylesheet" href="/media/assets/css/bootstrap.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/backgrounds.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/notifications.css?version=1" />
@@ -32,7 +33,7 @@
     <body class="bg-game" data-is-game="true">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
-
+            <!-- 
             <div class="taskbar">
                 <div class="icons">
                     <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
@@ -45,7 +46,7 @@
                     <div class="task_overlay"></div>
                 </div>
             </div>
-
+            -->
             <div class="player-selector-box">
                 <div class="player_selector fl blue-box ">
                     <div id="player_selector"></div> <span><i class="fa fa-clock-o"></i></span><span title="Duration of this game" id="game_time">00:00</span></div>
@@ -62,22 +63,36 @@
                 </div>
             </div>
 
-            <div class="card-hands blue-box" id="playercard_hand">
-                <div class="card-hands-sizer">
-                    Always ask to resolve to
-                    <i class="fa fa-plus-circle card-hands-sizer-plus" title="increase hand size" aria-hidden="true"></i>
-                    <span id="card-hand-size-limit" class="card-hands-sizer-size">8</span>
-                    <i class="fa fa-minus-circle card-hands-sizer-minus" title="decrease hand size" aria-hidden="true"></i>
-                    cards with each turn
-                </div>
-                <div class="hand-card-actions">
-                    <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice"></div>
-                    <div class="card-hand card-draw">
-                        <a href="#" class="card-icon" id="draw_card" title="Draw a new card">&nbsp;</a>
-                        <div class="hidden" id="draw_onlyGetTopCard"></div>
+            <div class="card-hands" id="playercard_hand">
+                <div class="taskbar pos-rel blue-box">
+                    <div class="icons">
+                        <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
+                        <a class="icon taskbar-turn longevent" data-phase="longevent" title="Long Event Phase">&nbsp;</a>
+                        <a class="icon taskbar-turn move" data-phase="movement" title="Movement/Hazard Phase">&nbsp;</a>
+                        <a class="icon taskbar-turn site" data-phase="site" title="Site Phase">&nbsp;</a>
+                        <a class="icon taskbar-turn eotdiscard" data-phase="eotdiscard" title="End-of-Turn Discard Phase">&nbsp;</a>
+                        <a class="icon taskbar-turn eot" data-phase="eot" title="End your turn and start next player's turn.">&nbsp;</a>
+                        <a class="icon startphase act cursor-default hidden" id="startphase_turn" data-phase="start" title="Draft Phase">&nbsp;</a>
+                        <div class="task_overlay"></div>
                     </div>
                 </div>
-                <div id="playercard_hand_container"></div>
+                <div class="blue-box">
+                    <div class="card-hands-sizer">
+                        Always ask to resolve to
+                        <i class="fa fa-plus-circle card-hands-sizer-plus" title="increase hand size" aria-hidden="true"></i>
+                        <span id="card-hand-size-limit" class="card-hands-sizer-size">8</span>
+                        <i class="fa fa-minus-circle card-hands-sizer-minus" title="decrease hand size" aria-hidden="true"></i>
+                        cards with each turn
+                    </div>
+                    <div class="hand-card-actions">
+                        <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice"></div>
+                        <div class="card-hand card-draw">
+                            <a href="#" class="card-icon" id="draw_card" title="Draw a new card">&nbsp;</a>
+                            <div class="hidden" id="draw_onlyGetTopCard"></div>
+                        </div>
+                    </div>
+                    <div id="playercard_hand_container"></div>
+                </div>
             </div>
         </div>
 

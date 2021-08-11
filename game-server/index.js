@@ -157,6 +157,21 @@ class Chat {
     }
 };
 
+const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
+{
+    return {
+        name: displayname,
+        deck: jDeck,
+        admin: isAdmin,
+        waiting: !isAdmin,
+        timestamp: timeAdded,
+        joined: false,
+        socket: null,
+        player_access_token_once : Date.now()
+    }
+};
+
+
 const Game = require("./game.js");
 
 exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda)
@@ -175,6 +190,14 @@ exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvide
         api: pAPI, 
         chat: pChat, 
         players: {},
-        name: room
+        name: room,
+        isEmpty : function() 
+        { 
+            return Object.keys(this.players).length === 0; 
+        },
+        addPlayer : function(userid, displayname, jDeck, isAdmin, timeAdded)
+        {
+            this.players[userid] = createPlayer(displayname, jDeck, isAdmin, timeAdded);
+        }
     };
 }; 

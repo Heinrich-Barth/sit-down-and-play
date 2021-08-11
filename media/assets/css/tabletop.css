@@ -25,42 +25,29 @@ a { color: #ffa500; text-decoration: none; }
 a:hover { color: #ff0; }
 
 .pos-rel { position: relative; }
-.taskbar
-{
-    position: fixed;
-    left: 0;
-    bottom: 350px;     
-    width: 40px;
-    border-radius: 5px;
-    background: rgba(39,56,76,0.82);
-    box-shadow: 15px 5px 20px rgba(0,0,0,0.8);
-    z-index: 10;
-}
-
+.taskbar { text-align: center; }
 .taskbar .task_overlay { display: none; }
 .taskbar.turn-opponent .task_overlay
 {
     position: absolute;
     left: 0;
     top: 0;
-    display: block;
     bottom: 0;
-    border-radius: 5px;
     right: 0px;
+    display: block;
     background: rgba(0,0,0,0.5);
+    border-radius: 5px;
 }
-
+.taskbar a { margin: 5px 19px; }
 .is-admin .taskbar.turn-opponent .task_overlay { display: none; }
 
 .icon.bt { border-top: 1px solid black; }
 .icon.bb { border-bottom: 1px solid black; }
-.icons {
-    width: 100%;
-    
-}
+.icons { margin-bottom: 3px; }
 .icon { width: 32px; height: 32px; display: block; }
+
 .icons a,
-.icons a:hover { display: block; cursor: pointer; margin-top: 5px; background-size: 32px 32px !important;     }
+.icons a:hover { display: inline-block; cursor: pointer; margin-top: 5px; background-size: 32px 32px !important;     }
 
 .card-bar .icon
 {
@@ -291,8 +278,16 @@ img.card-icon {
 .card-bar a:hover { color: #ffa500; }
 .card-bar a { text-align: center; color: white;}
 
-.hand span, .card-bar a span { padding: 1px; }
-
+.hand span, .card-bar a span {
+    padding: 1px;
+    background: green;
+    border-radius: 5px;
+    margin-top: 8px;
+    display: inline-block;
+    margin-left: 15px;
+    text-align: right;
+    font-size: 11px;
+}
 .rot90, .tapped { transform: rotate(90deg); }
 .rot180, .wounded { transform: rotate(180deg); }
 .rot270 { transform: rotate(270deg); }
@@ -304,7 +299,7 @@ img.card-icon {
     z-index: 400;
     padding: 5px;
     max-width: 580px;
-    min-width: 200px;
+    min-width: 480px;
     min-height: 84px;
 }
 .card-hands .card-generic,
@@ -337,7 +332,6 @@ img.card-icon {
     position: absolute; left: 9px; top: 13px; color: #ffa500; text-transform: uppercase; font-size: 12px;
 }
 
-
 .on-drag-event-generic #playercard_hand {
     z-index: 0;
     opacity: 0.7;
@@ -356,7 +350,7 @@ img.card-icon {
     top: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(0,0,0, 0.6);
+    background-color: rgba(0,0,0,0.75);
     z-index: 1000;
     cursor: pointer;
 }
@@ -368,13 +362,18 @@ img.card-icon {
     margin-right: 20px;
     margin-bottom: 20px;
 }
+.view-card-list-container img.card-icon {
+    width: auto;
+    height: 150px;
+}
 #view_card_list_container .view-card-list-container
 {
-    padding: 10px;
-    z-index: 1001;
     position: fixed;
-    max-width: 710px;
-    left: 50px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    z-index: 1001;
 }
 
 #view_card_list_container .container-data
@@ -385,63 +384,39 @@ img.card-icon {
     max-height: 510px;
 }
 
-#view_card_list_container .view-card-list-container.view-hand
-{
-    bottom: 200px;
-}
-#view_card_list_container .view-card-list-container.view-sideboard
-{
-    bottom: 160px;
-}
 #view_card_list_container .view-card-list-container.view-playdeck
 {
-    bottom: 107px;
     cursor: default;
-}
-#view_card_list_container .view-card-list-container.view-discard
-{
-    bottom: 215px;
-}
-#view_card_list_container .view-card-list-container.view-victory
-{
-    bottom: 300px;
 }
 .view-card-list-actions.icons
 {
     padding: 5px;
-    height: 100%;
-    background-color: rgba(0,0,0,0.7);
     position: absolute;
-    left:0;
-    display: none;
-    top:0;
-    width:100%;
+    left: 0;
+    bottom: 0;
 }
+#scoring-sheet .view-card-list-container a,
+#scoring-sheet .view-card-list-container a:hover,
 #view_card_list_container .view-card-list-container a,
 #view_card_list_container .view-card-list-container a:hover
 {
-    background-size: 21px 21px !important;   
+    background-size: 20px 20px !important;   
 }
-#view_card_list_container .view-card-list-container .card-hand:hover .view-card-list-actions.icons
-{
-    display: inline-block;
-}
-
-#view_card_list_container .view-sideboard .card-hand:hover  a.sideboard
+#view_card_list_container .view-sideboard .card-hand a.sideboard
 {
     display: none;
 }
 
-#view_card_list_container .view-hand.offer .card-hand:hover  a.hand
+#view_card_list_container .view-hand.offer .card-hand a.hand
 {
     display: none;
 }
 
-#view_card_list_container .view-discard .card-hand:hover  a.discardpile
+#view_card_list_container .view-discard .card-hand a.discardpile
 {
     display: none;
 }
-#view_card_list_container .view-playdeck .card-hand:hover  a.playdeck
+#view_card_list_container .view-playdeck .card-hand a.playdeck
 {
     display: none;
 }
@@ -449,9 +424,11 @@ img.card-icon {
 #view_card_list_container .view-card-list-actions a 
 {
     background-position-y: 0;
-    float: left;
     width: 21px;
-    display: inline;
+    height: 21px;
+    display: inline-block;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 5px;
 }
 .container-title-bar {
     padding-bottom: 10px;
@@ -624,21 +601,6 @@ body.on-drag-event-generic .area .on-drag-over {
     background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat; 
 }
 
-.location-reveal.hide,
-.side_panel.hide,
-.map_view_layer.hide {
-    display: none !important;
-}
-.map_view_layer {
-    background: rgba(0,0,0, 0.7);
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 500;
-}
-
 .state_tapped img { transform: rotate(90deg);    }
 .state_tapped_fixed img { transform: rotate(90deg);    }
 .state_wounded img { transform: rotate(180deg);    }
@@ -794,7 +756,7 @@ div#opponent_table .company { transform: rotate(180deg); }
 #playercard_hand_container {
     display: inline-block;
     margin-left: 60px;
-    max-width: 515px;
+    max-width: 485px;
     height: 100%;
 }
 .hand-card-actions {
@@ -822,35 +784,12 @@ div#opponent_table .company { transform: rotate(180deg); }
 #draw_card:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
 .hosts_nothing { display: none !important; }
 
-#lidles-eye { z-index: 601; position: absolute;left: 0;top: 0;bottom: 0;right: 0;text-align: center;background: rgba(0,0,0,0.9); }
-#lidles-eye img { margin-top: 20%; }
+#lidles-eye { z-index: 601;position: fixed;left: 0;top: 0;bottom: 0;right: 0; background: rgba(0,0,0,0.85); }
+#lidles-eye img { position: fixed; transform: translate(-50%, -50%); top: 50%; left: 50%; }
 
 #card_counter div.pos-rel { position: relative; }
 #card_counter div.pos-rel:hover .hidden { display: block; }
 
-
-.map-window {
-    z-index: 900;
-    position: fixed;
-}
-
-.map-overlay {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.8);
-    cursor: pointer;
-}
-
-.map-view {
-    position: fixed;
-    left: 2%;
-    top: 2%;
-    width: 96%;
-    height: 96%;
-}
 
 .card-hands .card-hands-sizer
 {

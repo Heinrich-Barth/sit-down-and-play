@@ -553,7 +553,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                     if (card === null)
                         return;
 
-                    card.owner = userid;
+                    Game._playboardManager.UpdateOwnership(userid, card);
 
                     var nStored = 0, nDiscarded = 0;
 
@@ -620,7 +620,10 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                          * the victory pile is different: usually, the target of your deck pils is always the card owner,
                          * yet the victory condition allows to take ownership of cards
                          */
-                        let _targetPlayer = obj.target === "victory" ? userid : card.owner;
+                        let _targetPlayer = card.owner;
+                        if (obj.target === "victory" || obj.target === "hand")
+                            _targetPlayer = userid;
+                            
                         if (Game._playboardManager.MoveCardTo(obj.uuid, _targetPlayer, obj.target))
                             list = [obj.uuid];
                     } 

@@ -54,45 +54,37 @@ body.addtodeck #result .image {
 
 .category .image .actions
 {
-    visibility: hidden;
     position: absolute;
-    background: rgba(0,0,0, 0.6);
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
+    top: 35px;
+    right: 20px;
+    width: 44px;
 }
 
-.category .image .actions a
-{
-    width: 100%;
+.category .image .actions a {
     display: block;
     height: 64px;
-    text-align: center;
-    margin-top: 50px;
+    margin-top: 5px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 5px;
 }
+.category .image .actions a:hover
+{
+    background-color: rgba(152,197,147,0.7);
 
-.category .image .actions
-{
-    padding-left: 100px;    
-}
-.category .image:hover .actions
-{
-visibility: visible;
 }
 
 .actions  .icon_add_pool 
 { 
-    background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
+    background: url("/media/assets/images/icons/icon-hand.png") 5px 15px no-repeat
 }
 .actions a.icon_add_pool:hover 
 { 
-    background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-hand-hover.png"); 
 }
 
 .actions a.icon_add_deck:hover 
 { 
-    background: url("/media/assets/images/icons/icon-playdeck-hover.png") -10px 0px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-playdeck-hover.png");
 }
 .actions a.icon_add_deck 
 { 
@@ -101,21 +93,22 @@ visibility: visible;
 
 .actions a.icon_add_sideboard:hover 
 { 
-    background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-sideboard-hover.png");
 }
 .actions a.icon_add_sideboard 
 { 
-    background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat; 
+    background: url("/media/assets/images/icons/icon-sideboard.png") 5px 15px no-repeat
 }
-
-.category .image div.actions[data-count="0"] {
-    visibility: visible;
+.category .image div.actions[data-count="0"] 
+{
     background: rgba(0,0,0,0.4);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
 
-.category .image div.actions[data-count="0"] a {
-    display: none;
-}
+.category .image div.actions[data-count="0"] a { display: none; }
 
 .list_left {
     margin-left: 330px;
@@ -126,7 +119,6 @@ visibility: visible;
     width: 300px;
     padding: 10px;
     display: inline-block;
-    float: left;
     margin-left: 5px;   
 }
 div.linklist {
@@ -216,7 +208,10 @@ div.count_bubble {
 .decklist .action a:hover { color:  #fff; }
 
 .builder-hint {
-    padding-top: 100px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .builder-hint-content {

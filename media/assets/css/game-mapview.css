@@ -1,0 +1,31 @@
+
+.map-window { z-index: 900; position: fixed; }
+.map-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.8);
+    cursor: pointer;
+}
+
+.map-view {
+    position: fixed;
+    left: 2%;
+    top: 2%;
+    width: 96%;
+    height: 96%;
+}
+.location-reveal.hide {
+    display: none !important;
+}
+.map_view_layer {
+    background: rgba(0,0,0, 0.7);
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+}

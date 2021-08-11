@@ -209,6 +209,12 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             return pDeck.getCardsInHand();
     };
 
+    PLAYBOARD_MANAGER.UpdateOwnership = function(playerId, pCard)
+    {
+        if (pCard !== null && playerId !== undefined && playerId !== "")
+            pCard.owner = playerId;
+    };
+
     /**
      * Get the top X cards
      * @param {String} playerId
@@ -225,7 +231,10 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         {
             _card = PLAYBOARD_MANAGER.decks.getFullPlayerCard(list[i]);
             if (_card !== null)
+            {
+                PLAYBOARD_MANAGER.UpdateOwnership(playerId, _card);
                 res.push({uuid:_card.uuid,code:_card.code, type:_card.type, status:_card.status, owner: _card.owner});
+            }
         }
 
         return res;
@@ -255,8 +264,14 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         if (_uuid === "")
             return null;
 
-        var _card = PLAYBOARD_MANAGER.decks.getFullPlayerCard(_uuid);
-        return _card.code === "" ? null : {uuid:_uuid,code:_card.code, type:_card.type, status:_card.status,owner: _card.owner};
+        const _card = PLAYBOARD_MANAGER.decks.getFullPlayerCard(_uuid);
+        if (_card === null)
+            return null;
+        else
+        {
+            _card.owner = playerId;
+            return { uuid:_uuid,code:_card.code, type:_card.type, status:_card.status, owner: _card.owner };
+        }
     };
 
     PLAYBOARD_MANAGER.Size = {

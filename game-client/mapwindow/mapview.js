@@ -972,7 +972,7 @@ const MapCreator = {
         img.setAttribute("decoding", "async");
         img.setAttribute("class", sTapped + " " + cssIsReady);
         img.setAttribute("data-src", sUrl);
-        img.setAttribute("src", "/media/assets/images/cards/backside-region.jpeg");
+        img.setAttribute("src", "/media/assets/images/cards/backside-region.jpg");
         img.setAttribute("data-code", code);
         img.setAttribute("data-location-type", sType);
         img.setAttribute("title", sTitle);

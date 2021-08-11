@@ -126,7 +126,7 @@ var SearchResult = {
                     _a.setAttribute("href", "#");
                     _a.setAttribute("class", "icon_add_sideboard");
                     _a.setAttribute("title", "add to sideboard");
-                    _a.setAttribute("data-target", "sb");
+                    _a.setAttribute("data-target", "sideboard");
                     _a.onclick = SearchResult.onClickLinkAddTo;
                     _tmp.appendChild(_a); 
 
