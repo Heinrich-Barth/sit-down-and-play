@@ -244,10 +244,13 @@ const onCheckCardCodes = function()
     if (!validateUserName())
         return;
 
-    DomUtils.removeAllChildNodes(document.getElementById("invalid-cards-info-result"));
-    document.getElementById("invalid-cards-info").classList.add("hidden");
+    if (document.getElementById("invalid-cards-info") !== null)
+    {
+        DomUtils.removeAllChildNodes(document.getElementById("invalid-cards-info-result"));
+        document.getElementById("invalid-cards-info").classList.add("hidden");
+    }
 
-    let vsCards = getCardCodeList();
+    const vsCards = getCardCodeList();
     if (vsCards.length === 0)
         return;
 

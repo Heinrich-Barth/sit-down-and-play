@@ -375,7 +375,7 @@ SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html
     new GamePlayRouteHandlerDefault(SERVER, "/play", "home.html", "login.html", "lobby.html").setupRoutes();
 
     const GamePlayRouteHandlerArda = require("./game-play-arda");
-    new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login.html", "lobby.html").setupRoutes();
+    new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html").setupRoutes();
 }
 
 require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
