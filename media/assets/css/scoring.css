@@ -25,8 +25,9 @@
     min-width: 300px;
     top: 30%;    
     padding: 20px;
-    z-index: 301;
+    z-index: 502;
     display: inline-block;
+    background: #27384c;
 }
 
 .scoring-sheet .view-score-container { 
@@ -112,13 +113,14 @@
     position: fixed;
     left: 5%;
     top: 5%;
-    width: 500px;
+    width: 545px;
     max-height: 500px;
     z-index: 500;
 }
 .view-score-victory-container  .view-card-list-container
 {
     max-height: 500px;
+    overflow: auto;
 }
 .view-score-victory-container  .container-title-bar-title
 {

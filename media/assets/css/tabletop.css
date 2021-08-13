@@ -30,7 +30,7 @@ a:hover { color: #ff0; }
 .taskbar.turn-opponent .task_overlay
 {
     position: absolute;
-    left: 0;
+    left: 80px;
     top: 0;
     bottom: 0;
     right: 0px;
@@ -38,7 +38,7 @@ a:hover { color: #ff0; }
     background: rgba(0,0,0,0.5);
     border-radius: 5px;
 }
-.taskbar a { margin: 5px 19px; }
+.taskbar a { margin: 5px 18px; }
 .is-admin .taskbar.turn-opponent .task_overlay { display: none; }
 
 .icon.bt { border-top: 1px solid black; }
@@ -75,6 +75,17 @@ a:hover { color: #ff0; }
 { 
     background: url("/media/assets/images/icons/icon-orga-hover.png") 0 0 no-repeat; 
 }
+.icons a.taskbar-score
+{ 
+    background: url("/media/assets/images/icons/icon-score.png") 0 0 no-repeat; 
+} 
+.icons a.taskbar-score.act, 
+.icons a.taskbar-score:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-score-hover.png") 0 0 no-repeat; 
+}
+
+
 .icons a.startphase 
 { 
     background: url("/media/assets/images/icons/icon-game-start.png") 0 0 no-repeat; 
@@ -757,7 +768,7 @@ div#opponent_table .company { transform: rotate(180deg); }
     display: inline-block;
     margin-left: 60px;
     max-width: 485px;
-    height: 100%;
+    min-height: 83px;
 }
 .hand-card-actions {
     width: 60px;

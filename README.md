@@ -215,6 +215,50 @@ You can finish the game via the game preferences menu (see above). This will aut
 
 The game will end automatically.
 
+## Arda Gameplay
+
+The Arda gameplay differes from the standard games a bit. The rules will not be discussed.
+
+### Starting an Arda Game
+
+Simply choose an arda deck from the right deck offerings (or provide your own deck) and check the "Arda game type" checkbox.
+
+![Starting an Arda game](readme-data/arda-1.png)
+
+### Character Draft
+
+Once all players have joined the table (see below) you can randomly assign the 10 starting characters by clicking on the respective box at the right of the screen.
+
+![Starting an Arda game](readme-data/arda-2.png)
+
+This option is only available once!
+
+Clicking on this option adds 10 characters to each players hand according to the Arda mechanism. After you have picked your cards, please *discard* the other characters by dragging and dopping them on the discard icon at the right next to your hand.
+
+### Minro Item Draft
+
+Now each player picks their minor items from the minor item offering deck. 
+
+### Starting the Game
+
+To put all characters and minor items back into the playdeck and get a random number of cards, click on the recycle icon above the deck's "Draw Card" icon. 
+
+![Redraw common hand cards](readme-data/arda-3.png)
+
+### Joining an Arda Game
+
+To join an Arda game, simply click on the game from the game list.
+
+![Game List](readme-data/arda-4.png)
+
+You will be asked to provide only a user name so your fellow players know who you are. The game host will receive a message with your request to join. Once that is granted you will proceed to the table automatically.
+
+### Granting Access
+
+Whenever a player wants to join the table, you will receive a notification and the option to grant or deny access. You will receive a notification once the player has successfully joined the table.
+
+![Game List](readme-data/arda-6.png)
+
 ## Adaptation Mechanisms
 
 You have the following default adaptation possibilities:

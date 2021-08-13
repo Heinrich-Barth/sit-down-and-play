@@ -1,14 +1,13 @@
 
 
 .lobby-wrapper {
-
-    z-index: 200;
+    position: absolute;
+    top: 75px;
     left: 5px;
     width: 20px;
     height: 20px;
+    z-index: 200;
     padding: 5px;
-    top: 75px;
-    position: absolute;
     color: white;
     overflow: hidden;
 }
@@ -20,14 +19,16 @@
 
 .lobby-requests
 {
-    width: 500px;
     position: fixed;
-    left: 200px;
-    padding: 20px;
-    z-index: 301;
+    left: 50%;
+    padding: 50px;
+    z-index: 501;
     color: #fff;
-    top: 200px;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
+
+.lobby-overlay { z-index: 500; }
 
 .lobby-requests h3 { margin-top: 0; color: #ffa500}
 
