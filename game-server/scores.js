@@ -75,7 +75,14 @@ class ScorintSheet {
         this._total = _tot;
         return _tot;
     }
-
+    
+    save()
+    {
+        return {
+            scores: this._sheet,
+            total: this._total
+        };
+    }
 }
 
 class SCORES {
@@ -88,6 +95,16 @@ class SCORES {
     reset()
     {
         this._sheets = { };
+    }
+
+    save()
+    {
+        let data = {};
+        let keys = Object.keys(this._sheets);
+        for (let key of keys)
+            data[key] = this._sheets[key].save();
+
+        return data;
     }
 
     /**

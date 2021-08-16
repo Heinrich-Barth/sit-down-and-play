@@ -418,7 +418,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                 return;
 
             const isHost = this.getCompanyPath(cardDiv).is_host;
-            if (isHost) // if this character is a host, he/she may accept characters under direct influence
+            if (isHost) /* if this character is a host, he/she may accept characters under direct influence */
             {
                 jQuery(cardDiv).droppable(
                 {
@@ -468,7 +468,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                             var donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
                             donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
                             
-                            if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) // oneself cannot be the target
+                            if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) /* oneself cannot be the target */
                                 return;
 
                             if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
@@ -511,7 +511,6 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                         const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
                         receivingCharacter.character_uuid = this.getAttribute("data-uuid");
                         
-                        //const character_uuid = receivingCharacter.company_uuid;
                         var drawReceivingCompanyId = receivingCharacter.company_uuid;
                         var drawDonatingCompanyId = "";
                         
@@ -527,7 +526,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                         else
                         {
                             var donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
-                            if (receivingCharacter.character_uuid === donatingCharacter.character_uuid) // oneself cannot be the target
+                            if (receivingCharacter.character_uuid === donatingCharacter.character_uuid) /*oneself cannot be the target*/
                                 return;
                             else if (receivingCharacter.company_uuid !== donatingCharacter.character_uuid)
                                 drawDonatingCompanyId = donatingCharacter.character_uuid;
@@ -846,34 +845,14 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         accept: HandCardsDraggable.droppableAcceptCharacter
     });
 
-    function onHandSizeLimitUpdate(nAdd)
     {
-        try
-        {
-            let pElem = document.getElementById("card-hand-size-limit");
-            const nAllowed = parseInt(pElem.innerHTML.trim()) + nAdd;
-            pElem.innerHTML = nAllowed;
-        }
-        catch (err)
-        {
+        const _handSizer = document.getElementById("playercard-hand-content").querySelector(".hand-card-sizer")
+        let _sizerId = ResolveHandSizeContainer.create(_handSizer, "Always ask to resolve to", 8, "cards.");
+        if (_sizerId !== "")
+            ResolveHandSizeFirst.create("playercard_hand_container", _sizerId, "cards");
 
-        }
+        ResolveHandSizeContainer.create(_handSizer, "General influence is", 20, "");
     }
-
-    document.getElementById("playercard_hand").querySelector(".card-hands-sizer-plus").onclick = (e) =>
-    {
-        onHandSizeLimitUpdate(1);
-        e.stopPropagation();
-        return false;
-    };
-    
-    document.getElementById("playercard_hand").querySelector(".card-hands-sizer-minus").onclick = (e) =>
-    {
-        onHandSizeLimitUpdate(-1);
-        e.stopPropagation();
-        return false;
-    };
 
     return HandCardsDraggable;
 }
-

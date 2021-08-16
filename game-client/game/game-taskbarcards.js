@@ -162,7 +162,7 @@ class TaskBarCards
             return false;
         };
 
-        document.querySelector(".card-bar .victory").oncontextmenu = (e) => 
+        document.querySelector(".card-hands .taskbar-score").onclick = (e) => 
         {
             MeccgApi.send("/game/score/show", "");
             e.stopPropagation();
@@ -426,7 +426,7 @@ class TaskBarCards
         const cardDiv = jLink.parentElement.parentElement;
         const sUuid = cardDiv.getAttribute("data-uuid");
 
-        if (target === "offer") // offer the card
+        if (target === "offer") /* offer the card */
         {
             MeccgApi.send("/game/view-cards/offer-reveal", { uuid: sUuid });
         

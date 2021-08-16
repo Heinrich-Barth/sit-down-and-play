@@ -82,10 +82,10 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         return PLAYBOARD_MANAGER.data;
     };
     
-    PLAYBOARD_MANAGER.SaveCurrentGame = function()
+    PLAYBOARD_MANAGER.Save = function()
     {
         return {
-            decks: PLAYBOARD_MANAGER.decks.saveCurrentGame(),
+            decks: PLAYBOARD_MANAGER.decks.save(),
             companies : PLAYBOARD_MANAGER.companies,
             characters : PLAYBOARD_MANAGER.characters,
             stagingarea : PLAYBOARD_MANAGER.stagingareas,

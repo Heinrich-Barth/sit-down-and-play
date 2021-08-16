@@ -278,7 +278,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
              */
             add(jsonCharacter, pContainer, bInsertBeforeTarget, bIsHosting)
             {
-                // remove, if the character is in the company. It is easier to redraw than to match which items are new etc.
+                /* remove, if the character is in the company. It is easier to redraw than to match which items are new etc. */
                 INSTANCE.character.removeExistingCharacter(jsonCharacter.character.uuid);
 
                 let pCharacter = insertNewCharacter(jsonCharacter.character, pContainer, bInsertBeforeTarget, bIsHosting);

@@ -28,6 +28,23 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
         started : null,
 
+        save : function()
+        {
+            let data = {};
+
+            data.meta = {
+                phase : Game.player_phase,
+                admin : Game._adminUser,
+                arda : Game.isArda(),
+                players : Game.players.save()
+            };
+            
+            data.playboard = Game._playboardManager.Save();
+            data.scoring = Game.scoring.save();
+
+            return data;
+        },
+
         isArda : function()
         {
             return this._isArda;
@@ -116,6 +133,19 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             names: {},
             current: 0,
             turn: 1,
+
+            save : function()
+            {
+                let data = {
+
+                    ids: this.ids,
+                    names: this.names,
+                    current : this.current,
+                    turn: this.turn
+                };
+
+                return data;
+            },
 
             registerThisPlayer: function (sId, sName)
             {
@@ -214,12 +244,6 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
         {
             for (var key in this.players.ids)
                 this._playboardManager.DumpDeck(this.players.ids[key]);
-        },
-
-        saveCurrentGame: function ()
-        {
-            return {
-            };
         },
 
         /**
@@ -939,15 +963,12 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             global: {
                 restoreGame: function (userid, socket, data)
                 {
-                    /*
-                     if (Game.restoreSavedGame(data))
-                     Game.apis.meccgApi.publish("/game/state/restored", userid, {});
-                     else
-                     {
-                     Game.apis.chat.send(userid, " could not restore the saved game.");
-                     Game.apis.meccgApi.publish("/game/score/final", "", Game.getFinalScore());
-                     }
-                     */
+                    
+                },
+
+                saveGame : function(userid, socket)
+                {
+                    Game.apis.meccgApi.reply("/game/save", socket, Game.save() );
                 },
 
                 onDiscardOpenly : function(userid, socket, data)
@@ -961,16 +982,6 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                             uuid : data.uuid
                         });
                     }
-                },
-
-                saveGame: function (userid, socket, data)
-                {
-                    
-                },
-                
-                saveGameCurrent : function (userid, socket, data)
-                {
-                    
                 },
                 
                 rollDices: function (userid, socket, obj)
@@ -1025,6 +1036,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                             Game._playboardManager.ReadyCompanyCards(list[i]);
 
                         Game.apis.meccgApi.publish("/game/player/set-current", Game.players.getCurrent(), {name: Game.players.getCurrent(), displayname: Game.players.getCurrentPlayerName()});
+
                     }
 
                     Game.setPhase(sPhase);
@@ -1172,16 +1184,16 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
     Game.apis.meccgApi.addListener("/game/card/state/reveal", Game.callbacks.card.onGameCardStateReveal);
     Game.apis.meccgApi.addListener("/game/card/draw", Game.callbacks.card.onCardDraw);
     Game.apis.meccgApi.addListener("/game/card/draw/single", Game.callbacks.card.onCardDrawSingle);
-    /*Game.apis.meccgApi.addListener("/game/card/get-top-card-from-hand", Game.callbacks.card.onGetTopCardFromHand); Get top X cards from your hand */
+
     Game.apis.meccgApi.addListener("/game/card/store", Game.callbacks.card.onCardStore);
     Game.apis.meccgApi.addListener("/game/card/move", Game.callbacks.card.onCardMove);
     Game.apis.meccgApi.addListener("/game/card/discard", Game.callbacks.card.onCardDiscard);
 
     Game.apis.meccgApi.addListener("/game/stagingarea/add/card", Game.callbacks.onStagingAreaAddCard);
 
+    Game.apis.meccgApi.addListener("/game/save", Game.callbacks.global.saveGame);
+
     Game.apis.meccgApi.addListener("/game/state/restore", Game.callbacks.global.restoreGame);
-    Game.apis.meccgApi.addListener("/game/state/save/request", Game.callbacks.global.saveGame);
-    Game.apis.meccgApi.addListener("/game/state/save/current", Game.callbacks.global.saveGameCurrent);
     Game.apis.meccgApi.addListener("/game/roll-dices", Game.callbacks.global.rollDices);
     Game.apis.meccgApi.addListener("/game/phase/set", Game.callbacks.global.phase); /* Set the current phase of the game turn */
     Game.apis.meccgApi.addListener("/game/add-cards-to-game", Game.callbacks.global.onGameAddCardsToGame); /* add a list of cards to the sideboard */

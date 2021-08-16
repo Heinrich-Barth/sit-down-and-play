@@ -13,22 +13,24 @@ class Deck extends DeckCommons {
         this.playdeck = [];
     }
 
+    save(isAdmin)
+    {
+        let data = super.save(isAdmin);
+        
+        data.handCards = this.handCards;
+        data.discardPile = this.discardPile;
+        data.sideboard = this.sideboard;
+        data.victory = this.victory;
+        data.playdeck = this.playdeck;
+
+        return data;
+    }
+
     createNewCardUuid()
     {
         return "d" + super.createNewCardUuid();
     }
     
-    saveState()
-    {
-        return {
-            handCards : [],
-            discardPile : [],
-            sideboard : [],
-            victory : [],
-            playdeck : []
-        };
-    }
-
     shuffle()
     {
         this.shuffleAny(this.playdeck);

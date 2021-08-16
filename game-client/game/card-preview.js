@@ -119,7 +119,6 @@ CardPreview.init = function(cardDiv, bLeft, bTop)
 
 CardPreview._getImage = function(elem)
 {
-    //let bAlways = CardPreview.isShowAlways(elem);
     let bAlways = CardPreview._isMyCard(elem);
     let src = elem.getAttribute("src") || "";
 

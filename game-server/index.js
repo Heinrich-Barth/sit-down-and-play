@@ -115,6 +115,16 @@ class GameAPI {
         this._io.to(socket.room).emit(path, data);
     }
 
+    replyTo(sPath, userid, data)
+    {
+        if (typeof data === "undefined")
+            return;
+
+        let socket = this._sockets[userid]
+        if (socket !== undefined)
+            socket.emit(sPath, {target: socket.userid, payload: data});
+    }
+
     reply(sPath, socket, data)
     {
         if (typeof data === "undefined")

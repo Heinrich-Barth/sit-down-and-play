@@ -118,8 +118,6 @@ const Preferences = {
             let sTitle = Preferences.config[id].title;
             let sCheck = Preferences.config[id].value ? "checked" : "";
             let sCss = Preferences.config[id].value ? Preferences.config[id].type_on : Preferences.config[id].type_off;
-            //
-
             let _id = "preference_id_" + (++Preferences._id);
             if (Preferences.config[id].checkbox)
             {
@@ -227,9 +225,6 @@ const Preferences = {
         */
         Preferences.addConfigToggle("images_errata_dc", "Use Dreamcards Errata", true);
         Preferences.addConfigToggle("images_errata_ic", "Use Errata", true);
-
-        // Preferences.addConfigValue("sound_chat_message", "Play sound for new chat message", false);
-        //Preferences.addConfigValue("sound_phases", "Play sound for each phase", false);
 
         Preferences.addConfigToggle("show_chat", "Show chat window", true, Preferences.callbacks._chat);
 

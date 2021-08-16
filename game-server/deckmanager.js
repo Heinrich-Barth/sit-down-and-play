@@ -17,6 +17,24 @@ class DeckManager {
         this._siteMap = { };
         this._deck = { };
         this._handManager = null;
+        this._firstPlayerId = "";
+    }
+
+    save()
+    {
+        let jData = 
+        {
+            admin : this._firstPlayerId,
+            uuid_count : this._uuid_count,
+            cardMap : this._cardMap,
+            siteMap : this._siteMap,
+            deck : { }
+        };
+        
+        for (let key in this._deck) 
+            jData.deck[key] = this._deck[key].save(this._firstPlayerId === key);
+
+        return jData;
     }
 
     creatHandManager()
@@ -66,22 +84,6 @@ class DeckManager {
         return Object.keys(this._deck);
     }
     
-    saveCurrentGame()
-    {
-        let jData = 
-        {
-            uuid_count : this._uuid_count,
-            cardMap : this._cardMap,
-            deck : [],
-            siteMap : this._siteMap
-        };
-        
-        for (var key in this._deck) 
-            jData.deck.push(this._deck[key]);
-
-        return jData;
-    }
-
     newDeckInstance(playerId)
     {
         throw "Overwrite newDeckInstance";
@@ -93,6 +95,10 @@ class DeckManager {
         deck.addDeck(jsonDeck, listAgents, this._cardMap, gameCardProvider);
         deck.shuffle();
         this._deck[playerId] = deck;
+
+        if (this._firstPlayerId === "")
+            this._firstPlayerId = playerId;
+
         return deck;
     }
 

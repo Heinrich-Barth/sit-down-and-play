@@ -40,6 +40,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
         _gameStarted : 0,
         _timeStarted : 0,
         _hiddenStartPhase : false,
+        _saved : { },
         
         onGameTime : function(jData)
         {
@@ -49,7 +50,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             GameBuilder._gameStarted = new Date(_online + nOffset).getTime();
             GameBuilder._timeStarted = new Date().getTime();
             GameBuilder.onCalcTime();
-            setInterval(GameBuilder.onCalcTime, GameBuilder._minuteInMillis); // every minute
+            setInterval(GameBuilder.onCalcTime, GameBuilder._minuteInMillis); /* every minute */
         },
         
         onCalcTime : function()
@@ -167,7 +168,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 case "organisation":
                 case "site":
                 case "eotdiscard":
-                    GameBuilder.resolveHandNotification();
+                    GameBuilder.resolveHandNotification(sPhase);
                     break;
 
                 default:
@@ -175,9 +176,9 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }
         },
 
-        resolveHandNotification : function()
+        resolveHandNotification : function(sPhase)
         {
-            document.body.dispatchEvent(new CustomEvent("meccg-check-handsize", { "detail": "" }));
+            document.body.dispatchEvent(new CustomEvent("meccg-check-handsize", { "detail": sPhase }));
         },
 
         initRestEndpoints : function()
@@ -413,7 +414,13 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                         CompanyManager.onEnterStartPhase(bIsMe);
                         break;
                     case "organisation":
-                        MeccgApi.send("/game/state/save/current", {});
+
+                        if (g_sLobbyToken !== "")
+                        {
+                            console.log("send save");
+                            MeccgApi.send("/game/save", {});
+                        }
+
                         CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
                         break;
                     case "movement":
@@ -453,6 +460,13 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                         document.querySelector(".area.area-player").setAttribute("data-turn-phase", sPhase);
                     }
                 }
+            });
+
+            
+            MeccgApi.addListener("/game/save", function(bIsMe, jData)
+            {
+                console.log("Saved game");
+                GameBuilder._saved = jData;
             });
             
             MeccgApi.addListener("/game/company/arrive", function(bIsMe, jData)

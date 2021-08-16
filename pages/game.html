@@ -5,8 +5,11 @@
         <title>Sit down and play</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <meta name="robots" content="noindex">
+        <!-- 
         <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
+
+        -->
         <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/game-mapview.css" />
         <link rel="stylesheet" href="/media/assets/css/bootstrap.css?version=1" />
@@ -55,7 +58,7 @@
 
             <div class="card-bar blue-box">
                 <div class="icons" id="card_counter">
-                    <a id="icon_bar_victory" class="icon victory context-cursor" title="Look at victory pile. Right click to edit score sheet"><span class="size">0</span></a>
+                    <a id="icon_bar_victory" class="icon victory" title="Look at victory pile. Right click to edit score sheet"><span class="size">0</span></a>
                     <a id="icon_hand" class="icon hand act context-cursor" title="Look at hand cards. Right click to reveal cards to opponent"><span class="size">0</span></a>
                     <a id="icon_bar_playdeck" class="icon playdeck context-cursor" title="Look at remaining playdeck. Right click to shuffle"><span class="size">0</span></a>
                     <a id="icon_bar_discardpile" class="icon discardpile" title="Look at discard pile"><span class="size">0</span></a>
@@ -66,6 +69,7 @@
             <div class="card-hands" id="playercard_hand">
                 <div class="taskbar pos-rel blue-box">
                     <div class="icons">
+                        <a class="icon taskbar-score" title="Open score sheet">&nbsp;</a>
                         <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
                         <a class="icon taskbar-turn longevent" data-phase="longevent" title="Long Event Phase">&nbsp;</a>
                         <a class="icon taskbar-turn move" data-phase="movement" title="Movement/Hazard Phase">&nbsp;</a>
@@ -76,14 +80,8 @@
                         <div class="task_overlay"></div>
                     </div>
                 </div>
-                <div class="blue-box">
-                    <div class="card-hands-sizer">
-                        Always ask to resolve to
-                        <i class="fa fa-plus-circle card-hands-sizer-plus" title="increase hand size" aria-hidden="true"></i>
-                        <span id="card-hand-size-limit" class="card-hands-sizer-size">8</span>
-                        <i class="fa fa-minus-circle card-hands-sizer-minus" title="decrease hand size" aria-hidden="true"></i>
-                        cards with each turn
-                    </div>
+                <div class="blue-box" id="playercard-hand-content">
+                    <div class="hand-card-sizer"></div>
                     <div class="hand-card-actions">
                         <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice"></div>
                         <div class="card-hand card-draw">

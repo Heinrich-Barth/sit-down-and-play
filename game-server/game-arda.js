@@ -5,6 +5,11 @@ exports.setupArdaSpecials = function(Game)
 
     Arda.game = Game;
 
+    Arda.reycled = {
+        minors : false,
+        characters: false,
+    }
+
     Arda.assignOpeningChars7 = function()
     {
         const players = Arda.game._playboardManager.decks.getPlayers();
@@ -66,11 +71,13 @@ exports.setupArdaSpecials = function(Game)
             {
                 deck.recycleMinorItems();
                 Arda.game.apis.chat.send(userid, "recycled all minor items");
+                Arda.reycled.minors = true;
                 isMinor = true;
             }
             else if (obj.type === "charackters")
             {
                 deck.recycleCharacter();
+                Arda.reycled.characters = true;
                 Arda.game.apis.chat.send(userid, "recycled all characters");
             }
             else
@@ -147,7 +154,17 @@ exports.setupArdaSpecials = function(Game)
             Arda.game.apis.chat.send(userid, "drew 1 " + obj.type + " item card");
         },
 
-        onGetHandMinorItems : function(userid, socket, obj)
+        onCheckDraft : function(userid, socket)
+        {
+            let data = {
+                characters: Arda.reycled.characters,
+                minoritems: Arda.reycled.minors,
+            };
+
+            Game.apis.meccgApi.reply("/game/arda/checkdraft", socket, data);
+        },
+
+        onGetHandMinorItems : function(userid)
         {
             const listMinor = Arda.game._playboardManager.getCardList(Arda.game._playboardManager.decks.getCards().handMinorItems(userid));
             Arda.game.apis.meccgApi.publish("/game/arda/hand/minor", userid, {list: listMinor});
@@ -207,9 +224,9 @@ exports.setupArdaSpecials = function(Game)
     };
 
     Game.apis.meccgApi.addListener("/game/arda/hands", Arda.callbacks.onGetHandMinorItems);
+    Game.apis.meccgApi.addListener("/game/arda/checkdraft", Arda.callbacks.onCheckDraft);
     Game.apis.meccgApi.addListener("/game/arda/from-hand", Arda.callbacks.onMoveArdaHandCard);
     Game.apis.meccgApi.addListener("/game/arda/draw", Arda.callbacks.onDrawCard);
     Game.apis.meccgApi.addListener("/game/arda/recycle", Arda.callbacks.onRecycle);
     Game.apis.meccgApi.addListener("/game/arda/assign-characters", Arda.callbacks.onAssignCharacters);
-    
 }

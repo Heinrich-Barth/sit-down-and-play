@@ -40,6 +40,8 @@ let SERVER = {
         maxage: g_pConfig.imageExpires() * 1000
     },
 
+    gamesStarted : 0,
+
     roomManager : null,
     cards : null,
     _io : null,

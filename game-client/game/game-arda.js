@@ -5,6 +5,7 @@ let Arda = {
     _hasReceivedMinor : false,
     _hasReceivedMps : false,
     _hasReceivedCharacters : false,
+    _idCount : 1,
 
     createHtmlElement: function(_code, _img, _uuid, type)
     {
@@ -82,13 +83,16 @@ let Arda = {
         this.insertArdaContainer();
 
         const bAllowRecyling = this.isAdraAdmin();
-        this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false).classList.remove("hidden");
-        this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling).classList.remove("hidden");
-        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling);
+        let idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
+        document.getElementById(idMps).classList.remove("hidden");
+
+        let idMinor = this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling, "");
+        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling, idMinor);
 
         this.getOpeningHands();
 
         this._ready = true;
+        MeccgApi.send("/game/arda/checkdraft", {});
     },
 
     getOpeningHands()
@@ -175,20 +179,24 @@ let Arda = {
         return document.getElementById(id + "_hand");
     },
 
-    createContainer : function(playerid, dataType, title, nHandSize, bRecycleOnce)
+    createContainer : function(playerid, dataType, title, nHandSize, bRecycleOnce, sShowNextElement)
     {
         const id = playerid + "_hand";
+        const idCardList = "arda_hand_container_" + dataType;
         let elem = document.getElementById(id);
         if (elem !== null)
-            return elem;
+            return id;
 
         const div = document.createElement("div");
         div.setAttribute("class", "arda-card-hands blue-box hidden arda-card-hand-" + dataType);
         div.setAttribute("id", id);
 
+        let _sizerId = ResolveHandSizeContainer.create(div, title + " - Always resolve to", nHandSize, "cards.");
+        div.getElementsByClassName("card-hands-sizer")[0].classList.add("arda-card-hands-sizer");
+
         let _div = document.createElement("div");
-        _div.setAttribute("class", "arda-card-hands-sizer");
-        _div.innerHTML = `<strong>${title}</strong> &dash; Always resolve to <strong>${nHandSize}</strong> cards`;
+        _div.setAttribute("class", "arda-inline");
+        _div.setAttribute("id", idCardList);
         div.appendChild(_div);
 
         _div = document.createElement("div");
@@ -200,7 +208,10 @@ let Arda = {
             _a.setAttribute("src", "#");
             _a.setAttribute("class", "arda-card-recycle fa fa-recycle");
             _a.setAttribute("data-type", dataType);
-            _a.setAttribute("title", "Reshuffle everything (only once)");
+            _a.setAttribute("id", "arda-card-recycle-" + dataType);
+            _a.setAttribute("data-next", sShowNextElement);
+            _a.setAttribute("title", "Complete draft and reshuffle everything");
+            _a.innerHTML = " Complete draft and reshuffle everything";
             _a.onclick = Arda.onRecycleDeck;
             _div.appendChild(_a);
         }
@@ -208,7 +219,8 @@ let Arda = {
         {
             let _a = document.createElement("a");
             _a.setAttribute("src", "#");
-            _a.setAttribute("class", "arda-card-draw");
+            _a.setAttribute("class", "arda-card-draw" + (bRecycleOnce ? " hidden":""));
+            _a.setAttribute("id", "arda-card-draw-" + dataType);
             _a.setAttribute("data-type", dataType);
             _a.setAttribute("data-handsize", nHandSize)
             _a.setAttribute("title", "Draw a new card");
@@ -216,16 +228,40 @@ let Arda = {
             _div.appendChild(_a);
         }
 
-
         div.appendChild(_div);
 
-        _div = document.createElement("div");
-        _div.setAttribute("class", "arda-inline");
-        _div.setAttribute("id", "arda_hand_container_" + dataType);
-        
-        div.appendChild(_div);
         document.body.appendChild(div);
-        return document.getElementById(id);
+
+        if (_sizerId !== "")
+            ResolveHandSizeFirst.create(idCardList, _sizerId,  title + " cards", ["organisation", "eotdiscard"]);
+
+        return id;
+    },
+
+    onCheckDraft : function(bHideDraftCharacters, bHideDraftMinors)
+    {
+        let elem;
+        
+        elem = !bHideDraftCharacters ? null : document.getElementById("arda-card-recycle-charackters");
+        if (elem !== null)
+        {
+            DomUtils.remove(elem);
+            document.getElementById("arda-card-draw-charackters").classList.remove("hidden");
+
+            elem = document.getElementById("arda_characters_hand");
+            ArrayList(elem).findByClassName("arda-hand-card-actions-fl").each((_el) => _el.classList.remove("arda-hand-card-actions-fl"));
+            elem.classList.remove("hidden");
+        }
+
+        elem = !bHideDraftMinors ? null : document.getElementById("arda-card-recycle-minor");
+        if (elem !== null)
+        {
+            DomUtils.remove(elem);
+            document.getElementById("arda-card-draw-minor").classList.remove("hidden");
+            elem = document.getElementById("arda_minors_hand");
+            ArrayList(elem).findByClassName("arda-hand-card-actions-fl").each((_el) => _el.classList.remove("arda-hand-card-actions-fl"));
+            elem.classList.remove("hidden");
+        }
     },
 
     onRecycleDeck : function(e)
@@ -233,8 +269,16 @@ let Arda = {
         let _question = createQuestionBox(function()
         {
             const target = e.target.getAttribute("data-type");
+            const next = e.target.getAttribute("data-next");
+
             DomUtils.remove(e.target);
-            ArrayList(document).findByClassName("arda-hand-card-actions-fl").each((_e) => _e.classList.remove("arda-hand-card-actions-fl"));
+            document.getElementById("arda-card-draw-" + target).classList.remove("hidden");
+            if (next !== "")
+            {
+                console.log("show next " + next);
+                document.getElementById(next).classList.remove("hidden");
+            }
+
             MeccgApi.send("/game/arda/recycle", { type: target });
         }, 
         "Do you want to reshuffle all cards into the playdeck?", 
@@ -245,7 +289,8 @@ let Arda = {
 
         _question.show("");
     },
-
+    
+    
     onDrawNewCard : function(e)
     {
         const elem = e.target;
@@ -360,6 +405,7 @@ if (g_isArda !== undefined && g_isArda === true)
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(jData.list));
     MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
+    MeccgApi.addListener("/game/arda/checkdraft", (bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
 }
 else
     Arda = null;

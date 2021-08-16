@@ -372,6 +372,8 @@ img.card-icon {
     float: left;
     margin-right: 20px;
     margin-bottom: 20px;
+    min-width: 107px;
+    min-height: 153px;
 }
 .view-card-list-container img.card-icon {
     width: auto;
@@ -804,10 +806,15 @@ div#opponent_table .company { transform: rotate(180deg); }
 
 .card-hands .card-hands-sizer
 {
-    color: #fff;
-    font-size: 10px;
+    display: inline;
+    margin-left: 20px;
+}
+
+.hand-card-sizer {
     padding: 5px 10px;
     text-align: right;
+    color: #fff;
+    font-size: 10px;
 }
 
 

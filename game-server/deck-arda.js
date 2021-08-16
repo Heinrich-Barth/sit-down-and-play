@@ -26,6 +26,32 @@ class Deck extends DeckDefault {
         this.listSpecialCharacters = [];
     }
 
+    save(isAdmin)
+    {
+        let data = super.save(isAdmin);
+        
+        data.handCardsMP = this.handCardsMP;
+
+        if (isAdmin)
+        {
+            data.playdeckMP = this.playdeckMP;
+            data.discardPileMP = this.discardPileMP;
+            data.handCardsCharacters = this.handCardsCharacters;
+            data.discardPileCharacters = this.discardPileCharacters;
+            data.playdeckCharacters = this.playdeckCharacters;
+            data.handMinorItems = this.handMinorItems;
+            data.discardPileMinorItems = this.discardPileMinorItems;
+            data.playdeckMinorItems = this.playdeckMinorItems;
+            data.playDeckCharacters7 = this.playDeckCharacters7;
+            data.typesCharacters = this.typesCharacters;
+            data.typesMinors = this.typesMinors;
+            data.typesMPs = this.typesMPs;
+            data.listSpecialCharacters = this.listSpecialCharacters;
+        }
+
+        return data;
+    }
+
     addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
     {
         super.addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider);
@@ -99,12 +125,6 @@ class Deck extends DeckDefault {
     createNewCardUuid()
     {
         return "a" + super.createNewCardUuid();
-    }
-
-    saveState()
-    {
-        /** do not save arda game. makes no sense. */
-        return [];
     }
 
     drawCardMarshallingPoints()

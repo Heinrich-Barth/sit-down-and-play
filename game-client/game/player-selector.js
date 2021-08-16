@@ -73,7 +73,7 @@ PlayerSelector.prototype.setCurrentPlayer = function(sPlayerId, bIsMe)
     let jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
     jTarget.classList.add("act");
 
-    if (!bIsMe) // show opponents board
+    if (!bIsMe) /* show opponents board */
         jTarget.dispatchEvent(new Event('click'));
 };
 

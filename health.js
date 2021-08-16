@@ -1,15 +1,32 @@
 
 
-const getHealthData = function()
+const getHealthData = function(jGames)
 {
     const os = require('os');
+    const lUptime =Date.now() -  g_nUptime;
+    const pUptime = new Date(lUptime);
 
     const data = { 
+
+        startup: {
+            startup: g_nUptime,
+            readable: new Date(g_nUptime).toUTCString(),
+        },
+
+        uptime : {
+
+            uptime: lUptime,
+            readable : pUptime.toUTCString(),
+            hours: pUptime.getHours() - 1,
+            minutes: pUptime.getMinutes()
+        },
+        
         memory : {
             raw: process.memoryUsage(),
             megabytes : { },
         },
         loadavg : os.loadavg(),
+        games: jGames
     };
 
     for (let key in data.memory.raw) 
@@ -18,11 +35,10 @@ const getHealthData = function()
     return data;
 };
 
+let g_nUptime = Date.now();
+
 exports.setup = function(SERVER)
 {
-
-    /**
-     * Give some health information
-     */
-    SERVER.instance.get("/health", (req, res) => SERVER.expireResponse(res, "application/json").send(getHealthData()).status(200));
+    g_nUptime = Date.now();
+    SERVER.instance.get("/health", (req, res) => SERVER.expireResponse(res, "application/json").send(getHealthData(SERVER.roomManager.getActiveGames())).status(200));
 };

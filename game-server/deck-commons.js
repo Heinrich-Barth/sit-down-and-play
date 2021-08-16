@@ -17,6 +17,13 @@ class DeckCommons {
         return this.id;
     }
 
+    save(isAdmin)
+    {
+        return {
+            id : this._id
+        };
+    }
+
     isAgent(code, listAgents)
     {
         const nSize = code === "" ? -1 : listAgents.length;
