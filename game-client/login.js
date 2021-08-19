@@ -318,6 +318,8 @@ const onCheckCardCodes = function()
         }
     }
 
+    document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "login" })); /** update the deck list view */
+
 })();
 
 document.body.addEventListener("meccg-file-dropped", (e) => populateDeck(e.detail), false);

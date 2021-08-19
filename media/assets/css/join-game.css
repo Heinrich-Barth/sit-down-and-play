@@ -248,6 +248,9 @@ textarea {
     width: 100%;
 }
 .deck-list { user-select: none; }
+
+.deck-list .title,
+.text-yellow,
 .deck-list label:hover { color: #ff0; }
 
 input:not(:checked) ~ .challenge-deck { display: none };
@@ -258,7 +261,6 @@ input:not(:checked) ~ .challenge-deck { display: none };
     text-align: center;
     font-size: 1.3em;
     margin-bottom: 10px;
-    color: #ff0;
 }
 
 .arda-text { text-align: left; margin-left: 113px;}

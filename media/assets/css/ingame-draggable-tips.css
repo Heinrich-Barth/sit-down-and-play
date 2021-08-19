@@ -6,6 +6,7 @@ body.on-drag-event-character .area-player .company-characters-add:before,
 body.on-drag-event-generic .area-opponent .site-target:before,
 body.on-drag-event-hazard .area-opponent .site-regions:before,
 body.on-drag-event-character .area-player .company-character-host:before,
+body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before,
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
 body.on-drag-event-resource .area-player .company-character-host:before
 {
@@ -88,6 +89,13 @@ body.on-drag-event-character #create_new_company:before
     width: 170px;
 }
 
+body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before
+{
+    content: "Follow";
+    z-index: 901;
+    margin-left: -30px;
+    top: 10px;
+}
 body.on-drag-event-character .area-player .company-characters-add:before
 {
     content: "Join";

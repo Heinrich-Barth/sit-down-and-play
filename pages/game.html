@@ -36,20 +36,7 @@
     <body class="bg-game" data-is-game="true">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
-            <!-- 
-            <div class="taskbar">
-                <div class="icons">
-                    <a class="icon taskbar-turn orga" data-phase="organisation" title="Organisation Phase">&nbsp;</a>
-                    <a class="icon taskbar-turn longevent" data-phase="longevent" title="Long Event Phase">&nbsp;</a>
-                    <a class="icon taskbar-turn move" data-phase="movement" title="Movement/Hazard Phase">&nbsp;</a>
-                    <a class="icon taskbar-turn site" data-phase="site" title="Site Phase">&nbsp;</a>
-                    <a class="icon taskbar-turn eotdiscard" data-phase="eotdiscard" title="End-of-Turn Discard Phase">&nbsp;</a>
-                    <a class="icon taskbar-turn eot" data-phase="eot" title="End your turn and start next player's turn.">&nbsp;</a>
-                    <a class="icon startphase act cursor-default hidden" id="startphase_turn" data-phase="start" title="Draft Phase">&nbsp;</a>
-                    <div class="task_overlay"></div>
-                </div>
-            </div>
-            -->
+
             <div class="player-selector-box">
                 <div class="player_selector fl blue-box ">
                     <div id="player_selector"></div> <span><i class="fa fa-clock-o"></i></span><span title="Duration of this game" id="game_time">00:00</span></div>
@@ -99,9 +86,9 @@
                 <div class="row" id="opponent_table">
 
                     <!-- STAGING AREA -->
-                    <div class="staging-area staging-area-opponent">
-                        <div class="staging-area-resources fr rot180" id="staging_area_resources_opponent"></div>
-                        <div class="staging-area-hazard fr staging-area-droppable rot180" id="staging_area_hazards_opponent"></div>
+                    <div class="staging-area staging-area-opponent rot180">
+                        <div class="staging-area-resources fr" id="staging_area_resources_opponent"></div>
+                        <div class="staging-area-hazard fr staging-area-droppable" id="staging_area_hazards_opponent"></div>
                         <div class="clear"></div>
                     </div>
 
@@ -113,6 +100,7 @@
                 <div class="row">
                     <!-- STAGING AREA -->
                     <div class="staging-area staging-area-player" id="staging-area-player">
+                        <div class="staging-area-drop" id="staging_area_drop"></div>
                         <div class="staging-area-resources staging-area-area fl" id="staging_area_resources_player">
                             <div class="clear"></div>
                         </div>

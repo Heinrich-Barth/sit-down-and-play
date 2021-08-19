@@ -142,30 +142,7 @@ class GameAPI {
     }
 }
 
-class Chat {
 
-    constructor(pApi)
-    {
-        this._api = pApi;
-    }
-
-    send(from, text)
-    {
-        this.sendMessage(from, text);
-    }
-
-    sendMessage(from, text)
-    {
-        if (this._api === null || text.indexOf(">") !== -1 || text.indexOf("<") !== -1)
-            return;
-
-        console.log("chat: " + text);
-        this._api.publish("/game/chat/message", from, {
-            userid: from,
-            message: text
-        });
-    }
-};
 
 const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
 {
@@ -183,13 +160,14 @@ const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
 
 
 const Game = require("./game.js");
+const Chat = require("./chat.js")
 
 exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda)
 {
     console.log("Setting up game " + room);
 
     let pAPI = new GameAPI(io, room);
-    let pChat = new Chat(pAPI);
+    let pChat = new Chat(pAPI, "/game/chat/message");
     let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider, isArda);
 
     return {

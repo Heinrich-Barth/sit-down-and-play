@@ -582,15 +582,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                     var nStored = 0, nDiscarded = 0;
 
                     var list = [];
-                    if (card.type !== "character")
-                    {
-                        if (Game._playboardManager.MoveCardTo(obj.uuid, card.owner, "victory"))
-                        {
-                            nStored++;
-                            list = [obj.uuid];
-                        }
-                    } 
-                    else
+                    if (card.type === "character")
                     {
                         var _remove = [];
                         var _uuid;
@@ -616,6 +608,15 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                         list = _remove;
                     }
+
+                    if (list.length === 0 || card.type !== "character" )
+                    {
+                        if (Game._playboardManager.MoveCardTo(obj.uuid, card.owner, "victory"))
+                        {
+                            nStored++;
+                            list = [obj.uuid];
+                        }
+                    } 
 
                     if (nStored !== 0)
                     {
@@ -976,6 +977,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                     var card = Game._playboardManager.GetCardByUuid(data.uuid);
                     if (card !== null)
                     {
+                        Game.apis.chat.send(userid, " discards " + card.code);
                         Game.apis.meccgApi.publish("/game/discardopenly", userid, {
                             code: card.code,
                             owner : card.owner,
@@ -1036,14 +1038,13 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                             Game._playboardManager.ReadyCompanyCards(list[i]);
 
                         Game.apis.meccgApi.publish("/game/player/set-current", Game.players.getCurrent(), {name: Game.players.getCurrent(), displayname: Game.players.getCurrentPlayerName()});
-
                     }
 
                     Game.setPhase(sPhase);
                     Game.inits.sendCurrentPhase();
 
-                    if (nNewTurn - nCurrentTurn !== 0)
-                        Game.apis.chat.send(Game.players.getCurrent(), " Starting their turn " + nNewTurn);
+                    if (nNewTurn !== nCurrentTurn)
+                        Game.apis.chat.send(Game.players.getCurrent(), " starts turn no. " + nNewTurn);
 
                     Game.apis.chat.send(Game.players.getCurrent(), " is now in " + sPhase + " phase");
                 },

@@ -1,10 +1,14 @@
 
 const DropZone = {
 
+    _dropzoneId : "",
+
     dragenter : function(e) 
     {
-        document.body.classList.add("on-drag-over");
         e.preventDefault();
+        const elem = document.getElementById(DropZone._dropzoneId);
+        if (elem !== null)
+            elem.classList.add("on-drag-over");   
     },
 
     onFileDropped : function(file)
@@ -36,8 +40,11 @@ const DropZone = {
 
     drop : function(ev)
     {
-        document.body.classList.remove("on-drag-over");
         ev.preventDefault();
+
+        const elem = document.getElementById(DropZone._dropzoneId);
+        if (elem !== null)
+            elem.classList.remove("on-drag-over");
 
         if (ev.dataTransfer.items) 
         {
@@ -63,25 +70,28 @@ const DropZone = {
         document.head.appendChild(link);
     },
 
-    init : function()
+    init : function(sId)
     {
+        const elem = document.getElementById(sId);
+        if (elem === null)
+            return;
+
+        this._dropzoneId = sId;
         this.addCss();
-        const elem = document.body;
 
         elem.ondragover = DropZone.dragenter;
+        elem.ondragexit = DropZone.dragleave;
         elem.ondragleave = DropZone.dragleave;
         elem.ondrop = DropZone.drop;
-
-        const div = document.createElement("div");
-        div.setAttribute("class", "on-drop-info bgblue");
-        div.innerHTML = "Drop Deck File<br>on the green";
-        document.body.appendChild(div);
     },
 
     dragleave : function(e)
     {
-        document.body.classList.remove("on-drag-over");
         e.preventDefault();
+
+        const elem = document.getElementById(DropZone._dropzoneId);
+        if (elem !== null)
+            elem.classList.remove("on-drag-over");
     },
 
     ondragend : function(e)
@@ -92,4 +102,4 @@ const DropZone = {
     }
 };
 
-DropZone.init();
+document.body.addEventListener("meccg-init-dropzone", (e) => DropZone.init(e.detail), false);

@@ -232,6 +232,58 @@ const CARDS = {
         console.error("\t-invalid card(s) found: " + Object.keys(invalids).length);
     },
 
+    updateMps : function()
+    {
+        for (let card of this._raw) 
+        {
+            if (card.MPs === undefined)
+                continue;
+            else if (card.MPs === "")
+                delete card.MPs;
+            else
+            {
+                if (card.MPs.indexOf("(") >= 0)
+                    card.MPs = card.MPs.replace("(", "").replace(")", "");
+            
+                card.MPs = this.toInt(card.MPs);
+            }
+        }
+    },
+    updateMind : function()
+    {
+        for (let card of this._raw) 
+        {
+            if (card.Mind === undefined)
+                continue;
+            else if (card.Mind === "")
+                delete card.Mind;
+            else
+            {
+                if (card.Mind.indexOf("(") >= 0)
+                    card.Mind = card.Mind.replace("(", "").replace(")", "");
+            
+                card.Mind = this.toInt(card.Mind);
+            }
+        }
+    },
+
+    
+
+    toInt : function(sVal)
+    {
+        try
+        {
+            return parseInt(sVal);
+        }
+        catch (errIgnore)
+        {
+
+        }
+
+        return 0;
+    },
+
+
     setup : function(_raw)
     {
         console.log("Setting up cards data.");
@@ -242,6 +294,8 @@ const CARDS = {
         this.integrityCheck();
         this.sort();
         this.addIndices();
+        this.updateMps();
+        this.updateMind();
 
         this.createTypes();
         this.prepareArda();
@@ -269,19 +323,8 @@ const CARDS = {
 
     getCardMind : function(code)
     {
-
-        try
-        {
-            const card = CARDS.getCardByCode(code);
-            if (card !== null && card.Mind !== undefined)
-                return parseInt(card.Mind);
-        }
-        catch (eIgnore)
-        {
-
-        }
-
-        return -1;
+        const card = CARDS.getCardByCode(code);
+        return card !== null && card.Mind !== undefined ? card.Mind : -1;
     },
 
     isCardAvailable : function(code)

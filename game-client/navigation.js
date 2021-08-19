@@ -14,6 +14,11 @@ const Navigation = {
         return document.body.getAttribute("data-is-game") === "true";
     },
 
+    isOpenByDefault : function()
+    {
+        return "open" == document.body.getAttribute("data-navigation-type");
+    },
+
     init : function(json)
     {
         if (!Array.isArray(json) || json.length === 0)
@@ -50,6 +55,9 @@ const Navigation = {
         div.appendChild(input);
         div.appendChild(nav);
         document.body.prepend(div);
+
+        if (Navigation.isOpenByDefault())
+            input.click();
     }
 };
 

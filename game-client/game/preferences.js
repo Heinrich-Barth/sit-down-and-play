@@ -8,8 +8,38 @@ const Preferences = {
     {
     },
 
+    changeBackground : function(sNew)
+    {
+        if (!document.body.classList.contains(sNew))
+            document.body.classList.add(sNew)
+
+        let list = document.body.classList;
+        for (let _name of list)
+        {
+            if (_name !== sNew && _name.indexOf("bg-") === 0)
+                document.body.classList.remove(_name);
+        }
+    },
+
     callbacks : {
 
+        _bgEagle : function()
+        {
+            Preferences.changeBackground("bg-eagle");
+        },
+
+        _bgRivendell : function()
+        {
+            Preferences.changeBackground("bg-rivendell");
+        },
+        _bgEdoras : function()
+        {
+            Preferences.changeBackground("bg-edoras");
+        },
+        _bgUnderdeeps : function()
+        {
+            Preferences.changeBackground("bg-underdeeps");
+        },
         _chat : function(isActive)
         {
             document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
@@ -18,6 +48,31 @@ const Preferences = {
         _endGame : function()
         {
             document.body.dispatchEvent(new CustomEvent("meccg-query-end-game", { }));
+        },
+
+        _saveGame : async function()
+        {
+            try 
+            {
+                let directory = await window.showDirectoryPicker();
+                let fileHandle = await directory.getFileHandle("savegame" + Date.now() + ".meccgsave", { create: true });
+                let writable = await fileHandle.createWritable();
+                try
+                {
+                    await writable.write(JSON.stringify(g_Game.GameBuilder.getSavedGame(), null, "\t"));
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Game saved to disk." }));
+                }
+                finally
+                {
+                    await writable.close();
+                }
+
+            } 
+            catch(e) 
+            {
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not save file." }));
+                console.log(e);
+            }
         },
 
         _gameAudio : function()
@@ -54,17 +109,17 @@ const Preferences = {
 
     useImagesDC : function()
     {
-        return Preferences._getConfigValue("images_errata_dc");
+        return true; /* Preferences._getConfigValue("images_errata_dc");*/
     },
 
     useImagesIC : function()
     {
-        return Preferences._getConfigValue("images_errata_ic");
+        return true; /*Preferences._getConfigValue("images_errata_ic");*/
     },
 
     discardOpenly : function()
     {
-        return Preferences._getConfigValue("discard_facedown");
+        return !Preferences._getConfigValue("discard_facedown");
     },
 
     offerBlindly : function()
@@ -142,18 +197,25 @@ const Preferences = {
 
         Preferences._html = "";
 
-        createSection("Cards");
+        createSection("General");
         createEntry0("viewpile_open");
+        createEntry0("discard_facedown");
+        createEntry0("show_chat");
+
+        /*
         createEntry0("images_errata_dc");
         createEntry0("images_errata_ic");
-
-        createSection("Chat");
-        createEntry0("show_chat");
+        */
+        createSection("Backgrounds");
+        createEntry0("bg_default");
+        createEntry0("bg_rivendell");
+        createEntry0("bg_edoras");
+        createEntry0("bg_deeps");
 
         createSection("Game");
         createEntry0("game_show_lobby");       
         createEntry0("game_addcards");       
-        createEntry0("game_audio");       
+        createEntry0("game_save");
         createEntry0("leave_game");
 
         createSection("Rules");
@@ -221,10 +283,16 @@ const Preferences = {
         Preferences.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
         /*
         Preferences.addConfigToggle("auto_reveal", "Reveal cards automatically", true);
-        Preferences.addConfigToggle("discard_facedown", "Discard cards face down", true);
+        
         */
+        Preferences.addConfigToggle("discard_facedown", "Discard cards face down", true);
         Preferences.addConfigToggle("images_errata_dc", "Use Dreamcards Errata", true);
         Preferences.addConfigToggle("images_errata_ic", "Use Errata", true);
+
+        Preferences.addConfigAction("bg_default", "Eagle", false, "fa-picture-o", Preferences.callbacks._bgEagle);
+        Preferences.addConfigAction("bg_rivendell", "Rivendell", false, "fa-picture-o", Preferences.callbacks._bgRivendell);
+        Preferences.addConfigAction("bg_edoras", "Edoras (bakarov/Onur Bakar)", false, "fa-picture-o", Preferences.callbacks._bgEdoras);
+        Preferences.addConfigAction("bg_deeps", "Bridge (Paul Mmonteagle)", false, "fa-picture-o", Preferences.callbacks._bgUnderdeeps);
 
         Preferences.addConfigToggle("show_chat", "Show chat window", true, Preferences.callbacks._chat);
 
@@ -232,6 +300,8 @@ const Preferences = {
         
         Preferences.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", Preferences.callbacks._addCardsToDeck);
         Preferences.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", Preferences.callbacks._gameAudio);
+        Preferences.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", Preferences.callbacks._saveGame);
+
         Preferences.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", Preferences.callbacks._endGame);
 
         Preferences.addConfigAction("rules_wizards", "The Wizards", false, "fa-eye", Preferences.callbacks._showRule);

@@ -23,6 +23,8 @@
     background: url("/media/assets/backgrounds/river.jpg") no-repeat center center fixed;
     background-size: cover;
 }
+
+.bg-edoras,
 .bg-default { background: url("/media/assets/backgrounds/default.jpg") no-repeat center center fixed; background-size: cover; }
 
 .bg-rocks {
@@ -33,5 +35,16 @@
 .bg-nature
 {
     background: url("/media/assets/backgrounds/nature.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.bg-rivendell
+{
+    background: url("/media/assets/backgrounds/rivendell.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.bg-underdeeps {
+    background: url("/media/assets/backgrounds/bridge-paul-monteagle.jpg") no-repeat center center fixed;
     background-size: cover;
 }

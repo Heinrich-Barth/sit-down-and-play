@@ -173,16 +173,8 @@ class DeckManager {
 
     _getTappedSites(playerId)
     {
-        if (typeof playerId === "undefined" || playerId === "")
-        {
-            console.log("invalid player id");
+        if (typeof playerId === "undefined" || playerId === "" || typeof this._siteMap[playerId] === "undefined")
             return { };
-        }
-        else if (typeof this._siteMap[playerId] === "undefined")
-        {
-            console.log("Player does not have site map");
-            return { };
-        }
         else
             return  this._siteMap[playerId];
     }

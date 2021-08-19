@@ -254,10 +254,9 @@ a:hover { color: #ff0; }
 
 .table { position: relative; width: 100%; }
 .table .area { width: 100%; }
-.table .area-opponent{ position: relative; min-height: 48%; }
-
-.table .area-player{position: relative; min-height: 48%;}
-
+.table .area-opponent, 
+.table .area-player {position: relative; max-height: 48%; height: 100%;}
+.table .area-opponent { margin-bottom: 20px; }
 img.card-icon { 
     width: 57px;
     height: 80px;
@@ -505,6 +504,7 @@ img.card-icon {
 .staging-area 
 {
     flex: 1 20%;
+    position: relative;
 }
 
 .companies {
@@ -516,14 +516,11 @@ img.card-icon {
     padding: 0 10px 0 50px;
 }
 
-.staging-area-area
-{
-    min-width: 70px; 
-    min-height: 80px;
-}
+
+.staging-area-drop { display: none; }
 
 .staging-area .card { float: left; margin-left: 2px; }
-.staging-area .card img.card-icon { height: 70px; }
+.staging-area .card img.card-icon { height: 70px; width: auto; }
 
 .company-characters-add
 {
@@ -547,6 +544,19 @@ body.on-drag-event-character .area-player .company-characters-add
     margin: 10px;
 }
 
+body.on-drag-event-hazard .staging-area-drop,
+body.on-drag-event-resource .staging-area-drop
+{
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 200px;
+}
+
+body.on-drag-event-hazard .staging-area-drop,
+body.on-drag-event-resource .staging-area-drop,
 body.on-drag-event-hazard .area-opponent .company-character-host,
 body.on-drag-event-hazard .area-opponent .site-regions,
 body.on-drag-event-generic .area-opponent .site-target,
@@ -756,7 +766,7 @@ div.card:hover img { box-shadow: 0px 0px 10px 0px #000; }
 
 div#opponent_table .company { transform: rotate(180deg); }
 
-.staging-area.staging-area-opponent { padding-top: 50px; }
+.staging-area.staging-area-opponent { padding-top: 20px; }
 
 #view_card_list_container .view-card-list-container .icons a.onoffer { display: none; }
 #view_card_list_container .view-card-list-container.offered .icons a { display: none; }

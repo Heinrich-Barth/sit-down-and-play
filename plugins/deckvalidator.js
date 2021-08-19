@@ -45,7 +45,7 @@ const extractMarshallingPoints = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
-        return card.type !== undefined && card.type === "Resource" && card.MPs !== undefined && card.MPs !== "" && card.MPs !== "0";
+        return card.type !== undefined && card.type === "Resource" && card.MPs !== undefined && card.MPs !== 0;
     });
 };
 
@@ -69,7 +69,7 @@ const extractCharactersMindMin7 = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
-        return card.type === "Character" && card.Mind !== undefined && card.Mind !== "" && parseInt(card.Mind) >= 6;
+        return card.type === "Character" && card.Mind !== undefined && card.Mind >= 6;
     });
 };
 

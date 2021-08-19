@@ -70,6 +70,7 @@ var DeckList =
         elem.setAttribute("id", "deck_card_view");
         elem.setAttribute("class", "hidden");
         document.body.appendChild(elem);
+        document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "deck_container" })); /** update the deck list view */
     },
 
     removeExisting : function()

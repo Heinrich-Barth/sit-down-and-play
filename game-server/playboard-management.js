@@ -1527,7 +1527,10 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             var pCharacter = PLAYBOARD_MANAGER.getCharacterByUuid(characterUuid);
             if (pCharacter === null)
             {
-                console.log("undefined char uuid " + characterUuid);
+                /** 
+                 * Character has not been found, i.e. is to be popped from hand.
+                 * Anyway, we are done here
+                 */
                 return [];
             }
 

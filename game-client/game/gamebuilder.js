@@ -41,6 +41,11 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
         _timeStarted : 0,
         _hiddenStartPhase : false,
         _saved : { },
+
+        getSavedGame : function()
+        {
+            return this._saved;
+        },
         
         onGameTime : function(jData)
         {
@@ -198,6 +203,11 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
             MeccgApi.addListener("/game/discardopenly", function(bIsMe, jData) 
             {
+                console.log(jData);
+                if (bIsMe)
+                    return;
+
+
                 /* TODO
                 jData.code;
                 jData.owner;

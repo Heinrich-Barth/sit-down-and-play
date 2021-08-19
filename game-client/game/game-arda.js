@@ -133,6 +133,11 @@ let Arda = {
         { 
             DomUtils.empty(div);
             div.classList.add("hidden");
+
+            const elem = document.getElementById("arda_characters_hand");
+            if (elem !== null)
+                elem.classList.remove("hidden");
+
             MeccgApi.send("/game/arda/assign-characters", {});
         };
     },
@@ -157,6 +162,14 @@ let Arda = {
         div.appendChild(a);
         parent.appendChild(div);
         return div;
+    },
+
+    onShowHands : function()
+    {
+        ArrayList(document).findByClassName("arda-card-hands").each((elem) => {
+            if (elem.classList.contains("hidden"))
+                elem.classList.remove("hidden");
+        });
     },
 
     toogleView : function(e)
@@ -200,7 +213,7 @@ let Arda = {
         div.appendChild(_div);
 
         _div = document.createElement("div");
-        _div.setAttribute("class", "arda-inline arda-hand-card-actions " + (bRecycleOnce ? "arda-hand-card-actions-fl" : ""));
+        _div.setAttribute("class", "arda-inline arda-hand-card-actions");
 
         if (bRecycleOnce)
         {
@@ -249,7 +262,6 @@ let Arda = {
             document.getElementById("arda-card-draw-charackters").classList.remove("hidden");
 
             elem = document.getElementById("arda_characters_hand");
-            ArrayList(elem).findByClassName("arda-hand-card-actions-fl").each((_el) => _el.classList.remove("arda-hand-card-actions-fl"));
             elem.classList.remove("hidden");
         }
 
@@ -259,7 +271,6 @@ let Arda = {
             DomUtils.remove(elem);
             document.getElementById("arda-card-draw-minor").classList.remove("hidden");
             elem = document.getElementById("arda_minors_hand");
-            ArrayList(elem).findByClassName("arda-hand-card-actions-fl").each((_el) => _el.classList.remove("arda-hand-card-actions-fl"));
             elem.classList.remove("hidden");
         }
     },
@@ -274,10 +285,7 @@ let Arda = {
             DomUtils.remove(e.target);
             document.getElementById("arda-card-draw-" + target).classList.remove("hidden");
             if (next !== "")
-            {
-                console.log("show next " + next);
                 document.getElementById(next).classList.remove("hidden");
-            }
 
             MeccgApi.send("/game/arda/recycle", { type: target });
         }, 
@@ -400,12 +408,15 @@ let Arda = {
 if (g_isArda !== undefined && g_isArda === true)
 {
     document.body.addEventListener("meccg-api-connected", () => Arda.init(), false);
+    MeccgApi.addListener("/game/arda/hand/show", () => Arda.onShowHands());
     MeccgApi.addListener("/game/arda/hand/minor", (bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
     MeccgApi.addListener("/game/arda/hand/characters", (bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(jData.list));
     MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
     MeccgApi.addListener("/game/arda/checkdraft", (bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
+
+    
 }
 else
     Arda = null;

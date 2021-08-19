@@ -129,7 +129,7 @@ class PlayerStagingAreaObjects {
 
     static droparea() 
     { 
-        return document.getElementById("staging-area-player"); 
+        return document.getElementById("staging_area_drop"); 
     }
 
 }

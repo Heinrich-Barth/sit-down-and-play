@@ -97,18 +97,14 @@ exports.setupArdaSpecials = function(Game)
                     Arda.game.apis.chat.send(userid, "drew common card " + card.code);
                 }
             }
+
+            Arda.game.apis.meccgApi.publish("/game/arda/hand/show", userid, {});
         },
 
         onAssignCharacters : function(userid)
         {
             Arda.assignOpeningChars7();
             Arda.assignOpeningChars(8);
-
-            for (let i = 0; i < 5; i++)
-                Arda.game._playboardManager.decks.getAdminDeck().drawCardCharacter();
-                
-            const listMinor = Arda.game._playboardManager.getCardList(Arda.game._playboardManager.decks.getAdminDeck().getHandCharacters());
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/characters", userid, {list: listMinor});
         },
       
         onDrawCard : function(userid, socket, obj)
