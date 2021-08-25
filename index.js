@@ -78,8 +78,9 @@ const getHtmlCspPage = function(page)
     g_pEventManager, 
     {
         getCardType : SERVER.cards.getCardType,
+        getCardTypeSpecific : SERVER.cards.getCardTypeSpecific,
         getCardMind : SERVER.cards.getCardMind,
-        getCardByCode : SERVER.cards.getCardByCode,
+        getCardByCode : SERVER.cards.getCardByCode
     });
     
     SERVER.authenticationManagement = require("./game-server/authentication.js");
@@ -345,6 +346,8 @@ SERVER.instance.post("/data/decks/check", function (req, res)
 });
 
 SERVER.instance.get("/data/samplerooms", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
+
+SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 
 /**
  * Error endpoint.
