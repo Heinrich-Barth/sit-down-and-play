@@ -39,7 +39,10 @@
 
             <div class="player-selector-box">
                 <div class="player_selector fl blue-box ">
-                    <div id="player_selector"></div> <span><i class="fa fa-clock-o"></i></span><span title="Duration of this game" id="game_time">00:00</span></div>
+                    <div id="player_selector"></div> 
+                    <span class="fa fa-globe" aria-hidden="true" title="Turns" id="game_turns">1</span>
+                    <span title="Duration of this game" class="fa fa-clock-o" id="game_time">00:00</span> 
+                </div>
                 <div class="clear"></div>
             </div>
 
@@ -70,9 +73,9 @@
                 <div class="blue-box" id="playercard-hand-content">
                     <div class="hand-card-sizer"></div>
                     <div class="hand-card-actions">
-                        <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice"></div>
+                        <div class="card-generic cursor-pointer card-dice" title="Click to roll the dice (r)"></div>
                         <div class="card-hand card-draw">
-                            <a href="#" class="card-icon" id="draw_card" title="Draw a new card">&nbsp;</a>
+                            <a href="#" class="card-icon" id="draw_card" title="Draw a new card (d)">&nbsp;</a>
                             <div class="hidden" id="draw_onlyGetTopCard"></div>
                         </div>
                     </div>
@@ -170,6 +173,7 @@
         <script src="/media/client/game/gamebuilder.js?version=1"></script>
         <script src="/media/client/game/highlight-card.js?version=1"></script>
         <script src="/media/client/game/lobby.js?version=1"></script>
+        <script src="/media/client/game/help.js?version=1"></script>
         <script src="/media/client/game/game-tabletop.js?version=1"></script>
         <script src="/media/client/game/shortcuts.js?version=1"></script>
         <script src="/media/client/game/resolvehandsize.js"></script>
