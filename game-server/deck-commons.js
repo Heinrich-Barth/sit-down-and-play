@@ -190,7 +190,8 @@ class DeckCommons {
             state : 0,
             owner : this.getPlayerId(),
             revealed: !isAgent,
-            agent : isAgent
+            agent : isAgent,
+            turn: 0
         };
     }
 }
