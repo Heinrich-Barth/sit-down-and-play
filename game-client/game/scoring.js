@@ -288,7 +288,6 @@ function createScoringApp(_CardList)
 
             ArrayList(document.getElementById("scoring-card")).find('input[name="' + sName + '"]').each((_el) => {
 
-                console.log(_el.checked);
                 if (_el.checked)
                     val = _el.value;
             })
