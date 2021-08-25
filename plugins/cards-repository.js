@@ -132,6 +132,12 @@ const CARDS = {
             this._cards[card.code] = card;
     },
 
+    identifyQuests : function()
+    {
+        for (var card of this._raw) 
+            card.isQuest = card.Race.startsWith("Quest-Side-");
+    },
+
     removeUnusedFields : function()
     {
         const vsUnused = getRemovableKeysArray();
@@ -327,6 +333,12 @@ const CARDS = {
         return card !== null && card.Mind !== undefined ? card.Mind : -1;
     },
 
+    getCardTypeSpecific : function(code)
+    {
+        const card = CARDS.getCardByCode(code);
+        return card !== null && card.Secondary !== undefined ? card.Secondary : "";
+    },
+
     isCardAvailable : function(code)
     {
         return code !== undefined && code !== "" && CARDS._types[code] !== undefined;
@@ -334,6 +346,7 @@ const CARDS = {
 
     postProcessCardList : function()
     {
+        this.identifyQuests();
         this.removeUnusedFields();
         this.removeFlavourText();
         console.log("Cards setup done.");
@@ -353,3 +366,5 @@ exports.getCardType = (code) => CARDS.getCardType(code);
 exports.getCardByCode = (code) => CARDS.getCardByCode(code);
 
 exports.getCardMind = (code) => CARDS.getCardMind(code);
+
+exports.getCardTypeSpecific = (code) => CARDS.getCardTypeSpecific(code);
