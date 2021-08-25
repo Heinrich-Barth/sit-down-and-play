@@ -290,7 +290,7 @@ const Preferences = {
         Preferences.addConfigToggle("images_errata_ic", "Use Errata", true);
 
         Preferences.addConfigAction("bg_default", "Eagle", false, "fa-picture-o", Preferences.callbacks._bgEagle);
-        Preferences.addConfigAction("bg_rivendell", "Rivendell", false, "fa-picture-o", Preferences.callbacks._bgRivendell);
+        Preferences.addConfigAction("bg_rivendell", "Rivendell (Jerry VanderStelt)", false, "fa-picture-o", Preferences.callbacks._bgRivendell);
         Preferences.addConfigAction("bg_edoras", "Edoras (bakarov/Onur Bakar)", false, "fa-picture-o", Preferences.callbacks._bgEdoras);
         Preferences.addConfigAction("bg_deeps", "Bridge (Paul Mmonteagle)", false, "fa-picture-o", Preferences.callbacks._bgUnderdeeps);
 
@@ -314,8 +314,8 @@ const Preferences = {
 
         const div = document.createElement("div");
         div.setAttribute("class", "config-wrapper blue-box");
-        div.innerHTML = `<div class="icons" id="prefs">
-                            <div class="icon conf cursor-pointer" title="Preferences"></div>
+        div.innerHTML = `<div class="icons cursor-pointer" id="prefs">
+                            <i class="fa fa-sliders" aria-hidden="true" title="Preferences"></i>
                         </div>
                         <div id="preferences-wrapper" class="hide">
                             <div class="config-panel-overlay" id="config-panel-overlay"></div>
@@ -325,7 +325,7 @@ const Preferences = {
 
         document.getElementById("config-panel").innerHTML = Preferences.getEntries();
 
-        document.getElementById("prefs").querySelector(".conf").onclick = () => setTimeout(function() { document.getElementById("preferences-wrapper").classList.remove("hide"); }, 500);
+        document.getElementById("prefs").onclick = () => setTimeout(function() { document.getElementById("preferences-wrapper").classList.remove("hide"); }, 500);
         document.getElementById("config-panel-overlay").onclick = () => document.getElementById("preferences-wrapper").classList.add("hide");
 
         ArrayList(document.getElementById("config-panel")).find("input").each((_el) => _el.onchange = Preferences.onEventChange);

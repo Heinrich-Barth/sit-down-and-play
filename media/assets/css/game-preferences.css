@@ -19,6 +19,8 @@
     padding-left: 20px;
     transform: translateX(-50%);
     max-height: 60%;
+    width: 100%;
+    max-width: 600px;
 }
 
 .config-panel-overlay {
@@ -37,7 +39,8 @@
     text-transform: uppercase;
 }
 
-.config-wrapper .icons { width: 20px; padding: 0; }
+.config-wrapper .icons { width: 20px; padding: 0; text-align:center;}
+.config-wrapper .icons:hover {color:#ffa500;}
 
 .config-wrapper:hover .icon {
     background: url(/media/assets/images/icons/icon-prefs-hover.png) 0 0 no-repeat;
