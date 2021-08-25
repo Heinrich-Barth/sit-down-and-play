@@ -472,9 +472,10 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                 var card = Game._playboardManager.GetCardByUuid(_uuid);
                 var type = card.type;
+                card.turn = Game.getCurrentTurn();
 
                 Game.apis.meccgApi.publish("/game/remove-card-from-hand", "", _uuid);
-                Game.apis.meccgApi.publish("/game/add-to-staging-area", userid, {uuid: _uuid, target: "", code: card.code, type: type, state: card.state, revealed: card.revealed, owner: card.owner});
+                Game.apis.meccgApi.publish("/game/add-to-staging-area", userid, {uuid: _uuid, target: "", code: card.code, type: type, state: card.state, revealed: card.revealed, owner: card.owner, turn: card.turn });
                 Game.updateHandCountersPlayer(userid);
                 Game.apis.chat.send(userid, "added " + card.code + " to staging area");
             },
@@ -1029,6 +1030,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                         Game.apis.chat.send(userid, " ends turn. Active player is " + Game.players.getCurrentPlayerName());
                         Game.inits.sendCurrentHandSize();
+                        Game.apis.meccgApi.publish("/game/set-turn", userid, { turn : nNewTurn })
                     }
 
                     if (sPhase === "organisation")
