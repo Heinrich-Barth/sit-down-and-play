@@ -80,45 +80,13 @@ const DeckbuilderApi =
         return true;
     },
     
-    addToPool : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_POOL, code);
-    },
-
-    addToDeckHazard : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_HAZARD, code);
-    },
-    addToDeckResources : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_RESOURCE, code);
-    },
-    addToDeckCharacters : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_CHARACTER, code);
-    },
-    addToDeckAvatar : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_AVATAR, code);
-    },
-
-    addToSideboard : function(code)
-    {
-        return this.add(DeckbuilderApi.DECK_SIDEBOARD, code);
-    },
-    
-    onRetreiveDeckName : function(name)
-    {
-        document.getElementById("deck_name").innerHTML = "Deck";
-    },
-    
     onInitAddCard : function(card, count, target)
     {
         for (var i = 0; i < count; i++)
         {
             this._count++;
             if (DeckList.addToDeck(card.code, target))
-                card.count--;
+                this.add(target, card)
         }
     },
 
