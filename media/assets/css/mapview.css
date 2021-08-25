@@ -111,8 +111,8 @@ textarea {
     padding: 5px;
     margin-right: 5px;
 }
-.map-action-image { padding: 6px 10px;  text-align: center; opacity: 0.5;}
-.map-action-image:hover { opacity: 1;}
+.map-action-image { color: #fff; padding: 6px 10px;  text-align: center; font-size: 35px !important; }
+.map-action-image:hover { color: #ffa500; }
 
 div.panel-buttons { width: 70px; }
 
