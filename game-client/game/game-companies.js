@@ -387,10 +387,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             INSTANCE.initSingleCardEvent(pCard, true);
             
             if (bAllowContextMenu)
-            {
-                console.log("generic")
                 document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: CARDID_PREFIX + card.uuid }} ));
-            }
             
             if (card.revealed || typeof card.revealed === "undefined")
                 INSTANCE.revealCard(pCard.querySelector("img"));
