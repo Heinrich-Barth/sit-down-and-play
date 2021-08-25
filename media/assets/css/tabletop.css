@@ -218,37 +218,33 @@ a:hover { color: #ff0; }
 {
     position: absolute;
     right: 0;
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
-    opacity: 0.5;
     z-index: 100;
-    cursor: pointer;
+    background-size: contain;
+    opacity: 0.6;
 }
 
-.location-icon-image:hover
-{
-    cursor: pointer;
-    opacity: 1;
-}
+.location-icon-image:hover { opacity: 1; }
 
 .location-icon
 {
     top: 0px;
-    background: url("/media/assets/images/icons/icon-location-area.png") 0 0px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-location-area.png"); 
 }
 .location-icon:hover
 {
-    background: url("/media/assets/images/icons/icon-location-area-hover.png") 0 0px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-location-area-hover.png"); 
 }
 .location-reveal
 {
     bottom: 10px;
-    background: url("/media/assets/images/icons/icon-eye.png") 0 0px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-eye.png"); 
 }
 .location-reveal:hover
 {
-    background: url("/media/assets/images/icons/icon-eye-hover.png") 0 0px no-repeat; 
+    background-image: url("/media/assets/images/icons/icon-eye-hover.png"); 
 }
 
 
@@ -477,9 +473,8 @@ img.card-icon {
 
 .company-site-list
 {
-    height: 100px;
-    max-height: 100px;
-    
+    height: 83px;
+    max-height: 83px;
     min-width: 72px;
     padding: 5px;
 }
@@ -760,6 +755,7 @@ div.card:hover img { box-shadow: 0px 0px 10px 0px #000; }
 .player-selector-box a.cur { color: #ffa500; }
 .player-selector-box a.act { font-weight: bold; }
 .player-selector-box span { min-width: 20px; min-height: 20px; display: inline-block; border-radius: 5px 40px 5px; }
+.player-selector-box span:before { padding-right: 5px; }
 .player-selector-box span.indicator-green { background: #BADA55; }
 .player-selector-box span.indicator-red { background: #d94f4f;   }
 .player-selector-box span.indicator-grey { background: grey; }
