@@ -85,3 +85,16 @@ a, a:active, a:visited {
 }
 
 a:hover { color: #ffa500; }
+
+#active_games table:nth-child(2)
+{
+  margin-top: 20px;
+}
+
+#active_games table { width: 100%; border-spacing: 0; }
+#active_games th, td { text-align: left;}
+#active_games tr td:first-child { width: 30px; text-align:right; padding-right: 10px;}
+#active_games tr th:last-child { width: 100%; max-width: 45%;}
+#active_games tbody tr:hover { background-color: rgba(255, 255, 255, 0.2);}
+#active_games a { display: block; }
+.join-game { text-align: center;}

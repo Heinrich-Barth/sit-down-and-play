@@ -1,8 +1,8 @@
 
 
+.help-wrapper,
 .lobby-wrapper {
     position: absolute;
-    top: 75px;
     left: 5px;
     width: 20px;
     height: 20px;
@@ -10,10 +10,20 @@
     padding: 5px;
     color: white;
     overflow: hidden;
+    text-align: center;
+}
+.help-wrapper
+{
+    top: 70px;
 }
 
+.lobby-wrapper {
+    top: 100px;
+}
+
+.help-wrapper:hover i,
 .lobby-requests i:hover,
-.lobby-wrapper i:hover {
+.lobby-wrapper:hover i {
     color: #ffa500;
 }
 
@@ -33,3 +43,4 @@
 .lobby-requests h3 { margin-top: 0; color: #ffa500}
 
 .lobby-requests i { cursor: pointer; margin-right: 10px;}
+
