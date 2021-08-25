@@ -98,13 +98,16 @@ const MapWindow = {
         if (document.body.classList.contains("on-show-map-window") || document.getElementById("map-iframe") !== null)
             return;
 
+        const jWrapper = document.getElementById("map-window");
+        if (jWrapper === null)
+            return;
+            
         document.body.classList.add("on-show-map-window");
 
         const jOverlay = document.createElement("div");
         jOverlay.setAttribute("class", "map-overlay");
         jOverlay.setAttribute("id", "map-window-overlay");
 
-        let jWrapper = document.getElementById("map-window");
         DomUtils.removeAllChildNodes(jWrapper); /** just make sure it is empty */
 
         /** add the overlay to allow closing it again */
