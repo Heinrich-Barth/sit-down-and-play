@@ -93,3 +93,5 @@ exports.getMapdata = () => CardsMap.getMapdata(ImageList.getImages());
 exports.getCardMind = (code) => CardRepository.getCardMind(code);
 
 exports.getCardByCode = (code) => CardRepository.getCardByCode(code);
+
+exports.getCardTypeSpecific = (code) => CardRepository.getCardTypeSpecific(code);

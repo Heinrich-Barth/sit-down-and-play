@@ -117,13 +117,13 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             for (var i = 0; i < jData.player.stage_hazards.length; i++)
             {
                 _data = jData.player.stage_hazards[i];
-                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner);
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
             }
             
             for (var i = 0; i < jData.player.stage_resources.length; i++)
             {
                 _data = jData.player.stage_resources[i];
-                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner);
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
             }
                 
 
@@ -133,13 +133,13 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             for (var i = 0; i < jData.opponent.stage_hazards.length; i++)
             {
                 _data = jData.opponent.stage_hazards[i];
-                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner);
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
             }
             
             for (var i = 0; i < jData.opponent.stage_resources.length; i++)
             {
                 _data = jData.opponent.stage_resources[i];
-                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner);
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
             }
 
             
@@ -151,15 +151,18 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }, 1500);
         },
         
-        onAddCardToStagingArea : function(bIsMe, cardCode, uuid, target, type, state, revealed)
+        onAddCardToStagingArea : function(bIsMe, cardCode, uuid, target, type, state, revealed, owner, turn)
         {
             if (uuid === "" || cardCode === "" || type === "")
             {
                 MeccgUtils.logWarning("invalid card data");
                 return false;
             }
+
+            if (turn === undefined)
+                turn = 1;
             
-            var cardId = Stagingarea.onAddCardToStagingArea(bIsMe, uuid, "", cardCode, type, state, revealed);
+            var cardId = Stagingarea.onAddCardToStagingArea(bIsMe, uuid, "", cardCode, type, state, revealed, turn);
             if (bIsMe)
                 HandCardsDraggable.initCardInStagingArea(cardId, "", type);
             
@@ -203,7 +206,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
             MeccgApi.addListener("/game/discardopenly", function(bIsMe, jData) 
             {
-                console.log(jData);
                 if (bIsMe)
                     return;
 
@@ -326,7 +328,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             MeccgApi.addListener("/game/card/state/glow", (bIsMe, jData) =>g_Game.CompanyManager.onMenuActionGlow(jData.uuid));
             MeccgApi.addListener("/game/card/state/highlight", (bIsMe, jData) => g_Game.CompanyManager.onMenuActionHighlight(jData.uuid));
 
-            MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, "", jData.type, jData.state, jData.revealed, jData.owner));
+            MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, "", jData.type, jData.state, jData.revealed, jData.owner, jData.turn));
 
             MeccgApi.addListener("/game/update-deck-counter/player/generics", function(bIsMe, playload)
             {
@@ -396,7 +398,10 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     
                 CompanyManager.drawLocations(company, start, regions, target, jData.revealed, jData.attached, jData.current_tapped, jData.target_tapped);
             });
+
             
+            MeccgApi.addListener("/game/set-turn", (bIsMe, jData) => document.getElementById("game_turns").innerHTML = jData.turn);
+
             MeccgApi.addListener("/game/set-phase", function(bIsMe, jData)
             {
                 const sPhase = jData.phase;
@@ -426,10 +431,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     case "organisation":
 
                         if (g_sLobbyToken !== "")
-                        {
-                            console.log("send save");
                             MeccgApi.send("/game/save", {});
-                        }
 
                         CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
                         break;
@@ -475,7 +477,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             
             MeccgApi.addListener("/game/save", function(bIsMe, jData)
             {
-                console.log("Saved game");
                 GameBuilder._saved = jData;
             });
             

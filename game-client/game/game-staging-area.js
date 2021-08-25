@@ -33,7 +33,7 @@ function createStagingArea(_CardList, _CardPreview)
             return "";
     }
 
-    function createNewCard(uuid, code, type, id, cssState)
+    function createNewCard(uuid, code, type, id, cssState, turn)
     {
         if (uuid === "")
             return null;
@@ -42,11 +42,14 @@ function createStagingArea(_CardList, _CardPreview)
         jDiv.setAttribute("class", "card " + cssState);
         jDiv.setAttribute("id", id);
 
+        let safeCode = CardList.getSafeCode(code);
+
         jDiv.setAttribute("data-uuid", uuid);
-        jDiv.setAttribute("data-card-code", CardList.getSafeCode(code));
+        jDiv.setAttribute("data-card-code", safeCode);
         jDiv.setAttribute("data-card-type", type);
         jDiv.setAttribute("draggable", "true");
         jDiv.setAttribute("data-revealed", true);
+        jDiv.setAttribute("title", safeCode + ", since turn " + turn);
 
         let jImage = document.createElement("img");
         jImage.setAttribute("class", "card-icon");
@@ -77,7 +80,7 @@ function createStagingArea(_CardList, _CardPreview)
             img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image"));
         },
         
-        insertNewCard : function(uuid, isPlayer, code, type, state)
+        insertNewCard : function(uuid, isPlayer, code, type, state, turn)
         {
             var isResource;
             if (type === "hazard")
@@ -89,7 +92,7 @@ function createStagingArea(_CardList, _CardPreview)
             
             var id = "stagecard_" + uuid;
             var css = getCardStateCss(state);
-            const res = createNewCard(uuid, code, type, id, css);
+            const res = createNewCard(uuid, code, type, id, css, turn);
             if (res === null)
                 return "";
 
@@ -108,12 +111,15 @@ function createStagingArea(_CardList, _CardPreview)
          * @param {String} state
          * @returns {String} ID of card container
          */
-        onAddCardToStagingArea : function(bIsMe, uuid, target, code, type, state, revealed)
+        onAddCardToStagingArea : function(bIsMe, uuid, target, code, type, state, revealed, turn)
         {
             if (uuid === "" || code === "" || type === "")
                 return "";
+
+            if (turn === undefined)
+                turn = 1;
             
-            var id = this.insertNewCard(uuid, bIsMe, code, type, state);
+            const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn);
             if (id === "")
                 return "";
            
