@@ -122,27 +122,132 @@ You will be asked if you want to start the audio chat. This is not supported at 
 
 #### A first look
 
-Your table will look similar to this:
+When you enter the table, you will be greeted with an introduction popup telling you about chat opportunites and the drag and drop gameplay.
 
+Once closed, the table will look like this:
+                
 ![The table](readme-data/table.png)
 
 The upper left corner shows the players at this table. The active player is highlighted in bold. Next to each player is the card number in hand once the first organisation phase starts.
 
-![The Phases](readme-data/icons-phase.png)
+#### Playing Cards
 
-The icons at the center allow for an easy navigation through phases and indicate in which you are at the moment. _Hovering over each icon will activate a tooltip._
+Playing cards works via *drag & drop*. Once you drag the card, target drop zones will appear where you can drop the respective card.
 
-![Your Cards](readme-data/icon-actions.png)
+![Playing Cards](readme-data/sample-drop.png)
 
-At the lower right are your card piles and are as follows (from top to bottom)
+You can drag the card over each of the drop zones and drop it to put it into play (or to any pile). Each potential drop zone will have a tooltip appearing which indicates the action type.
 
-* `Marshaling points` (right click to change score)
-* `Toggle hand cards list` (active by default)
-* `Play deck` 
-* `Discard pile`
-* `Sideboard`
+####  Playing Characters
 
-You can right-click on the play deck to shuffle it.
+A character may create a *new company* or *join* an existing company under general influence or follow a character under direct influence. As a player, you have to make sure that the action is legitimate, i.e. there is enough general or direct influence available.
+
+Splitting and reoganizing companies is easy as well. Simply drag the character and perform the action. If they have followers, they will continue to follow as well.
+
+![Playing Characters](readme-data/char.png)
+
+In this example, a character may join its current company under general influence, join another company either under direct or general influence or split into a separate company.
+
+#### Choosing a start site
+
+A company is indicated by a dotted line, above which there is a mountain icon. Clicking on this will open the map where hyou can select your home site.
+
+![ ](readme-data/homesite.png)
+
+The map will appear with red markers on it. Such a marker is called a region marker. Clicking on it will show all available sites in that region. Clicking on such a site will automatically set it as starting site.
+
+![ ](readme-data/homesite-map.png)
+After having clicked on the site, the map window closes and the site is set.
+
+![ ](readme-data/homesite-done.png)
+
+#### Planning your movement
+
+To plan your movement, click on the mountain icon again to open the map. Similar to start site selection, choose your target site.
+
+![ ](readme-data/movement-1.png)
+
+The sitepath will have to be chosen manually. To do so, click on a region and add it to the sitepath. To remove it again, click on the card in the sitepath.
+
+![ ](readme-data/movement-2.png)
+
+To confirm this movement, click on the green icon and close the winodw again.
+To reval the movement to your opponent, click on the "eye" icon.
+
+![ ](readme-data/movement-3.png)
+
+#### Playing Hazards
+
+Hazards can be either events or creatures. Usually, events are added to the staging area.
+
+![ ](readme-data/hazard-1.png)
+
+Hazards may also be attached to a specific chraracter, e.g. corruption cards.
+
+![ ](readme-data/hazard-2.png)
+
+To force a company or character to face hazard, drop it onto the regions and it will appear next to the site.
+
+![ ](readme-data/hazard-3.png)
+
+![ ](readme-data/hazard-4.png)
+
+If you want to play a card "on guard", simply drop it onto the destiation site and it will appear face fown.
+
+#### Obtaining Marshalling Points
+
+To obtain marshalling points, simply drag a card onto your vicotry pile.
+
+![ ](readme-data/score-1.png)
+
+This will open a window that lets you choose the category and amount of points.
+
+![ ](readme-data/score-2.png)
+
+#### No more hazards
+
+You can signal the end of your hazard play against a company by right clicking on the target site and choosing the respective action.
+
+![ ](readme-data/nmh-1.png)![ ](readme-data/nmh-2.png)
+
+This action will reduce the sitepath to the destiation site only. On guard cards will be kept attached to the site.
+
+![ ](readme-data/nmh-3.png)
+
+#### Updating your scores
+
+Click on the victory pile icon to open the score sheet.
+
+![ ](readme-data/score-3.png)
+
+You can change your points at any time during the game.
+
+![ ](readme-data/score-4.png)
+
+#### Tapping Cards and Sites
+
+To alter the card state, hover over the card and wait for the cursor to change. A question mark indicates a right click action to be available.
+
+![ ](readme-data/tap-1.png)
+
+![ ](readme-data/tap-2.png)
+
+The context menu provides all available actions.
+
+![ ](readme-data/tap-3.png)
+
+![ ](readme-data/tap-4.png)
+
+
+#### Reshuffle discard pile into playdeck
+
+The discard pile will be reshuffled automatically once your playdeck is out of cards. You do not need to do this yourself.
+
+#### Troubleshooting
+
+* Sometimes you may not hit the drop zone to play a card. Just retry.
+* You may reload the page if it seems necessary.
+* Open the browsers inspection tool console to check for errors. This should usually not happen but you never know. Chrome's shortcut is CTRL+SHIFT+J
 
 #### Game Options
 
@@ -156,47 +261,6 @@ You can reveal cards to your opponent by opening the respective pile and selecti
 
 ![Revealing cards](readme-data/reveal-cards.png)
 
-#### Playing the game
-
-The entire gameplay relys on drag and drop. Available target zones will be highlighted once you are dragging cards.
-
-![A company](readme-data/company1.png)
-
-The company above can be split any time by dragging and dropping the respective cards.
-
-#### Locations and Movement
-
-To select a starting site, simply click on the mountain icon above the company. This will open up a movement frame in which you simply select a starting site.
-
-![A company](readme-data/map-start.png)
-
-If there is a starting site, opening the movement window again will allow you to organize the company movement.
-
-![A company](readme-data/map-move.png)
-
-
-The movement window allows you to select target sites. 
-
-When clicking on a region (red marker), you will obtain a list of available sites.
-
-To set/change target sites, simply click on the site card and it will be updated below the map.
-
-Regions can be added to the movement by simply clicking on the respective region card (instead of the site card).
-
-To remove regions from the movement list, simply click on the region card in your current movement.
-
-#### Movement Phase
-
-If you accept the movement, the window will close automatically and the cards will be added to the company. 
-
-![A company](readme-data/move-reval.png)
-
-To reveal the movement, click on the `eye` below the mountain icon.
-
-#### Site Phase
-
-You can tap a site by right clicking on it. The cards will never be removed from the game  but a tapped state is stored until you either untap it or if your play deck is empty.
-
 #### Empty play deck
 
 If you are out of cards, simply draw a new card. All cards from you discard pile will be added to your play deck and are reshuffled automatically.
@@ -204,10 +268,6 @@ If you are out of cards, simply draw a new card. All cards from you discard pile
 #### Organisation Phase / Scoring cards
 
 To store cards, move them to your marshaling points pile. A popup will ask you to specify how (and if) this card should be stored.
-
-![Scoring](readme-data/score.png)
-
-You can open the score sheet and manually update each category by right-clicking on the marshalling points pile.
 
 #### Finishing the Game
 
