@@ -16,19 +16,33 @@ Although the gameplay is guided by Middle-earth Collectible Card Game, you can e
 
 Most importantly, you will need to provide the card data and its images. A description of the JSON format will be given below.
 
-*A deckbuilder is yet to be implemented.*
+### Feature Overview
 
 Here are some essential features of this project:
 
 * Intuitive gameplay via drag and drop.
-* No (expert) commands necessary.
 * No user identity management needed.
 * A database server is not needed at all.
 * No persistence needed, all works *in-memory*
 
+### What you can do
+
+This project allows to
+
+* Play a game
+* Play a shared deck game (arda)
+* Browse cards
+* Build a deck
+
+## Disclaimer
+
+Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises.
+
+*MECCG* assets are not included in this repository. 
+
 ## Preparations
 
-Card data and images are not part of this project, so you will have to use a third-party domain to obtain them.
+Card data and images *are not part of this project* and you will have to provide them.
 
 You have to provide certain configuration data using the file ``./data/config.json``. Changes will be ignored via ``.gitignore``. The sample file ``./data/config-example.json`` shows a mock configuration.
 
@@ -38,23 +52,12 @@ The card data file is centra, because all further data is generated from it (whi
 
 There are two ways to provide for this json object:
 
-* deploy the card data json file to ``./card-data/cards-raw.json``. This file will be ignored via ``.gitignore``.
-* setup a dedicated serverCDN server. This project will then query the endpoint ``/data/cards`` and expects the json object.
+* deploy the card data json file to ``./card-data/cards-raw.json``. This file will be ignored via ``.gitignore``. See the section *Providing your own cards* down below for more detailed information.
+* setup a dedicated CDN server and provide the endpoint to query the json from via your configuration file.
 
 ### Providing Card Images
 
-This project will query its own endpoint ``/cards/:set/:image`` and you can simply configure a permanent redirect to easiy and conveniently provide the graphic.
-
-A sample request would be as follows:
-
-``/cards/METW/imagefile.jpg``
-
-The redirect then uses your CDN `https://your-domain.com` and your `image-path` (e.g. `/img/cards`) create a redirect
-
-``https://your-domain.com/img/cards/METW/imagefile.jpg``
-
-*HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations.
-
+The image URL is being constructed as part of the `plugins/imagelist.js` module. Your own endpoint may be added via the configuration file. Importantly, you can also use a CDN server (*HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations).
 
 ## Running Locally
 
@@ -456,17 +459,13 @@ The following third-party libraries. Be aware of their respective licenses.
 #### HTML / CSS 
 
 * Some CSS is taken from https://html5up.net (MIT License)
-* The CSS colours and some design ideas were taken from https://cardnum.net (MIT License)
+* The CSS colours and some design ideas were taken from https://github.com/mtgred/netrunner (MIT License)
 * Font Awesome Free, see https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 
 #### Icons and Backgrounds
 
 * All icon licenses are "free for commercial use" with no link back Icons were taken from https://www.iconfinder.com/
 * The background image was taken from https://www.pexels.com/ Unfotunately, I cannot remember the link exactly anymore.
-
-## Disclaimer
-
-Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises.
 
 ## License
 
