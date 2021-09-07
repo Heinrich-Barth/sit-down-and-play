@@ -46,6 +46,11 @@ class DeckManager {
     {
         return false;
     }
+    
+    isSinglePlayer()
+    {
+        return false;
+    }
 
     reset()
     {
