@@ -11,13 +11,15 @@ let g_pFilter = {};
 
 const CardDataProvider = {
 
+    imageUrl : "",
+
     onCardsReceived : function(body)
     {
         try 
         {
             const cards = CardRepository.setup(JSON.parse(body));
             CardsMap.init(cards);
-            ImageList.init(cards);
+            ImageList.init(cards, CardDataProvider.imageUrl);
             Agents.createAgentList(cards);
             g_pFilter = new CardsMeta(CardRepository.getCards());
             CardRepository.postProcessCardList();
@@ -56,8 +58,10 @@ const CardDataProvider = {
         }).on("error", (error) => console.error(error.message));
     },
 
-    load : function(cardsUrl) 
+    load : function(cardsUrl, imageUrl) 
     {
+        CardDataProvider.imageUrl = imageUrl;
+
         if (CardDataProvider.loadLocally("./data/cards-raw.json"))
             console.log("Successfully loaded card data from local file.");
         else if (cardsUrl !== undefined && cardsUrl !== "")
@@ -72,7 +76,9 @@ exports.validateDeck = (jDeck) => DeckValidator.validate(jDeck);
 
 exports.validateDeckArda = (jDeck) => DeckValidator.validateArda(jDeck, CardRepository);
 
-exports.load = (cardsUrl) => CardDataProvider.load(cardsUrl);
+exports.validateDeckSingleplayer = (jDeck) => DeckValidator.validateSingleplayer(jDeck, CardRepository);
+
+exports.load = (cardsUrl, imageUrl) => CardDataProvider.load(cardsUrl, imageUrl);
 
 exports.getCards = () => CardRepository.getCards();
 

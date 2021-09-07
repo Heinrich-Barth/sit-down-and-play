@@ -966,11 +966,10 @@ const MapCreator = {
         const sTapped = isTapped !== undefined && isTapped ? 'site-is-tapped' : "site-image";
         const sTitle = this.removeQuotes(code) + " (" + sType + ")";
         const sUrl = isSite ? MapBuilder.CardList.getImageSite(code) : MapBuilder.CardList.getImageRegion(code);
-        const cssIsReady = MapBuilder.CardList.isReady() ? "" : "cardlist_require_reload";
         
         const img = document.createElement("img");
         img.setAttribute("decoding", "async");
-        img.setAttribute("class", sTapped + " " + cssIsReady);
+        img.setAttribute("class", sTapped);
         img.setAttribute("data-src", sUrl);
         img.setAttribute("src", "/media/assets/images/cards/backside-region.jpg");
         img.setAttribute("data-code", code);

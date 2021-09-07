@@ -1,16 +1,3 @@
-const CardListSanatizeUrl = function(sImageCDNUrl)
-{
-    if (sImageCDNUrl === undefined || sImageCDNUrl === "")
-        return "";
-
-    sImageCDNUrl = sImageCDNUrl.trim();
-    if (sImageCDNUrl === "/")
-        sImageCDNUrl = "";
-    else if (sImageCDNUrl.endsWith("/"))
-        sImageCDNUrl = sImageCDNUrl.substring(0, sImageCDNUrl.length-1);
-
-    return sImageCDNUrl;
-}
 
 /**
  * Card Image Files
@@ -32,31 +19,18 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     this._isReady = false;
 
     const pThat = this;
-
-    fetch("/data/image-cdn").then((response) => response.text().then((val) => {
-        pThat._imageCDNUrl = CardListSanatizeUrl(val);
-        pThat._isReady = true;
-
-        /** this is necssary to avoid a speed race if this module is loaded later.  */
-        const list = document.getElementsByClassName("cardlist_require_reload");
-        const len = list === null ? 0 : list.length;
-        for (let i = 0; i < len; i++)
-        {
-            let _elem = list[i];
-            let srcAttr = _elem.getAttribute("data-src") === null || _elem.getAttribute("data-src") === "" ? "src" : "data-src";
-            let src = _elem.getAttribute(srcAttr);
-            _elem.setAttribute(srcAttr, pThat._imageCDNUrl + src);
-        }
-    }));
     
     if (this._list === null)
     {
         fetch("/data/list/images").then((response) => 
         {
-            response.json().then((cards) => {
+            response.json().then((cards) => 
+            {
                 pThat._list = cards.images;
                 if (cards.fliped !== undefined)
                     pThat._fliped = cards.fliped;
+
+                pThat._isReady = true;
             });
         })
         .catch(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch image list." })));
@@ -102,11 +76,6 @@ CardList.prototype.useImagesIC = function()
     return typeof Preferences === "undefined" ? this._useImagesIC : Preferences.useImagesIC();
 };
 
-CardList.prototype.createImageUrl = function(sSet, sImage) 
-{
-    return this._imageCDNUrl + "/" + sSet.toUpperCase() + "/" + sImage;
-};
-
 CardList.prototype.getImageByCode = function(code, sDefault) 
 {
     code = this.removeQuotes(code);
@@ -117,13 +86,12 @@ CardList.prototype.getImageByCode = function(code, sDefault)
     let useDC =  this.useImagesDC();
     let useIC =  this.useImagesIC();
 
-    let _prefix = "";
-    if (useDC && this._list[code].errata_dc)
-        _prefix = "dce-";
-    else if (useIC && this._list[code].errata_ic)
-        _prefix = "ice-";
-    
-    return this.createImageUrl(this._list[code].set_code, _prefix + this._list[code].image);
+    if (useDC && this._list[code].errata_dc !== "")
+        return this._list[code].errata_dc;
+    else if (useIC && this._list[code].errata_ic !== "")
+        return this._list[code].errata_ic;
+    else
+        return this._list[code].image
 };
 
 CardList.prototype.removeSetInformation = function(_code)
