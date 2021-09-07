@@ -67,6 +67,9 @@ class DeckCommons {
             }
         }
     
+        if (nSize === MAX_CARDS_PER_DECK)
+            console.log("Will not add more than " + MAX_CARDS_PER_DECK + " cards for safety reasons.");
+            
         return nSize;
     }
 
