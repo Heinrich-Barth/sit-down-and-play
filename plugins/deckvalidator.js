@@ -33,6 +33,14 @@ const extractMinorItems = function(jDeck, pCardRepository)
 };
 
 
+const extractHazards = function(jDeck, pCardRepository)
+{
+    return extractBySecondary(jDeck, pCardRepository, function(card) 
+    {
+        return card.alignment.toLowerCase() === "neutral";
+    });
+};
+
 const removeAvatars = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -149,6 +157,21 @@ exports.validateArda = function(jDeck, pCardRepository)
         console.log("- Characters with mind of > 5: " + Object.keys(jDeck.chars_mind7).length);
         console.log("- Characters with mind of < 6: " + (Object.keys(jDeck.chars_others).length + Object.keys(jDeck.chars_special).length));
         console.log("- Cards in playdeck: " + Object.keys(jDeck.playdeck).length);
+    }
+
+    return jDeck;
+};
+
+exports.validateSingleplayer = function(jDeck, pCardRepository)
+{
+    jDeck = jDeck === null ? null : validateDeck(jDeck);
+    if (jDeck !== null)
+    {
+        jDeck.minors = { };
+        jDeck.chars_special = { };
+        jDeck.chars_mind7 = { };
+        jDeck.chars_others = { }
+        jDeck.mps = extractHazards(jDeck.playdeck, pCardRepository);
     }
 
     return jDeck;
