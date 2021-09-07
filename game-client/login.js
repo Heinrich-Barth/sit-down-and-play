@@ -235,6 +235,9 @@ const onPerformLogin = function()
     });
 
     let sUrlTarget = !document.getElementById("toggle_isarda").checked ? sUrl : sUrl.replace("/play/", "/arda/");
+    if (document.getElementById("toggle_issingleplayer") !== null)
+        sUrlTarget = sUrl.replace("/play/", "/singleplayer/");
+        
     document.getElementById("form").setAttribute("action", sUrlTarget + "/check");   
     document.getElementById("form").submit();
 };
