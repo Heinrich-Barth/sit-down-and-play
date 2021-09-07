@@ -33,6 +33,11 @@ var SearchResult = {
         SearchResult.displayResult(e.detail);
     },
 
+    onDisplayResultDeck : function(e)
+    {
+        SearchResult.displayResult(e.detail);
+    },
+
     insertEmptySearch : function()
     {
         const div = document.createElement("div");
@@ -48,6 +53,8 @@ var SearchResult = {
 
         DomUtils.empty(document.getElementById("result"));
         DomUtils.empty(document.getElementById("linklist"));
+
+        console.log(vnIndicesCharacters);
 
         var nSize = this.getResultSize(vnIndicesCharacters);
         document.getElementById("size").innerHTML = nSize;
@@ -436,5 +443,7 @@ var SearchResult = {
     SearchResult.insertScrollTop();
 })();
 
+
+document.body.addEventListener("meccg-deckbuilder-viewdeck-details", SearchResult.onDisplayResultDeck, false);
 document.body.addEventListener("meccg-deckbuilder-displayresult", SearchResult.onDisplayResult, false);
 document.body.addEventListener("meccg-deckbuilder-update-bubble", SearchResult.onUpdateCardResultListCount, false);

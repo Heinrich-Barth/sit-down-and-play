@@ -16,7 +16,7 @@ var DeckList =
         elem = document.createElement("div");
         elem.setAttribute("class", "decklist fl bgblue");
         elem.setAttribute("id", "deck_container");
-        elem.innerHTML = `<h2><span id="deck_name">Your Deck</span> (<span id="deck_count">0</span>)</h2>
+        elem.innerHTML = `<h2><span class="fa fa-eye" id="deck_name">Your Deck</span> (<span id="deck_count">0</span>)</h2>
 
         <div style="text-align: center; margin: 20px 0;">
             <button class="button-small" id="save_deck"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save deck</button>
@@ -62,6 +62,8 @@ var DeckList =
                 <span class="title card_deck_title">{title}</span>&nbsp;(<span class="count count_deck_entry">1</span>)
             </div>
         </div>`;
+
+        elem.querySelector("h2").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck", { "detail": "" }));
 
         document.getElementById("result_container").prepend(elem);
         document.getElementById("linklist").parentNode.classList.add("list_left");

@@ -45,12 +45,18 @@ body.addtodeck #result .image {
     width: 200px;
     height: 282px;
 }
-  .decklist .fl {
-    float: none !important;
-  }
-  .decklist div.w48 {
-    width: 100%;
-  }
+.decklist .fl {
+float: none !important;
+}
+.decklist div.w48 {
+width: 100%;
+}
+
+.decklist h2 {
+    cursor: pointer;
+}
+
+.decklist h2:hover { color: #fff; }
 
 .category .image .actions
 {

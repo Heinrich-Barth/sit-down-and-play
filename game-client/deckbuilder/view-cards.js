@@ -161,6 +161,31 @@ const ViewCards =
                 ViewCards.config.vsTypesResource.push(_type);
         }
     },
+
+    searchDeck : function()
+    {
+        let vnIndicesCharacters = {};
+        
+        let nAdded = 0;
+        let _index = -1, _type;
+        for (var card of ViewCards.config.jsonData) 
+        {
+            _index++;
+            if (card.count === card.limit || card.count === -1)
+                continue;
+
+            _type = card.Secondary;
+           
+            if (typeof vnIndicesCharacters[_type.toString()] === 'undefined' )
+                vnIndicesCharacters[_type.toString()] = [];
+
+            vnIndicesCharacters[_type.toString()].push(_index);
+            nAdded++;
+        }        
+        
+        if (nAdded > 0)
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-displayresult", { "detail": vnIndicesCharacters }));
+    },
     
     search : function(e)
     {
@@ -306,3 +331,4 @@ const ViewCards =
 })();
 
 document.body.addEventListener("meccg-deckbuilder-search", ViewCards.search, false);
+document.body.addEventListener("meccg-deckbuilder-viewdeck", ViewCards.searchDeck, false);
