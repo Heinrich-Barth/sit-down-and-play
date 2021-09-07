@@ -33,7 +33,7 @@
     </head>
 
 
-    <body class="bg-game" data-is-game="true">
+    <body class="bg-game" data-is-game="true" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}" data-image-url="{IMAGE_CDN_URL}">
 
@@ -146,7 +146,6 @@
             const g_sUserId = "{TPL_USER_ID}";
             const g_sApiKey = "{TPL_API_KEY}";
             const g_sLobbyToken = "{TPL_LOBBY_TOKEN}";
-            const g_isArda = {TPL_IS_ARDA};
         </script>
 
         <script src="/media/client/socket.io.js"></script>
