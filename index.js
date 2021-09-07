@@ -68,7 +68,7 @@ const getHtmlCspPage = function(page)
     const g_pEventManager = require("./eventmanager.js");
 
     SERVER.cards = require("./plugins/cards.js");
-    SERVER.cards.load(g_pConfig.cardUrl());
+    SERVER.cards.load(g_pConfig.cardUrl(), g_pConfig.imageUrl());
     
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
@@ -315,8 +315,6 @@ SERVER.instance.get("/data/dump", (req, res) => SERVER.expireResponse(res, "appl
  */
 SERVER.instance.get("/data/decks", (req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
 
-SERVER.instance.get("/data/image-cdn", (req, res) => SERVER.cacheResponse(res, "text/plain").send(SERVER.environment.imageCDN).status(200));
-
 /**
   * Check if the deck is valid.
   */
@@ -348,6 +346,9 @@ SERVER.instance.post("/data/decks/check", function (req, res)
 SERVER.instance.get("/data/samplerooms", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
 
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
+
+if (SERVER.environment.imageCDN === "/data-images")
+    SERVER.instance.use("/data-images", g_pExpress.static(__dirname + "/data-images", SERVER.cacheResponseHeader));
 
 /**
  * Error endpoint.
@@ -381,6 +382,9 @@ SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html
 
     const GamePlayRouteHandlerArda = require("./game-play-arda");
     new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html").setupRoutes();
+
+    const GamePlayRouteHandlerSingle = require("./game-play-single");
+    new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login-singleplayer.html", "home.html").setupRoutes();
 }
 
 require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
