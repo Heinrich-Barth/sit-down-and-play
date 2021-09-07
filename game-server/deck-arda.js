@@ -26,6 +26,11 @@ class Deck extends DeckDefault {
         this.listSpecialCharacters = [];
     }
 
+    getMaxDeckSize()
+    {
+        return 1000;
+    }
+
     save(isAdmin)
     {
         let data = super.save(isAdmin);
@@ -118,7 +123,17 @@ class Deck extends DeckDefault {
 
     shuffleCommons()
     {
+        this.shuffleMinorItems();
+        this.shuffleMPs();
+    }
+
+    shuffleMinorItems()
+    {
         this.shuffleAny(this.playdeckMinorItems);
+    }
+
+    shuffleMPs()
+    {
         this.shuffleAny(this.playdeckMP);
     }
 
@@ -291,6 +306,19 @@ class Deck extends DeckDefault {
         {
             return res.from(uuid, deck.handCardsCharacters);
         };
+
+        res.fromAnywhere = function(uuid)
+        {
+            return res.fromHand(uuid) || 
+            res.fromSideboard(uuid) || 
+            res.fromPlaydeck(uuid) || 
+            res.fromDiscardpile(uuid) ||
+            res.fromVictory(uuid) ||
+            res.from(uuid, deck.discardPileMinorItems) ||
+            res.from(uuid, deck.playdeckMinorItems) ||
+            res.from(uuid, deck.playdeckMP) ||
+            res.from(uuid, deck.discardPileMP);
+        }
 
         return res;
     }
