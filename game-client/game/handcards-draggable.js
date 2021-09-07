@@ -851,7 +851,8 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
         if (_sizerId !== "")
             ResolveHandSizeFirst.create("playercard_hand_container", _sizerId, "cards");
 
-        ResolveHandSizeContainer.create(_handSizer, "General influence is", 20, "");
+        ResolveHandSizeContainer.create(_handSizer, "Stage points are ", 0, "");
+        ResolveHandSizeContainer.create(_handSizer, "Unused general influence is", 20, "");
     }
 
     return HandCardsDraggable;
