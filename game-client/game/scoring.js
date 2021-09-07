@@ -446,13 +446,27 @@ function createScoringApp(_CardList)
         },
     };
 
+    const extractCategories = function(categories)
+    {
+        const isExtended = "true" === document.body.getAttribute("data-game-arda");
+        let res = [];
+
+        for (let _item of categories)
+        {
+            if (!_item.extended || (isExtended && _item.extended))
+                res.push(_item);
+        }
+    
+        return res;
+    };
+
     fetch("/data/scores").then((response) => 
     {
         if (response.status === 200)
         {
             response.json().then((data) => {
                 if (typeof data !== "undefined" && typeof data.categories !== "undefined" && typeof data.points !== "undefined")
-                    SCORING._init(data.categories, data.points.min, data.points.max);
+                    SCORING._init(extractCategories(data.categories), data.points.min, data.points.max);
             });
         }
     })

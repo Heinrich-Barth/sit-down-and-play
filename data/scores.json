@@ -1,34 +1,46 @@
 {
     "categories": [
         {
-            "id": "score_stage",
-            "value":  "stage",
-            "label": "Stage Points",
-            "default": false
+            "id": "score_ally",
+            "value":  "ally",
+            "label": "Ally Points",
+            "default": false,
+            "extended": false
         },
         {
             "id": "score_character",
             "value":  "character",
             "label": "Character Points",
-            "default": false
-        },
-        {
-            "id": "score_ally",
-            "value":  "ally",
-            "label": "Ally Points",
-            "default": false
-        },
-        {
-            "id": "score_item",
-            "value":  "item",
-            "label": "Item Points",
-            "default": false
+            "default": false,
+            "extended": false
         },
         {
             "id": "score_faction",
             "value":  "faction",
             "label": "Faction Points",
-            "default": false
+            "default": false,
+            "extended": false
+        },
+        {
+            "id": "score_ardahoards",
+            "value":  "hoarditem",
+            "label": "Hoard Item Points",
+            "default": false,
+            "extended": true
+        },
+        {
+            "id": "score_ardarings",
+            "value":  "ringitems",
+            "label": "Ring Item Points",
+            "default": false,
+            "extended": true
+        },
+        {
+            "id": "score_item",
+            "value":  "item",
+            "label": "Item Points",
+            "default": false,
+            "extended": false
         },
         {
             "id": "score_kill",
@@ -40,7 +52,8 @@
             "id": "score_misc",
             "value":  "misc",
             "label": "Misc. Points",
-            "default": true
+            "default": true,
+            "extended": false
         }
     ],
 

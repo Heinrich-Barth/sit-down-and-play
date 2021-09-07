@@ -1,24 +1,53 @@
 
 
-exports.create =  function ()
+/**
+ * Read the score json object
+ * 
+ * @param {Boolean} isExtended 
+ * @returns Array of ids
+ */
+const createNewScoreSheet = function(isExtended)
 {
-    return new SCORES();
+    let res = {};
+    
+    for (let category of g_pScores)
+    {
+        if (!category.extended || (isExtended && category.extended))
+            res[category.value] = 0;
+    }
+
+    return res;
+};
+
+
+const loadScoreStats = function()
+{
+    try
+    {
+        const fs = require("fs");
+        const data = JSON.parse(fs.readFileSync("data/scores.json"));
+        return data.categories;
+    }
+    catch (err)
+    {
+        console.log(err);
+    }
+
+    return {};
+};
+
+const g_pScores = loadScoreStats();
+
+exports.create =  function(isExtended)
+{
+    return new SCORES(isExtended);
 };
 
 class ScorintSheet {
 
-    constructor()
+    constructor(isExtended)
     {
-        this._sheet = {
-            stage: 0,
-            character: 0,
-            ally: 0,
-            item: 0,
-            faction: 0,
-            kill: 0,
-            misc: 0
-        };
-
+        this._sheet = createNewScoreSheet(isExtended);
         this._total = 0;
     }
 
@@ -87,9 +116,10 @@ class ScorintSheet {
 
 class SCORES {
     
-    constructor()
+    constructor(isExtended)
     {
         this._sheets = { };
+        this._isExtended = isExtended;
     }
 
     reset()
@@ -115,7 +145,7 @@ class SCORES {
     add(sPlayerId)
     {
         if (typeof this._sheets[sPlayerId] === "undefined")
-            this._sheets[sPlayerId] = new ScorintSheet();
+            this._sheets[sPlayerId] = new ScorintSheet(this._isExtended);
     }
 
     update(userid, type, nPoints)
