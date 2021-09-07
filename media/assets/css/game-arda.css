@@ -45,7 +45,7 @@ div#arda_mps_hand { bottom: 10px; }
 }
 .arda-card-hands-sizer strong { color: #ffa500; }
 
-.arda-inline { display: inline-block}
+.arda-inline { display: inline-block; margin-right: 60px;}
 .arda-card-hands .arda-card-hand,
 .arda-card-hands .card-hand {
     display: inline-block;
@@ -54,19 +54,35 @@ div#arda_mps_hand { bottom: 10px; }
     min-height: 60px;
 }
 
+.arda-hand-card-actions .arda-pile-action img,
 .arda-actions img {
     border: 1px solid #000;
     width: 20px;
-    position: absolute;
-    cursor: pointer;
-    right: 5px;
     background: rgba(0,0,0,0.5);
     border-radius: 5px;
 }
 
+.arda-actions img {
+    position: absolute;
+    cursor: pointer;
+    right: 5px;
+}
+.arda-hand-card-actions {
+    position: absolute;
+    right: 5px;
+    width: 60px;
+    margin-right: 0;
+    text-align: center;
+    cursor: pointer;
+}
+
 .arda-actions img:nth-child(1) { bottom: 10px; }
 .arda-actions img:nth-child(2) { top: 10px; }
+
+.arda-pile-action:hover img,
 .arda-actions img:hover  { background-color: #ffa500; }
+
+.arda-pile-action:first-child { margin-right: 5px;}
 
 .arda-card-draw
 {
@@ -78,3 +94,15 @@ div#arda_mps_hand { bottom: 10px; }
     background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
 }
 .arda-card-draw:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
+
+#arda_characters_hand .arda-pile-action { visibility: hidden;}
+
+#view_card_list_container .view-mps .hideOnOffer,
+#view_card_list_container .view-mps .view-card-list-actions .hand,
+#view_card_list_container .view-mps .view-card-list-actions .sideboard,
+#view_card_list_container .view-minor .hideOnOffer,
+#view_card_list_container .view-minor .view-card-list-actions .hand,
+#view_card_list_container .view-minor .view-card-list-actions .sideboard
+{
+    display: none;
+}
