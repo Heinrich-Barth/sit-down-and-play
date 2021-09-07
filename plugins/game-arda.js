@@ -91,10 +91,3 @@ exports.prepareDeck = function(pGameCardProvider, jDeck, keepOthers)
     if (!keepOthers)
         jDeck.playdeck = {};
 };
-
-exports.onDeckAdded = function(playerId, PLAYBOARD_MANAGER)
-{
-    /** 
-     * 
-     */
-};
