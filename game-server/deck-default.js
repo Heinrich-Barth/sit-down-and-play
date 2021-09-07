@@ -274,6 +274,15 @@ class Deck extends DeckCommons {
             fromVictory : function(uuid)
             {
                 return this.from(uuid, deck.victory);
+            },
+
+            fromAnywhere : function(uuid)
+            {
+                return this.fromHand(uuid) || 
+                       this.fromSideboard(uuid) || 
+                       this.fromPlaydeck(uuid) || 
+                       this.fromDiscardpile(uuid) ||
+                       this.fromVictory(uuid);
             }
         }
     }

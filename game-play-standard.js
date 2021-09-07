@@ -18,6 +18,11 @@ class GamePlayRouteHandler
         return false;
     }
 
+    isSinglePlayer()
+    {
+        return false;
+    }
+
     getServerInstance()
     {
         return this.m_pServerInstance;
@@ -160,7 +165,7 @@ class GamePlayRouteHandler
             const userId = UTILS.generateUuid();
 
             /** add player to lobby */
-            const lNow = this.m_pServerInstance.roomManager.addToLobby(room, userId, displayname, jDeck, this.isArda());
+            const lNow = this.m_pServerInstance.roomManager.addToLobby(room, userId, displayname, jDeck, this.isArda(), this.isSinglePlayer());
 
             /** proceed to lobby */
             const jSecure = { httpOnly: true, secure: true };

@@ -10,11 +10,11 @@ let fnSocketIo = function() { return null; }
  * @param {String} room 
  * @returns TRUE if the romm has been created, FALSE if it already existed
  */
-const _createRoom = function(room, isArda, userId) 
+const _createRoom = function(room, isArda, isSinglePlayer, userId) 
 {
     if (ROOM_MANAGER._rooms[room] === undefined)
     {
-        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda);
+        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda, isSinglePlayer);
         ROOM_MANAGER._rooms[room].game.setGameAdminUser(userId);
     }
 
@@ -469,16 +469,16 @@ const ROOM_MANAGER = {
      * @param {JSON} jDeck 
      * @returns Timestamp when joined
      */
-    addToLobby: function (room, userId, displayname, jDeck, isArda) 
+    addToLobby: function (room, userId, displayname, jDeck, isArda, isSinglePlayer) 
     {
-        const pRoom = _createRoom(room, isArda, userId);
+        const pRoom = _createRoom(room, isArda, isSinglePlayer, userId);
         const isFirst = pRoom.isEmpty();
         if (isFirst)
             console.log("first player");
         else
             console.log("not first player");
             
-        if (pRoom.game.isArda())
+        if (pRoom.game.isArda() && !isSinglePlayer)
             ROOM_MANAGER._eventManager.trigger("arda-prepare-deck", ROOM_MANAGER.gameCardProvider, jDeck, isFirst);
 
         const lNow = Date.now();
@@ -510,6 +510,8 @@ const ROOM_MANAGER = {
         let sToken = ROOM_MANAGER.updatePlayerToken(room, userId);
         let sLobbyToken = ROOM_MANAGER._rooms[room].players[userId].admin ? ROOM_MANAGER._rooms[room].lobbyToken : "";
         const isArda = ROOM_MANAGER._rooms[room].game.isArda() ? "true" : "false";
+        const isSinglePlayer = ROOM_MANAGER._rooms[room].game.isSinglePlayer() ? "true" : "false";
+
         return ROOM_MANAGER.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
@@ -517,6 +519,7 @@ const ROOM_MANAGER = {
             .replace("{TPL_USER_ID}", userId)
             .replace("{TPL_API_KEY}", sSecret)
             .replace("{TPL_IS_ARDA}", isArda)
+            .replace("{TPL_IS_SINGLEPLAYER}", isSinglePlayer)
             .replace("{TPL_JOINED_TIMESTAMP}", sToken);
     },
 

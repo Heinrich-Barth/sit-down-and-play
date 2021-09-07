@@ -74,6 +74,17 @@ let Arda = {
         document.head.appendChild(link);
     },
 
+    updateSinglePlayer : function()
+    {
+        let isSingle = "true" === document.body.getAttribute("data-is-singleplayer");
+        if (isSingle)
+        {
+            document.getElementById("arda-action-container-randomchars").classList.add("hidden");
+            document.getElementById("arda-action-container-minor").classList.add("hidden");
+            document.getElementById("arda-action-container-charackters").classList.add("hidden");
+        }
+    },
+
     init : function()
     {
         if (this._ready)
@@ -90,7 +101,7 @@ let Arda = {
         this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling, idMinor);
 
         this.getOpeningHands();
-
+        this.updateSinglePlayer();
         this._ready = true;
         MeccgApi.send("/game/arda/checkdraft", {});
     },
@@ -232,6 +243,29 @@ let Arda = {
         {
             let _a = document.createElement("a");
             _a.setAttribute("src", "#");
+            _a.setAttribute("class", "arda-pile-action" + (bRecycleOnce ? " hidden":""));
+            _a.setAttribute("id", "arda-view-discard-" + dataType);
+            _a.setAttribute("data-type", dataType);
+            _a.setAttribute("data-view", "discard");
+            _a.setAttribute("title", "View discard pile");
+            _a.innerHTML = `<img src="/media/assets/images/icons/icon-discardpile.png" data-view="discard" data-type="${dataType}">`;
+            _a.onclick = Arda.onViewPile;
+            _div.appendChild(_a);
+
+            _a = document.createElement("a");
+            _a.setAttribute("src", "#");
+            _a.setAttribute("class", "arda-pile-action context-cursor" + (bRecycleOnce ? " hidden":""));
+            _a.setAttribute("id", "arda-view-playdeck-" + dataType);
+            _a.setAttribute("data-type", dataType);
+            _a.setAttribute("title", "View playdeck. Right click to shuffle");
+            _a.setAttribute("data-view", "playdeck");
+            _a.innerHTML = `<img src="/media/assets/images/icons/icon-playdeck.png" data-view="playdeck" data-type="${dataType}">`;
+            _a.onclick = Arda.onViewPile;
+            _a.oncontextmenu = Arda.onShufflePlaydeck;
+            _div.appendChild(_a);
+
+            _a = document.createElement("a");
+            _a.setAttribute("src", "#");
             _a.setAttribute("class", "arda-card-draw" + (bRecycleOnce ? " hidden":""));
             _a.setAttribute("id", "arda-card-draw-" + dataType);
             _a.setAttribute("data-type", dataType);
@@ -240,7 +274,6 @@ let Arda = {
             _a.onclick = Arda.onDrawNewCard;
             _div.appendChild(_a);
         }
-
         div.appendChild(_div);
 
         document.body.appendChild(div);
@@ -249,6 +282,18 @@ let Arda = {
             ResolveHandSizeFirst.create(idCardList, _sizerId,  title + " cards", ["organisation", "eotdiscard"]);
 
         return id;
+    },
+
+    onShufflePlaydeck : function(e)
+    {
+        const type = e.target.getAttribute("data-type");
+        if (type === "mps" || type === "minor")
+        {
+            MeccgApi.send("/game/arda/shuffle", { target: type });
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Playdeck shuffled (" + type + ")" }));
+        }
+
+        e.preventDefault();
     },
 
     onCheckDraft : function(bHideDraftCharacters, bHideDraftMinors)
@@ -272,7 +317,18 @@ let Arda = {
             document.getElementById("arda-card-draw-minor").classList.remove("hidden");
             elem = document.getElementById("arda_minors_hand");
             elem.classList.remove("hidden");
+
+            document.getElementById("arda-view-playdeck-minor").classList.remove("hidden");
+            document.getElementById("arda-view-discard-minor").classList.remove("hidden");
         }
+    },
+
+    onViewPile : function(e)
+    {
+        const type = e.target.getAttribute("data-type");
+        const pile = e.target.getAttribute("data-view");
+        
+        MeccgApi.send("/game/arda/view", { type: type, pile: pile });
     },
 
     onRecycleDeck : function(e)
@@ -284,6 +340,9 @@ let Arda = {
 
             DomUtils.remove(e.target);
             document.getElementById("arda-card-draw-" + target).classList.remove("hidden");
+            document.getElementById("arda-view-playdeck-" + target).classList.remove("hidden");
+            document.getElementById("arda-view-discard-" + target).classList.remove("hidden");
+
             if (next !== "")
                 document.getElementById(next).classList.remove("hidden");
 
@@ -405,7 +464,7 @@ let Arda = {
     }
 };
 
-if (g_isArda !== undefined && g_isArda === true)
+if ("true" === document.body.getAttribute("data-game-arda"))
 {
     document.body.addEventListener("meccg-api-connected", () => Arda.init(), false);
     MeccgApi.addListener("/game/arda/hand/show", () => Arda.onShowHands());
@@ -415,10 +474,8 @@ if (g_isArda !== undefined && g_isArda === true)
     MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
     MeccgApi.addListener("/game/arda/checkdraft", (bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
-
-    
+    MeccgApi.addListener("/game/arda/view", (bIsMe, jData) => g_Game.TaskBarCards.onShow(bIsMe, jData));    
 }
 else
     Arda = null;
     
-

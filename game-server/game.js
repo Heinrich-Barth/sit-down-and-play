@@ -1,4 +1,4 @@
-
+const TurnTimer = require("./turnTimer");
 
 /**
  * Add ARDA specific routes
@@ -10,7 +10,7 @@ const setupArdaSpecials = function(Game)
     require("./game-arda").setupArdaSpecials(Game);
 }
 
-var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager, isArda)
+var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager, isArda, isSinglePlayer)
 {
     const Game =
     {
@@ -18,11 +18,14 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
         scoring : _score,
         _eventManager : _eventManager,
         _isArda : isArda,
+        _isSinglePlayer : isSinglePlayer,
         _adminUser : "",
         apis : {
             chat : _Chat,
             meccgApi : _MeccgApi
         },
+
+        _timeTimer : new TurnTimer(),
 
         player_phase: "start",
 
@@ -43,6 +46,11 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             data.scoring = Game.scoring.save();
 
             return data;
+        },
+
+        isSinglePlayer : function()
+        {
+            return this._isSinglePlayer;
         },
 
         isArda : function()
@@ -202,11 +210,6 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             {
                 return this.names;
             }
-        },
-
-        isSinglePlayer : function()
-        {
-            return Game.players.getCount() == 1;
         },
 
         isMyTurn: function ()
@@ -997,7 +1000,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                     Game.apis.chat.send(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")");
                 },
 
-                phase: function (userid, socket, sPhase) // todo
+                phase: function (userid, socket, sPhase) 
                 {
                     switch (sPhase)
                     {
@@ -1028,7 +1031,10 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                         userid = Game.nextPlayersTurn();
                         nNewTurn = Game.getCurrentTurn();
 
-                        Game.apis.chat.send(userid, " ends turn. Active player is " + Game.players.getCurrentPlayerName());
+                        const lTime = Game._timeTimer.pollElapsedMins();
+
+                        Game.apis.chat.send(userid, " ends turn after " + lTime + "mins. Active player is " + Game.players.getCurrentPlayerName());
+
                         Game.inits.sendCurrentHandSize();
                         Game.apis.meccgApi.publish("/game/set-turn", userid, { turn : nNewTurn })
                     }
@@ -1047,8 +1053,8 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                     if (nNewTurn !== nCurrentTurn)
                         Game.apis.chat.send(Game.players.getCurrent(), " starts turn no. " + nNewTurn);
-
-                    Game.apis.chat.send(Game.players.getCurrent(), " is now in " + sPhase + " phase");
+                    else
+                        Game.apis.chat.send(Game.players.getCurrent(), " is now in " + sPhase + " phase");
                 },
 
                 onGameAddCardsToGame: function (userid, socket, data)
@@ -1238,12 +1244,13 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
     return Game;
 }
 
-exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda)
+exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer)
 {
     return new GameInstance(_MeccgApi, 
                             _Chat, 
-                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider, isArda), 
-                            require("./scores.js").create(),
+                            require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer), 
+                            require("./scores.js").create(isArda),
                             _eventManager,
-                            isArda);
+                            isArda,
+                            isSinglePlayer);
 }

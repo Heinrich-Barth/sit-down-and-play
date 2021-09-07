@@ -585,14 +585,8 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
             return false;
         }
 
-        
         // remove chard from deck 
-        var bRemoved = pDeck.pop().fromHand(uuid) || 
-                       pDeck.pop().fromSideboard(uuid) || 
-                       pDeck.pop().fromPlaydeck(uuid) || 
-                       pDeck.pop().fromDiscardpile(uuid) ||
-                       pDeck.pop().fromVictory(uuid);
-        if (bRemoved)
+        if (pDeck.pop().fromAnywhere(uuid))
             return true;
 
         var i;
@@ -1585,13 +1579,18 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 const DeckManagerDefault = require("./deckmanager-default");
 const DeckManagerArda = require("./deckmanager-arda");
 
+const newDeckManagerInstance = function(isArda, isSinglePlayer)
+{
+    return isArda || isSinglePlayer ? new DeckManagerArda(isSinglePlayer) : new DeckManagerDefault();
+}
+
 /**
  * Create a new Game
  * @param {Array} _agentList 
  * @returns 
  */
- exports.setup = function(_agentList, _eventManager, _gameCardProvider, isArda) 
+ exports.setup = function(_agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer) 
  {
-     const pDeckManager = isArda ? new DeckManagerArda() : new DeckManagerDefault();
+     const pDeckManager = newDeckManagerInstance(isArda, isSinglePlayer);
      return new PlayBoardManagement(pDeckManager, _agentList, _eventManager, _gameCardProvider);
  };

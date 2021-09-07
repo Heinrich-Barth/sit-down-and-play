@@ -4,11 +4,12 @@ const Deck = require("./deck-arda");
 
 class DeckManagerArda extends DeckManager {
 
-    constructor()
+    constructor(isSinglePlayer)
     {
         super();
 
         this.adminUserId = "";
+        this.singlePlayer = isSinglePlayer;
     }
 
     getAdminDeck()
@@ -29,6 +30,11 @@ class DeckManagerArda extends DeckManager {
     isArda()
     {
         return true;
+    }
+
+    isSinglePlayer()
+    {
+        return this.singlePlayer;
     }
 
     shuffleArdaMarshallingPoints()
@@ -54,7 +60,8 @@ class DeckManagerArda extends DeckManager {
         }
 
         /** every player draws their own MP hand */
-        this.drawMarshallingPoints(playerId, 5)
+        if (!this.isSinglePlayer())    
+            this.drawMarshallingPoints(playerId, 5)
     }
 
     drawMinorItems(playerId, nCount)

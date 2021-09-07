@@ -62,6 +62,22 @@ exports.setupArdaSpecials = function(Game)
 
     Arda.callbacks = { 
 
+        onShuffle : function(userid, socket, obj)
+        {
+            const deck = Arda.game._playboardManager.decks.getAdminDeck();
+
+            if (obj.target === "minor")
+            {
+                deck.shuffleMinorItems();
+                Arda.game.apis.chat.send(userid, "shuffled minor items deck");
+            }
+            else if (obj.target === "mps")
+            {
+                deck.shuffleMPs();
+                Arda.game.apis.chat.send(userid, "shuffled marshalling points deck");
+            }
+        },
+
         onRecycle : function(userid, socket, obj)
         {
             const deck = Arda.game._playboardManager.decks.getAdminDeck();
@@ -105,6 +121,34 @@ exports.setupArdaSpecials = function(Game)
         {
             Arda.assignOpeningChars7();
             Arda.assignOpeningChars(8);
+        },
+
+        onViewCards : function(userid, socket, obj)
+        {
+            const type = obj.type;
+            const pile = obj.pile;
+            
+            let _list = null;
+            if (type === "minor")
+            {
+                if (pile === "playdeck")
+                    _list = Arda.game._playboardManager.decks.getCards().playdeckMinor(userid);
+                else if (pile === "discard")
+                    _list = Arda.game._playboardManager.decks.getCards().discardPileMinor(userid);
+            }
+            else if (type === "mps")
+            {
+                if (pile === "playdeck")
+                    _list = Arda.game._playboardManager.decks.getCards().playdeckMPs(userid);
+                else if (pile === "discard")
+                    _list = Arda.game._playboardManager.decks.getCards().discardPileMPs(userid);
+            }
+            
+            if (_list !== null)
+            {
+                Game.apis.chat.send(userid, " views " + type + " cards in " + pile);
+                Game.apis.meccgApi.reply("/game/arda/view", socket, {type: type, pile:pile, list: Arda.game._playboardManager.getCardList(_list) });
+            }
         },
       
         onDrawCard : function(userid, socket, obj)
@@ -225,4 +269,7 @@ exports.setupArdaSpecials = function(Game)
     Game.apis.meccgApi.addListener("/game/arda/draw", Arda.callbacks.onDrawCard);
     Game.apis.meccgApi.addListener("/game/arda/recycle", Arda.callbacks.onRecycle);
     Game.apis.meccgApi.addListener("/game/arda/assign-characters", Arda.callbacks.onAssignCharacters);
+    Game.apis.meccgApi.addListener("/game/arda/view", Arda.callbacks.onViewCards);
+    Game.apis.meccgApi.addListener("/game/arda/shuffle", Arda.callbacks.onShuffle);
+    
 }

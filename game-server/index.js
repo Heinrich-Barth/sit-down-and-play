@@ -162,13 +162,18 @@ const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
 const Game = require("./game.js");
 const Chat = require("./chat.js")
 
-exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda)
+exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer)
 {
-    console.log("Setting up game " + room);
+    if (isSinglePlayer)
+        console.log("Setting up single player game " + room);
+    else if (isArda)
+        console.log("Setting up arda game " + room);
+    else
+        console.log("Setting up game " + room);
 
     let pAPI = new GameAPI(io, room);
     let pChat = new Chat(pAPI, "/game/chat/message");
-    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider, isArda);
+    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer);
 
     return {
         secret: UTILS.createSecret(),

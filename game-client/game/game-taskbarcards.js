@@ -55,8 +55,8 @@ class ViewCardListContainer {
             <img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/media/assets/images/cards/backside.jpg">
             <div class="view-card-list-actions icons">
                 <a href="#" class="icon hand" data-move-to="hand" title="Move to hand">&nbsp;</a>
-                <a href="#" class="icon playdeck" data-move-to="playdeck" title="Move to playdeck">&nbsp;</a>
-                <a href="#" class="icon discardpile" data-move-to="discardpile" title="Move to discard pile">&nbsp;</a>
+                <a href="#" class="icon playdeck" data-move-to="playdeck" title="Move to top of playdeck">&nbsp;</a>
+                <a href="#" class="icon discardpile" data-move-to="discardpile" title="Move to top of discard pile">&nbsp;</a>
                 <a href="#" class="icon sideboard" data-move-to="sideboard" title="Move to sideboard">&nbsp;</a>
                 <a href="#" class="icon onoffer" data-move-to="offer" title="Reveal to opponent">&nbsp;</a>
             </div>
@@ -453,6 +453,8 @@ class TaskBarCards
         jContainer.classList.remove("view-discard");
         jContainer.classList.remove("view-playdeck");
         jContainer.classList.remove("view-victory");
+        jContainer.classList.remove("view-mps");
+        jContainer.classList.remove("view-minor");
 
         DomUtils.removeAllChildNodes(jContainer.querySelector(".container-data"));
 
