@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sit down and join a game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'" />
+    
+    <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+    <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/media/assets/css/notifications.css" />
+    <link rel="stylesheet" href="/media/assets/css/join-game.css" />
+
+    <script src="/media/assets/js/jquery.min.js"></script>
+    <script src="/media/assets/js/jquery-ui.min.js"></script>
+</head>
+
+<body class="bgbagend" data-navigation-type="open">
+
+    <div class="blue-box join-game on-drag-hide" id="login">
+
+        <h1>Who are you to the others?</h1>
+
+        <form method="post" action="#">
+            <div class="fields">
+                <div class="field">
+                    <label for="user">Your Name: </label><input type="text" class="w50" name="user" id="user" value="{DISPLAYNAME}"
+                        maxlength="20" placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
+
+                    <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Join Game</button>
+
+                </div>
+                <p class="arda-text hidden"><input type="checkbox" id="toggle_isarda" value="isArda" name="isArda"><label for="toggle_isarda">This game will be an <b>Arda</b> game</label></p>
+                <p class="arda-text hidden"><input type="checkbox" id="toggle_issingleplayer" value="isArda" name="isArda"><label for="toggle_isarda">This game will be an <b>Arda</b> game</label></p>
+                <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
+            </div>
+
+            <div class="fields hidden" id="invalid-cards-info">
+                <h2>Invalid Codes found</h2>
+                <p>The following cards could not be found: </p>
+                <div id="invalid-cards-info-result"></div>
+            </div>
+            
+            
+            <div class="fields">
+                <div class="deck-fields w50">
+                    <div class="fields" style="margin: 0px;">
+                        <div class="field"><textarea id="resources" class="card-type" placeholder="Paste Resources here"></textarea></div>
+                    </div>
+                    <div class="fields" style="margin: 0px;">
+                        <div class="field"><textarea id="hazards" class="card-type" placeholder="Paste Hazards here"></textarea></div>
+                    </div>
+                    <div class="fields" style="margin: 0px;">
+                        <div class="field"><textarea id="sideboard" class="card-type" placeholder="Paste Sideboard here"></textarea></div>
+                    </div>
+                    <div class="fields" style="margin: 0px;">
+                        <div class="field"><textarea id="characters" class="card-type" placeholder="Paste Characters here"></textarea></div>
+                    </div>
+                    <div class="fields" style="margin: 0px;">
+                        <div class="field"><textarea id="pool" class="card-type" placeholder="Paste Pool here"></textarea></div>
+                    </div>
+                    <p class="cookie_notice">You can also <span class="text-yellow"><i class="fa fa-bullseye" aria-hidden="true"></i> <b>drop</b></span> your deck file here to load it.</p>
+                </div>          
+                <div class="deck-list">
+                    <div class="deck-list-entries"></div>
+                </div>
+                <div class="deck-clear"></div>
+            </div>
+            <div class="deck-clear"></div>
+        </form>
+        <form method="post" action="#" class="hidden" id="form">
+            <textarea name="data"></textarea>
+        </form>
+    </div>
+    
+    <script src="/media/client/game/notify.js"></script>
+    <script src="/media/client/game/libraries.js"></script>
+    <script src="/media/client/dropfile-generic.js"></script>
+    <script src="/media/client/login.js"></script>
+    <script src="/media/client/navigation.js"></script>
+</body>
+
+</html>
