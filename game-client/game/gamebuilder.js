@@ -105,7 +105,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }];
             CompanyManager.onAttachCardToCompanySites(companyId, card, true);
         },
-        
+
         restoreBoard : function(jData)
         {
             var _data;
@@ -375,6 +375,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
             MeccgApi.addListener("/game/player/draw/company", (bIsMe, jData) => CompanyManager.drawCompany(bIsMe, jData));
             MeccgApi.addListener("/game/player/indicator", (bIsMe, jData) => CompanyManager.updateLastSeen(jData.userid, jData.connected));
+            MeccgApi.addListener("/game/player/remove", (bIsMe, jData) => CompanyManager.removePlayerIndicator(jData.userid));
+            
             MeccgApi.addListener("/game/remove-empty-companies", (bIsMe, jData) => CompanyManager.removeEmptyCompanies(jData));
             
             MeccgApi.addListener("/game/player/draw/locations", function(bIsMe, jData)

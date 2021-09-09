@@ -9,6 +9,14 @@ function PlayerSelector()
     this._playerHex = {};
 }
 
+PlayerSelector.prototype.removePlayerIndicator = function(userid)
+{
+    const sHex = this.player2Hex(userid);
+    const elem = document.getElementById("player_selector_" + sHex);
+    if (elem !== null)
+        elem.parentNode.removeChild(elem);
+};
+
 PlayerSelector.prototype.updateLastSeen = function(username, isOnline)
 {
     const sHex = this.player2Hex(username);

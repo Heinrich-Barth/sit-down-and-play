@@ -222,6 +222,11 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         {
             _playerSelector.updateLastSeen(username, isOnline)
         },
+
+        removePlayerIndicator : function(username)
+        {
+            _playerSelector.removePlayerIndicator(username)
+        },
         
         updateHandSize : function(username, nCount, nCountPlaydeck)
         {

@@ -103,16 +103,15 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
             for (let i = 0; i < players.length; i++)
             {
-                if (players[i] !== id)
+                if (players[i] !== userId)
                 {
                     _ids.push(players[i]);
                 }
                 else
                 {
                     _posDel = i;
-                    
-                        
-
+                    console.log("Player kicked from index list: " + userId)
+                    Game.apis.meccgApi.publish("/game/player/remove", "", { userid: userId });
                     /** todo: discard everything */
                 }
             }
@@ -122,14 +121,18 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
             Game.players.ids = _ids;
 
-            if (Game.players.current > _posDel)
+            if (Game.players.names[userId] !== undefined)
+                delete Game.players.names[userId];
+
+            if (Game.players.current !== 0)
             {
-                Game.players.current--;
-            }
-            else if (Game.players.current === _posDel)
-            {
-                Game.players.current--;
-                Game.global.phase(userId, null, "eot"); /** pass turn to next player */
+                if (Game.players.current > _posDel)
+                    Game.players.current--;
+                else if (Game.players.current === _posDel)
+                {
+                    Game.players.current--;
+                    Game.callbacks.global.phase(userId, null, "eot"); /** pass turn to next player */
+                }
             }
         },
 

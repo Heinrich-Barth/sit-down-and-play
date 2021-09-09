@@ -202,8 +202,9 @@ const ROOM_MANAGER = {
         if (ROOM_MANAGER._rooms[room] === undefined)
             return false;
 
+        let pRoom = ROOM_MANAGER._rooms[room];
         let keys = [];
-        let players = ROOM_MANAGER._rooms[room].players;
+        let players = pRoom.players;
         for (let key in players) 
         {
             if (players[key].socket === null || !players[key].socket.connected) 
@@ -211,10 +212,7 @@ const ROOM_MANAGER = {
         }
 
         for (let i = 0; i < keys.length; i++)
-        {
-            console.log(ROOM_MANAGER._rooms[room].players[keys[i]].name + " removed from game.");
-            delete ROOM_MANAGER._rooms[room].players[keys[i]];
-        }
+            ROOM_MANAGER.kickPlayer(pRoom, keys[i]);
 
         if (Object.keys(ROOM_MANAGER._rooms[room].players).length === 0)
         {
@@ -402,18 +400,24 @@ const ROOM_MANAGER = {
      * @param {String} room 
      * @param {String} userid 
      */
-    kickPlayer: function (room, userid) 
+    kickPlayer: function (pRoom, userid) 
     {
-        if (room === undefined || userid === undefined || ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].players[userid] === undefined)
+        let pPlayer = pRoom.players[userid];
+        if (pPlayer === undefined)
             return;
 
-        let pPlayer = ROOM_MANAGER._rooms[room].players[userid];
+        const name = pPlayer.name;
+        console.log(name + " removed from game.");
+
         if (pPlayer.socket !== null) 
         {
             pPlayer.socket.leave(pPlayer.socket.room);
             pPlayer.socket.disconnect(true);
             pPlayer.socket = null;
         }
+
+        delete pRoom.players[userid];
+        pRoom.game.removePlayer(userid);
     },
 
     allowJoin: function (room, expectSecret, userId, joined, player_access_token_once) {

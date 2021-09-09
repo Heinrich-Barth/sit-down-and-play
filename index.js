@@ -419,7 +419,7 @@ SERVER.onIoConnection = function (socket)
         }
         else 
         {
-            console.log(socket.username + " disconnected from game " + socket.room);
+            console.log(socket.username + " (" + socket.id + ") disconnected from game " + socket.room);
 
             SERVER.roomManager.onDisconnected(socket.userid, socket.room);
             SERVER.roomManager.checkGameContinuence(socket.room);
@@ -441,7 +441,11 @@ SERVER.onIoConnection = function (socket)
     {
         if (!socket.auth) 
         {
-            console.log("Disconnecting socket " + socket.id + " due to missing authentication.");
+            let name = socket.username;
+            if (name === undefined)
+                name = "unknown";
+                
+            console.log("Disconnecting socket of " + name + " (" + socket.id + ") due to missing authentication.");
             socket.disconnect('unauthorized');
         }
 
