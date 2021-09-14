@@ -154,10 +154,20 @@ const createPlayer = function(displayname, jDeck, isAdmin, timeAdded)
         timestamp: timeAdded,
         joined: false,
         socket: null,
+        visitor : false,
         player_access_token_once : Date.now()
     }
 };
 
+
+const createVisitor = function(displayname, timeAdded)
+{
+    let pPlayer = createPlayer(displayname, {}, false, timeAdded);
+    pPlayer.visitor = true;
+    pPlayer.waiting = true;
+    pPlayer.admin = false;
+    return pPlayer;
+};
 
 const Game = require("./game.js");
 const Chat = require("./chat.js")
@@ -183,6 +193,7 @@ exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvide
         api: pAPI, 
         chat: pChat, 
         players: {},
+        visitors : {},
         name: room,
         isEmpty : function() 
         { 
@@ -191,6 +202,10 @@ exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvide
         addPlayer : function(userid, displayname, jDeck, isAdmin, timeAdded)
         {
             this.players[userid] = createPlayer(displayname, jDeck, isAdmin, timeAdded);
+        },
+        addSpectator : function(userid, displayname, timeAdded)
+        {
+            this.visitors[userid] = createVisitor(displayname, timeAdded);
         }
     };
 }; 

@@ -20,7 +20,9 @@ PlayerSelector.prototype.removePlayerIndicator = function(userid)
 PlayerSelector.prototype.updateLastSeen = function(username, isOnline)
 {
     const sHex = this.player2Hex(username);
-    document.getElementById("player_selector_" + sHex).querySelector("span").setAttribute("class", isOnline ? "indicator-green" : "indicator-red");
+    const elem = document.getElementById("player_selector_" + sHex);
+    if (elem !== null)
+        elem.querySelector("span").setAttribute("class", isOnline ? "indicator-green" : "indicator-red");
 };
 
 PlayerSelector.prototype.player2Hex = function (sInput)

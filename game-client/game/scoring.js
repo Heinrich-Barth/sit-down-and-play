@@ -192,7 +192,7 @@ class ScoringContainers {
         div.setAttribute("class", "hidden scoring-sheet");
 
         const _temp = document.createElement("div");
-        _temp.setAttribute("class", "menu-overlay");
+        _temp.setAttribute("class", "menu-overlay hidden");
         div.appendChild(_temp);
         div.appendChild(this.createScoreSheetContainer());       
         div.appendChild(this.createVictoryContainer());
@@ -262,7 +262,6 @@ function createScoringApp(_CardList)
             {
                 sheet.classList.add("hidden");
                 ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
-                ArrayList(document).findByClassName("arda-card-hands").each((e) => e.classList.add("hidden"));
             }
         },
         

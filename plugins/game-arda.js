@@ -7,7 +7,6 @@ const createCardEntry = function(jTarget, sName)
 const addAvatarsToPoolAndSideboard = function(jDeck)
 {
     jDeck.pool = { };
-    jDeck.sideboard = { };
 
     createCardEntry(jDeck.pool, "Alatar [H] (TW)");
     createCardEntry(jDeck.pool, "Gandalf [H] (TW)");

@@ -24,7 +24,12 @@ const populateField = function(jDeck, sId, bClear)
 
     let sVal = document.getElementById(sId).value;
     for(let k in jDeck) 
-        sVal += "\n" + jDeck[k].count + " " + k;
+    {
+        if (typeof jDeck[k] === "number")
+            sVal += "\n" + jDeck[k] + " " + k;
+        else
+            sVal += "\n" + jDeck[k].count + " " + k;
+    }
 
     document.getElementById(sId).value = sVal.trim();
 };

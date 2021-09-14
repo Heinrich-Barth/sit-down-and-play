@@ -787,6 +787,9 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         onMenuActionClear: function (elem)
         {
+            if (elem === null)
+                return elem;
+
             elem.classList.remove("state_ready");
             elem.classList.remove("state_tapped");
             elem.classList.remove("state_tapped_fixed");
@@ -810,7 +813,9 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         onMenuActionTap: function (uuid, code, bForced)
         {
-            this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]')).classList.add(bForced ? "state_tapped_fixed" : "state_tapped");
+            const elem = this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]'));
+            if (elem !== null)
+                elem.classList.add(bForced ? "state_tapped_fixed" : "state_tapped");
         },
 
         onMenuActionWound: function (uuid, code)
@@ -851,9 +856,13 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 return;
 
             if (pElem.classList.contains("glowing"))
+            {
                 pElem.classList.remove("glowing");
-            else
-                pElem.classList.add("glowing");
+                return;
+            }
+
+            pElem.classList.add("glowing");
+            setTimeout(() => pElem.classList.remove("glowing"), 6000);
         },
 
         onMenuActionHighlight:  function (uuid)

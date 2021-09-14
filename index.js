@@ -364,6 +364,8 @@ SERVER.instance.get("/error/login", (req, res) => SERVER.clearCookies(res).sendF
  */
 SERVER.instance.get("/deckbuilder", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("deckbuilder.html")).status(200));
 
+SERVER.instance.get("/converter", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("converter.html")).status(200));
+
 SERVER.instance.get("/cards", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("card-browser.html")).status(200));
  
 /**

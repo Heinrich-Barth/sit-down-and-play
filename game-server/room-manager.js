@@ -5,6 +5,7 @@ const Game = require("./index.js");
 
 let fnSocketIo = function() { return null; }
 
+
 /**
  * Create a new room if necessary
  * @param {String} room 
@@ -55,23 +56,43 @@ const ROOM_MANAGER = {
             return ROOM_MANAGER._rooms[room].game.getTappedSites(userid);
     },
 
+    _isVisitor : function(pRoom, userid)
+    {
+        return pRoom.visitors[userid] !== undefined;
+    },
+
+    _getPlayerOrVisitor : function(room, userid)
+    {
+        if (ROOM_MANAGER._rooms[room] == undefined)
+            return null;
+
+        if (ROOM_MANAGER._rooms[room].players[userid] !== undefined)
+            return ROOM_MANAGER._rooms[room].players[userid];
+        else if (ROOM_MANAGER._rooms[room].visitors[userid] !== undefined)
+            return ROOM_MANAGER._rooms[room].visitors[userid];
+        else
+            return null;
+    },
+
     updatePlayerToken : function(room, userid)
     {
-        if (ROOM_MANAGER._rooms[room] == undefined || ROOM_MANAGER._rooms[room].players[userid] === undefined)
+        const pPlayer = ROOM_MANAGER._getPlayerOrVisitor(room, userid);
+        if (pPlayer === null)
             return 0;
-            
-        let lToken = Date.now();
-        ROOM_MANAGER._rooms[room].players[userid].player_access_token_once = lToken;
+        
+        const lToken = Date.now();
+        pPlayer.player_access_token_once = lToken;
         return lToken;
     },
 
     isValidAccessToken : function(room, userid, lToken)
     {
-        if (ROOM_MANAGER._rooms[room] == undefined || ROOM_MANAGER._rooms[room].players[userid] === undefined || lToken < 1)
+        const pPlayer = ROOM_MANAGER._getPlayerOrVisitor(room, userid);
+        if (pPlayer === null || lToken < 1)
             return false;
 
-        let lRes = ROOM_MANAGER._rooms[room].players[userid].player_access_token_once === lToken;
-        ROOM_MANAGER._rooms[room].players[userid].player_access_token_once = 0;
+        const lRes = pPlayer.player_access_token_once === lToken;
+        pPlayer.player_access_token_once = 0;
         return lRes;
     },
 
@@ -82,13 +103,26 @@ const ROOM_MANAGER = {
 
         let list = [];
         let players = ROOM_MANAGER._rooms[room].players;
-        for (var key in players) 
+        for (let key in players) 
         {
             if (players[key].waiting === waitingOnly)
             {
                 list.push({
                     id: key,
                     name: players[key].name,
+                    time : new Date(players[key].timestamp).toUTCString()
+                });
+            }
+        }
+
+        players = ROOM_MANAGER._rooms[room].visitors;
+        for (let key in players) 
+        {
+            if (players[key].waiting)
+            {
+                list.push({
+                    id: key,
+                    name: "Spectator: " + players[key].name,
                     time : new Date(players[key].timestamp).toUTCString()
                 });
             }
@@ -255,14 +289,28 @@ const ROOM_MANAGER = {
         return ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].created <= userJoined;
     },
 
-    rejectEntry: function (room, userId) {
-        if (ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].players[userId] !== undefined)
-            delete ROOM_MANAGER._rooms[room].players[userId];
+    rejectEntry: function (room, userId) 
+    {
+        if (ROOM_MANAGER._rooms[room] === undefined)
+            return;
+
+        const pRoom = ROOM_MANAGER._rooms[room];
+        if (pRoom.players[userId] !== undefined)
+            delete pRoom.players[userId];
+        else if (pRoom.visitors[userId] !== undefined)
+            delete pRoom.visitors[userId];
     },
 
-    inviteWaiting: function (room, userId) {
-        if (ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].players[userId] !== undefined)
-            ROOM_MANAGER._rooms[room].players[userId].waiting = false;
+    inviteWaiting: function (room, userId) 
+    {
+        if (ROOM_MANAGER._rooms[room] === undefined)
+            return;
+
+        const pRoom = ROOM_MANAGER._rooms[room];
+        if (pRoom.players[userId] !== undefined)
+            pRoom.players[userId].waiting = false;
+        else if (pRoom.visitors[userId] !== undefined)
+            pRoom.visitors[userId].waiting = false;
     },
 
     /**
@@ -294,18 +342,23 @@ const ROOM_MANAGER = {
      */
     rejoinAfterBreak: function (userid, room, socket) 
     {
-        if (ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].players[userid] === undefined)
+        if (ROOM_MANAGER._rooms[room] === undefined)
+            return false;
+        
+        const pRoom = ROOM_MANAGER._rooms[room];
+        const isPlayer = pRoom.players[userid] !== undefined;
+        const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
+        if (pPlayer === undefined)
             return false;
 
-        const pRoom = ROOM_MANAGER._rooms[room];
-        let pPlayer = ROOM_MANAGER._rooms[room].players[userid];
-
         /* add the player to the board of all other players */
-        pRoom.api.publish("/game/player/add", "", { userid: userid, name: pPlayer.name });
+        if (isPlayer)
+            pRoom.api.publish("/game/player/add", "", { userid: userid, name: pPlayer.name });
 
         /* now join the game room to receive all "published" messages as well */
         pPlayer.socket = socket;
         pPlayer.socket.join(room);
+        pPlayer.visitor = !isPlayer;
 
         /* now, acitave endpoints for this player */
         pRoom.api.initGameEndpoint(socket);
@@ -317,10 +370,14 @@ const ROOM_MANAGER = {
         pRoom.api.reply("/game/rejoin/immediately", socket, pRoom.game.getCurrentBoard(userid));
 
         /* notify other players */
-        pRoom.chat.sendMessage(userid, " joined the game.");
+        if (isPlayer)
+            pRoom.chat.sendMessage(userid, " joined the game.");
+        else
+            pRoom.chat.sendMessage(userid, " joined as visitor.");
 
-        /* add indicator */
-        pRoom.api.publish("/game/player/indicator", "", { userid: userid, connected: true });
+            /* add indicator */
+        if (isPlayer)
+            pRoom.api.publish("/game/player/indicator", "", { userid: userid, connected: true });
 
         /** additional game data */
         pRoom.api.reply("/game/data/all", socket, pRoom.game.getPlayboardDataObject());
@@ -420,11 +477,25 @@ const ROOM_MANAGER = {
         pRoom.game.removePlayer(userid);
     },
 
-    allowJoin: function (room, expectSecret, userId, joined, player_access_token_once) {
+    allowJoin: function (room, expectSecret, userId, joined, player_access_token_once) 
+    {
         if (room === "" || ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].secret !== expectSecret)
             return false;
 
-        if (ROOM_MANAGER._rooms[room].players[userId] === undefined || ROOM_MANAGER._rooms[room].players[userId].timestamp !== joined)
+        const pRoom = ROOM_MANAGER._rooms[room];
+        let bIsPlayer = true;
+        if (pRoom.players[userId] !== undefined)
+        {
+            if (pRoom.players[userId].timestamp !== joined)
+                return false;
+        } 
+        else if (pRoom.visitors[userId] !== undefined)
+        {
+            bIsPlayer = false;
+            if (pRoom.visitors[userId].timestamp !== joined)
+                return false;
+        }
+        else
             return false;
             
         if (!ROOM_MANAGER.isValidAccessToken(room, userId, player_access_token_once))
@@ -432,12 +503,22 @@ const ROOM_MANAGER = {
             console.log("Invalid access token (once");
             return false;
         }
+        else if (bIsPlayer)
+        {
+            /* add player to game */
+            pRoom.game.joinGame(pRoom.players[userId].name, userId, pRoom.players[userId].deck);
 
-        /* add player to game */
-        ROOM_MANAGER._rooms[room].game.joinGame(ROOM_MANAGER._rooms[room].players[userId].name, userId, ROOM_MANAGER._rooms[room].players[userId].deck);
-        ROOM_MANAGER._rooms[room].players[userId].joined = true;
-        ROOM_MANAGER._rooms[room].players[userId].player_access_token_once = 0;
-        ROOM_MANAGER._rooms[room].players[userId].deck = null; /** the deck is only needed once */
+            pRoom.players[userId].joined = true;
+            pRoom.players[userId].player_access_token_once = 0;
+            pRoom.players[userId].deck = null; /** the deck is only needed once */
+        }
+        else
+        {
+            pRoom.visitors[userId].joined = true;
+            pRoom.visitors[userId].player_access_token_once = 0;
+            pRoom.visitors[userId].deck = null; /** the deck is only needed once */
+        }
+
         return true;
     },
 
@@ -451,6 +532,11 @@ const ROOM_MANAGER = {
         }
     },
 
+    roomExists : function(room)
+    {
+        return room !== undefined && room !== "" && ROOM_MANAGER._rooms[room] !== undefined;
+    },
+
     /**
      * Check if the given user is the HOST of this game. 
      * Only the host may reject or admit join rejests
@@ -462,6 +548,17 @@ const ROOM_MANAGER = {
     isGameHost : function(room, token)
     {
         return ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].lobbyToken === token;
+    },
+
+    addSpectator : function (room, userId, displayname) 
+    {
+        const pRoom = ROOM_MANAGER._rooms[room];
+        if (pRoom === undefined)
+            return;
+            
+        const lNow = Date.now();
+        pRoom.addSpectator(userId, displayname, lNow);
+        return lNow;
     },
 
     /**
@@ -492,10 +589,19 @@ const ROOM_MANAGER = {
 
     updateEntryTime: function (room, userId) 
     {
-        if (ROOM_MANAGER._rooms[room] !== undefined && ROOM_MANAGER._rooms[room].players[userId] !== undefined) 
+        if (ROOM_MANAGER._rooms[room] === undefined)
+            return 0;
+
+        const lNow = Date.now();
+        const pRoom = ROOM_MANAGER._rooms[room];
+        if (pRoom.players[userId] !== undefined) 
+        {            
+            pRoom.players[userId].timestamp = lNow;
+            return lNow;
+        }
+        else if (pRoom.visitors[userId] !== undefined) 
         {
-            let lNow = Date.now();
-            ROOM_MANAGER._rooms[room].players[userId].timestamp = lNow;
+            pRoom.visitors[userId].timestamp = lNow;
             return lNow;
         }
         else
@@ -507,14 +613,22 @@ const ROOM_MANAGER = {
 
     loadGamePage: function (room, userId, username, lTimeJoined) {
 
-        if (ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].players[userId] === undefined)
+        if (ROOM_MANAGER._rooms[room] === undefined)
             return "";
 
-        let sSecret = ROOM_MANAGER._rooms[room].secret;
-        let sToken = ROOM_MANAGER.updatePlayerToken(room, userId);
-        let sLobbyToken = ROOM_MANAGER._rooms[room].players[userId].admin ? ROOM_MANAGER._rooms[room].lobbyToken : "";
-        const isArda = ROOM_MANAGER._rooms[room].game.isArda() ? "true" : "false";
-        const isSinglePlayer = ROOM_MANAGER._rooms[room].game.isSinglePlayer() ? "true" : "false";
+        const pRoom = ROOM_MANAGER._rooms[room];
+        
+        const pPlayer = ROOM_MANAGER._getPlayerOrVisitor(room, userId);
+        if (pPlayer === null)
+            return "";
+
+        const isVisitor = ROOM_MANAGER._isVisitor(pRoom, userId);
+
+        const sSecret = pRoom.secret;
+        const sToken = ROOM_MANAGER.updatePlayerToken(room, userId);
+        const sLobbyToken = pPlayer.admin ? pRoom.lobbyToken : "";
+        const isArda = pRoom.game.isArda() ? "true" : "false";
+        const isSinglePlayer = pRoom.game.isSinglePlayer() ? "true" : "false";
 
         return ROOM_MANAGER.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
@@ -523,6 +637,7 @@ const ROOM_MANAGER = {
             .replace("{TPL_USER_ID}", userId)
             .replace("{TPL_API_KEY}", sSecret)
             .replace("{TPL_IS_ARDA}", isArda)
+            .replace("{TPL_IS_VISITOR}", isVisitor)
             .replace("{TPL_IS_SINGLEPLAYER}", isSinglePlayer)
             .replace("{TPL_JOINED_TIMESTAMP}", sToken);
     },
@@ -536,10 +651,15 @@ const ROOM_MANAGER = {
      */
     isAccepted: function (room, userId) 
     {
-        if (ROOM_MANAGER._rooms[room] === undefined || ROOM_MANAGER._rooms[room].players[userId] === undefined)
+        if (ROOM_MANAGER._rooms[room] === undefined)
             return null;
-        else
+
+        if (ROOM_MANAGER._rooms[room].players[userId] !== undefined)
             return !ROOM_MANAGER._rooms[room].players[userId].waiting
+        else if (ROOM_MANAGER._rooms[room].visitors[userId] !== undefined)
+            return !ROOM_MANAGER._rooms[room].visitors[userId].waiting;
+        else
+            return null;
     }
 };
 

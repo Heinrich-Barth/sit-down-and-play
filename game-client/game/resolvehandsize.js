@@ -8,11 +8,17 @@ class ResolveHandSizeFirst
         this.idSize = idSize;
         this.sHandName = sHandName === undefined || sHandName === "" ? "cards" : sHandName;
         this.phases = aPhases === undefined || aPhases.length === 0 ? null : aPhases;
+        
+    }
+
+    static isVisitor()
+    {
+        return document.body.getAttribute("data-is-watcher") === "true";
     }
 
     static create(idContainer, idSize, sHandName, aPhases)
     {
-        if (idSize === "" || idContainer === "")
+        if (idSize === "" || idContainer === "" || ResolveHandSizeFirst.isVisitor())
             return;
 
         let pThis = new ResolveHandSizeFirst(idContainer, idSize, sHandName, aPhases);

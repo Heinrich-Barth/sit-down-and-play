@@ -11,6 +11,7 @@ class GamePlayRouteHandler
         this.pageHome = __dirname + "/pages/"  + sPagePlayRoot;
         this.pageLogin = __dirname + "/pages/" + sPageLogin;
         this.pageLobby = __dirname + "/pages/" + sLobbyPage;
+        this.pageWatch = __dirname + "/pages/login-watch.html";
     }
 
     isArda()
@@ -95,7 +96,23 @@ class GamePlayRouteHandler
         /**
          * Get the status of a given player (access denied, waiting, addmitted)
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
+
+        /**
+         * Setup spectator
+         */
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/watch", this.onWatch.bind(this));
+
+
+        /**
+         * Perform the login and set all necessary cookies.
+         * 
+         * The room will only allow ALPHANUMERIC characters and the display name will also be
+         * checked to be alphanumeric only to avoid any HTML injection possibilities.
+         * 
+         */
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/watch/check", this.onWatchCheck.bind(this));
+
 
         /**
          * Player joins a table.
@@ -129,6 +146,48 @@ class GamePlayRouteHandler
          * Validate Deck first
          */
         return this.m_pServerInstance.cards.validateDeck(jDeck);
+    }
+
+    onWatchCheck(req, res)
+    {
+        try 
+        {
+            const room = req.params.room.toLocaleLowerCase();
+
+            if (!UTILS.isAlphaNumeric(room))
+                throw "Invalid room name";
+
+            const jData = JSON.parse(req.body.data);
+            const displayname = jData.name;
+
+            /**
+             * assert the username is alphanumeric only
+             */
+            if (!UTILS.isAlphaNumeric(displayname))
+                throw "Invalid data";
+
+            if (!this.m_pServerInstance.roomManager.roomExists(room))
+                throw "Room does not exist";
+
+            const userId = UTILS.generateUuid();
+
+            /** add player to lobby */
+            const lNow = this.m_pServerInstance.roomManager.addSpectator(room, userId, displayname);
+
+            /** proceed to lobby */
+            const jSecure = { httpOnly: true, secure: true };
+            res.cookie('room', room, jSecure);
+            res.cookie('username', displayname, jSecure);
+            res.cookie('userId', userId, jSecure);
+            res.cookie('joined', lNow, jSecure);
+            res.setHeader('Content-Type', 'text/plain');
+            this.m_pServerInstance.expireResponse(res).redirect("/play/" + req.params.room + "/lobby");
+        }
+        catch (e) 
+        {
+            console.log(e);
+            this.m_pServerInstance.expireResponse(res).redirect("/error/login");
+        }
     }
 
     onLoginCheck(req, res)
@@ -180,6 +239,20 @@ class GamePlayRouteHandler
         {
             console.log(e);
             this.m_pServerInstance.expireResponse(res).redirect("/error/login");
+        }
+    }
+
+    onWatch(req, res)
+    {
+        this.m_pServerInstance.clearCookies(res);
+        
+        if (!UTILS.isAlphaNumeric(req.params.room) || !this.m_pServerInstance.roomManager.roomExists(req.params.room))
+            res.redirect("/error");
+        else
+        {
+            const sHtml = fs.readFileSync(this.pageWatch, 'utf8');
+            res.setHeader('Content-Type', 'text/html');
+            this.m_pServerInstance.expireResponse(res).send(sHtml).status(200);
         }
     }
 
@@ -291,9 +364,9 @@ class GamePlayRouteHandler
         /**
          * Assert that the user really accepted
          */
-        let bForwardToGame = this.m_pServerInstance.roomManager.isAccepted(room, req.cookies.userId);
+        const bForwardToGame = this.m_pServerInstance.roomManager.isAccepted(room, req.cookies.userId);
         if (bForwardToGame === null) 
-        {
+        {   
             res.redirect(this.contextPlay + room + "/login");
             return;
         }

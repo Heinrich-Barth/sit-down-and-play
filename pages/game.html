@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="/media/assets/css/lobby.css" />
         <link rel="stylesheet" href="/media/assets/css/addcards.css" />
         <link rel="stylesheet" href="/media/assets/css/ingame-draggable-tips.css" />
+        <link rel="stylesheet" href="/media/assets/css/watcher.css" />
         
 
         <script src="/media/assets/js/jquery.min.js?version=1"></script>
@@ -31,7 +32,7 @@
     </head>
 
 
-    <body class="bg-game" data-is-game="true" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
+    <body class="bg-game" data-is-game="true" data-is-watcher="{TPL_IS_VISITOR}" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}">
 
@@ -176,6 +177,8 @@
         <script src="/media/client/game/resolvehandsize.js"></script>
         <script src="/media/client/game/game-arda.js?version=1"></script>
         <script src="/media/client/game/introtip.js"></script>
+        <script src="/media/client/game/watchonly.js"></script>
         <script src="/media/client/onready.js"></script>
+
     </body>
 </html>

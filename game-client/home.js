@@ -36,7 +36,7 @@ const addGameTypes = function(data, isArda, existing)
     let title = isArda ? "Arda" : "Standard/Dreamcard"
     const table = document.createElement("table");
     table.innerHTML = `<thead><tr>
-                            <th colspan="2">${title} Game</th>
+                            <th colspan="3">${title} Game</th>
                             <th>Players</th>
                         </tr></thead>`;
 
@@ -56,7 +56,10 @@ const addGameTypes = function(data, isArda, existing)
 
         count++;
         const _tr = document.createElement("tr");
-        _tr.innerHTML = `<td>${count}</td><td><a href="/${_context}/${_room}" title="Click to join this game">${_room}</td><td class="players">${_players}</td>`;
+        _tr.innerHTML = `<td>${count}</td>
+                        <td><a href="/${_context}/${_room}" title="Click to join this game">${_room}</td>
+                        <td><a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"></a></td>
+                        <td class="players">${_players}</td>`;
         container.appendChild(_tr);
         existing.push(_room)
     }
