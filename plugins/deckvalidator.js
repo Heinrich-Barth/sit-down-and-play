@@ -28,7 +28,7 @@ const extractMinorItems = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
-        return card.Secondary.toLowerCase() === "minor item" || card.isQuest;
+        return card.Secondary.toLowerCase() === "minor item" || card.isQuest || card.isStartable;
     });
 };
 
