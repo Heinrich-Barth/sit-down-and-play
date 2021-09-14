@@ -93,6 +93,7 @@ const ContextMenu = {
         
         elem.setAttribute("data-context-code", code);
         elem.oncontextmenu = ContextMenu.contextActions.onContextSite;
+        elem.ondblclick = ContextMenu.contextActions.onDoubleClickSite;
         elem.classList.add("context-cursor");
     },
 
@@ -119,11 +120,47 @@ const ContextMenu = {
         if (elem !== null)
         {
             elem.oncontextmenu = ContextMenu.contextActions.onContextGeneric;
+            elem.ondblclick = ContextMenu.contextActions.onDoubleClick;
             elem.classList.add("context-cursor");
         }
     },
 
     contextActions : {
+
+        onDoubleClickSite : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+
+            const code = ContextMenu._getCardCode(e.target);
+            ContextMenu.callbacks.doRotate("_site", code, e.altKey ? "ready" : "tap");
+        },
+
+
+        onDoubleClick : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+                
+            let code = ContextMenu._getCardCode(e.target);
+            if (code === "")
+                code = ContextMenu.getAttribute(e.target, "data-card-code");
+
+            let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
+            if (uuid === "")
+                uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+
+            if (e.ctrlKey)
+                ContextMenu.hightlightCard(uuid, code);
+            else
+                ContextMenu.callbacks.doRotate(uuid, code, e.altKey ? "ready" : "tap");
+        },
 
         onContextGeneric : function(e)
         {
@@ -221,6 +258,11 @@ const ContextMenu = {
         return val === null ? "" : val;
     },
 
+    hightlightCard : function(uuid, code)
+    {
+        MeccgApi.send("/game/card/state/glow", {uuid : uuid, code: code });  
+    },
+
     callbacks : {
         empty : function() { },
 
@@ -244,6 +286,16 @@ const ContextMenu = {
 
         rotate : function(pMenu, sAction) 
         {
+            let uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
+            let code = ContextMenu.getAttribute(pMenu, "data-card-code");
+            ContextMenu.callbacks.doRotate(uuid, code, sAction);
+        },
+
+        doRotate : function(uuid, code, sAction)
+        {
+            if (code === "" || uuid === "")
+                return;
+
             let nState = -1;
             if (sAction === "ready")
                 nState = 0;
@@ -255,9 +307,6 @@ const ContextMenu = {
                 nState = 180;
             else if (sAction === "rot270")
                 nState = 270;
-            
-            let uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
-            let code = ContextMenu.getAttribute(pMenu, "data-card-code");
 
             if (nState !== -1)
                 MeccgApi.send("/game/card/state/set", {uuid : uuid, state : nState, code: code });        
@@ -267,7 +316,8 @@ const ContextMenu = {
         {
             let uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
             let code = ContextMenu.getAttribute(pMenu, "data-card-code");
-            MeccgApi.send("/game/card/state/glow", {uuid : uuid, code: code });  
+            ContextMenu.hightlightCard(uuid, code);
+            //MeccgApi.send("/game/card/state/glow", {uuid : uuid, code: code });  
         },
 
         flip : function(pMenu)
@@ -325,7 +375,7 @@ const ContextMenu = {
         this.addItem("tap_91", "Forced tap card (90°)", "fa-lock", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("wound", "Wound card (180°)", "fa-arrow-circle-down", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("rot270", "Rotate 270°", "fa-arrow-circle-left", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
-        this.addItem("glow_action", "Toggle Highlight", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow);
+        this.addItem("glow_action", "Highlight card (5s)", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow);
         this.addItem("flipcard", "Flip Card", "fa-eye-slash", "context-menu-item-flipcard context-menu-item-generic", ContextMenu.callbacks.flip);
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive);
 
