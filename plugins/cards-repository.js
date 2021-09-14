@@ -138,6 +138,13 @@ const CARDS = {
             card.isQuest = card.Race.startsWith("Quest-Side-");
     },
 
+    identifyInLieuItems : function()
+    {
+        const sPattern = "in lieu of";
+        for (var card of this._raw) 
+            card.isStartable = card.text.indexOf(sPattern) !== -1;
+    },
+
     removeUnusedFields : function()
     {
         const vsUnused = getRemovableKeysArray();
@@ -244,7 +251,7 @@ const CARDS = {
         {
             if (card.MPs === undefined)
                 continue;
-            else if (card.MPs === "")
+            else if (card.MPs === "" || card.normalizedtitle === "grim voiced and grim faced")
                 delete card.MPs;
             else
             {
@@ -347,6 +354,7 @@ const CARDS = {
     postProcessCardList : function()
     {
         this.identifyQuests();
+        this.identifyInLieuItems();
         this.removeUnusedFields();
         this.removeFlavourText();
         console.log("Cards setup done.");
