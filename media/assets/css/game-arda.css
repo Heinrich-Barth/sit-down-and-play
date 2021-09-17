@@ -3,8 +3,8 @@
 .arda-hand-wrapper {position: fixed;right: 5px;top: 50%;transform: translateY(-50%);}
 
 .arda-hand-container { text-align: right; margin-bottom: 5px; }
-.arda-hand-container i { cursor: pointer; color: #ffa500; padding: 5px; min-width: 20px; text-align: center; }
-.arda-hand-container i:hover { color: #fff; }
+.arda-hand-container i { cursor: pointer; color: #fff; padding: 5px; min-width: 20px; text-align: center; }
+.arda-hand-container i:hover { color: #ffa500; }
 
 .arda-card-hands {
     position: fixed;
