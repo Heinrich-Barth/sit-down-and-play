@@ -182,3 +182,16 @@
     height: 20px;
     background-position-y: 0;
 }
+
+.scoring-sheet.final-score .view-score-container
+{
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    font-size: 1.2em;
+}
+.scoring-sheet.final-score .menu-overlay
+{
+    z-index: 500;
+    cursor: default;
+}
