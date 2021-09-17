@@ -228,3 +228,15 @@ div.count_bubble {
 }
 
 span.builder-white { color: #fff !important; font-weight: bold;}
+.decklist label
+{ padding-top: 10px; border-bottom: 1px dotted #ffa500; display: block; cursor: pointer; text-transform: uppercase; font-size: 1.2em; margin: 12px 0;}
+
+.decklist label:hover {
+    color: #fff;
+}
+.decklist input[type="checkbox"] { display: none; }
+.decklist input[type="checkbox"]:checked ~ .deck_part,
+.decklist input[type="checkbox"]:checked ~ .d_container { display: none; }
+.decklist .fa:before {
+    padding-right: 5px;
+}

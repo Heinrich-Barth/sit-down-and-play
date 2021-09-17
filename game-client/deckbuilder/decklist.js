@@ -24,28 +24,33 @@ var DeckList =
 
         <div class="pos-rel">
             <div class="pos-rel fl w48 deck_part">
-                <h3>Pool (<span class="count_type" id="count_pool">0</span>)</h3>
+                <label for="checkbox_pool">Pool (<span class="count_type" id="count_pool">0</span>)</label>
+                <input type="checkbox" id="checkbox_pool">
                 <div id="pool" class="d_container pt5">-</div>
             </div>
             <div class="pos-rel fl w48 deck_part_col" id="deck_chars">
-                <h3 class="mr-20">Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</h3>
+                <label for="checkbox_ch" class="mr-20">Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</label>
+                <input type="checkbox" id="checkbox_ch">
             </div>
             <div class="clearfix"> </div>
         </div>
 
         <div class="pos-rel">
             <div class="pos-rel fl w48 deck_part_col" id="deck_resources">
-                <h3 class="mr-20">Resources (<span class="count_type_col" id="count_deck_r">0</span>)</h3>
+                <label for="checkbox_res" class="mr-20">Resources (<span class="count_type_col" id="count_deck_r">0</span>)</label>
+                <input type="checkbox" id="checkbox_res">
             </div>
 
             <div class="pos-rel fl w48 deck_part_col" id="deck_hazards">
-                <h3>Hazards (<span class="count_type_col" id="count_deck_h">0</span>)</h3>
+                <label for="checkbox_haz">Hazards (<span class="count_type_col" id="count_deck_h">0</span>)</label>
+                <input type="checkbox" id="checkbox_haz">
             </div>
             <div class="clearfix"> </div>
         </div>
 
         <div class="pos-rel deck_part">
-            <h3>Sideboard (<span class="count_type" id="count_sideboard">0</span>)</h3>
+            <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
+            <input type="checkbox" id="checkbox_sb">
             <div id="sideboard" class="d_container pt5">-</div>
         </div>
 
@@ -73,6 +78,23 @@ var DeckList =
         elem.setAttribute("class", "hidden");
         document.body.appendChild(elem);
         document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "deck_container" })); /** update the deck list view */
+
+        
+        const list = document.getElementById("deck_container").querySelectorAll("label");
+        for (let _element of list)
+        {
+            _element.setAttribute("data-open", "fa-chevron-down");
+            _element.setAttribute("data-close", "fa-chevron-up");
+            _element.classList.add("fa");
+            _element.classList.add("fa-chevron-down");
+        }
+            
+    },
+
+    toggleDeckPart : function(e)
+    {
+        alert("Hallo");
+        console.log(e.target);
     },
 
     removeExisting : function()
