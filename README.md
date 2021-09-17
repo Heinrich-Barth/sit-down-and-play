@@ -246,11 +246,21 @@ The context menu provides all available actions.
 
 The discard pile will be reshuffled automatically once your playdeck is out of cards. You do not need to do this yourself.
 
+#### Shortcuts
+
+The following shortcuts are available:
+
+* `r` to roll the dice
+* `d` to draw a card
+* `Doubleclick` to tap a card
+* `Doubleclick`+`ALT` to untap a card
+* `Doubleclick`+`CTRL` to highlight card for 5 seconds
+
 #### Troubleshooting
 
 * Sometimes you may not hit the drop zone to play a card. Just retry.
 * You may reload the page if it seems necessary.
-* Open the browsers inspection tool console to check for errors. This should usually not happen but you never know. Chrome's shortcut is CTRL+SHIFT+J
+* Open the browsers inspection tool console to check for errors. This should usually not happen but you never know. Chrome's shortcut is `CTRL+SHIFT+J`
 
 #### Game Options
 
