@@ -1,0 +1,61 @@
+
+
+.game-watch-only .card-bar,
+.game-watch-only .config-wrapper,
+.game-watch-only .help-wrapper,
+.game-watch-only #playercard-hand-content,
+.game-watch-only .taskbar-score,
+.game-watch-only .area-player,
+.game-watch-only .chattext
+{
+    display: none !important;
+}
+
+.game-watch-only #playercard_hand
+{
+    min-height: 50px;
+    left: 5px;
+}
+
+.game-watch-only .taskbar.turn-opponent .task_overlay
+{
+    left: 0;
+}
+
+.game-watch-only .area-opponent 
+{
+    max-height: 90%;
+}
+
+.game-watch-only .staging-area,
+.game-watch-only .companies
+{
+    flex: 1 90%;
+}
+.game-watch-only div#opponent_table .company,
+.game-watch-only .staging-area-opponent.rot180
+{
+    transform:rotate(0deg);
+}
+
+.game-watch-only .companies.hidden {
+    display: block !important;
+    background: rgba(0,0,0,0.1);
+}
+
+.game-watch-only .companies:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.game-watch-only .chatbox-wrapper
+{
+    bottom: 5px;
+    top: auto;
+}
+
+
+.game-watch-only .company-host,
+.game-watch-only .company
+{
+    height: auto !important;
+}
