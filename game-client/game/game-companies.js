@@ -587,7 +587,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                     ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
                 
                 if (bIsPlayer)
-                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, start: true, code: code }} ));
+                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: true, code: code }} ));
             }
 
             if (target !== "")
@@ -603,7 +603,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 if (!bIsPlayer)
                     document.body.dispatchEvent(new CustomEvent('meccg-context-site-arrive', { detail: { id: "company_" + company, company: company, code: code }} ));
                 else
-                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, start: false, code: code }} ));
+                    document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: false, code: code }} ));
                 
                 if (target_tapped)
                     ArrayList(pContainerTarget).find(".card").each((e) => e.classList.add("state_tapped"));
