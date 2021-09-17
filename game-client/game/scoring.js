@@ -421,12 +421,31 @@ function createScoringApp(_CardList)
                     SCORING.addPlayer(_playerId, jMap[_playerId]);
             }
         },
+
+        isAvailable : function(sPlayerId, jTable)
+        {
+            if (jTable === null || sPlayerId === null || sPlayerId === "")
+                return false;
+
+            let tRow = jTable.querySelector("thead tr");
+            if (tRow === null)
+                return false;
+            else
+                return tRow.querySelector('th[data-player="'+sPlayerId+'"]') !== null;
+        },
         
         addPlayer : function(sPlayerId, sName)
         {
             let jTable = document.getElementById("scoring-sheet").querySelector("table");
+
+            if (SCORING.isAvailable(sPlayerId, jTable))
+            {
+                console.log("already there");
+                return;
+            }
             
             let th = document.createElement("th");
+            th.setAttribute("data-player", sPlayerId);
             th.innerHTML = sName;
             jTable.querySelector("thead tr").appendChild(th);
 
