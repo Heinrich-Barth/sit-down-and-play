@@ -92,6 +92,11 @@ const ContextMenu = {
             return;
         
         elem.setAttribute("data-context-code", code);
+        
+        const companyId = e.detail.company;
+        if (companyId !== undefined && companyId !== "")
+            elem.setAttribute("data-contextmenu-site-arrive-company", companyId);
+
         elem.oncontextmenu = ContextMenu.contextActions.onContextSite;
         elem.ondblclick = ContextMenu.contextActions.onDoubleClickSite;
         elem.classList.add("context-cursor");
@@ -186,8 +191,12 @@ const ContextMenu = {
                 return false;
             
             let sCode = e.target.getAttribute("data-context-code");
+            let sCompany = e.target.getAttribute("data-contextmenu-site-arrive-company");
+            if (sCompany === null)
+                sCompany = "";
+
             if (typeof sCode !== "undefined" && sCode !== null && sCode !== "")
-                ContextMenu.show(e, "_site", sCode, "", "location");
+                ContextMenu.show(e, "_site", sCode, sCompany, "location");
             
             return false;
         },
@@ -329,7 +338,6 @@ const ContextMenu = {
 
         arrive : function(pMenu)
         {
-            
             const companyId = ContextMenu.getAttribute(pMenu, "data-company");
             if (companyId !== "")
                 MeccgApi.send("/game/company/arrive", {company : companyId });
@@ -380,7 +388,7 @@ const ContextMenu = {
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive);
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard"];
-        this.data.types["location"] = ["ready", "tap"];
+        this.data.types["location"] = ["ready", "tap", "arrive"];
         this.data.types["arrive"] = ["arrive"];
 
         this.data.specialClasses["card"] = "";
