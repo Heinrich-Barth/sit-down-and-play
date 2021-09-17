@@ -14,6 +14,8 @@ CreateCardsMeta.prototype._listType = [ ];
 CreateCardsMeta.prototype._listHazardTypes = [ ];
 CreateCardsMeta.prototype._listNonHazardTypes = [ ];
 CreateCardsMeta.prototype._titleBasedIndices = { };
+CreateCardsMeta.prototype._listSets = [ ];
+
    
 Quantities.prototype.add = function(sTitle, nQuantity)
 {
@@ -43,6 +45,20 @@ CreateCardsMeta.prototype.createCardCodeList = function (cards)
     for (var card of cards)
         this._titleBasedIndices[card.code] = card.index;
 };
+
+CreateCardsMeta.prototype.updateSets = function (cards) 
+{
+    let _data = { };
+    for (var card of cards)
+    {
+        if (card.set_code !== "")
+        _data[card.set_code] = true;
+    }
+    
+    this._listSets = Object.keys(_data);
+    this._listSets.sort();
+};
+
 
 CreateCardsMeta.prototype.updateSecondaries = function (cards) 
 {
@@ -147,6 +163,7 @@ CreateCardsMeta.prototype.saveMeta = function ()
     meta["hazards"] = this._listHazardTypes;
     meta["resources"] = this._listNonHazardTypes;
     meta["code-indices"] = this._titleBasedIndices;
+    meta["sets"] = this._listSets;
 
     return meta;
 };
@@ -154,6 +171,7 @@ CreateCardsMeta.prototype.saveMeta = function ()
 CreateCardsMeta.prototype.init = function (cards) 
 {
     this.addIndices(cards);
+    this.updateSets(cards);
     this.updateSecondaries(cards);
     this.updateAlign(cards);
     this.updateTypes(cards);

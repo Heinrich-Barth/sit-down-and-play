@@ -30,7 +30,7 @@ const SearchBar = {
             set : document.getElementById("view_card_set").value
         };
         
-        if (data.type !== "" || data.align !== "" || data.title !== "" || data.text !== "" || data.category !== "")
+        if (data.type !== "" || data.align !== "" || data.title !== "" || data.text !== "" || data.category !== "" || data.set !== "")
             document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-search", { "detail": data }));
     },
 

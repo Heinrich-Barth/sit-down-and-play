@@ -7,6 +7,7 @@ const ViewCards =
         vsAlign : [],
         vsType : [],
         vsCategory : [],
+        vsSets : [],
         vnIndicesCharacters : {},
         vsDeckContainerIds : [],
         vsTypesAvatarChars : [],
@@ -136,6 +137,7 @@ const ViewCards =
         ViewCards.config.vsTypesHazard = [];
         ViewCards.config.vsTypesResource = [];
         ViewCards.config.vsCodeIndices = json["code-indices"];
+        ViewCards.config.vsSets = json["sets"];
         
         for (var _type in json["secondaries"])
         {
@@ -309,7 +311,8 @@ const ViewCards =
         const data = {
             type: ViewCards.config.vsType,
             align: ViewCards.config.vsAlign,
-            category: ViewCards.config.vsCategory
+            category: ViewCards.config.vsCategory,
+            sets : ViewCards.config.vsSets
         };
 
         document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-searchbar", { "detail": data }));
