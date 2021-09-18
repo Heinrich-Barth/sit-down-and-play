@@ -6,21 +6,29 @@ class ChatBox {
         
     }
 
+    static getTimeString(lTime)
+    {
+        return lTime < 10 ? "0" + lTime : "" + lTime;
+    }
+
+    static getTimer()
+    {
+        const pDate = new Date();
+        const sHo = ChatBox.getTimeString(pDate.getHours());
+        const sMi = ChatBox.getTimeString(pDate.getMinutes());
+        const sSe = ChatBox.getTimeString(pDate.getSeconds());
+        return "<span>(" + sHo + ":" + sMi + ":" + sSe + ")</span>";
+    }
+
     create()
     {
         if (document.getElementById("chatbox") !== null)
             return;
 
         const div = document.createElement("div");
-        div.setAttribute("class", "chatbox-wrapper");
+        div.setAttribute("class", "chatbox blue-box");
         div.setAttribute("id", "chatbox");
-        div.innerHTML = `<div class="chatbox">
-                <div class="chatmessages blue-box"></div>
-                <input type="text" class="chattext" maxlength="200" placeholder="Type message (max 200 chars)">
-            </div>`;
-
         document.body.appendChild(div);
-        document.getElementById("chatbox").querySelector(".chattext").onkeyup = ChatBox.OnKeyPress;
     }
 
     ensureLength(sText, nLen) 
@@ -37,32 +45,25 @@ class ChatBox {
             return;
 
         const text = document.createElement("div");
-        text.innerHTML = "<b>" + sFrom + ":</b> " + this.ensureLength(sText, 200);
-        let objDiv = document.getElementById("chatbox").querySelector(".chatmessages");
-
+        text.innerHTML = "<b>" + ChatBox.getTimer() + sFrom + ":</b> " + this.ensureLength(sText, 200);
+        let objDiv = document.getElementById("chatbox");
         objDiv.appendChild(text);
 
+        this.reduceMessages(objDiv);
         objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    reduceMessages(div)
+    {
+        const maxLen = 15;
+        const list = div.querySelectorAll("div");
+        if (list !== null && list.length > maxLen && div.firstChild)
+            div.removeChild(div.firstChild);
     }
 
     isValidInput(sText) 
     {
         return sText.indexOf("<") === -1 && sText.indexOf(">") === -1;
-    }
-
-    static OnKeyPress(e) 
-    {
-        if (e.which === 13) 
-        {
-            const jThis = document.getElementById("chatbox").querySelector(".chattext");
-            const sText = jThis.value.trim().replace("<", "").replace(">", "");
-            jThis.value = "";
-
-            if (sText !== "")
-                MeccgApi.send("/game/chat/message", sText);
-
-            return false;
-        }
     }
 
     static ToggleView(e) 

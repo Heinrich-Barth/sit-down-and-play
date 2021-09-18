@@ -8,7 +8,7 @@
 
 .arda-card-hands {
     position: fixed;
-    right: 10px;
+    right: 5px;
     z-index: 400;
     padding: 5px;
     max-width: 400px;
@@ -18,8 +18,8 @@
     max-height: 200px;
 }
 
-div#arda_characters_hand { top: 100px; }
-div#arda_minors_hand { top: 220px; }
+div#arda_characters_hand { top: 75px; }
+div#arda_minors_hand { top: 195px; }
 div#arda_mps_hand { bottom: 10px; }
 
 .arda-card-hands-sizer {

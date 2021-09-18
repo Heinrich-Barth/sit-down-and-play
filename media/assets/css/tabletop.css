@@ -628,55 +628,23 @@ body.on-drag-event-generic .area .on-drag-over {
 .company-character-reosurces .card,
 .company-character-host { position: relative; }
 
-.chatbox-wrapper {
+.chatbox {
     position: fixed;
     right: 5px;
     top: 5px;
-}
-.chatbox-wrapper.chat-icon {     z-index: 200;
-    left: 5px;
-    width: 20px;
-    height: 20px;
-    padding: 5px;
-    top: 40px;}
-.chatbox .chattext { 
-    width: 286px !important;
-    font-size: 0.6em;
-    line-height: 1.35em;
-    color: #39454b;
+    width: 294px;
+    height: 53px;
+    font-size: 0.65em;
+    color: #fff;
     display: block;
     padding: 0.65em 0.75em;
-    border: solid 2px #e5e6e7;
-    border-radius: 0.5em;
     outline: none;
-}
-.chatbox .chatmessages {
-    display: block;
-    width: 291px !important;
-    height: 53px;
     overflow-y: auto;
-    border: 0;
-    line-break: normal; 
-    color: white;
-    font-size: 12px;
-    padding: 5px;
 }
+.chatbox div { line-break: normal;  }
 
-.chat-icon .icons {
-    width: 20px;
-    padding: 0;
-}
-.chat-icon .chat
-{ 
-    background: url("/media/assets/images/icons/icon-chat.png") 0 0 no-repeat; 
-} 
-.chat-icon .chat.act,
-.chat-icon .chat:hover
-{ 
-    background: url("/media/assets/images/icons/icon-chat-hover.png") 0 0 no-repeat; 
-} 
-
-.chatbox .chatmessages b { color: #ffa500; }
+.chatbox span { font-size: 0.8em; padding-right: 3px;}
+.chatbox b { color: #ffa500; }
 
 .company-character-reosurces {  margin-top: -60px; min-height: 84px; }
 .company-character-reosurces .card { margin-top: -60px; z-index: 101; max-height: 80px; }
