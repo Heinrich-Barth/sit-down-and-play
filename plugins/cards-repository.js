@@ -142,7 +142,12 @@ const CARDS = {
     {
         const sPattern = "in lieu of";
         for (var card of this._raw) 
+        {
             card.isStartable = card.text.indexOf(sPattern) !== -1;
+            if (!card.isStartable && card.code === "Heirlooms of Eärendil (ML)")
+                card.isStartable = true;
+        }
+            
     },
 
     removeUnusedFields : function()
