@@ -76,10 +76,20 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             document.getElementById("game_time").innerHTML = sVal + lMins;
         },
 
+        alreadyInHand: function(uuid)
+        {
+            const cont = document.getElementById("playercard_hand_container")
+            const id = "card_icon_nr_" + uuid;
+            return cont !== null && cont.querySelector("#" + id) !== null;
+        },
+
         onDrawCard : function(cardCode, uuid, type)
         {
             if (uuid === "" || type === "")
                 return false;
+            
+            if (GameBuilder.alreadyInHand(uuid))
+                return;
             
             var _code = CardList.getSafeCode(cardCode);
             var _img = CardList.getImage(cardCode);

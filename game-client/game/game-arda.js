@@ -383,6 +383,9 @@ let Arda = {
         var _code = g_Game.CardList.getSafeCode(cardCode);
         var _img = g_Game.CardList.getImage(cardCode);
 
+        if (container.querySelector("#arda-hand-card-" + uuid) !== null)
+            return;
+
         container.appendChild(Arda.createHtmlElement(_code, _img, uuid, type));
         g_Game.CardPreview.addHover("arda-hand-card-" + uuid, false, true);   
     },
