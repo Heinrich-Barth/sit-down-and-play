@@ -154,7 +154,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             pImage.setAttribute("data-owner", "");
         else
         {
-            let bIsMyCard = card.owner === MeccgApi.getMyId() ? "" : "other";
+            let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : "other";
             pImage.setAttribute("data-owner", bIsMyCard);
         }
             
@@ -214,28 +214,27 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         return document.getElementById(id);
     }
 
-    const _playerSelector = new PlayerSelector();
 
     var INSTANCE = {
 
         updateLastSeen : function(username, isOnline)
         {
-            _playerSelector.updateLastSeen(username, isOnline)
+            g_pPlayerSelector.updateLastSeen(username, isOnline)
         },
 
         removePlayerIndicator : function(username)
         {
-            _playerSelector.removePlayerIndicator(username)
+            g_pPlayerSelector.removePlayerIndicator(username)
         },
         
         updateHandSize : function(username, nCount, nCountPlaydeck)
         {
-            _playerSelector.updateHandSize(username, nCount, nCountPlaydeck);
+            g_pPlayerSelector.updateHandSize(username, nCount, nCountPlaydeck);
         },
         
         clearLastSeen : function()
         {
-            _playerSelector.clearLastSeen();
+            g_pPlayerSelector.clearLastSeen();
         },
 
         character: {
@@ -338,7 +337,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         player2Hex: function (sInput)
         {
-            return _playerSelector.player2Hex(sInput);
+            return g_pPlayerSelector.player2Hex(sInput);
         },
         
         /**
@@ -413,7 +412,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                     return null;
             }
 
-            const container = getTargetContainer(MeccgApi.isMe(playerId), this.player2Hex(playerId));
+            const container = getTargetContainer(MeccgPlayers.isChallenger(playerId), this.player2Hex(playerId));
             ArrayList(container).findByClassName("company").each(function (company)
             {
                 ArrayList(company).findByClassName("site-container").each(function (sitecontainer)
@@ -457,7 +456,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             var elemContainer = null;
 
             /** check if this company is my own (i.e. non-opponent) */
-            bIsMe = MeccgApi.isMe(jsonCompany.playerId);
+            bIsMe = MeccgPlayers.isChallenger(jsonCompany.playerId);
             
             let pElemContainer = document.getElementById("company_" + id);
             const existsAlready =  pElemContainer !== null;
@@ -827,16 +826,6 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         {
             this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]')).classList.add("state_rot270");
         },
-                 
-        /**
-         * Add players to the player indicator box 
-         * @param {list} vsPlayersIds
-         * @return {void}
-         */
-        addPlayers: function (sMyId, jMap)
-        {
-            _playerSelector.addPlayers(sMyId, jMap);
-        },
         
         /**
          * Set the current player (player turn!)
@@ -846,7 +835,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
          */
         setCurrentPlayer : function(sPlayerId, bIsMe)
         {
-            _playerSelector.setCurrentPlayer(sPlayerId, bIsMe);
+            g_pPlayerSelector.setCurrentPlayer(sPlayerId, bIsMe);
         },
 
         onMenuActionGlow: function (uuid)

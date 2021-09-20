@@ -77,7 +77,7 @@ class ChatBox {
 
     static OnChatMessageReceived(bIsMe, jData) 
     {
-        new ChatBox().message(MeccgApi.getUserName(jData.userid), jData.message);
+        new ChatBox().message(MeccgPlayers.getPlayerDisplayName(jData.userid), jData.message);
     }
 }
 

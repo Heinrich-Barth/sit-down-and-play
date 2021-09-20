@@ -538,25 +538,9 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             MeccgApi.send("/game/player/time", {});
         },
         
-        onDisconnected : () => CompanyManager.updateLastSeen(MeccgApi.getMyId(), false),
-        onConnected : () => CompanyManager.updateLastSeen(MeccgApi.getMyId(), true),
+        onDisconnected : () => CompanyManager.updateLastSeen(MeccgPlayers.getChallengerId(), false),
+        onConnected : () => CompanyManager.updateLastSeen(MeccgPlayers.getChallengerId(), true),
         onError : (error) => console.error('There has been a problem with your fetch operation:', error)
-    };
-
-    MeccgApi.onPlayerListReceived = function(sMyId, jNameMap)
-    {
-        CompanyManager.addPlayers(sMyId, jNameMap);
-        Scoring.addPlayers(sMyId, jNameMap);
-        
-        document.body.dispatchEvent(new CustomEvent("meccg-dice-players", { "detail": jNameMap }));
-    };
-
-    MeccgApi.onAddPlayer = function(sMyId, jNameMap)
-    {
-        CompanyManager.addPlayers(sMyId, jNameMap);
-        Scoring.addPlayers(sMyId, jNameMap);
-        
-        document.body.dispatchEvent(new CustomEvent("meccg-dice-players", { "detail": jNameMap }));
     };
 
     MeccgApi.setOnReconnectAttempt(GameBuilder.onDisconnected);

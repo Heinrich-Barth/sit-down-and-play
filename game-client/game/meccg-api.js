@@ -1,51 +1,99 @@
 
+const MeccgPlayers = {
 
+    myId: g_sUserId,
+
+    room : "",
+    _interval : null,
+    usermap : null,
+
+    isChallenger : function(sid)
+    {
+        return this.myId === sid;
+    },
+
+    getChallengerId : function()
+    {
+        return this.myId;
+    },
+
+    /**
+     * Set the user map
+     * 
+     * @param {Boolean} bIsMe 
+     * @param {Map} jMap 
+     */
+    setPlayerNames : function(bIsMe, jMap)
+    {
+        if (MeccgPlayers.usermap === null)
+        {
+            MeccgPlayers.usermap = jMap;
+            MeccgPlayers.onPlayerListReceived();
+        }
+    },
+
+    getPlayerDisplayName : function(sId)
+    {
+        if (sId === null || typeof sId === "undefined" || sId === "" || typeof MeccgPlayers.usermap[sId] === "undefined")
+            return "(unknown)";
+        else if (sId === "Game")
+            return "Game";
+        else
+            return MeccgPlayers.usermap[sId];
+    },
+
+    /**
+     * Add a player once the game has already started
+     * 
+     * @param {JSON} jData 
+     * @returns 
+     */
+    addPlayer : function(bIsMe, jData)
+    {
+        if (MeccgPlayers.usermap !== null && MeccgPlayers.usermap[jData.userid] === undefined)
+        {            
+            MeccgPlayers.usermap[jData.userid] = jData.name;
+            MeccgPlayers.onPlayerListReceived();
+        }
+    },
+ 
+    onPlayerListReceived : function()
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-players-updated", { "detail": {
+            challengerId : MeccgPlayers.getChallengerId(),
+            map : MeccgPlayers.usermap
+        }}));
+    },
+
+    onDocumentReady : function()
+    {
+        MeccgApi.addListener("/game/set-player-names", this.setPlayerNames);
+        MeccgApi.addListener("/game/player/add", this.addPlayer);
+    }
+};
 
 const MeccgApi =
 {
     _routes: {},
     _socket: null,
     _ignoreDisconnection : false,
-    myId: "",
     room : "",
-    myDisplayName : "",
     _interval : null,
     usermap : null,
     
     isMe : function(sid)
     {
-        return this.myId === sid;
+        return MeccgPlayers.isChallenger(sid);
     },
     
     isConnected : function()
     {
         return this.connected;
     },
-
     
-    getApiKey : function()
-    {
-        return g_sApiKey;
-    },
-
     getTimeJoined : function()
     {
         return g_lTimeJoined;
-    },
-
-    getRoom : function()
-    {
-        return g_sRoom;
-    },
-
-    getUserId : function()
-    {
-        return g_sUserId;
-    },
-    
-    getDisplayName : function()
-    {
-        return g_sDisplayName;
     },
 
     send: function (path, message, bAwait)
@@ -82,11 +130,7 @@ const MeccgApi =
     
     disconnect : function()
     {       
-        setTimeout(function()
-        {
-            MeccgApi._socket.emit("/game/quit", {});
-        }, 1000);
-        
+        setTimeout(() => MeccgApi._socket.emit("/game/quit", {}), 1000);
         setTimeout(MeccgApi.onQuitGame, 5000);
     },
     
@@ -98,18 +142,20 @@ const MeccgApi =
     {
         MeccgApi._paths[path] = callbackFunction;           
     },
-    
-    getMyId : function()
+
+    initSocketPaths : function()
     {
-        return MeccgApi.myId;
+        for (let path in MeccgApi._paths)
+            MeccgApi.initSocketPath(path);
     },
+
     
     initSocketPath : function(path)
     {
         this._socket.on(path, (data) =>
         {
-            let bIsMe = typeof data.target === "undefined" ? false : MeccgApi.myId === data.target;
-            let payload = typeof data.target === "undefined" ? {} : data.payload;
+            const bIsMe = typeof data.target !== "undefined" && MeccgPlayers.isChallenger(data.target)
+            const payload = typeof data.target === "undefined" ? {} : data.payload;
 
             try
             {
@@ -117,16 +163,13 @@ const MeccgApi =
             }
             catch(e)
             {
+                console.log(path);
+                console.log(typeof MeccgApi._paths[path]);
                 MeccgUtils.logError(e);
             }
         });
     },
     
-    getUrl : function()
-    {
-        return window.location.host;
-    },
-
     getOneTimeAccessToken : function()
     {
         let lToken = parseInt(document.getElementById("interface").getAttribute("data-time"));
@@ -161,38 +204,29 @@ const MeccgApi =
             MeccgApi._callbackReconnect();
     },
 
+    onAuthenticationSuccess : function()
+    {
+        const sUser = g_sDisplayName;
+        const sUserUUID = g_sUserId;
+        const sRoom = g_sRoom;
+
+        MeccgApi.initSocketPaths();
+        MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
+    },
+
     onDocumentReady : function()
     {
-        this.addListener("/game/set-player-names", this.setUserNames);
-        this.addListener("/game/player/add", this.addPlayer);
-
-        var sUrl = MeccgApi.getUrl();
-        var sUser = MeccgApi.getDisplayName();
-        var sUserUUID = MeccgApi.getUserId();
-        var sToken = MeccgApi.getApiKey();
-        var sRoom = MeccgApi.getRoom();
-        var lJoined = MeccgApi.getTimeJoined();
-        
-        MeccgApi.room = sRoom;
-        
-        if (sUserUUID === "" || sToken === "")
+        const lJoined = MeccgApi.getTimeJoined();
+               
+        if (g_sUserId === "" || g_sApiKey === "")
         {
             MeccgUtils.logError("neither user nor token available");
             return;
         }
+      
+        this._socket = io(window.location.host);
 
-        this.myId = sUserUUID;
-        this.myDisplayName = sUser;
-        
-        this._socket = io(sUrl);
-
-        this._socket.on('/authenticate/success', () => 
-        {
-            for (var key in MeccgApi._paths)
-                MeccgApi.initSocketPath(key);
-
-            MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
-        });
+        this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess);
 
         this._socket.on('disconnect', () => 
         {
@@ -214,68 +248,14 @@ const MeccgApi =
         
         /** so do the login */
         this._socket.emit("/authenticate", { 
-            token: sToken, 
-            room: sRoom,
+            token: g_sApiKey, 
+            room: g_sRoom,
             joined : lJoined,
-            userId : sUserUUID,
-            dispayName : sUser,
+            userId : g_sUserId,
+            dispayName : g_sDisplayName,
             player_access_token_once : MeccgApi.getOneTimeAccessToken()
         });
-    },
-
-    getUserName : function(sId)
-    {
-        if (typeof sId === "undefined" || sId === "" || typeof MeccgApi.usermap[sId] === "undefined")
-            return "(unknown)";
-        else if (sId === "Game")
-            return "Game";
-        else
-            return MeccgApi.usermap[sId];
-    },
-
-    getPlayerNameById : function(sId)
-    {
-        if (sId === "" || MeccgApi.usermap === null || typeof MeccgApi.usermap[sId] === "undefined")
-            return "";
-        else
-            return MeccgApi.usermap[sId];
-    },
-
-    /** Callback to handle player list event */
-    onPlayerListReceived : function()
-    {
-        
-    },
-
-    /**
-     * Set the user map
-     * 
-     * @param {Boolean} bIsMe 
-     * @param {Map} jMap 
-     */
-    setUserNames : function(bIsMe, jMap)
-    {
-        if (MeccgApi.usermap === null)
-        {
-            MeccgApi.usermap = jMap;
-            MeccgApi.onPlayerListReceived(MeccgApi.myId, jMap);
-        }
-    },
-
-    /**
-     * Add a player once the game has already started
-     * 
-     * @param {JSON} jData 
-     * @returns 
-     */
-    addPlayer : function(bIsMe, jData)
-    {
-        if (MeccgApi.usermap !== null && MeccgApi.usermap[jData.userid] === undefined)
-        {            
-            MeccgApi.usermap[jData.userid] = jData.name;
-            MeccgApi.onPlayerListReceived(MeccgApi.myId, MeccgApi.usermap);
-        }
-    },
+    },    
     
     queryEndGame : function()
     {
@@ -295,4 +275,7 @@ const MeccgApi =
 };
 
 document.body.addEventListener("meccg-query-end-game", MeccgApi.queryEndGame, false);
-document.body.addEventListener("meccg-api-init", () => MeccgApi.onDocumentReady(), false);
+document.body.addEventListener("meccg-api-init", () => {
+    MeccgPlayers.onDocumentReady();
+    MeccgApi.onDocumentReady();
+}, false);

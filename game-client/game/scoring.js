@@ -201,269 +201,273 @@ class ScoringContainers {
     }
 }
 
+const SCORING = {
+        
+    stats : { },
+
+    cardList : null,
+    
+    _resetStats : function()
+    {
+        for (let k in SCORING.stats)
+        {
+            if (SCORING.stats.hasOwnProperty(k))
+                SCORING.stats[k] = 0;
+        }
+    },
+
+    _createStatsMap : function(categories)
+    {
+        categories.forEach((entry) => SCORING.stats[entry.value] = 0);
+    },
+
+    _init : function(categories, min, max)
+    {
+        new ScoringContainers(categories, min, max).create();
+        this._createStatsMap(categories);
+
+        if (document.getElementById("scoring-card") !== null)
+        {
+            const elem = document.getElementById("scoring-card");
+            elem.querySelector(".menu-overlay").onclick = SCORING.hideScoringCard;
+            elem.querySelector(".button").onclick = SCORING.onStoreCard;
+        }
+
+        if (document.getElementById("scoring-sheet") !== null)
+        {
+            const elem = document.getElementById("scoring-sheet");
+            elem.querySelector(".menu-overlay").onclick = SCORING.hideScoringSheet;
+            elem.querySelector(".buttonUpdate").onclick = SCORING.onStoreSheet;
+            elem.querySelector(".buttonCancel").onclick = SCORING.hideScoringSheet;
+            
+            ArrayList(elem).find("table tbody tr a").each((_elem) => _elem.onclick = SCORING.onChangeScoreValue);
+        }
+    },
+    
+    hideScoringCard : function()
+    {
+        document.getElementById("scoring-card").classList.add("hidden");
+        ArrayList(document.getElementById("view-score-sheet-card-list")).findByClassName(".container-data").each(DomUtils.empty);
+        ArrayList(document.getElementById("scoring-card")).findByClassName(".score-type").each((_elem) => _elem.classList.remove("req"));
+        ArrayList(document.getElementById("scoring-card")).findByClassName(".score-points").each((_elem) => _elem.classList.remove("req"));
+    },
+    
+    hideScoringSheet : function()
+    {
+        const sheet = document.getElementById("scoring-sheet");
+        if (!sheet.classList.contains("final-score"))
+        {
+            sheet.classList.add("hidden");
+            ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
+        }
+    },
+    
+    displayCard : function(sCode)
+    {
+        const elem = document.getElementById("scoring-card").querySelector("img");
+        const sSrc = elem.getAttribute("data-image-path") + SCORING.getImage(sCode);
+        elem.setAttribute("src", sSrc);
+    },
+    
+    onStoreCard : function()
+    {
+        let sType = SCORING.getCurrentSelectValue("score_type");
+        let nPoints = parseInt(SCORING.getCurrentSelectValue("score_points"));
+        
+        SCORING.hideScoringCard();
+        MeccgApi.send("/game/score/add", { type: sType, points: nPoints });
+    },
+    
+    getCurrentSelectValue : function(sName)
+    {
+        let val = "";
+
+        ArrayList(document.getElementById("scoring-card")).find('input[name="' + sName + '"]').each((_el) => {
+
+            if (_el.checked)
+                val = _el.value;
+        })
+        
+        return val === null ? "" : val;
+    },
+    
+    scoreCard : function(sCardCode)
+    {
+        if (sCardCode === "" || typeof sCardCode === "undefined")
+            return;
+        
+        this.displayCard(sCardCode);
+        this._clickDefault("score-type-choose");
+        this._clickDefault("score-points-choose");
+        
+        document.getElementById("scoring-card").classList.remove("hidden");
+    },
+
+    _clickDefault : function(id)
+    {
+        let elem = document.getElementById(id);
+        if (elem === null)
+            return;
+
+        const sId1 = elem.getAttribute("default-id");
+        if (sId1 !== null && sId1 !== "")
+            document.getElementById(sId1).dispatchEvent(new Event("click"));
+    },
+    
+    _showScoreSheet : function(jData, bAllowUpdate)
+    {
+        if (typeof jData === "undefined")
+            return;
+            
+        let jTable = document.getElementById("scoring-sheet").querySelector("tbody");
+        let _elem;
+        let player;
+        let points, total;
+
+        for (var key in jData)
+        {
+            total = 0;
+            player = MeccgPlayers.isChallenger(key) ? "self" : key;
+            for (var type in jData[key])
+            {
+                points = jData[key][type];
+                _elem = jTable.querySelector('tr[data-score-type="'  + type + '"] td[data-player="'+player+'"]');
+                if (player === "self")
+                    _elem = _elem.querySelector("span");
+                
+                _elem.innerHTML = points;
+                
+                if (type !== "stage")
+                    total += points;
+            }
+            document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerHTML = total;
+        }
+
+        if (!bAllowUpdate)
+        {
+            document.getElementById("scoring-sheet").classList.add("final-score");
+            DomUtils.remove(document.getElementById("view-score-sheet-card-list"));
+
+            const overlay = document.getElementById("scoring-sheet").querySelector(".menu-overlay");
+            overlay.classList.remove("hidden");
+            overlay.onclick = () => { return false; };
+        }
+        
+        document.getElementById("scoring-sheet").classList.remove("hidden");
+    },
+    
+    showScoreSheetCards : function(listCards)
+    {
+        if (typeof listCards !== "undefined" && listCards.length > 0)
+            document.body.dispatchEvent(new CustomEvent("meccg-show-victory-sheet", { "detail": listCards }));
+    },
+
+    showScoreSheet : function(jData)
+    {
+        this._showScoreSheet(jData, true);
+    },
+    
+    showFinalScore : function(jData)
+    {
+        this._showScoreSheet(jData, false);
+    },
+    
+    _updateStats : function(type, points)
+    {
+        if (typeof points !== "undefined" && SCORING.stats[type] !== undefined)
+            SCORING.stats[type] = points;
+    },
+    
+    onStoreSheet : function()
+    {
+        SCORING._resetStats();
+        
+        const sheet = document.getElementById("scoring-sheet");
+        ArrayList(sheet).find('td[data-player="self"]').each((elem) =>
+        {
+            const nScore = parseInt(elem.querySelector("span").innerHTML);
+            const type = elem.parentNode.getAttribute("data-score-type");
+            SCORING._updateStats(type, nScore);
+        });
+        
+        SCORING.hideScoringSheet();
+        MeccgApi.send("/game/score/update", SCORING.stats);
+    },
+    
+    onChangeScoreValue : function(e)
+    {
+        let bAdd = this.getAttribute("data-score-action") === "increase";
+        let jSpan = this.parentNode.querySelector("span"); 
+        let nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
+        jSpan.innerHTML = nCount;
+        
+        jSpan = document.getElementById("scoring-sheet").querySelector("th.score-total");
+        nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
+        jSpan.innerHTML = nCount;
+
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    },
+    
+    addPlayers : function(sMyId, jMap)
+    {
+        for (var _playerId in jMap)
+        {
+            if (sMyId !== _playerId)
+                SCORING.addPlayer(_playerId, jMap[_playerId]);
+        }
+    },
+
+    isAvailable : function(sPlayerId, jTable)
+    {
+        if (jTable === null || sPlayerId === null || sPlayerId === "")
+            return false;
+
+        let tRow = jTable.querySelector("thead tr");
+        if (tRow === null)
+            return false;
+        else
+            return tRow.querySelector('th[data-player="'+sPlayerId+'"]') !== null;
+    },
+    
+    addPlayer : function(sPlayerId, sName)
+    {
+        let jTable = document.getElementById("scoring-sheet").querySelector("table");
+
+        if (SCORING.isAvailable(sPlayerId, jTable))
+        {
+            console.log("already there");
+            return;
+        }
+        
+        let th = document.createElement("th");
+        th.setAttribute("data-player", sPlayerId);
+        th.innerHTML = sName;
+        jTable.querySelector("thead tr").appendChild(th);
+
+        ArrayList(jTable.querySelector("tbody")).find("tr").each(function(_tr)
+        {
+            const elem = document.createElement("td");
+            elem.setAttribute("data-player", sPlayerId);
+            elem.innerHTML = "0";
+            _tr.appendChild(elem)
+        });
+
+        th = document.createElement("th");
+        th.setAttribute("data-player", sPlayerId);
+        th.innerHTML = "0";
+        jTable.querySelector("tfoot").querySelector("tr.score-total").appendChild(th);
+    },
+};
+
+document.body.addEventListener("meccg-players-updated", (e) => SCORING.addPlayers(e.detail.challengerId, e.detail.map), false);
+
 
 function createScoringApp(_CardList)
 {
-    const CardList = _CardList;
+    SCORING.cardList = _CardList;
        
-    const SCORING = {
-        
-        stats : { },
-        
-        _resetStats : function()
-        {
-            for (let k in SCORING.stats)
-            {
-                if (SCORING.stats.hasOwnProperty(k))
-                    SCORING.stats[k] = 0;
-            }
-        },
-
-        _createStatsMap : function(categories)
-        {
-            categories.forEach((entry) => SCORING.stats[entry.value] = 0);
-        },
-
-        _init : function(categories, min, max)
-        {
-            new ScoringContainers(categories, min, max).create();
-            this._createStatsMap(categories);
-
-            if (document.getElementById("scoring-card") !== null)
-            {
-                const elem = document.getElementById("scoring-card");
-                elem.querySelector(".menu-overlay").onclick = SCORING.hideScoringCard;
-                elem.querySelector(".button").onclick = SCORING.onStoreCard;
-            }
-
-            if (document.getElementById("scoring-sheet") !== null)
-            {
-                const elem = document.getElementById("scoring-sheet");
-                elem.querySelector(".menu-overlay").onclick = SCORING.hideScoringSheet;
-                elem.querySelector(".buttonUpdate").onclick = SCORING.onStoreSheet;
-                elem.querySelector(".buttonCancel").onclick = SCORING.hideScoringSheet;
-                
-                ArrayList(elem).find("table tbody tr a").each((_elem) => _elem.onclick = SCORING.onChangeScoreValue);
-            }
-        },
-        
-        hideScoringCard : function()
-        {
-            document.getElementById("scoring-card").classList.add("hidden");
-            ArrayList(document.getElementById("view-score-sheet-card-list")).findByClassName(".container-data").each(DomUtils.empty);
-            ArrayList(document.getElementById("scoring-card")).findByClassName(".score-type").each((_elem) => _elem.classList.remove("req"));
-            ArrayList(document.getElementById("scoring-card")).findByClassName(".score-points").each((_elem) => _elem.classList.remove("req"));
-        },
-        
-        hideScoringSheet : function()
-        {
-            const sheet = document.getElementById("scoring-sheet");
-            if (!sheet.classList.contains("final-score"))
-            {
-                sheet.classList.add("hidden");
-                ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
-            }
-        },
-        
-        displayCard : function(sCode)
-        {
-            const elem = document.getElementById("scoring-card").querySelector("img");
-            const sSrc = elem.getAttribute("data-image-path") + CardList.getImage(sCode);
-            elem.setAttribute("src", sSrc);
-        },
-        
-        onStoreCard : function()
-        {
-            let sType = SCORING.getCurrentSelectValue("score_type");
-            let nPoints = parseInt(SCORING.getCurrentSelectValue("score_points"));
-            
-            SCORING.hideScoringCard();
-            MeccgApi.send("/game/score/add", { type: sType, points: nPoints });
-        },
-        
-        getCurrentSelectValue : function(sName)
-        {
-            let val = "";
-
-            ArrayList(document.getElementById("scoring-card")).find('input[name="' + sName + '"]').each((_el) => {
-
-                if (_el.checked)
-                    val = _el.value;
-            })
-            
-            return val === null ? "" : val;
-        },
-        
-        scoreCard : function(sCardCode)
-        {
-            if (sCardCode === "" || typeof sCardCode === "undefined")
-                return;
-            
-            this.displayCard(sCardCode);
-            this._clickDefault("score-type-choose");
-            this._clickDefault("score-points-choose");
-            
-            document.getElementById("scoring-card").classList.remove("hidden");
-        },
-
-        _clickDefault : function(id)
-        {
-            let elem = document.getElementById(id);
-            if (elem === null)
-                return;
-
-            const sId1 = elem.getAttribute("default-id");
-            if (sId1 !== null && sId1 !== "")
-                document.getElementById(sId1).dispatchEvent(new Event("click"));
-        },
-        
-        _showScoreSheet : function(jData, bAllowUpdate)
-        {
-            if (typeof jData === "undefined")
-                return;
-                
-            let jTable = document.getElementById("scoring-sheet").querySelector("tbody");
-            let _elem;
-            let player;
-            let points, total;
-
-            for (var key in jData)
-            {
-                total = 0;
-                player = MeccgApi.isMe(key) ? "self" : key;
-                for (var type in jData[key])
-                {
-                    points = jData[key][type];
-                    _elem = jTable.querySelector('tr[data-score-type="'  + type + '"] td[data-player="'+player+'"]');
-                    if (player === "self")
-                        _elem = _elem.querySelector("span");
-                    
-                    _elem.innerHTML = points;
-                    
-                    if (type !== "stage")
-                        total += points;
-                }
-                document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerHTML = total;
-            }
-
-            if (!bAllowUpdate)
-            {
-                document.getElementById("scoring-sheet").classList.add("final-score");
-                DomUtils.remove(document.getElementById("view-score-sheet-card-list"));
-
-                const overlay = document.getElementById("scoring-sheet").querySelector(".menu-overlay");
-                overlay.classList.remove("hidden");
-                overlay.onclick = () => { return false; };
-            }
-            
-            document.getElementById("scoring-sheet").classList.remove("hidden");
-        },
-        
-        showScoreSheetCards : function(listCards)
-        {
-            if (typeof listCards !== "undefined" && listCards.length > 0)
-                document.body.dispatchEvent(new CustomEvent("meccg-show-victory-sheet", { "detail": listCards }));
-        },
-
-        showScoreSheet : function(jData)
-        {
-            this._showScoreSheet(jData, true);
-        },
-        
-        showFinalScore : function(jData)
-        {
-            this._showScoreSheet(jData, false);
-        },
-        
-        _updateStats : function(type, points)
-        {
-            if (typeof points !== "undefined" && SCORING.stats[type] !== undefined)
-                SCORING.stats[type] = points;
-        },
-        
-        onStoreSheet : function()
-        {
-            SCORING._resetStats();
-            
-            const sheet = document.getElementById("scoring-sheet");
-            ArrayList(sheet).find('td[data-player="self"]').each((elem) =>
-            {
-                const nScore = parseInt(elem.querySelector("span").innerHTML);
-                const type = elem.parentNode.getAttribute("data-score-type");
-                SCORING._updateStats(type, nScore);
-            });
-            
-            SCORING.hideScoringSheet();
-            MeccgApi.send("/game/score/update", SCORING.stats);
-        },
-        
-        onChangeScoreValue : function(e)
-        {
-            let bAdd = this.getAttribute("data-score-action") === "increase";
-            let jSpan = this.parentNode.querySelector("span"); 
-            let nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
-            jSpan.innerHTML = nCount;
-            
-            jSpan = document.getElementById("scoring-sheet").querySelector("th.score-total");
-            nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
-            jSpan.innerHTML = nCount;
-
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        },
-        
-        addPlayers : function(sMyId, jMap)
-        {
-            for (var _playerId in jMap)
-            {
-                if (sMyId !== _playerId)
-                    SCORING.addPlayer(_playerId, jMap[_playerId]);
-            }
-        },
-
-        isAvailable : function(sPlayerId, jTable)
-        {
-            if (jTable === null || sPlayerId === null || sPlayerId === "")
-                return false;
-
-            let tRow = jTable.querySelector("thead tr");
-            if (tRow === null)
-                return false;
-            else
-                return tRow.querySelector('th[data-player="'+sPlayerId+'"]') !== null;
-        },
-        
-        addPlayer : function(sPlayerId, sName)
-        {
-            let jTable = document.getElementById("scoring-sheet").querySelector("table");
-
-            if (SCORING.isAvailable(sPlayerId, jTable))
-            {
-                console.log("already there");
-                return;
-            }
-            
-            let th = document.createElement("th");
-            th.setAttribute("data-player", sPlayerId);
-            th.innerHTML = sName;
-            jTable.querySelector("thead tr").appendChild(th);
-
-            ArrayList(jTable.querySelector("tbody")).find("tr").each(function(_tr)
-            {
-                const elem = document.createElement("td");
-                elem.setAttribute("data-player", sPlayerId);
-                elem.innerHTML = "0";
-                _tr.appendChild(elem)
-            });
-
-            th = document.createElement("th");
-            th.setAttribute("data-player", sPlayerId);
-            th.innerHTML = "0";
-            jTable.querySelector("tfoot").querySelector("tr.score-total").appendChild(th);
-        },
-    };
-
     const extractCategories = function(categories)
     {
         const isExtended = "true" === document.body.getAttribute("data-game-arda");

@@ -48,10 +48,7 @@ class DiceContainer {
 
     appendResult(id, bIsPlayer, userId, first, second, total)
     {
-
-        let sName = bIsPlayer ? "You" : this.getPlayerName(userId);
-        sName = this.getPlayerName(userId);
-
+        const sName = bIsPlayer ? "You" : this.getPlayerName(userId);
         document.getElementById("dice_roll").querySelector(".dice-result-list").prepend(DiceContainer.createResultElement(id, sName, first, second, total));
         return id;
     }
@@ -66,7 +63,6 @@ class DiceContainer {
     show(bIsPlayer, userId, first, second, total)
     {
         const nId = this.appendResult(++DiceContainer._count, bIsPlayer, userId, first, second, total);
-
         setTimeout(() => DiceContainer.removeResult(nId), DiceContainer._timeout); 
     }
 
@@ -77,11 +73,11 @@ class DiceContainer {
 
     static OnPlayers(e)
     {
-        DiceContainer._jPlayerMap = e.detail;
+        DiceContainer._jPlayerMap = e.detail.map;
     }
 };
 
 document.body.addEventListener("meccg-dice-rolled", DiceContainer.OnShow, false);
-document.body.addEventListener("meccg-dice-players", DiceContainer.OnPlayers, false);
+document.body.addEventListener("meccg-players-updated", DiceContainer.OnPlayers, false);
 document.body.addEventListener("meccg-init-ready", () => new DiceContainer().create(), false);
 

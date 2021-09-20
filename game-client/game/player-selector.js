@@ -81,6 +81,9 @@ PlayerSelector.prototype.setCurrentPlayer = function(sPlayerId, bIsMe)
         list[i].classList.remove("act");
 
     let jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
+    if (jTarget === null)
+        return;
+        
     jTarget.classList.add("act");
 
     if (!bIsMe) /* show opponents board */
@@ -141,3 +144,7 @@ PlayerSelector.prototype.onLoadOpponentView = function(e)
     e.stopPropagation();
     return false;
 };
+
+
+const g_pPlayerSelector = new PlayerSelector();
+document.body.addEventListener("meccg-players-updated", (e) => g_pPlayerSelector.addPlayers(e.detail.challengerId, e.detail.map), false);
