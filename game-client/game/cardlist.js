@@ -69,11 +69,11 @@ CardList.prototype.getFlipSide = function(code)
 
 CardList.prototype.useImagesDC = function()
 {
-    return typeof Preferences === "undefined" ? this._useImagesDC : Preferences.useImagesDC();
+    return typeof GamePreferences === "undefined" ? this._useImagesDC : GamePreferences.useImagesDC();
 };
 CardList.prototype.useImagesIC = function()
 {
-    return typeof Preferences === "undefined" ? this._useImagesIC : Preferences.useImagesIC();
+    return typeof GamePreferences === "undefined" ? this._useImagesIC : GamePreferences.useImagesIC();
 };
 
 CardList.prototype.getImageByCode = function(code, sDefault) 

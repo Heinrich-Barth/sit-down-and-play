@@ -856,6 +856,7 @@ const MapCreator = {
         if (sText.length < 3)
             return;
 
+        const showAlignment = MapCreator.createSearchLimitations();
         for (var _region in MapBuilder.jMap)
         {
             if (_region.toLowerCase().indexOf(sText) > -1)
@@ -864,38 +865,55 @@ const MapCreator = {
             for (var _site in MapBuilder.jMap[_region].sites)
             {
                 if (_site.toLowerCase().indexOf(sText)  > -1)
-                    MapCreator.getSiteImages(MapBuilder.jMap[_region].sites[_site]);
+                    MapCreator.getSiteImages(MapBuilder.jMap[_region].sites[_site], showAlignment);
             }
         }
 
         MapCreator.fillSiteList();
     },
+
+    createSearchLimitations : function()
+    {
+        const keys = MapBuilder.getAdditionalAlignKeys();
+        const showAlignment = 
+        {
+            "hero": g_pRegionMapPreferences.showSite("hero"),
+            "minion": g_pRegionMapPreferences.showSite("minion"),
+            "balrog":  g_pRegionMapPreferences.showSite("balrog")
+        }
+
+        for(let key of keys)
+            showAlignment[key] = g_pRegionMapPreferences.showSite(key);
+
+        return showAlignment;
+    },
     
-    getSiteImages : function(j)
+    getSiteImages : function(j, showAlignment)
     {
         function createEntry(jEntry)
         {
             return { set_code : jEntry["set_code"], image : jEntry["image"], code: jEntry["code"], site: true};
         }
 
+        if (showAlignment === undefined)
+            showAlignment = MapCreator.createSearchLimitations();
         if (typeof this._temp === "undefined")
             this._temp = [];
         
-        if (typeof j.hero !== "undefined")
+        if (showAlignment.hero &&typeof j.hero !== "undefined")
             this._temp.push(createEntry(j.hero));
 
-        if (typeof j.minion !== "undefined")
+        if (typeof j.minion !== "undefined" && showAlignment.minion)
             this._temp.push(createEntry(j.minion));
 
-        if (typeof j.balrog !== "undefined")
+        if (typeof j.balrog !== "undefined" && showAlignment.balrog)
             this._temp.push(createEntry(j.balrog));
         
-        let keys = MapBuilder.getAdditionalAlignKeys();
-        var len = keys.length;
-        for(var i = 0; i < len; i++)
+        const keys = MapBuilder.getAdditionalAlignKeys();
+        for(let key of keys)
         {
-            if (typeof j[keys[i]] !== "undefined")
-                this._temp.push(createEntry(j[keys[i]]));
+            if (typeof j[key] !== "undefined" && showAlignment[key])
+                this._temp.push(createEntry(j[key]));
         }
     },
     
@@ -922,7 +940,7 @@ const MapCreator = {
         elemSites.appendChild(opt); 
         
         MapCreator.getRegionImages(MapBuilder.jMap[selection]);
-            
+        const showAlignment = MapCreator.createSearchLimitations();
         for (var key in MapBuilder.jMap[selection].sites)
         {
             opt = document.createElement('option');
@@ -930,7 +948,7 @@ const MapCreator = {
             opt.value = key; 
             elemSites.appendChild(opt); 
             
-            MapCreator.getSiteImages(MapBuilder.jMap[selection].sites[key]);
+            MapCreator.getSiteImages(MapBuilder.jMap[selection].sites[key], showAlignment);
         }
         
         MapCreator.fillSiteList();

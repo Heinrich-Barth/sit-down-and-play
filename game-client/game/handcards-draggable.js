@@ -170,7 +170,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
              * however, the basic idea is really that you can see what has been discarded from the hand, so 
              * this should suffice for now
              */
-            if (Preferences.discardOpenly())
+            if (GamePreferences.discardOpenly())
                 MeccgApi.send("/game/discardopenly", {uuid: uuid });
 
             return false;

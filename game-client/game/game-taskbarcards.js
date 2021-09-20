@@ -254,7 +254,7 @@ class TaskBarCards
 
     onShow(jData) 
     {
-        let bICanSee = !Preferences.offerBlindly();
+        let bICanSee = !GamePreferences.offerBlindly();
         let elem = this._onShowList(jData, "Looking at your ", bICanSee);
         if (elem === null)
             return false;
@@ -269,7 +269,7 @@ class TaskBarCards
 
     onShowOnOffer(bIsMe, jData) 
     {
-        let bICanSee = !Preferences.offerBlindly();
+        let bICanSee = !GamePreferences.offerBlindly();
         let elem = this._onShowList(jData, bIsMe ? "Offer to show cards from " : "Opponents card from ", bICanSee);
         if (elem === null)
             return false;

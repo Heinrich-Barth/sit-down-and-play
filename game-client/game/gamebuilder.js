@@ -277,7 +277,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             
             MeccgApi.addListener("/game/lobby/request", function()
             {
-                if (Preferences.autoOpenLobby())
+                if (GamePreferences.autoOpenLobby())
                     document.getElementById("lobby-wrapper").dispatchEvent(new Event('click'));
                 else
                     document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "A player is in the lobby" }));

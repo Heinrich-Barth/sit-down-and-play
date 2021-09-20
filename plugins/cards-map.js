@@ -4,6 +4,28 @@ let g_Mapdata = {};
 let g_Mapregions = {};
 let g_Sites = { };
 
+const SiteAlignments = {
+    list : null,
+    map: { },
+
+    add : function(sAlignment, siteTitle)
+    {
+        SiteAlignments.map[sAlignment] = true;
+    },
+
+    sort : function()
+    {
+        SiteAlignments.list = Object.keys(SiteAlignments.map);
+        SiteAlignments.list.sort();
+        SiteAlignments.map = null;
+    },
+
+    get : function()
+    {
+        return SiteAlignments.list;
+    }
+
+}
 
 const fs = require("fs");
 
@@ -327,6 +349,11 @@ const MAPDATA =
             }
 
             jRegion[region].sites[siteTitle][sAlignment].index = _card.index;
+
+            /**
+             * add site alignment to allow filtering later
+             */
+            SiteAlignments.add(sAlignment, siteTitle);
         }
 
         function createifNecessary(_card, jRegion, region, siteTitle) {
@@ -490,6 +517,8 @@ exports.init = function(jsonCards)
     g_Mapdata = MAPDATA.create(jsonCards, jPos);
     g_Mapregions = MAPDATA.createSiteCodeRegionList(g_Mapdata);
     g_Sites = MAPDATA.createSiteImageList(jsonCards);
+
+    SiteAlignments.sort();
 }
 
 exports.getMapdata = function(_imageList)
@@ -497,7 +526,8 @@ exports.getMapdata = function(_imageList)
     return {
         map : g_Mapdata,
         mapregions : g_Mapregions,
-        images : _imageList
+        images : _imageList,
+        alignments : SiteAlignments.get()
     };
 };
 
