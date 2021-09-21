@@ -378,16 +378,7 @@ SERVER.instance.get("/", (req, res) => res.redirect("/play"));
   */
 SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
-{
-    const GamePlayRouteHandlerDefault = require("./game-play-standard");
-    new GamePlayRouteHandlerDefault(SERVER, "/play", "home.html", "login.html", "lobby.html").setupRoutes();
-
-    const GamePlayRouteHandlerArda = require("./game-play-arda");
-    new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html").setupRoutes();
-
-    const GamePlayRouteHandlerSingle = require("./game-play-single");
-    new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login-singleplayer.html", "home.html").setupRoutes();
-}
+require("./game-play")(SERVER);
 
 require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
 

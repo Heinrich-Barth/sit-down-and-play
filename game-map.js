@@ -41,65 +41,38 @@ const getTappedSites = function(SERVER, cookies)
     return { };
 };
 
-const getCookieValue = function(cookies, name, value)
-{
-    return cookies === undefined || cookies["map" + name] === undefined ? value : cookies["map" +name];
-}
 
-
-const getMapFilterCookies = function(cookies)
+const CookiePreferences = require("./cookiepreferences");
+class MapCookiePreferences extends CookiePreferences
 {
-    return {
-        hero : getCookieValue(cookies, "hero", true),
-        minion : getCookieValue(cookies, "minion", true),
-        fallenwizard : getCookieValue(cookies, "fallenwizard", true),
-        balrog : getCookieValue(cookies, "balrog", false),
-        elf : getCookieValue(cookies, "elf", true),
-        dwarf : getCookieValue(cookies, "dwarf", true),
-        lord : getCookieValue(cookies, "lord", true),
-        fallenlord : getCookieValue(cookies, "fallenlord", true),
-        dragon : getCookieValue(cookies, "dragon", false)
-    };
-};
-const updateMapFilterCookies = function(req, res)
-{
-    try
+    constructor(sPrefix)
     {
-        const jData = req.body;
-        const val = jData.value === true;
-        switch(jData.name)
-        {
-            case "hero":
-            case "minion":
-            case "fallenwizard":
-            case "balrog":
-            case "elf":
-            case "dwarf":
-            case "lord":
-            case "fallenlord":
-            case "dragon":
-                res.cookie("map" + jData.name, val, g_bIsProduction);
-                console.log("updated cookie " + jData.name + " to " + jData.value);
-                break;
-            default:
-                console.log("Unknown cookie type " + jData.name);
-                break;
-        }
+        super(sPrefix);
     }
-    catch (e)
+
+    sanatizeValue(val)
     {
-        console.log(e);
+        return val === true;
     }
 }
 
-let g_bIsProduction = false;
+const pCookiePreferences = new MapCookiePreferences();
+pCookiePreferences.addPreference("hero", true);
+pCookiePreferences.addPreference("minion", true);
+pCookiePreferences.addPreference("fallenwizard", true);
+pCookiePreferences.addPreference("balrog", false);
+pCookiePreferences.addPreference("elf", true);
+pCookiePreferences.addPreference("dwarf", true);
+pCookiePreferences.addPreference("lord", true);
+pCookiePreferences.addPreference("fallenlord", true);
+pCookiePreferences.addPreference("dragon", true);
 
 exports.setup = function(SERVER, g_pExpress, fnGetHtmlCspPage)
 {
     if (fnGetHtmlCspPage !== undefined)
         getHtmlCspPage = fnGetHtmlCspPage;
 
-    g_bIsProduction = SERVER.environment.isProduction;
+    pCookiePreferences.setProduction(SERVER.environment.isProduction);
 
     /* Map images should be cached */
     SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));
@@ -119,9 +92,9 @@ exports.setup = function(SERVER, g_pExpress, fnGetHtmlCspPage)
      */
     SERVER.instance.get("/data/list/map", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getMapdata()).status(200));
 
-    SERVER.instance.get("/data/map/filters", (req, res) => SERVER.expireResponse(res, "application/json").send(getMapFilterCookies(req.cookies)).status(200));
-    SERVER.instance.post("/data/map/filters", (req, res) =>  { 
-        updateMapFilterCookies(req, res); 
+    SERVER.instance.get("/data/preferences/map", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));
+    SERVER.instance.post("/data/preferences/map", (req, res) =>  { 
+        pCookiePreferences.update(req, res); 
         res.setHeader('Content-Type', 'text/plain');
         res.send("").status(200); 
     });

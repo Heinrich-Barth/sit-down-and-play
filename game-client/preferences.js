@@ -139,6 +139,26 @@ class Preferences {
         return "";
     }
 
+    getCookieUpdateUrl()
+    {
+        return "";
+    }
+
+    updateCookie(name, value)
+    {
+        const options = {
+            method: 'POST',
+            body: JSON.stringify({ name: name, value: value }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    
+        const sUrl = this.getCookieUpdateUrl();
+        if (sUrl !== undefined && sUrl !== null && sUrl !== "")
+            fetch(sUrl, options).then(() => {}).catch(() => console.log("error"));
+    }
+
     init()
     {
         if (document.getElementById("config-panel") !== null)
@@ -170,6 +190,5 @@ class Preferences {
 
         ArrayList(document.getElementById("config-panel")).find("input").each((_el) => _el.onchange = Preferences.onEventChange);
         ArrayList(document.getElementById("config-panel")).find("label[data-type=action]").each((_el) => _el.onclick = Preferences.onEventClick);
-        
     }
 };

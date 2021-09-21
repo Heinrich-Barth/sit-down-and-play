@@ -53,18 +53,9 @@ class RegionMapPreferences extends Preferences {
         this.createEntry0("show_dragon");
     }
 
-    updateCookie(name, value)
+    getCookieUpdateUrl()
     {
-        const options = {
-            method: 'POST',
-            body: JSON.stringify({ name: name, value: value }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    
-        fetch("/data/map/filters", options).then(() => {}).catch(() => console.log("error"));
-        console.log(name + " = " + value);
+        return "/data/preferences/map";
     }
 
     toggleHero(isActive)
@@ -176,7 +167,7 @@ const g_pRegionMapPreferences = new RegionMapPreferences();
 
 (function() { 
     
-    fetch("/data/map/filters").then((response) => response.json().then((data) => g_pRegionMapPreferences.init(data))).catch(() => new RegionMapPreferences(null).init());
+    fetch("/data/preferences/map").then((response) => response.json().then((data) => g_pRegionMapPreferences.init(data))).catch(() => new RegionMapPreferences(null).init());
 
 })();
 

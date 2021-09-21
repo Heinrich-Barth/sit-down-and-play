@@ -6,15 +6,19 @@ class GamePreferences extends Preferences {
         super();
     }
 
+    static URL = "/data/preferences/game";
+
     getGameCss()
     {
         return "config-wrapper-game";
     }
 
-    _changeBackground(sNew)
+    static _replaceBackground(sNew)
     {
-        if (!document.body.classList.contains(sNew))
-            document.body.classList.add(sNew)
+        if (sNew === undefined || sNew === "" || document.body.classList.contains(sNew))
+            return false;
+
+        document.body.classList.add(sNew)
 
         let list = document.body.classList;
         for (let _name of list)
@@ -22,6 +26,19 @@ class GamePreferences extends Preferences {
             if (_name !== sNew && _name.indexOf("bg-") === 0)
                 document.body.classList.remove(_name);
         }
+
+        return true;
+    }
+
+    _changeBackground(sNew)
+    {
+        if (GamePreferences._replaceBackground(sNew))
+            this.updateCookie("background", sNew);
+    }
+
+    getCookieUpdateUrl()
+    {
+        return GamePreferences.URL;
     }
 
     _bgEagle()
@@ -197,6 +214,16 @@ class GamePreferences extends Preferences {
         this.addConfigAction("rules_balrog", "Balrog", false, "fa-eye", Preferences.callbacks._showRule);
         */
     }
+
+
 };
 
-(function() { new GamePreferences().init(); })();
+const g_pGamesPreferences = new GamePreferences();
+g_pGamesPreferences.init();
+
+
+(function() { 
+    
+    fetch(GamePreferences.URL).then((response) => response.json().then((data) => GamePreferences._replaceBackground(data.background)));
+
+})();
