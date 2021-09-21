@@ -1,14 +1,24 @@
 
 .config-wrapper {
-    z-index: 200;
-    left: 5px;
     width: 20px;
     height: 20px;
     padding: 5px;
-    top: 40px;
     position: absolute;
     color: white;
     overflow: hidden;
+}
+
+.config-wrapper-game {
+    z-index: 200;
+    left: 5px;
+    top: 40px;
+}
+
+.config-wrapper-map {
+    top: 70px;
+    left: 10px;
+    z-index: 501;
+    background: rgb(39,56,76);
 }
 
 #config-panel {
