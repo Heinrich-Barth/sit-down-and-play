@@ -1,64 +1,18 @@
 
-const toInt = function(val)
+const getRemovableKeysArray = function()
 {
     try
     {
-        if (val !== undefined && val !== "")
-            return parseInt(val);
+        let data = require("fs").readFileSync("./data/obsoleteCardKeys.json", 'utf8');
+        if (data !== "")
+            return JSON.parse(data);
     }
-    catch (e)
+    catch (err)
     {
-
+        console.error(err);
     }
 
-    return 0;
-};
-
-
-const getRemovableKeysArray = function()
-{
-    return [
-        "Artist",
-        "Body",
-        "DCpath",
-        "Direct",
-        "Gear",
-        "GoldRing",
-        "GreaterItem",
-        "Haven",
-        "Hoard",
-        "Home",
-        "Information",
-        "MajorItem",
-        "MinorItem",
-        "Non",
-        "Path",
-        "Playable",
-        "Precise",
-        "Prowess",
-        "RPath",
-        "Race",
-        "Rarity",
-        "Region",
-        "Site",
-        "Specific",
-        "Stage",
-        "errata",
-        "erratum",
-        "extras",
-        "flip-title",
-        "full_set",
-        "gccgSet",
-        "released",
-        "title-du",
-        "title-es",
-        "title-fn",
-        "title-fr",
-        "title-gr",
-        "title-it",
-        "title-jp",
-        "trimCode"
-    ];
+    return [];
 };
 
 const CARDS = {
@@ -73,9 +27,7 @@ const CARDS = {
 
     sort: function () 
     {
-        this._raw.sort(function (card1, card2) {
-            return card1.title.replace('"', "").localeCompare(card2.title.replace('"', ""), "de-DE");
-        });
+        this._raw.sort( (card1, card2) => card1.title.replace('"', "").localeCompare(card2.title.replace('"', ""), "de-DE"));
     },
 
     stripQuotes : function()
@@ -97,12 +49,9 @@ const CARDS = {
 
     addIndices: function () 
     {
-        var index = 0;
+        let index = 0;
         for (var card of this._raw) 
-        {
-            card.index = index;
-            index++;
-        }
+            card.index = ++index;
     },
 
     temp : function (jMap)
@@ -122,7 +71,7 @@ const CARDS = {
 
         }
 
-        fs.writeFileSync("./data/map-positions.json", JSON.stringify(_temp, null, '\t'), 'utf-8');
+        require("fs").writeFileSync("./data/map-positions.json", JSON.stringify(_temp, null, '\t'), 'utf-8');
     },
 
     prepareArda : function()
@@ -168,7 +117,7 @@ const CARDS = {
         }
 
         if (rem > 0)
-            console.log("\t-properties removed from cards: " + rem);
+            console.log("\t- properties removed from cards: " + rem);
     },
 
     removeFlavourText : function()
@@ -201,7 +150,7 @@ const CARDS = {
         }
 
         if (rem > 0)
-            console.log("\t-flavour texts removed from cards: " + rem);
+            console.log("\t- flavour texts removed from cards: " + rem);
     },
 
     removeUnwantedCards : function(_raw)
@@ -247,7 +196,7 @@ const CARDS = {
             addInvalid(card, "normalizedtitle");
         }
 
-        console.error("\t-invalid card(s) found: " + Object.keys(invalids).length);
+        console.error("\t- invalid card(s) found: " + Object.keys(invalids).length);
     },
 
     updateMps : function()
@@ -351,6 +300,40 @@ const CARDS = {
         return card !== null && card.Secondary !== undefined ? card.Secondary : "";
     },
 
+    getMarshallingPoints : function(code)
+    {
+        let data = {
+            type: "",
+            points: 0
+        }
+
+        const card = CARDS.getCardByCode(code);
+        if (card === null || card.Secondary === undefined || card.Secondary === "")
+            return data;
+
+        data.points = card.MPs === undefined ? 0 : card.MPs;
+        if (card.Secondary.indexOf("Creature") !== -1)
+            data.type = "kill";
+        else if (card.Secondary === "Character")
+        {
+            data.type = "character";
+            data.points = 0;
+        }
+        else if (card.Secondary === "Ally")
+            data.type = "ally";
+        else if (card.Secondary === "Faction")
+            data.type = "faction";
+        else if (card.type === "Resource")
+        {
+            if (card.Secondary.endsWith("item") || card.Secondary.endsWith("Item"))
+                data.type = "item";
+            else 
+                data.type = "misc";
+        }
+
+        return data;
+    },
+
     isCardAvailable : function(code)
     {
         return code !== undefined && code !== "" && CARDS._types[code] !== undefined;
@@ -381,3 +364,5 @@ exports.getCardByCode = (code) => CARDS.getCardByCode(code);
 exports.getCardMind = (code) => CARDS.getCardMind(code);
 
 exports.getCardTypeSpecific = (code) => CARDS.getCardTypeSpecific(code);
+
+exports.getMarshallingPoints = (code) => CARDS.getMarshallingPoints(code);
