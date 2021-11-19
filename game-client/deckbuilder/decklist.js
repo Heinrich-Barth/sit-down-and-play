@@ -16,7 +16,7 @@ var DeckList =
         elem = document.createElement("div");
         elem.setAttribute("class", "decklist fl bgblue");
         elem.setAttribute("id", "deck_container");
-        elem.innerHTML = `<h2><span class="fa fa-eye" id="deck_name">Your Deck</span> (<span id="deck_count">0</span>)</h2>
+        elem.innerHTML = `<h2><span class="fa fa-eye" id="deck_name"></span><input type="text" class="deckname" id="deckname" placeholder="Your deck name" value=""> (<span id="deck_count">0</span>)</h2>
 
         <div style="text-align: center; margin: 20px 0;">
             <button class="button-small" id="save_deck"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save deck</button>

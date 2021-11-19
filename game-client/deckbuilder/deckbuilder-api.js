@@ -7,8 +7,11 @@ const DeckbuilderApi =
 
     DECK_SIDEBOARD : "sideboard",
     DECK_CHARACTER : "character",
+    DECK_CHARACTER2 : "chars",
     DECK_RESOURCE: "resource",
+    DECK_RESOURCES: "resources",
     DECK_HAZARD: "hazard",
+    DECK_HAZARDS: "hazards",
     DECK_AVATAR : "avatar",
     DECK_POOL : "pool",
 
@@ -97,6 +100,16 @@ const DeckbuilderApi =
         return "";
     },
 
+    onUpdateDeckName : function(e)
+    {
+        if (e === undefined || e.detail === undefined)
+            return;
+
+        const name = e.detail.trim();
+        const pos = name.lastIndexOf(".");
+        document.getElementById("deckname").value = pos < 1 ? name.trim() : name.substr(0, pos).trim();
+    },
+
     onLoadDeck : function(e)
     {
         if (e === undefined)
@@ -117,6 +130,18 @@ const DeckbuilderApi =
     
     initAddCards : function(cards)
     {
+        function getCardCount(pCard)
+        {
+            if (pCard !== undefined)
+            {
+                if (pCard.count !== undefined)
+                    return pCard.count;
+                else
+                    return parseInt(pCard);
+            }
+            else
+                return 0;
+        }
 
         function doAddCard(card, count)
         {
@@ -137,65 +162,43 @@ const DeckbuilderApi =
                 DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
         }
 
-        var size = cards["size"];
-        var count, card;
-        for (var key in cards[DeckbuilderApi.DECK_POOL])
+        function addCardGroup(cards, groupkey, target)
         {
-            count = cards[DeckbuilderApi.DECK_POOL][key].count;
-            
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null)
-                Notify.error("Cannot get pool card from code " + key);
-            else
-                this.onInitAddCard(card, count, DeckbuilderApi.DECK_POOL);
+            let size = 0;
+            let count, card;
+            for (let key in cards[groupkey])
+            {
+                count = getCardCount(cards[groupkey][key]);
+                if (count < 1)
+                    continue;
+    
+                card = ViewCards.getCardFromCardCode(key);
+                if (card === null)
+                    Notify.error("Cannot get " + groupkey + " card from code " + key);
+                else
+                {
+                    if (target !== "" && target !== undefined)
+                        DeckbuilderApi.onInitAddCard(card, count, target);
+                    else
+                        doAddCard(card, count);
+
+                    size += count;
+                }
+            }
+    
+            return size;
         }
-        
-        for (var key in cards[DeckbuilderApi.DECK_RESOURCE])
-        {
-            count = cards[DeckbuilderApi.DECK_RESOURCE][key].count;
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null)
-                Notify.error("Cannot get resource card from code " + key);
-            else
-                doAddCard(card, count);
-        }
-        for (var key in cards[DeckbuilderApi.DECK_HAZARD])
-        {
-            count = cards[DeckbuilderApi.DECK_HAZARD][key].count;
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null)
-                Notify.error("Cannot get hazard card from code " + key);
-            else
-                doAddCard(card, count);
-        }
-        for (var key in cards[DeckbuilderApi.DECK_CHARACTER])
-        {
-            count = cards[DeckbuilderApi.DECK_CHARACTER][key].count;
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null)
-                Notify.error("Cannot get character card from code " + key);
-            else
-                doAddCard(card, count);
-        }
-        for (var key in cards[DeckbuilderApi.DECK_AVATAR])
-        {
-            count = cards[DeckbuilderApi.DECK_AVATAR][key].count;
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null)
-                Notify.error("Cannot get avatar card from code " + key);
-            else
-                this.onInitAddCard(card, count, DeckbuilderApi.DECK_AVATAR)
-        }
-        
-        for (var key in cards[DeckbuilderApi.DECK_SIDEBOARD])
-        {
-            count = cards[DeckbuilderApi.DECK_SIDEBOARD][key].count;
-            card = ViewCards.getCardFromCardCode(key);
-            if (card === null) 
-                Notify.error("Cannot get sideboard card from code " + key);
-            else            
-                this.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD)
-        }
+
+        let size = 0;
+        size += addCardGroup(cards, DeckbuilderApi.DECK_POOL, DeckbuilderApi.DECK_POOL);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_RESOURCE);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_RESOURCES);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_HAZARD);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_HAZARDS);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER2);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_AVATAR, DeckbuilderApi.DECK_AVATAR);
+        size += addCardGroup(cards, DeckbuilderApi.DECK_SIDEBOARD, DeckbuilderApi.DECK_SIDEBOARD);
         
         return size;
     },
@@ -220,35 +223,24 @@ document.addEventListener('keydown', function(e)
 	}
 });
 
-async function onSaveDeck()
+document.getElementById("save_deck").onclick = function()
 {
-    const fileHandle = await window.showSaveFilePicker({
-        excludeAcceptAllOption: true,
-        multiple: false,
-        types: [
-            {
-                description: "Deck Files",
-                accept: {
-                 'application/json': ['.meccg']
-                }
-            }
-        ]
-    });
-    
-    const writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(DeckbuilderApi._deck, null, "\t"));
-    await writable.close();
+    let sName = document.getElementById("deckname").value;
+    if (sName === null || sName === undefined || sName === "")
+        sName = "Your deck";
+    else
+        sName = sName.trim();
 
-    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Deck saved." }));
-}
+    const data = {
+        data: DeckbuilderApi._deck,
+        name : sName
+    };
 
-/**             
- */
-(function()
-{
-    document.getElementById("save_deck").onclick = onSaveDeck;
-})();
+    document.body.dispatchEvent(new CustomEvent("meccg-saveas-deck", { "detail": data}));
+};
 
 document.body.addEventListener("meccg-deckbuilder-load-deck", DeckbuilderApi.onLoadDeck, false);
 document.body.addEventListener("meccg-deckbuilder-add-to-deck", DeckbuilderApi.onAdd, false);
 document.body.addEventListener("meccg-deckbuilder-remove-from-deck", DeckbuilderApi.onRemove, false);
+document.body.addEventListener("meccg-file-dropped-name", DeckbuilderApi.onUpdateDeckName, false);
+
