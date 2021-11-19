@@ -124,7 +124,7 @@ div.panel-buttons { width: 70px; }
     z-index: 500;
 }
 
-#found_sites img { width: 80px; height: 112px; }
+#found_sites img { width: 80px; height: 112px; background: url(/media/assets/images/cards/backside.jpg) 0 0 no-repeat;background-size: contain; }
 
 #found_sites img.site-is-tapped {
     opacity: 0.5;
