@@ -264,3 +264,5 @@ input:not(:checked) ~ .challenge-deck { display: none };
 }
 
 .arda-text { text-align: left; margin-left: 113px;}
+
+.isLoggingIn button { display: none;}
