@@ -1,7 +1,12 @@
 
-function _load(pDeckLoader, name, dir, sReplace, list)
+/**
+ * Load a deck
+ * @param {Array} list 
+ * @param {String} name 
+ * @param {Object} _data 
+ */
+function load0(list, name, _data)
 {
-    let _data = pDeckLoader.getDecks(dir, sReplace);
     if (_data !== null)
     {
         list.push({
@@ -9,17 +14,23 @@ function _load(pDeckLoader, name, dir, sReplace, list)
             decks : _data
         });
     }
-
 }
 
-
+/**
+ * Load deck files in given directory
+ * 
+ * @param {Object} pDeckLoader 
+ * @param {String} sDir 
+ * @returns 
+ */
 exports.load = function(pDeckLoader, sDir) 
 {
     let decks = [];
-    _load(pDeckLoader, "DC Challenge Decks", sDir + "/data/decks/cddc", "CDDC -", decks);
-    _load(pDeckLoader, "Arda Decks", sDir + "/data/decks/arda", "arda-", decks);
-    _load(pDeckLoader, "FirstFolk Sample Decks", sDir + "/data/decks/firstfolk", "MEFB - ", decks);
-    _load(pDeckLoader, "Standard Challenge Decks", sDir + "/data/decks/standard", "", decks);
+
+    load0(decks, "DC Challenge Decks", pDeckLoader.getDecks(sDir + "/data/decks/cddc", "CDDC -"));
+    load0(decks, "Arda Decks", pDeckLoader.getDecks(sDir + "/data/decks/arda", "arda-"));
+    load0(decks, "FirstFolk Sample Decks", pDeckLoader.getDecks(sDir + "/data/decks/firstfolk", "MEFB - "));
+    load0(decks, "Standard Challenge Decks", pDeckLoader.getDecks(sDir + "/data/decks/standard", ""));
 
     return decks;
 }
