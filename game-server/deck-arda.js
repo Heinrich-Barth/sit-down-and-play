@@ -36,6 +36,7 @@ class Deck extends DeckDefault {
         let data = super.save(isAdmin);
         
         data.handCardsMP = this.handCardsMP;
+        data.ishost = isAdmin;
 
         if (isAdmin)
         {
@@ -53,8 +54,48 @@ class Deck extends DeckDefault {
             data.typesMPs = this.typesMPs;
             data.listSpecialCharacters = this.listSpecialCharacters;
         }
+        else
+        {
+            data.playdeckMP = [];
+            data.discardPileMP = [];
+            data.handCardsCharacters = [];
+            data.discardPileCharacters = [];
+            data.playdeckCharacters = [];
+            data.handMinorItems = [];
+            data.discardPileMinorItems = [];
+            data.playdeckMinorItems = [];
+            data.playDeckCharacters7 = [];
+            data.typesCharacters = [];
+            data.typesMinors = [];
+            data.typesMPs = [];
+            data.listSpecialCharacters = [];
+        }
 
         return data;
+    }
+
+    restore(deck)
+    {
+        super.restore(deck);
+
+        this.restoreList(this.handCardsMP, deck.handCardsMP);
+
+        if (deck.ishost === true)
+        {
+            this.restoreList(this.playdeckMP, deck.playdeckMP);
+            this.restoreList(this.discardPileMP, deck.discardPileMP);
+            this.restoreList(this.handCardsCharacters, deck.handCardsCharacters);
+            this.restoreList(this.discardPileCharacters, deck.discardPileCharacters);
+            this.restoreList(this.playdeckCharacters, deck.playdeckCharacters);
+            this.restoreList(this.handMinorItems, deck.handMinorItems);
+            this.restoreList(this.discardPileMinorItems, deck.discardPileMinorItems);
+            this.restoreList(this.playdeckMinorItems, deck.playdeckMinorItems);
+            this.restoreList(this.playDeckCharacters7, deck.playDeckCharacters7);
+            this.restoreList(this.typesCharacters, deck.typesCharacters);
+            this.restoreList(this.typesMinors, deck.typesMinors);
+            this.restoreList(this.typesMPs, deck.typesMPs);
+            this.restoreList(this.listSpecialCharacters, deck.listSpecialCharacters);
+        }
     }
 
     addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)

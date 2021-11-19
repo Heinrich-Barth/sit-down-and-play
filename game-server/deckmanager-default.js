@@ -20,6 +20,11 @@ class DeckManagerDefault extends DeckManager {
     {
         return new Deck(playerId);
     }
+
+    resoteCardMapCloneCard(input)
+    {
+        return Deck.cloneCardEntry(input);
+    }
 }
 
 module.exports = DeckManagerDefault;

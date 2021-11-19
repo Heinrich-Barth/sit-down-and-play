@@ -90,6 +90,11 @@ class DeckManagerArda extends DeckManager {
         if (_deckPlayer !== null)
             _deckPlayer.updateListReferences(this.getPlayerDeck(adminId));
     }
+
+    resoteCardMapCloneCard(input)
+    {
+        return Deck.cloneCardEntry(input);
+    }
 }
 
 module.exports = DeckManagerArda;

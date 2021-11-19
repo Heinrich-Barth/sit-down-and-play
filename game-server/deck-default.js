@@ -13,6 +13,25 @@ class Deck extends DeckCommons {
         this.playdeck = [];
     }
 
+    restore(deck)
+    {
+        this.restoreList(this.handCards, deck.handCards);
+        this.restoreList(this.discardPile, deck.discardPile);
+        this.restoreList(this.sideboard, deck.sideboard);
+        this.restoreList(this.victory, deck.victory);
+        this.restoreList(this.playdeck, deck.playdeck);
+    }
+
+    restoreList(target, list)
+    {
+        this.clearArray(target);
+        for (let id of list)
+        {
+            if (typeof id === "string" && id !== "")
+                target.push(id);
+        }
+    }
+
     save(isAdmin)
     {
         let data = super.save(isAdmin);
@@ -24,6 +43,12 @@ class Deck extends DeckCommons {
         data.playdeck = this.playdeck;
 
         return data;
+    }
+
+    clearArray(list)
+    {
+        if (list !== null && list !== undefined)
+            list.splice(0, list.length)
     }
 
     createNewCardUuid()
@@ -55,7 +80,7 @@ class Deck extends DeckCommons {
                 listTarget.push(listSource[i]);
                    
             listSource.splice(0, listSource.length)
-            this.shuffleAny(listSource);
+            this.shuffleAny(listTarget);
             return true;
         }
         else

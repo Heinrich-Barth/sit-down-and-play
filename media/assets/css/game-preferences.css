@@ -29,7 +29,6 @@
     padding-left: 20px;
     transform: translateX(-50%);
     max-height: 60%;
-    width: 100%;
     max-width: 600px;
 }
 
@@ -74,4 +73,44 @@ height: 17px;
 }
 .config-panel input { 
 display: none;
+}
+
+#restore-game {
+    position: fixed;
+    z-index: 401;
+}
+.restore-panel 
+{
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    padding: 0 20px 20px 20px;
+    color: #fff;
+    position: fixed;
+    text-align: center;
+}
+
+.restore-panel table { width: 100%; text-align: left; }
+.restore-panel th { border-bottom: 1px solid #fff; }
+.restore-panel select {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.restore-panel h2 { color: #ffa500; text-align: center;}
+
+.restore-panel td.center { text-align: center; }
+.restore-panel td.entry { width: 200px;  }
+.restore-panel button {
+
+    width: 200px !important;
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    margin-top: 30px;
 }

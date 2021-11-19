@@ -1,12 +1,33 @@
-const CARD_STATE = 
-{
-    ready : 0,
-    tapped : 90,
-    wounded : 180,
-    tapped_fixed : 91,
-    rot270 : 270            
-};
 
+const CARD_STATE = { };
+
+Object.defineProperties(CARD_STATE, {
+    ready: {
+        value: 0,
+        writable: false,
+        configurable: false
+    },
+    tapped: {
+        value: 90,
+        writable: false,
+        configurable: false
+    },
+    wounded: {
+        value: 180,
+        writable: false,
+        configurable: false
+    },
+    tapped_fixed: {
+        value: 91,
+        writable: false,
+        configurable: false
+    },
+    rot270: {
+        value: 270,
+        writable: false,
+        configurable: false
+    }
+});
 
 class DeckManager {
 
@@ -37,6 +58,63 @@ class DeckManager {
         return jData;
     }
 
+    resoteCardMapCloneCard(input)
+    {
+        /** overwrite */
+        return null;
+    }
+
+    restoreCardMap(data)
+    {
+        if (data === null || data === undefined)
+            return;
+
+        this._cardMap = { };
+
+        for (let key of Object.keys(data))
+        {
+            const _card = this.resoteCardMapCloneCard(data[key]);
+            if (_card === null)
+                throw "Cannot duplicate card";
+            else
+                this._cardMap[key] = _card;
+        }
+    }
+
+    restoreSiteMap(data)
+    {
+        this._siteMap = { };
+
+        if (data === null || data === undefined)
+            return;
+
+        for (let key of Object.keys(data))
+        {
+            this._siteMap[key] = {};
+
+            let _site = data[key];
+            for (let site of Object.keys(_site))
+                this._siteMap[key][site] = _site[site] === true;
+        }
+    }
+
+    restore(decks)
+    {
+        this.reset();
+        this.restoreCardMap(decks.cardMap);
+        this.restoreSiteMap(decks.siteMap);
+
+        for (let key of Object.keys(decks.deck))
+        {
+            let deck = this.newDeckInstance(key);
+            deck.restore(decks.deck[key]);
+            this._deck[key] = deck;
+        }
+
+        this.uuid_count = Date.now();
+        return true;
+    }
+
     creatHandManager()
     {
         throw "please overwrite!";
@@ -59,31 +137,6 @@ class DeckManager {
         this._deck = { };
     }
     
-    restoreSavedGame(jDecks)
-    {
-        this.reset();
-        this._uuid_count = jDecks.uuid_count;
-        this._cardMap = jDecks.cardMap;
-        
-        let nSize = jDecks.deck;
-        if (nSize === 0)
-            return false;
-        
-        let _deck;
-        let _id;
-        for (var i = 0; i < nSize; i++)
-        {
-            _deck = jDecks[i];
-            _id = _deck.id;
-            if (_id === "")
-                return false;
-            else
-                this._deck[_id] = _deck;
-        }
-        
-        return true;
-    }
-
     getPlayers()
     {
         return Object.keys(this._deck);

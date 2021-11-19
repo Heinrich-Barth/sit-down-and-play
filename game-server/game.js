@@ -10,7 +10,7 @@ const setupArdaSpecials = function(Game)
     require("./game-arda").setupArdaSpecials(Game);
 }
 
-var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager, isArda, isSinglePlayer)
+var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventManager, isArda, isSinglePlayer, fnEndGame)
 {
     const Game =
     {
@@ -20,6 +20,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
         _isArda : isArda,
         _isSinglePlayer : isSinglePlayer,
         _adminUser : "",
+        _fnEndGame : fnEndGame,
         apis : {
             chat : _Chat,
             meccgApi : _MeccgApi
@@ -30,6 +31,11 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
         player_phase: "start",
 
         started : null,
+
+        getHost : function()
+        {
+            return Game._adminUser;
+        },
 
         save : function()
         {
@@ -46,6 +52,11 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             data.scoring = Game.scoring.save();
 
             return data;
+        },
+
+        restore : function(playboard, score)
+        {
+            return Game._playboardManager.Restore(playboard) && Game.scoring.restore(score);
         },
 
         isSinglePlayer : function()
@@ -252,15 +263,6 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
                 this._playboardManager.DumpDeck(this.players.ids[key]);
         },
 
-        /**
-         * 
-         * @param {type} jData
-         * @return {boolean} success
-         */
-        restoreSavedGame: function (jData)
-        {
-            return false;
-        },
 
         getFinalScore: function ()
         {
@@ -971,7 +973,119 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             global: {
                 restoreGame: function (userid, socket, data)
                 {
-                    
+                    try
+                    {
+                        let assignments = data.assignments; 
+                        if (Game.players.ids.length !== Object.keys(assignments).length)
+                            throw "Player count missmatch";
+                        else if (Game.isArda() !== data.game.meta.arda)
+                            throw "Arda missmatch";
+
+                        for (let id of Object.keys(assignments))
+                        {
+                            if (!Game.players.ids.includes(assignments[id]) || assignments[id] === "")
+                                throw "Invalid player id detected.";
+                        }
+
+                        let playboard = data.game.playboard;
+                        let _map = playboard.decks.cardMap;
+                        for (let _cardId of Object.keys(_map))
+                        {
+                            const _formerOwner = _map[_cardId].owner;
+                            if (assignments[_formerOwner] === undefined)
+                                throw "Cannot find former owner " + _formerOwner;
+                            else
+                                _map[_cardId].owner = assignments[_formerOwner];
+                        }
+
+                        let error = false;
+                        let keys = Object.keys(playboard.decks.siteMap);
+                        keys.forEach(function(key) 
+                        {
+                            let newkey = assignments[key];
+                            if (newkey === undefined)
+                            {
+                                console.log("Cannot find owner " + key + " in siteMap");
+                                error = true;
+                                return;
+                            }
+                            playboard.decks.siteMap[newkey] = playboard.decks.siteMap[key];
+                            delete playboard.decks.siteMap[key];
+                        });
+
+                        keys = Object.keys(playboard.decks.deck);
+                        keys.forEach(function(key) 
+                        {
+                            let newkey = assignments[key];
+                            if (newkey === undefined)
+                            {
+                                console.log("Cannot find owner " + key + " in deck");
+                                error = true;
+                                return;
+                            }
+                            playboard.decks.deck[newkey] = playboard.decks.deck[key];
+                            delete playboard.decks.deck[key];
+                        });
+
+                        keys = Object.keys(playboard.stagingarea);
+                        keys.forEach(function(key) 
+                        {
+                            let newkey = assignments[key];
+                            if (newkey === undefined)
+                            {
+                                console.log("Cannot find owner " + key + " in stagingarea");
+                                error = true;
+                                return;
+                            }
+                            playboard.stagingarea[newkey] = playboard.stagingarea[key];
+                            delete playboard.stagingarea[key];
+                        });
+
+                        keys = Object.keys(data.game.scoring);
+                        keys.forEach(function(key) 
+                        {
+                            let newkey = assignments[key];
+                            if (newkey === undefined)
+                            {
+                                console.log("Cannot find owner " + key + " in scoring");
+                                error = true;
+                                return;
+                            }
+                            data.game.scoring[newkey] = data.game.scoring[key];
+                            delete data.game.scoring[key];
+                        });
+
+                        keys = Object.keys(playboard.companies);
+                        keys.forEach((key) => 
+                        {
+                            let newkey = assignments[playboard.companies[key].playerId];
+                            if (newkey === undefined)
+                            {
+                                console.log("Cannot find owner " + key + " in companies");
+                                error = true;
+                                return;
+                            }
+                            playboard.companies[key].playerId = newkey;
+                        });
+
+                        if (error)
+                            throw "Could not update ownership";
+                        else if (!Game.restore(playboard, data.game.scoring))
+                            throw "Cannot restore game playboard";
+
+                        Game.player_phase = data.game.meta.phase;
+                        Game.players.turn = parseInt(data.game.meta.players.turn);
+                        Game.players.current = parseInt(data.game.meta.players.current);
+
+                        Game.apis.meccgApi.publish("/game/restore", userid, { success : true });
+                    }
+                    catch (err)
+                    {
+                        console.log(err);
+
+                        if (Game._fnEndGame !== undefined)
+                            Game._fnEndGame();
+                    }
                 },
 
                 saveGame : function(userid, socket)
@@ -1204,8 +1318,8 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
     Game.apis.meccgApi.addListener("/game/stagingarea/add/card", Game.callbacks.onStagingAreaAddCard);
 
     Game.apis.meccgApi.addListener("/game/save", Game.callbacks.global.saveGame);
+    Game.apis.meccgApi.addListener("/game/restore", Game.callbacks.global.restoreGame);
 
-    Game.apis.meccgApi.addListener("/game/state/restore", Game.callbacks.global.restoreGame);
     Game.apis.meccgApi.addListener("/game/roll-dices", Game.callbacks.global.rollDices);
     Game.apis.meccgApi.addListener("/game/phase/set", Game.callbacks.global.phase); /* Set the current phase of the game turn */
     Game.apis.meccgApi.addListener("/game/add-cards-to-game", Game.callbacks.global.onGameAddCardsToGame); /* add a list of cards to the sideboard */
@@ -1247,7 +1361,7 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
     return Game;
 }
 
-exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer)
+exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame)
 {
     return new GameInstance(_MeccgApi, 
                             _Chat, 
@@ -1255,5 +1369,6 @@ exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _ga
                             require("./scores.js").create(isArda),
                             _eventManager,
                             isArda,
-                            isSinglePlayer);
+                            isSinglePlayer,
+                            fnEndGame);
 }

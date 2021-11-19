@@ -93,19 +93,107 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
         };
     };
 
-    /** 
-     * Restore a saved game
-     * @param {json} jData
-     * @return {boolean} success state
-     */
-    PLAYBOARD_MANAGER.RestoreSavedGame = function(jBoard)
+    PLAYBOARD_MANAGER.ArrayUUIDClone = function(input)
     {
-        PLAYBOARD_MANAGER.companies = jBoard.companies;
-        PLAYBOARD_MANAGER.characters = jBoard.characters;
-        PLAYBOARD_MANAGER.stagingareas = jBoard.stagingarea;
-        PLAYBOARD_MANAGER._counter = jBoard.counter;
-        
-        return PLAYBOARD_MANAGER.decks.restoreSavedGame(jBoard.decks);
+        let target = [];
+        if (input === null || input === undefined || input.length === 0)
+            return target;
+
+        for (let inf of input)
+        {
+            let uuid = PLAYBOARD_MANAGER.AssertString(inf);
+            if (uuid !== "")
+                target.push(uuid);
+        }
+
+        return target;
+    };
+
+    PLAYBOARD_MANAGER.AssertString = function(input)
+    {
+        return input === undefined || input === null || typeof input !== "string" ? "" : input;
+    };
+
+    PLAYBOARD_MANAGER.RestoreCompanies = function(input)
+    {
+        PLAYBOARD_MANAGER.companies = {};
+
+        for (let companyid in input)
+        {
+            let _company = input[companyid];
+            let newCompany = {
+                id: companyid,
+                playerId: PLAYBOARD_MANAGER.AssertString(_company.playerId),
+                characters: [],
+                sites: { 
+                    current: "",
+                    regions: [],
+                    target: "",
+                    attached: [],
+                    revealed: false
+                }
+            };
+
+            for (let char of _company.characters)
+            {
+                const _character = {
+                    uuid: PLAYBOARD_MANAGER.AssertString(char.uuid),
+                    influenced: PLAYBOARD_MANAGER.ArrayUUIDClone(char.influenced)
+                };
+
+                newCompany.characters.push(_character);
+            }
+
+            if (_company.sites !== undefined)
+            {
+                newCompany.sites.current = PLAYBOARD_MANAGER.AssertString(_company.sites.current);
+                newCompany.sites.target = PLAYBOARD_MANAGER.AssertString(_company.sites.target);
+                newCompany.sites.regions = PLAYBOARD_MANAGER.ArrayUUIDClone(_company.sites.regions);
+                newCompany.sites.attached = PLAYBOARD_MANAGER.ArrayUUIDClone(_company.sites.attached);
+                newCompany.sites.revealed = _company.sites.revealed === true;
+            }
+
+            PLAYBOARD_MANAGER.companies[companyid] = newCompany;
+        }
+    };
+    
+    PLAYBOARD_MANAGER.RestoreCharacters = function(input)
+    {
+        PLAYBOARD_MANAGER.characters = { };
+        for (let characterid in input)
+        {
+            const _source = input[characterid];
+            PLAYBOARD_MANAGER.characters[characterid] = {
+                companyId : PLAYBOARD_MANAGER.AssertString(_source.companyId),
+                character : PLAYBOARD_MANAGER.AssertString(_source.character),
+                uuid : PLAYBOARD_MANAGER.AssertString(_source.uuid),
+                parentUuid : PLAYBOARD_MANAGER.AssertString(_source.parentUuid),
+                resources : PLAYBOARD_MANAGER.ArrayUUIDClone(_source.resources),
+                hazards : PLAYBOARD_MANAGER.ArrayUUIDClone(_source.hazards)
+            }
+        }
+    };
+    
+    PLAYBOARD_MANAGER.RestoreStagingareas = function(input)
+    {
+        PLAYBOARD_MANAGER.stagingareas = { };
+        for (let uuid in input)
+        {
+            PLAYBOARD_MANAGER.stagingareas[uuid] = {
+                resources : PLAYBOARD_MANAGER.ArrayUUIDClone(input[uuid].resources),
+                hazards : PLAYBOARD_MANAGER.ArrayUUIDClone(input[uuid].hazards)
+            };
+        }
+    };
+
+    PLAYBOARD_MANAGER.Restore = function(playboard)
+    {
+        PLAYBOARD_MANAGER.decks.restore(playboard.decks);
+        PLAYBOARD_MANAGER.RestoreCompanies(playboard.companies);
+        PLAYBOARD_MANAGER.RestoreCharacters(playboard.characters);
+        PLAYBOARD_MANAGER.RestoreStagingareas(playboard.stagingarea);
+        PLAYBOARD_MANAGER._counter = parseInt(playboard.counter);
+        return true;
     };
     
     PLAYBOARD_MANAGER.characterExists = function(uuid)
@@ -713,12 +801,14 @@ let PlayBoardManagement = function(_Decks, _listAgents, _eventManager, _gameCard
 
     PLAYBOARD_MANAGER.GetStagingCards = function(playerId, isResources)
     {
-        if (PLAYBOARD_MANAGER.stagingareas[playerId] === "undefined")
+        if (PLAYBOARD_MANAGER.stagingareas[playerId] === undefined)
             return [];
-        else if (isResources)
+        else if (isResources && PLAYBOARD_MANAGER.stagingareas[playerId].resources !== undefined)
             return PLAYBOARD_MANAGER.stagingareas[playerId].resources;
-        else
+        else if (!isResources && PLAYBOARD_MANAGER.stagingareas[playerId].hazards !== undefined)
             return PLAYBOARD_MANAGER.stagingareas[playerId].hazards;
+        else
+            return [];        
     };
 
     PLAYBOARD_MANAGER.GetFullCompanyCharacter = function(companyId, uuid)
