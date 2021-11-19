@@ -4,7 +4,6 @@ const CardsMeta = require("./cards-meta");
 const CardsMap = require("./cards-map");
 const ImageList = require("./imagelist");
 const CardRepository = require("./cards-repository");
-const Agents = require("./cards-agents");
 const DeckValidator = require("./deckvalidator");
 
 let g_pFilter = {}; 
@@ -12,6 +11,7 @@ let g_pFilter = {};
 const CardDataProvider = {
 
     imageUrl : "",
+    _agentList : [],
 
     onCardsReceived : function(body)
     {
@@ -20,7 +20,7 @@ const CardDataProvider = {
             const cards = CardRepository.setup(JSON.parse(body));
             CardsMap.init(cards);
             ImageList.init(cards, CardDataProvider.imageUrl);
-            Agents.createAgentList(cards);
+            this.createAgentList(cards);
             g_pFilter = new CardsMeta(CardRepository.getCards());
             CardRepository.postProcessCardList();
         } 
@@ -29,6 +29,15 @@ const CardDataProvider = {
             console.error(error.message);
             console.log(error);
         };
+    },
+
+    createAgentList : function (jsonCards)
+    {
+        for (let card of jsonCards) 
+        {
+            if (card["type"] === "Character" && card["Secondary"] === "Agent") 
+            this._agentList.push(card.code);
+        }
     },
 
     loadLocally : function(file)
@@ -43,6 +52,11 @@ const CardDataProvider = {
         };
         
         return false;
+    },
+
+    getAgents : function()
+    {
+        return this._agentList;
     },
 
     loadFromUrl : function(cardsUrl)
@@ -86,7 +100,7 @@ exports.isCardAvailable = (code) => CardRepository.isCardAvailable(code);
 
 exports.getCardType = (code) => CardRepository.getCardType(code);
 
-exports.getAgents = () => Agents.getAgents();
+exports.getAgents = () => CardDataProvider.getAgents();
 
 exports.getFilters = () => g_pFilter;
 
@@ -101,3 +115,5 @@ exports.getCardMind = (code) => CardRepository.getCardMind(code);
 exports.getCardByCode = (code) => CardRepository.getCardByCode(code);
 
 exports.getCardTypeSpecific = (code) => CardRepository.getCardTypeSpecific(code);
+
+exports.getMarshallingPoints = (code) => CardRepository.getMarshallingPoints(code);
