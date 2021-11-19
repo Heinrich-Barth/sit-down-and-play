@@ -442,9 +442,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                         break;
                     case "organisation":
 
-                        if (g_sLobbyToken !== "")
-                            MeccgApi.send("/game/save", {});
-
                         CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
                         break;
                     case "movement":
@@ -486,12 +483,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 }
             });
 
-            
-            MeccgApi.addListener("/game/save", function(bIsMe, jData)
-            {
-                GameBuilder._saved = jData;
-            });
-            
             MeccgApi.addListener("/game/company/arrive", function(bIsMe, jData)
             {
                 CompanyManager.onCompanyArrivesAtDestination(jData.company, true);
