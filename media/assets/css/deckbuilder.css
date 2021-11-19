@@ -240,3 +240,19 @@ span.builder-white { color: #fff !important; font-weight: bold;}
 .decklist .fa:before {
     padding-right: 5px;
 }
+
+#deckname {
+    display: inline;
+    width: 150px;
+    line-height: 1em;
+    padding: 5px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    background: transparent;
+    color: #fff;
+}
+
+#deck_container h2,
+#deckname
+{ font-size: 15px; }
