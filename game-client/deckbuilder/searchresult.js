@@ -54,8 +54,6 @@ var SearchResult = {
         DomUtils.empty(document.getElementById("result"));
         DomUtils.empty(document.getElementById("linklist"));
 
-        console.log(vnIndicesCharacters);
-
         var nSize = this.getResultSize(vnIndicesCharacters);
         document.getElementById("size").innerHTML = nSize;
 
