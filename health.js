@@ -1,43 +1,22 @@
-const getHours = function(lUptime)
-{
-    const lHours = lUptime / 60;
-    return Math.floor(lHours);
-};
-
-const getMinutes = function(lUptime)
-{
-    const sHours = "" + Math.floor(lUptime % 60);
-    const sShort = sHours.length < 2 ? sHours : sHours.substr(0, 2);
-    return parseInt(sShort);
-};
-
 
 const getHealthData = function(jGames)
 {
     const os = require('os');
-    const lUptimeSeconds = (Date.now() -  g_nUptime) / 1000;
-    const lUptime = lUptimeSeconds / 60;
-    const lHours = getHours(lUptime);
-    const lMins = getMinutes(lUptime);
 
     const data = { 
 
         startup: {
             startup: g_nUptime,
-            readable: new Date(g_nUptime).toUTCString(),
-            seconds: Math.floor(lUptimeSeconds)
+            readable: new Date(g_nUptime).toUTCString()
         },
 
-        uptime : {
-            hours: lHours,
-            minutes: lMins
-        },
+        loadavg : os.loadavg(),
         
         memory : {
             raw: process.memoryUsage(),
-            megabytes : { },
+            megabytes : { }
         },
-        loadavg : os.loadavg(),
+
         games: jGames
     };
 
