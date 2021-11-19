@@ -3,7 +3,7 @@ const UTILS = require("./meccg-utils");
 
 class GamePlayRouteHandler 
 {
-    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage)
+    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, g_pAuthentication)
     {
         this.m_pServerInstance = pServer;
         this.contextPlay = sContext + "/";
@@ -12,6 +12,7 @@ class GamePlayRouteHandler
         this.pageLogin = __dirname + "/pages/" + sPageLogin;
         this.pageLobby = __dirname + "/pages/" + sLobbyPage;
         this.pageWatch = __dirname + "/pages/login-watch.html";
+        this.pAuthentication = g_pAuthentication;
     }
 
     isArda()
@@ -40,7 +41,7 @@ class GamePlayRouteHandler
         /**
          * Home
          */
-        this.m_pServerInstance.instance.get(this.contextRoot, this.onHome.bind(this));
+        this.m_pServerInstance.instance.get(this.contextRoot, this.pAuthentication.isSignedInPlay, this.onHome.bind(this));
 
         /**
          * The LOGIN page.
@@ -50,7 +51,7 @@ class GamePlayRouteHandler
          * 
          * The page forwards to a login page which will create all cookies.
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/login", this.onLogin.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/login", this.pAuthentication.isSignedInPlay, this.onLogin.bind(this));
         
         /**
          * Perform the login and set all necessary cookies.
@@ -59,7 +60,7 @@ class GamePlayRouteHandler
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/login/check", this.onLoginCheck.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/login/check", this.pAuthentication.isSignedInPlay, this.onLoginCheck.bind(this));
 
         /**
          * Player enters the lobby to wait until addmitted to the table.
@@ -70,37 +71,37 @@ class GamePlayRouteHandler
          * If the player does not yet have logged in, redirect to login.
          * Otherwise, simply show the waiting screen
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room/lobby", this.onLobby.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room/lobby", this.pAuthentication.isSignedInPlay, this.onLobby.bind(this));
 
         /**
          * Get a list of players who are waiting to join this game
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room/waiting/:token", this.onWaiting.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room/waiting/:token", this.pAuthentication.isSignedInPlay, this.onWaiting.bind(this));
 
         /**
          * Allow player to access the table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/invite/:id/:token", this.onJoinTable.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/invite/:id/:token", this.pAuthentication.isSignedInPlay, this.onJoinTable.bind(this));
 
         /**
          * Reject player access to table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/reject/:id/:token", this.onReqjectEntry.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/reject/:id/:token", this.pAuthentication.isSignedInPlay, this.onReqjectEntry.bind(this));
 
         /**
          * Reject player access to table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/remove/:id/:token", this.onRemovePlayer.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/remove/:id/:token", this.pAuthentication.isSignedInPlay, this.onRemovePlayer.bind(this));
 
         /**
          * Get the status of a given player (access denied, waiting, addmitted)
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.pAuthentication.isSignedInPlay, this.onPlayerStatus.bind(this));
 
         /**
          * Setup spectator
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/watch", this.onWatch.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/watch", this.pAuthentication.isSignedInPlay, this.onWatch.bind(this));
 
 
         /**
@@ -110,7 +111,7 @@ class GamePlayRouteHandler
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/watch/check", this.onWatchCheck.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/watch/check", this.pAuthentication.isSignedInPlay, this.onWatchCheck.bind(this));
 
 
         /**
@@ -118,7 +119,7 @@ class GamePlayRouteHandler
          * 
          * The room name has to be ALPHANUMERIC. Otherwise, the requets will fail.
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room", this.onPlayAtTable.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room", this.pAuthentication.isSignedInPlay, this.onPlayAtTable.bind(this));
     }
 
     onLogin(req, res)
@@ -217,14 +218,18 @@ class GamePlayRouteHandler
             if (jDeck === null)
                 throw "Invalid Deck";
 
-            /**
-             * Now, check if there already is a game for this Room
-             */
+            /** Now, check if there already is a game for this Room */
             const userId = UTILS.generateUuid();
 
             /** add player to lobby */
             const lNow = this.m_pServerInstance.roomManager.addToLobby(room, userId, displayname, jDeck, this.isArda(), this.isSinglePlayer());
 
+            if (lNow === -1)
+            {
+                this.m_pServerInstance.expireResponse(res).redirect("/");
+                return;
+            }
+            
             /** proceed to lobby */
             const jSecure = { httpOnly: true, secure: true };
             res.cookie('room', room, jSecure);

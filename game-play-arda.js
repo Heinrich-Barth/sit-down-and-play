@@ -3,9 +3,9 @@ const GamePlayRouteHandler = require("./game-play-standard");
 
 class GamePlayRouteHandlerArda extends GamePlayRouteHandler
 {
-    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage)
+    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, pAuthentication)
     {
-        super(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage)
+        super(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, pAuthentication)
     }
 
     validateDeck(jDeck)
