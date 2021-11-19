@@ -42,8 +42,11 @@ class CreateHandCardsDraggableUtils {
     {
         try
         {
-            if (jElem.hasClass("ui-droppable"))
-                jElem.removeClass('ui-droppable').droppable('destroy');
+            if (jElem !== null && jElem.hasClass("ui-droppable"))
+            {
+                jElem.removeClass('ui-droppable');
+                jElem.droppable('destroy');
+            }
         }
         catch(e)
         {
@@ -55,8 +58,11 @@ class CreateHandCardsDraggableUtils {
     {
         try
         {
-            if (jElem.hasClass("ui-droppable"))
-                jElem.removeClass('ui-droppable').droppable('destroy');
+            if (jElem !== null && jElem.hasClass("ui-droppable"))
+            {
+                jElem.removeClass('ui-droppable');
+                jElem.droppable('destroy');
+            }
         }
         catch(e)
         {
@@ -72,9 +78,12 @@ class CreateHandCardsDraggableUtils {
      */
     static removeDraggable(jElem)
     {   
-        CreateHandCardsDraggableUtils.removeElementDraggable(jElem);
-        CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
-        DomUtils.removeNode(jElem.get(0));
+        if (jElem !== null && jElem !== undefined)
+        {
+            CreateHandCardsDraggableUtils.removeElementDraggable(jElem);
+            CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
+            DomUtils.removeNode(jElem.get(0));
+        }
     }
 
     static requireMessageId()
@@ -134,18 +143,17 @@ class PlayerStagingAreaObjects {
 
 }
 
-function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
+function createHandCardsDraggable(_CardPreview, _MeccgApi)
 {
     CreateHandCardsDraggableUtils.CardPreview = _CardPreview;
 
     const MeccgApi = _MeccgApi;
-    const Scoring = _Scoring;
     
     document.body.setAttribute("data-class", document.body.getAttribute("class"));
   
     const DropFunctions = {
 
-        removeDraggable(ui, uuid, src)
+        removeDraggable(ui)
         {
             if (ui.draggable.attr("data-location") === "hand" || ui.draggable.attr("data-card-type") !== "character")
                 CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
@@ -184,10 +192,10 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
             CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
             
             MeccgApi.send("/game/card/store", { uuid: uuid });
-            Scoring.scoreCard(code);
+            document.body.dispatchEvent(new CustomEvent("meccg-score-card", { "detail": code }));
             return false;
         },
-        
+
         dropOnSideboard : function( event, ui ) 
         {
             const uuid = ui.draggable.attr("data-uuid");
@@ -432,7 +440,6 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi, _Scoring)
                         const source = elemDraggable.getAttribute("data-location");
                         const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
                         receivingCharacter.character_uuid = this.getAttribute("data-uuid");
-                        
                         var redrawReceivingCompanyId = receivingCharacter.company_uuid;
                         var redrawDonatingCompanyId = "";
                         
