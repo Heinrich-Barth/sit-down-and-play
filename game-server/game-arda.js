@@ -1,24 +1,24 @@
 
-exports.setupArdaSpecials = function(Game)
-{
-    let Arda = { };
+class Arda { 
 
-    Arda.game = Game;
-
-    Arda.reycled = {
-        minors : false,
-        characters: false,
+    constructor(game)
+    {
+        this.game = game;
+        this.reycled = {
+            minors : false,
+            characters: false,
+        };
     }
 
-    Arda.assignOpeningChars7 = function()
+    assignOpeningChars7()
     {
-        const players = Arda.game._playboardManager.decks.getPlayers();
+        const players = this.game._playboardManager.decks.getPlayers();
         if (players.length === 0)
             return;
 
         for (let userid of players)
         {
-            const deck = Arda.game._playboardManager.decks.getPlayerDeck(userid);
+            const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
             if (deck === null)
                 continue;
                 
@@ -26,21 +26,21 @@ exports.setupArdaSpecials = function(Game)
             const uuid2 = deck.drawOpeningCharacterMind7();
 
             if (uuid1 !== "")
-                Arda.game.callbacks.card.onCardDrawSingle(userid);
+                this.game.callbacks.card.onCardDrawSingle(userid);
 
             if (uuid2 !== "")
-                Arda.game.callbacks.card.onCardDrawSingle(userid);
+                this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        Arda.game._playboardManager.decks.getAdminDeck().mergeCharacterListsOnce();
-    };
+        this.game._playboardManager.decks.getAdminDeck().mergeCharacterListsOnce();
+    }
 
-    Arda.assignOpeningChars = function(nCount)
+    assignOpeningChars(nCount)
     {
-        const players = Arda.game._playboardManager.decks.getPlayers();
+        const players = this.game._playboardManager.decks.getPlayers();
         for (let userid of players)
         {
-            const deck = Arda.game._playboardManager.decks.getPlayerDeck(userid);
+            const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
             if (deck === null)
                 continue;
 
@@ -53,223 +53,223 @@ exports.setupArdaSpecials = function(Game)
             }
 
             for (let i = 0; i < nDraw; i++)
-                Arda.game.callbacks.card.onCardDrawSingle(userid);
+                this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        Arda.game._playboardManager.decks.getAdminDeck().addSpecialCharacers();
-        Arda.game._playboardManager.decks.getAdminDeck().shuffleCharacterDeck();
-    };
+        this.game._playboardManager.decks.getAdminDeck().addSpecialCharacers();
+        this.game._playboardManager.decks.getAdminDeck().shuffleCharacterDeck();
+    }
 
-    Arda.callbacks = { 
+    onShuffle(userid, socket, obj)
+    {
+        const deck = this.game._playboardManager.decks.getAdminDeck();
 
-        onShuffle : function(userid, socket, obj)
+        if (obj.target === "minor")
         {
-            const deck = Arda.game._playboardManager.decks.getAdminDeck();
-
-            if (obj.target === "minor")
-            {
-                deck.shuffleMinorItems();
-                Arda.game.apis.chat.send(userid, "shuffled minor items deck");
-            }
-            else if (obj.target === "mps")
-            {
-                deck.shuffleMPs();
-                Arda.game.apis.chat.send(userid, "shuffled marshalling points deck");
-            }
-        },
-
-        onRecycle : function(userid, socket, obj)
+            deck.shuffleMinorItems();
+            this.game.apis.chat.send(userid, "shuffled minor items deck");
+        }
+        else if (obj.target === "mps")
         {
-            const deck = Arda.game._playboardManager.decks.getAdminDeck();
-            let isMinor = false;
+            deck.shuffleMPs();
+            this.game.apis.chat.send(userid, "shuffled marshalling points deck");
+        }
+    }
 
-            if (obj.type === "minor")
-            {
-                deck.recycleMinorItems();
-                Arda.game.apis.chat.send(userid, "recycled all minor items");
-                Arda.reycled.minors = true;
-                isMinor = true;
-            }
-            else if (obj.type === "charackters")
-            {
-                deck.recycleCharacter();
-                Arda.reycled.characters = true;
-                Arda.game.apis.chat.send(userid, "recycled all characters");
-            }
-            else
-                return;
+    onRecycle(userid, socket, obj)
+    {
+        const deck = this.game._playboardManager.decks.getAdminDeck();
+        let isMinor = false;
 
-            for (let i = 0; i < 4; i++)
-            {
-                const uuid = isMinor ? deck.drawCardMinorItems() : deck.drawCardCharacter();
-                if (uuid === "")
-                    continue;
-                    
-                const card = Arda.game._playboardManager.decks.getFullPlayerCard(uuid);
-                if (card !== null)
-                {
-                    const data = {uuid:uuid, code:card.code, hand:obj.type, clear : i == 0};
-                    Arda.game.apis.meccgApi.publish("/game/arda/draw", userid, data);
-                    Arda.game.apis.chat.send(userid, "drew common card " + card.code);
-                }
-            }
-
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/show", userid, {});
-        },
-
-        onAssignCharacters : function(userid)
+        if (obj.type === "minor")
         {
-            Arda.assignOpeningChars7();
-            Arda.assignOpeningChars(8);
-        },
-
-        onViewCards : function(userid, socket, obj)
+            deck.recycleMinorItems();
+            this.game.apis.chat.send(userid, "recycled all minor items");
+            this.reycled.minors = true;
+            isMinor = true;
+        }
+        else if (obj.type === "charackters")
         {
-            const type = obj.type;
-            const pile = obj.pile;
-            
-            let _list = null;
-            if (type === "minor")
-            {
-                if (pile === "playdeck")
-                    _list = Arda.game._playboardManager.decks.getCards().playdeckMinor(userid);
-                else if (pile === "discard")
-                    _list = Arda.game._playboardManager.decks.getCards().discardPileMinor(userid);
-            }
-            else if (type === "mps")
-            {
-                if (pile === "playdeck")
-                    _list = Arda.game._playboardManager.decks.getCards().playdeckMPs(userid);
-                else if (pile === "discard")
-                    _list = Arda.game._playboardManager.decks.getCards().discardPileMPs(userid);
-            }
-            
-            if (_list !== null)
-            {
-                Game.apis.chat.send(userid, " views " + type + " cards in " + pile);
-                Game.apis.meccgApi.reply("/game/arda/view", socket, {type: type, pile:pile, list: Arda.game._playboardManager.getCardList(_list) });
-            }
-        },
-      
-        onDrawCard : function(userid, socket, obj)
+            deck.recycleCharacter();
+            this.reycled.characters = true;
+            this.game.apis.chat.send(userid, "recycled all characters");
+        }
+        else
+            return;
+
+        for (let i = 0; i < 4; i++)
         {
-            const deck = Arda.game._playboardManager.decks.getPlayerDeck(userid);
-            if (deck === null)
-                return;
-
-            let uuid = "";
-            const type = obj.type;
-            if (type === "minor")
-                uuid = deck.drawCardMinorItems();
-            else if (type === "mps")
-                uuid = deck.drawCardMarshallingPoints();
-            else if (type === "charackters")
-                uuid = deck.drawCardCharacter();
-            else
-                return;
-
+            const uuid = isMinor ? deck.drawCardMinorItems() : deck.drawCardCharacter();
             if (uuid === "")
-            {
-                let sDeck = "There are no cards left in the ";
-                if (type === "mps")
-                    sDeck += "marshalling points deck";
-                else if (type === "minor")
-                    sDeck += "minor items offering deck";
-                else
-                    sDeck += "roving characters deck";
-
-                Arda.game.apis.meccgApi.publish("/game/notification", userid, { type: "warning", message: sDeck } );
-                return;
-            }
+                continue;
                 
-
-            const card = Arda.game._playboardManager.decks.getFullPlayerCard(uuid);
-            if (card === null)
-                return;
-
-            Arda.game._playboardManager.UpdateOwnership(userid, card);
-
-            const data = {uuid:uuid, code:card.code, hand:obj.type, clear : false};
-            Arda.game.apis.meccgApi.publish("/game/arda/draw", userid, data);
-            Arda.game.apis.chat.send(userid, "drew 1 " + obj.type + " item card");
-        },
-
-        onCheckDraft : function(userid, socket)
-        {
-            let data = {
-                characters: Arda.reycled.characters,
-                minoritems: Arda.reycled.minors,
-            };
-
-            Game.apis.meccgApi.reply("/game/arda/checkdraft", socket, data);
-        },
-
-        onGetHandMinorItems : function(userid)
-        {
-            const listMinor = Arda.game._playboardManager.getCardList(Arda.game._playboardManager.decks.getCards().handMinorItems(userid));
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/minor", userid, {list: listMinor});
-
-            const listMP = Arda.game._playboardManager.getCardList(Arda.game._playboardManager.decks.getCards().handMarshallingPoints(userid));
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/marshallingpoints", userid, {list: listMP});
-
-            const listChars = Arda.game._playboardManager.getCardList(Arda.game._playboardManager.decks.getAdminDeck().getHandCharacters());
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/characters", userid, {list: listChars});
-        },
-
-        onMoveArdaHandCard: function(userid, socket, obj)
-        {
-            if (obj.to !== "hand" && obj.to !== "discardpile")
-                return;
-
-            const uuid = obj.uuid;
-            const deck = Arda.game._playboardManager.decks.getPlayerDeck(userid);
-            if (deck === null)
+            const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+            if (card !== null)
             {
-                console.log("Cannot find deck of player " + userid);
-                return;
-            }
-
-            let bOk = false;
-
-            if (obj.type === "minor")
-                bOk = deck.pop().fromHandMinor(uuid)
-            else if (obj.type === "mps")
-                bOk = deck.pop().fromHandMps(uuid)
-            else if (obj.type === "charackters")
-                bOk = deck.pop().fromHandCharacters(uuid)
-
-            if (!bOk)
-                return;
-
-            const card = Arda.game._playboardManager.decks.getFullPlayerCard(uuid);
-            if (card === null)
-                return;
-
-            /** this is essential, otherwise a card will not be removed from the respective hand */
-            Arda.game._playboardManager.UpdateOwnership(userid, card);
-
-            Arda.game.apis.meccgApi.publish("/game/arda/hand/card/remove", userid, { uuid: obj.uuid });
-            if (obj.to === "hand")
-            {
-                deck.push().toPlaydeckSpecific(uuid);
-                Arda.game.callbacks.card.onCardDrawSingle(userid, socket, {});
-                Arda.game.apis.chat.send(userid, "moved 1 arda " + obj.type + " item card to their hand");
-            }
-            else if (obj.to === "discardpile")
-            {
-                deck.push().toDiscardpile(uuid);
-                Arda.game.apis.chat.send(userid, "discarded 1 card from arda hand " + obj.type);
+                const data = {uuid:uuid, code:card.code, hand:obj.type, clear : i == 0};
+                this.game.apis.meccgApi.publish("/game/arda/draw", userid, data);
+                this.game.apis.chat.send(userid, "drew common card " + card.code);
             }
         }
-    };
 
-    Game.apis.meccgApi.addListener("/game/arda/hands", Arda.callbacks.onGetHandMinorItems);
-    Game.apis.meccgApi.addListener("/game/arda/checkdraft", Arda.callbacks.onCheckDraft);
-    Game.apis.meccgApi.addListener("/game/arda/from-hand", Arda.callbacks.onMoveArdaHandCard);
-    Game.apis.meccgApi.addListener("/game/arda/draw", Arda.callbacks.onDrawCard);
-    Game.apis.meccgApi.addListener("/game/arda/recycle", Arda.callbacks.onRecycle);
-    Game.apis.meccgApi.addListener("/game/arda/assign-characters", Arda.callbacks.onAssignCharacters);
-    Game.apis.meccgApi.addListener("/game/arda/view", Arda.callbacks.onViewCards);
-    Game.apis.meccgApi.addListener("/game/arda/shuffle", Arda.callbacks.onShuffle);
-    
+        this.game.apis.meccgApi.publish("/game/arda/hand/show", userid, {});
+    }
+
+    onAssignCharacters(userid)
+    {
+        this.assignOpeningChars7();
+        this.assignOpeningChars(8);
+    }
+
+    onViewCards(userid, socket, obj)
+    {
+        const type = obj.type;
+        const pile = obj.pile;
+        
+        let _list = null;
+        if (type === "minor")
+        {
+            if (pile === "playdeck")
+                _list = this.game._playboardManager.decks.getCards().playdeckMinor(userid);
+            else if (pile === "discard")
+                _list = this.game._playboardManager.decks.getCards().discardPileMinor(userid);
+        }
+        else if (type === "mps")
+        {
+            if (pile === "playdeck")
+                _list = this.game._playboardManager.decks.getCards().playdeckMPs(userid);
+            else if (pile === "discard")
+                _list = this.game._playboardManager.decks.getCards().discardPileMPs(userid);
+        }
+        
+        if (_list !== null)
+        {
+            Game.apis.chat.send(userid, " views " + type + " cards in " + pile);
+            Game.apis.meccgApi.reply("/game/arda/view", socket, {type: type, pile:pile, list: this.game._playboardManager.getCardList(_list) });
+        }
+    }
+  
+    onDrawCard(userid, socket, obj)
+    {
+        const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+        if (deck === null)
+            return;
+
+        let uuid = "";
+        const type = obj.type;
+        if (type === "minor")
+            uuid = deck.drawCardMinorItems();
+        else if (type === "mps")
+            uuid = deck.drawCardMarshallingPoints();
+        else if (type === "charackters")
+            uuid = deck.drawCardCharacter();
+        else
+            return;
+
+        if (uuid === "")
+        {
+            let sDeck = "There are no cards left in the ";
+            if (type === "mps")
+                sDeck += "marshalling points deck";
+            else if (type === "minor")
+                sDeck += "minor items offering deck";
+            else
+                sDeck += "roving characters deck";
+
+                this.game.apis.meccgApi.publish("/game/notification", userid, { type: "warning", message: sDeck } );
+            return;
+        }
+            
+
+        const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+        if (card === null)
+            return;
+
+            this.game._playboardManager.UpdateOwnership(userid, card);
+
+        const data = {uuid:uuid, code:card.code, hand:obj.type, clear : false};
+        this.game.apis.meccgApi.publish("/game/arda/draw", userid, data);
+        this.game.apis.chat.send(userid, "drew 1 " + obj.type + " item card");
+    }
+
+    onCheckDraft(userid, socket)
+    {
+        let data = {
+            characters: this.reycled.characters,
+            minoritems: this.reycled.minors,
+        };
+
+        this.game.apis.meccgApi.reply("/game/arda/checkdraft", socket, data);
+    }
+
+    onGetHandMinorItems(userid)
+    {
+        const listMinor = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getCards().handMinorItems(userid));
+        this.game.apis.meccgApi.publish("/game/arda/hand/minor", userid, {list: listMinor});
+
+        const listMP = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getCards().handMarshallingPoints(userid));
+        this.game.apis.meccgApi.publish("/game/arda/hand/marshallingpoints", userid, {list: listMP});
+
+        const listChars = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getAdminDeck().getHandCharacters());
+        this.game.apis.meccgApi.publish("/game/arda/hand/characters", userid, {list: listChars});
+    }
+
+    onMoveArdaHandCard(userid, socket, obj)
+    {
+        if (obj.to !== "hand" && obj.to !== "discardpile")
+            return;
+
+        const uuid = obj.uuid;
+        const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+        if (deck === null)
+        {
+            console.log("Cannot find deck of player " + userid);
+            return;
+        }
+
+        let bOk = false;
+
+        if (obj.type === "minor")
+            bOk = deck.pop().fromHandMinor(uuid)
+        else if (obj.type === "mps")
+            bOk = deck.pop().fromHandMps(uuid)
+        else if (obj.type === "charackters")
+            bOk = deck.pop().fromHandCharacters(uuid)
+
+        if (!bOk)
+            return;
+
+        const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+        if (card === null)
+            return;
+
+        /** this is essential, otherwise a card will not be removed from the respective hand */
+        this.game._playboardManager.UpdateOwnership(userid, card);
+
+        this.game.apis.meccgApi.publish("/game/arda/hand/card/remove", userid, { uuid: obj.uuid });
+        if (obj.to === "hand")
+        {
+            deck.push().toPlaydeckSpecific(uuid);
+            this.game.callbacks.card.onCardDrawSingle(userid, socket, {});
+            this.game.apis.chat.send(userid, "moved 1 arda " + obj.type + " item card to their hand");
+        }
+        else if (obj.to === "discardpile")
+        {
+            deck.push().toDiscardpile(uuid);
+            this.game.apis.chat.send(userid, "discarded 1 card from arda hand " + obj.type);
+        }
+    }
 }
+
+exports.setupArdaSpecials = function(Game)
+{
+    const pArda = new Arda(Game);
+    Game.apis.meccgApi.addListener("/game/arda/hands", pArda.onGetHandMinorItems.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/checkdraft", pArda.onCheckDraft.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/from-hand", pArda.onMoveArdaHandCard.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/draw", pArda.onDrawCard.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/recycle", pArda.onRecycle.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/assign-characters", pArda.onAssignCharacters.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/view", pArda.onViewCards.bind(pArda));
+    Game.apis.meccgApi.addListener("/game/arda/shuffle", pArda.onShuffle.bind(pArda));
+};
