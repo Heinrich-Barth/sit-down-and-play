@@ -251,7 +251,7 @@ a:hover { color: #ff0; }
 .table { position: relative; width: 100%; }
 .table .area { width: 100%; }
 .table .area-opponent, 
-.table .area-player {position: relative; max-height: 48%; height: 100%;}
+.table .area-player {position: relative; min-height: 48%; }
 .table .area-opponent { margin-bottom: 20px; }
 img.card-icon { 
     width: 57px;
