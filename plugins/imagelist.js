@@ -1,73 +1,86 @@
 
+class ImageList {
 
-let g_ImageList = {};
-let g_QuestList = {};
-
-let g_nCountErrataDC = 0;
-let g_nCountErrataIC = 0;
-
-const removeEndingSlash = function(imageUrl)
-{
-    if (imageUrl.endsWith("/"))
-        return imageUrl.substring(0, imageUrl.length - 1);
-    else
-        return imageUrl;
-};
-
-const createImageUrl = function(imageName, setCode, imageUrl)
-{
-    return imageUrl + "/" + setCode + "/" + imageName;
-};
-
-const imageListJson = function(card, imageUrl) 
-{
-    let isDCErratum = card.erratum !== undefined && card.erratum === true;
-    let isICErratum = card.ice_errata !== undefined && card.ice_errata === true;
+    constructor()
+    {
+        this.g_ImageList = {};
+        this.g_QuestList = {};
+        this.g_nCountErrataDC = 0;
+        this.g_nCountErrataIC = 0;
+    }
     
-    if (isDCErratum)
-        g_nCountErrataDC++;
+    static removeEndingSlash(imageUrl)
+    {
+        return imageUrl.endsWith("/") ? imageUrl.substring(0, imageUrl.length - 1) : imageUrl;
+    }
 
-    if (isICErratum)
-        g_nCountErrataIC++;
+    static createImageUrl(imageName, setCode, imageUrl)
+    {
+        return imageUrl + "/" + setCode + "/" + imageName;
+    }
 
-    return {
-        title: card.title,
-        image: createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl),
-        errata_dc : !isDCErratum ? "" : createImageUrl("dce-" + card.ImageName, card.set_code.toUpperCase(), imageUrl),
-        errata_ic : !isICErratum  ? "" : createImageUrl("ice-" + card.ImageName, card.set_code.toUpperCase(), imageUrl),
-        set_code: card.set_code.toUpperCase()
+    newImage(card, imageUrl) 
+    {
+        let isDCErratum = card.erratum !== undefined && card.erratum === true;
+        let isICErratum = card.ice_errata !== undefined && card.ice_errata === true;
+        
+        if (isDCErratum)
+            this.g_nCountErrataDC++;
+
+        if (isICErratum)
+            this.g_nCountErrataIC++;
+
+        return {
+            title: card.title,
+            image: ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl),
+            errata_dc : isDCErratum ? ImageList.createImageUrl("dce-" + card.ImageName, card.set_code.toUpperCase(), imageUrl) : "",
+            errata_ic : isICErratum ? ImageList.createImageUrl("ice-" + card.ImageName, card.set_code.toUpperCase(), imageUrl) : "",
+            set_code: card.set_code.toUpperCase()
+        };
     };
-};
 
-const createImageList = function (jsonCards, imageUrl) 
-{
-    let list = {};
+    createImageList(jsonCards, imageUrl) 
+    {
+        let list = {};
 
-    for (let card of jsonCards) 
-        list[card.code] = imageListJson(card, imageUrl);
+        for (let card of jsonCards) 
+            list[card.code] = this.newImage(card, imageUrl);
 
-    console.log("\t-image url prefix: " + imageUrl);
-    console.log("\t-IC errata images available: " + g_nCountErrataIC);
-    console.log("\t-DC errata images available: " + g_nCountErrataDC);
+        console.log("\t- image url prefix: " + imageUrl);
+        console.log("\t- IC errata images available: " + this.g_nCountErrataIC);
+        console.log("\t- DC errata images available: " + this.g_nCountErrataDC);
 
-    return list;
-};
+        return list;
+    }
 
-exports.init = function(jsonCards, imageUrl)
-{
-    if (imageUrl === undefined)
-        imageUrl = "";
+    init(jsonCards, imageUrl)
+    {
+        if (imageUrl !== undefined)
+        {
+            this.g_ImageList = this.createImageList(jsonCards, ImageList.removeEndingSlash(imageUrl));
+            this.g_QuestList = require("./cards-quests").identifyQuests(jsonCards);
+        }
+    }
 
-    g_ImageList = createImageList(jsonCards, removeEndingSlash(imageUrl));
-    g_QuestList = require("./cards-quests").identifyQuests(jsonCards);
-};
+    getImages()
+    {
+        return this.g_ImageList;
+    }
 
-exports.getImages = () => g_ImageList;
+    getList()
+    {
+        return {
+            images: this.g_ImageList,
+            fliped : this.g_QuestList
+        };
+    }
 
-exports.getList = function()
-{
-    return {
-        images: g_ImageList,
-        fliped : g_QuestList
-    };
-};
+}
+
+const pImageList = new ImageList();
+
+exports.init = (jsonCards, imageUrl) => pImageList.init(jsonCards, imageUrl);
+
+exports.getImages = () => pImageList.getImages();
+
+exports.getList = () => pImageList.getList();
