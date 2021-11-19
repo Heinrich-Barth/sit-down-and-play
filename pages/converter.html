@@ -7,11 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'" />
+    <meta name="robots" content="noindex, nofollow">
     
     <link rel="icon" type="image/png" href="/media/assets/favicon.png">
     <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="/media/assets/css/notifications.css" />
     <link rel="stylesheet" href="/media/assets/css/join-game.css" />
+    <link rel="stylesheet" href="/media/assets/css/converter.css" />
 </head>
 
 <body class="bgbagend" data-navigation-type="open">
@@ -49,6 +51,7 @@
                 </div>   
                 
                 <div class="deck-clear"></div>
+                <input type="text" id="deckname" placeholder="Your deck name" value="">
                 <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Convert Deck</button>
             </div>
             <div class="deck-clear"></div>
@@ -61,6 +64,7 @@
     <script src="/media/client/game/notify.js"></script>
     <script src="/media/client/game/libraries.js"></script>
     <script src="/media/client/converter.js"></script>
+    <script src="/media/client/saveas.js"></script>
     <script src="/media/client/navigation.js"></script>
 </body>
 

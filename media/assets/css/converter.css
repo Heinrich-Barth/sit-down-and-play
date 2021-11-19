@@ -1,0 +1,9 @@
+input#deckname {
+    width: 300px !important;
+    margin: 10px auto;
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    background: transparent;
+    color: #fff;
+}

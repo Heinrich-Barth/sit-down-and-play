@@ -95,15 +95,29 @@
  
  const onPerformLogin = function()
  {
-     let jDeck = createDeck();
-     if (jDeck === null) 
+     let data = createDeck();
+     if (data === null) 
          return false;
- 
-    const form = document.getElementById("form");
-    form.querySelector("textarea").value = JSON.stringify(jDeck);
-    form.classList.remove("hidden");
- };
- 
+
+    let sName = document.getElementById("deckname").value;
+    if (sName === null || sName === undefined || sName === "")
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Provide a deck name first" }));
+        document.getElementById("deckname").focus();
+        return;
+    }
+    else
+        sName = sName.trim();
+
+    const det = {
+        data: data,
+        name : sName
+    };
+
+    document.body.dispatchEvent(new CustomEvent("meccg-saveas-deck", { "detail": det}));
+};
+  
+
  const onCheckCardCodes = function()
  {
     if (document.getElementById("invalid-cards-info") !== null)
@@ -149,7 +163,6 @@
          document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
      });   
  };
- 
  
 (function()
 {
