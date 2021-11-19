@@ -42,13 +42,13 @@ exports.identifyQuests = function(jsonCards)
 
     const nSize = missingSide.length;
 
-    console.log("\t-Quests identified: " + (nQuests - nSize));
+    console.log("\t- Quests identified: " + (nQuests - nSize));
     for (let i = 0; i < nSize; i++)
     {
         delete list[missingSide[i]];
-        console.log("\t-removing missing quest " + missingSide[i] + " from quest list.");
+        console.log("\t- removing missing quest " + missingSide[i] + " from quest list.");
     }
 
-    console.log("\t-missing quest removed: " + nSize);
+    console.log("\t- missing quest removed: " + nSize);
     return list;
 };
