@@ -10,13 +10,17 @@ const SiteAlignments = {
 
     add : function(sAlignment, siteTitle)
     {
-        SiteAlignments.map[sAlignment] = true;
+        if (SiteAlignments.map[sAlignment] === undefined)
+            SiteAlignments.map[sAlignment] = [siteTitle];
+        else
+            SiteAlignments.map[sAlignment].push(siteTitle);
     },
 
     sort : function()
     {
         SiteAlignments.list = Object.keys(SiteAlignments.map);
         SiteAlignments.list.sort();
+        /*console.log(SiteAlignments.map);*/
         SiteAlignments.map = null;
     },
 
