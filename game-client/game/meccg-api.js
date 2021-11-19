@@ -32,6 +32,11 @@ const MeccgPlayers = {
         }
     },
 
+    getPlayers()
+    {
+        return MeccgPlayers.usermap;
+    },
+
     getPlayerDisplayName : function(sId)
     {
         if (sId === null || typeof sId === "undefined" || sId === "" || typeof MeccgPlayers.usermap[sId] === "undefined")
