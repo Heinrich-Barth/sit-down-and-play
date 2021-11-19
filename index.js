@@ -16,7 +16,6 @@ let SERVER = {
 
     environment: {
 
-        uuid_tpl: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
         startupTime: Date.now(),
         port: process.env.PORT || 8080,
 
@@ -95,6 +94,7 @@ const getHtmlCspPage = function(page)
 /**
  * Create server
  */
+const g_pAuthentication = require("./authentication");
 const g_pExpress = require('express');
 
 SERVER.instance = g_pExpress();
@@ -104,6 +104,11 @@ SERVER.instance = g_pExpress();
     SERVER.instance.use(require('cookie-parser')());
     SERVER.instance.use(g_pExpress.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
     SERVER.instance.use(g_pExpress.json()); // for parsing application/json
+
+    SERVER.instance.use(function (req, res, next) {
+        res.setHeader('X-Robots-Tag','noindex, nofollow');
+        next();
+    });
 
     SERVER.instance.disable('x-powered-by');
     SERVER._http = require('http').createServer(SERVER.instance);
@@ -288,6 +293,19 @@ SERVER.instance.get("/data/list/sites", (req, res) => SERVER.cacheResponse(res, 
 SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", SERVER.cacheResponseHeader));
 
 /**
+ * This allows dynamic scoring categories. Can be cached, because it will not change.
+ */
+SERVER.instance.get("/data/marshallingpoints", (req, res) => {
+    res.setHeader('content-type', 'application/json');
+    res.send(SERVER.cards.getMarshallingPoints(req.query.code));
+});
+
+/**
+ * This allows dynamic scoring categories. Can be cached, because it will not change.
+ */
+ SERVER.instance.use("/robots.txt", g_pExpress.static(__dirname + "/robots.txt"));
+ 
+ /**
  * Get the navigation
  */
 SERVER.instance.get("/data/navigation", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER._navigation).status(200));
@@ -362,25 +380,34 @@ SERVER.instance.get("/error/login", (req, res) => SERVER.clearCookies(res).sendF
 /**
  * Start the deckbuilder
  */
-SERVER.instance.get("/deckbuilder", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("deckbuilder.html")).status(200));
+SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("deckbuilder.html")).status(200));
 
 SERVER.instance.get("/converter", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("converter.html")).status(200));
 
-SERVER.instance.get("/cards", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("card-browser.html")).status(200));
+SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("card-browser.html")).status(200));
  
 /**
   * Home Page redirects to "/play"
   */
 SERVER.instance.get("/", (req, res) => res.redirect("/play"));
+
+SERVER.instance.get("/login", (req, res) => g_pAuthentication.showLoginPage(req, res, __dirname + "/pages/authentication-login.html"));
+SERVER.instance.post("/login", (req, res) => {
+
+    if (g_pAuthentication.signIn(req, res))
+        res.redirect("/");
+    else 
+        res.redirect("/login");
+});
  
 /**
   * About Page
   */
 SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
-require("./game-play")(SERVER);
+require("./game-play")(SERVER, g_pAuthentication);
 
-require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage);
+require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage, g_pAuthentication);
 
 require("./game-rules").setup(SERVER, g_pExpress);
 

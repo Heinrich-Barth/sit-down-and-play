@@ -112,6 +112,19 @@ class ScorintSheet {
             total: this._total
         };
     }
+
+    restore(scores)
+    {
+        if (scores === null || scores === undefined)
+            return;
+
+        this.total = 0;
+        for (let key of Object.keys(this._sheet))
+        {
+            this._sheet[key] = scores[key] === undefined ? 0 : parseInt(scores[key]);
+            this.total += this._sheet[key];
+        }
+    }
 }
 
 class SCORES {
@@ -135,6 +148,20 @@ class SCORES {
             data[key] = this._sheets[key].save();
 
         return data;
+    }
+
+    restore(scores)
+    {
+        this.reset();
+
+        let keys = Object.keys(scores);
+        for (let sPlayerId of keys)
+        {  
+            this.add(sPlayerId);
+            this._sheets[sPlayerId].restore(scores[sPlayerId].scores);
+        }
+
+        return true;
     }
 
     /**
