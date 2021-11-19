@@ -13,6 +13,12 @@ const generateUuid = function ()
     return g_sUUIDTpl.replace(/[xy]/g, replaceTplUUID);
 };
 
+const generateFlatUuid = function()
+{
+    const sTpl = "xxxxxxxx_xxxx_xxxx_xxxx_xxxxxxxxxxxx";
+    return sTpl.replace(/[xy]/g, replaceTplUUID);
+};
+
 const isAlphaNumeric = function(sInput)
 {
     return sInput !== undefined && sInput.trim() !== "" && /^[0-9a-zA-Z]{1,}$/.test(sInput);
@@ -42,6 +48,9 @@ exports.uuidLength = () => { return g_sUUIDLength; }
   * @returns UUID String
   */
  exports.generateUuid = () => generateUuid();
+
+ exports.generateFlatUuid = () => generateFlatUuid();
+
 
  /**
  * Create a unique secret 
