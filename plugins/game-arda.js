@@ -21,7 +21,7 @@ const addAvatarsToPoolAndSideboard = function(jDeck)
     createCardEntry(jDeck.sideboard, "Saruman [F] (WH)");
 };
 
-addRingwraithsToPoolAndSideboard = function(jDeck)
+const addRingwraithsToPoolAndSideboard = function(jDeck)
 {
     jDeck.pool = { };
     jDeck.sideboard = { };
