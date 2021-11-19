@@ -161,18 +161,27 @@ let Arda = {
         a.setAttribute("data-type", dataType);
         a.setAttribute("data-player", playerId);
         a.setAttribute("id", "arda-action-container-" + dataType);
-        a.setAttribute("title", title);
-        a.setAttribute("class", "blue-box fa " + html);
+        a.setAttribute("title", title + ". Right click to refresh.");
+        a.setAttribute("class", "blue-box fa context-cursor " + html);
         a.setAttribute("aria-hidden", "true");
         a.onclick = Arda.toogleView;
-
+        
         if (label !== "")
-            a.innerHTML = label;
+            a.innerText = label;
 
-        div.setAttribute("class", "arda-hand-container");
+        div.setAttribute("class", "arda-hand-container ");
+        div.oncontextmenu = Arda.onRefreshHands;
         div.appendChild(a);
         parent.appendChild(div);
         return div;
+    },
+
+    onRefreshHands : function(e)
+    {
+        Arda.getOpeningHands();
+
+        e.preventDefault();
+        e.stopPropagation();
     },
 
     onShowHands : function()
@@ -396,6 +405,8 @@ let Arda = {
         if (container === null)
             return false;
 
+        DomUtils.removeAllChildNodes(container);
+
         for (let elem of jData)
             Arda.onDrawSingleCard(container, elem.code, elem.uuid, type);
 
@@ -423,20 +434,21 @@ let Arda = {
 
             }
         }
+        else
+            Arda.onReceiveOpeningHandGeneric("arda_hand_container_charackters", "charackters", jData);
     },
 
     onReceiveOpeningHandMinor : function(jData)
     {
         /* you can only receive your opening hand once, but it will be triggered for every player at the table */
-        if (!Arda._hasReceivedMinor)
-            Arda._hasReceivedMinor = Arda.onReceiveOpeningHandGeneric("arda_hand_container_minor", "minor", jData);
+        Arda.onReceiveOpeningHandGeneric("arda_hand_container_minor", "minor", jData);
     },
 
-    onReceiveOpeningHandMarshalingPoints : function(jData)
+    onReceiveOpeningHandMarshalingPoints : function(bIsMe, jData)
     {
         /* you can only receive your opening hand once, but it will be triggered for every player at the table */
-        if (!Arda._hasReceivedMps)
-            Arda._hasReceivedMps = Arda.onReceiveOpeningHandGeneric("arda_hand_container_mps", "mps", jData);
+        if (bIsMe)
+            Arda.onReceiveOpeningHandGeneric("arda_hand_container_mps", "mps", jData);
     },
 
     onDrawCard : function(bIsMe, jData)
@@ -473,7 +485,7 @@ if ("true" === document.body.getAttribute("data-game-arda"))
     MeccgApi.addListener("/game/arda/hand/show", () => Arda.onShowHands());
     MeccgApi.addListener("/game/arda/hand/minor", (bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
     MeccgApi.addListener("/game/arda/hand/characters", (bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
-    MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(jData.list));
+    MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(bIsMe, jData.list));
     MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
     MeccgApi.addListener("/game/arda/checkdraft", (bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
