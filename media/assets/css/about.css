@@ -63,3 +63,17 @@ ul {
 
 
 .about h2 { margin-top: 2em; }
+
+
+.auth input
+{
+    line-height: 1.75em !important;
+    box-sizing: border-box; 
+    margin: 2em 0;
+}
+
+.auth button {
+    display: block;
+    width: 100%;
+    border-radius: 9px;
+}
