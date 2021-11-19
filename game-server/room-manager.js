@@ -1,6 +1,4 @@
 
-const fs = require('fs');
-const UTILS = require("../meccg-utils");
 const Game = require("./index.js");
 
 let fnSocketIo = function() { return null; }
@@ -15,7 +13,7 @@ const _createRoom = function(room, isArda, isSinglePlayer, userId)
 {
     if (ROOM_MANAGER._rooms[room] === undefined)
     {
-        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda, isSinglePlayer);
+        ROOM_MANAGER._rooms[room] = Game.newGame(fnSocketIo(), room, ROOM_MANAGER.getAgentList(), ROOM_MANAGER._eventManager, ROOM_MANAGER.gameCardProvider, isArda, isSinglePlayer, ROOM_MANAGER.endGame);
         ROOM_MANAGER._rooms[room].game.setGameAdminUser(userId);
     }
 
@@ -568,23 +566,50 @@ const ROOM_MANAGER = {
      * @param {String} userId 
      * @param {String} displayname 
      * @param {JSON} jDeck 
-     * @returns Timestamp when joined
+     * @returns Timestamp when joined or -1 on error
      */
     addToLobby: function (room, userId, displayname, jDeck, isArda, isSinglePlayer) 
     {
         const pRoom = _createRoom(room, isArda, isSinglePlayer, userId);
         const isFirst = pRoom.isEmpty();
-        if (isFirst)
-            console.log("first player");
-        else
-            console.log("not first player");
-            
+
+        /** a singleplayer game cannot have other players and a ghost game about to die should not allow new contestants */
+        if (!isFirst && (pRoom.game.isSinglePlayer() || ROOM_MANAGER.gameIsActive(pRoom)))
+            return -1;
+
         if (pRoom.game.isArda() && !isSinglePlayer)
             ROOM_MANAGER._eventManager.trigger("arda-prepare-deck", ROOM_MANAGER.gameCardProvider, jDeck, isFirst);
 
         const lNow = Date.now();
         pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow);
+
+        /** timer to check for abandoned games */
+        setTimeout(function ()
+        {
+            if (ROOM_MANAGER.kickDisconnected(room))
+                console.log("Ghost game " + room + " is empty and was destroyed.");
+
+        }, 2000 * 60);
+
         return lNow;
+    },
+
+    /**
+     * Check if this game room is still active. It might still be in the list for some time but the
+     * host not available anymore (maybe just left without actually quitting the game). The session will 
+     * expire at some point, but the connection should be lost. Therefore, the game should not be accessible
+     * anymore (since it does not make any sense).
+     * 
+     * @param {Object} pRoom 
+     * @returns 
+     */
+    gameIsActive: function(pRoom)
+    {
+        const userid = pRoom.game.getHost();
+        if (userid === undefined || userid === "" || pRoom.players[userid] === undefined)
+            return false;
+        else
+            return pRoom.players[userid].socket !== null && !pRoom.players[userid].socket.connected;
     },
 
     updateEntryTime: function (room, userId) 
