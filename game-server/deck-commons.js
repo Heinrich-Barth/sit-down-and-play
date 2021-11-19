@@ -1,10 +1,10 @@
-let g_deck_uuid_count = 0;
 
 class DeckCommons {
     
     constructor(playerId)
     {      
         this.id = playerId;
+        this.g_deck_uuid_count = 0;
     }
 
     getMaxDeckSize()
@@ -162,7 +162,7 @@ class DeckCommons {
 
     createNewCardUuid()
     {
-        return ++g_deck_uuid_count;
+        return ++this.g_deck_uuid_count;
     }
 
     requestNewCardUuid()
@@ -170,6 +170,44 @@ class DeckCommons {
         return this.getPlayerId() + "_" + this.createNewCardUuid();
     }
 
+    static createEmptyCardEntry()
+    {
+        return {
+            code : "",
+            type : "",
+            uuid : "",
+            state : 0,
+            owner : "",
+            revealed: false,
+            agent : false,
+            turn: 0
+        };
+    }
+
+    static cloneCardEntry(input)
+    {
+        let data = DeckCommons.createEmptyCardEntry();
+        for (let key of Object.keys(data))
+        {
+            if (input[key] === undefined)
+                return null;
+        };
+
+        data.code = DeckCommons.assertString(input.code);
+        data.type = DeckCommons.assertString(input.type);
+        data.uuid = DeckCommons.assertString(input.uuid);
+        data.state = parseInt(input.state);
+        data.owner = DeckCommons.assertString(input.owner);
+        data.revealed = input.revealed === true;
+        data.agent = input.agent === true;
+        data.turn = parseInt(input.turn);
+        return data;
+    }
+
+    static assertString(input)
+    {
+        return input !== undefined && typeof input === "string" ? input : "";
+    }
 
     createCardEntry(code, isAgent, _cardMap, gameCardProvider)
     {
@@ -185,17 +223,17 @@ class DeckCommons {
             console.log("Invalid card type");
             return null;
         }
-        
-        return {
-            code : code,
-            type : sType.toLowerCase(),
-            uuid : this.requestNewCardUuid(),
-            state : 0,
-            owner : this.getPlayerId(),
-            revealed: !isAgent,
-            agent : isAgent,
-            turn: 0
-        };
+
+        let data = DeckCommons.createEmptyCardEntry();
+        data.code = code;
+        data.type = sType.toLowerCase();
+        data.uuid = this.requestNewCardUuid();
+        data.state = 0;
+        data.owner = this.getPlayerId();
+        data.revealed = !isAgent;
+        data.agent = isAgent;
+        data.turn = 0;
+        return data;
     }
 }
 
