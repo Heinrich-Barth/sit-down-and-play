@@ -170,31 +170,22 @@ const createVisitor = function(displayname, timeAdded)
 };
 
 const Game = require("./game.js");
-const Chat = require("./chat.js")
+const Chat = require("./chat.js");
 
-exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer)
+const createRoomInstance = function(io, room)
 {
-    if (isSinglePlayer)
-        console.log("Setting up single player game " + room);
-    else if (isArda)
-        console.log("Setting up arda game " + room);
-    else
-        console.log("Setting up game " + room);
-
-    let pAPI = new GameAPI(io, room);
-    let pChat = new Chat(pAPI, "/game/chat/message");
-    let pGame = Game.newInstance(pAPI, pChat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer);
-
     return {
+
         secret: UTILS.createSecret(),
         lobbyToken : UTILS.createSecret(),
         created: Date.now(),
-        game: pGame, 
-        api: pAPI, 
-        chat: pChat, 
+        game: null, 
+        api: null,
+        chat: null,
         players: {},
         visitors : {},
         name: room,
+
         isEmpty : function() 
         { 
             return Object.keys(this.players).length === 0; 
@@ -206,6 +197,61 @@ exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvide
         addSpectator : function(userid, displayname, timeAdded)
         {
             this.visitors[userid] = createVisitor(displayname, timeAdded);
-        }
+        },
+
+        endGame : function() {}
     };
+}
+
+const disconnectPlayer = function(socket)
+{
+    if (socket == undefined || socket.room === undefined || socket.room === "")
+        return null;
+
+    try
+    {
+        socket.leave(socket.room);
+        socket.disconnect(true);
+    }
+    catch (err)
+    {
+        console.log(err);
+    }
+
+    return null;
+}
+
+exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame)
+{
+    if (isSinglePlayer)
+        console.log("Setting up single player game " + room);
+    else if (isArda)
+        console.log("Setting up arda game " + room);
+    else
+        console.log("Setting up game " + room);
+
+    let pRoomInstance = createRoomInstance(io, room);
+
+    pRoomInstance.api = new GameAPI(io, room);
+    pRoomInstance.chat = new Chat(pRoomInstance.api, "/game/chat/message"), 
+    pRoomInstance.fnEndGame = fnEndGame === undefined ? function() {} : fnEndGame,
+    pRoomInstance.endGame = function()
+    {
+        const _list = this.players;
+        this.players = [];
+        
+        for (var i = 0; i < _list.length; i++)
+        {
+            let _player = _list[i];
+            if (_player.socket !== null)
+                _player.socket = disconnectPlayer(_player.socket)
+        }
+
+        this.fnEndGame(this.name);
+
+    };
+
+    pRoomInstance.game =  Game.newInstance(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame);
+
+    return pRoomInstance;
 }; 
