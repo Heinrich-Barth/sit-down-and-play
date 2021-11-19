@@ -784,7 +784,11 @@ const MapCreator = {
     {
         let jElem = document.querySelector(".mapchooser");
         if (jElem.classList.contains("hide"))
+        {
             jElem.classList.remove("hide");
+            document.getElementById("card_text").focus();
+        }
+            
         else
             jElem.classList.add("hide");
     },
@@ -852,7 +856,7 @@ const MapCreator = {
     
     onSearchByTitle : function()
     {
-        var sText = document.getElementById("card_text").value.trim();
+        var sText = document.getElementById("card_text").value.trim().toLowerCase();
         if (sText.length < 3)
             return;
 
@@ -1133,14 +1137,14 @@ const MapCreator = {
     {
         ArrayList(document.getElementById("found_sites")).find("img").each(function(el)
         {
-            if (MapCreator.getAttribute(el, "data-location-type") === "location")
+            if (el.getAttribute("data-location-type") === "location")
                 return;
             
-            var _code = MapCreator.getAttribute(el, "data-code");
-            if (_code.startsWith(sTitle))
-                this.classList.remove("hide");
+            const _code = el.getAttribute("data-code");
+            if (_code !== null && _code.startsWith(sTitle))
+                el.classList.remove("hide");
             else
-                this.classList.add("hide");
+                el.classList.add("hide");
         });
     },
     
