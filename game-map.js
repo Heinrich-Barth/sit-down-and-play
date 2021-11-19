@@ -65,7 +65,7 @@ pCookiePreferences.addPreference("elf", true);
 pCookiePreferences.addPreference("dwarf", true);
 pCookiePreferences.addPreference("lord", true);
 pCookiePreferences.addPreference("fallenlord", true);
-pCookiePreferences.addPreference("dragon", true);
+pCookiePreferences.addPreference("dragon", false);
 
 exports.setup = function(SERVER, g_pExpress, fnGetHtmlCspPage)
 {
