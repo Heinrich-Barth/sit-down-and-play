@@ -28,7 +28,7 @@ class ScoringContainers {
 
             let elem = document.createElement("div");
             elem.setAttribute("class", "score_label");
-            elem.innerHTML = `<input type="radio" name="score_type" id="${entry.id}" value="${entry.value}" ${_ch}> <label for="${entry.id}">${entry.label}</label>`;
+            elem.innerHTML = `<input type="radio" name="score_type" id="${entry.id}" value="${entry.value}" ${_ch}> <label id="${entry.id}_label" for="${entry.id}">${entry.label}</label>`;
             div.appendChild(elem);
         });
 
@@ -49,7 +49,7 @@ class ScoringContainers {
 
             const div = document.createElement("div");
             div.setAttribute("class", "score_label");
-            div.innerHTML = `<input type="radio" name="score_points" id="${_id}" value="${i}"> <label for="${_id}">${_label}</label>`;
+            div.innerHTML = `<input type="radio" name="score_points" id="${_id}" value="${i}"> <label for="${_id}" id="${_id}_points">${_label}</label>`;
             jChoose_score_type.appendChild(div);
         };
 
@@ -98,7 +98,7 @@ class ScoringContainers {
         view_score_container.appendChild(jContainerData);
 
         {
-            const _temp = document.createElement("hdiv2");
+            const _temp = document.createElement("div");
             _temp.setAttribute("class", "clear");
             view_score_container.appendChild(_temp);
         }
@@ -106,6 +106,7 @@ class ScoringContainers {
         jContainer.appendChild(view_score_container);
 
         document.body.appendChild(jContainer);
+
     }
 
     createScoreSheetEntries()
@@ -265,7 +266,7 @@ const SCORING = {
     displayCard : function(sCode)
     {
         const elem = document.getElementById("scoring-card").querySelector("img");
-        const sSrc = elem.getAttribute("data-image-path") + SCORING.getImage(sCode);
+        const sSrc = elem.getAttribute("data-image-path") + SCORING.cardList.getImage(sCode);
         elem.setAttribute("src", sSrc);
     },
     
@@ -301,6 +302,23 @@ const SCORING = {
         this._clickDefault("score-points-choose");
         
         document.getElementById("scoring-card").classList.remove("hidden");
+        const isDefault = document.body.getAttribute("data-game-arda") !== "true" ? "true" : "false";
+        fetch("/data/marshallingpoints?code=" + encodeURI(sCardCode) + "&standard=" + isDefault).then((response) => 
+        {
+            response.json().then((data) => 
+            {
+                let points = data.points && data.points >= 0 ? data.points : 0;
+                let elem = document.getElementById("score_" + points + "_points");
+                if (elem !== null)
+                    elem.click();
+
+                points = data.type && data.type !== "" ? data.type : "misc";
+                elem = document.getElementById("score_" + points + "_label");
+                if (elem !== null)
+                    elem.click();
+            });
+        })
+        .catch(() => {});
     },
 
     _clickDefault : function(id)
@@ -462,7 +480,7 @@ const SCORING = {
 };
 
 document.body.addEventListener("meccg-players-updated", (e) => SCORING.addPlayers(e.detail.challengerId, e.detail.map), false);
-
+document.body.addEventListener("meccg-score-card", (e) => SCORING.scoreCard(e.detail), false);
 
 function createScoringApp(_CardList)
 {
@@ -503,11 +521,6 @@ function createScoringApp(_CardList)
         addPlayers: function(sMyId, jNameMap)
         {
             SCORING.addPlayers(sMyId, jNameMap);
-        },
-
-        scoreCard : function(sCardCode)
-        {
-            SCORING.scoreCard(sCardCode);
         },
 
         showScoreSheet : function(jData)
