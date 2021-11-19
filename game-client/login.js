@@ -33,6 +33,7 @@ const populateDeck = function(jData)
     populateField(jData.avatar, "characters", true);
     populateField(jData.chars, "characters", false);
     populateField(jData.character, "characters", false);
+    populateField(jData.characters, "characters", false);
 
     populateField(jData.sideboard, "sideboard", true);
     populateField(jData.pool, "pool", true);
@@ -247,6 +248,9 @@ const onCheckCardCodes = function()
     if (vsCards.length === 0)
         return;
 
+    /** avoid speed race. Allow click only once and hide the field */
+    document.body.classList.add("isLoggingIn");
+
     const options = {
         method: 'POST',
         body: JSON.stringify(vsCards),
@@ -272,11 +276,14 @@ const onCheckCardCodes = function()
 
                     document.getElementById("invalid-cards-info-result").innerHTML = '<ul class="cookie_notice">' + sHtml + "</ul>";
                     document.getElementById("invalid-cards-info").classList.remove("hidden");
+
+                    document.body.classList.remove("isLoggingIn");
                 }
             });
         }
     }).catch(() => 
     {
+        document.body.classList.remove("isLoggingIn");
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
     });   
 };
