@@ -178,7 +178,7 @@ class Preferences {
                         </div>
                         <div id="preferences-wrapper" class="hide">
                             <div class="config-panel-overlay" id="config-panel-overlay"></div>
-                            <div class="config-panel config-panel blue-box" id="config-panel"></div>
+                            <div class="config-panel blue-box" id="config-panel"></div>
                         </div>`;
         document.body.appendChild(div);
 
