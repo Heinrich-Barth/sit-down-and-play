@@ -92,33 +92,6 @@ class GamePreferences extends Preferences {
         DomUtils.removeNode(document.getElementById("question-fake-hide"));
     }
     
-    async _saveGamefunction()
-    {
-        try 
-        {
-            let directory = await window.showDirectoryPicker();
-            let fileHandle = await directory.getFileHandle("savegame" + Date.now() + ".meccgsave", { create: true });
-            let writable = await fileHandle.createWritable();
-            try
-            {
-                await writable.write(JSON.stringify(g_Game.GameBuilder.getSavedGame(), null, "\t"));
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Game saved to disk." }));
-            }
-            finally
-            {
-                await writable.close();
-            }
-
-        } 
-        catch(e) 
-        {
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not save file." }));
-            console.log(e);
-        }
-    }
-
-
-
     static useImagesDC()
     {
         return true; /* Preferences._getConfigValue("images_errata_dc");*/
@@ -162,11 +135,13 @@ class GamePreferences extends Preferences {
         this.createEntry0("bg_deeps");
 
         this.createSection("Game");
+        this.createEntry0("game_save");
+        this.createEntry0("game_load");
         this.createEntry0("game_show_lobby");       
         this.createEntry0("game_addcards");       
-        this.createEntry0("game_save");
         this.createEntry0("leave_game");
 
+        /*
         this.createSection("Rules");
         this.createEntry0("rules_wizard");       
         this.createEntry0("rules_dragons");       
@@ -175,6 +150,7 @@ class GamePreferences extends Preferences {
         this.createEntry0("rules_against-the-shadow");       
         this.createEntry0("rules_white-hand");       
         this.createEntry0("rules_balrog");       
+        */
     }
 
     addConfiguration()
@@ -200,7 +176,8 @@ class GamePreferences extends Preferences {
         
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
-        this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", this._saveGame);
+        this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
+        this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
 
