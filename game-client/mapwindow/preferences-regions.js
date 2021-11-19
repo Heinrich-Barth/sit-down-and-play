@@ -40,16 +40,18 @@ class RegionMapPreferences extends Preferences {
         this.createSection("Standard Sites");
         this.createEntry0("show_hero");
         this.createEntry0("show_minion");
-        this.createEntry0("show_fallenwizard");
         this.createEntry0("show_balrog");
 
-        this.createSection("FirstBorn Sites");
+        this.createSection("Fallen Wizard / Lord Specific Sites");
+        this.createEntry0("show_fallenwizard");
         this.createEntry0("show_elf");
         this.createEntry0("show_dwarf");
 
-        this.createSection("Other Sites");
-        this.createEntry0("show_lord");
+        this.createSection("Shared Fallen Wizard / Lords Sites");
         this.createEntry0("show_fallenlord");
+        this.createEntry0("show_lord");
+
+        this.createSection("Other Sites");
         this.createEntry0("show_dragon");
     }
 
@@ -118,12 +120,12 @@ class RegionMapPreferences extends Preferences {
         this.addConfigToggle("show_minion", "Minion", this.isTrue(this.minion), this.toggleMinion.bind(this));
         this.addConfigToggle("show_fallenwizard", "Fallen Wizard (Heavens)", this.isTrue(this.fallenwizard), this.toggleFallenWizard.bind(this));
         this.addConfigToggle("show_balrog", "Balrog", this.isTrue(this.balrog), this.toggleBalrog.bind(this));
+        this.addConfigToggle("show_lord", "Shared Lord Sites (Elves, Dwarfs, ...)", this.isTrue(this.lord), this.toggleLord.bind(this));
+        this.addConfigToggle("show_fallenlord", "Shared Fallen Wizard and Lord Sites", this.isTrue(this.fallenlord), this.toggleFallenlord.bind(this));
 
         this.addConfigToggle("show_elf", "Elf Lords (Heavens)", this.isTrue(this.elf), this.toggleElf.bind(this));
         this.addConfigToggle("show_dwarf", "Dwarf Lords (Heavens)", this.isTrue(this.dwarf), this.toggleDwarf.bind(this));
 
-        this.addConfigToggle("show_lord", "Lord", this.isTrue(this.lord), this.toggleLord.bind(this));
-        this.addConfigToggle("show_fallenlord", "Fallen/Lord", this.isTrue(this.fallenlord), this.toggleFallenlord.bind(this));
         this.addConfigToggle("show_dragon", "Dragon Lords", this.isTrue(this.dragon), this.toggleDragon.bind(this));
     }
 
