@@ -17,12 +17,12 @@ const DropZone = {
             return;
 
         const reader = new FileReader();
-        reader.onload = (event) => DropZone.onFileRead(event.target.result);
+        reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
         reader.onerror = () => Notify.error("Cannot read given file.");
         reader.readAsText(file);
     },
 
-    onFileRead : function(sText)
+    onFileRead : function(sText, file)
     {
         if (sText === undefined || sText.trim() === "")
             Notify.error("File seems to be empty...");
@@ -31,6 +31,7 @@ const DropZone = {
         {
             let json = JSON.parse(sText);
             document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": json }));
+            document.body.dispatchEvent(new CustomEvent("meccg-file-dropped-name", { "detail": file }));
         }
         catch (e)
         {
