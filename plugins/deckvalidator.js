@@ -1,9 +1,21 @@
 
+/**
+ * Check if given object is empty
+ * @param {Object} _deck 
+ * @returns 
+ */
 const isEmpty = function(_deck)
 {
     return _deck == undefined || Object.keys(_deck).length === 0;
 };
 
+/**
+ * Get a list of given field values by code (e.g. for filter list)
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @param {Function} isMatcher Match Function
+ * @returns 
+ */
 const extractBySecondary = function(jDeck, pCardRepository, isMatcher)
 {
     let res = { };
@@ -24,6 +36,12 @@ const extractBySecondary = function(jDeck, pCardRepository, isMatcher)
     return res;
 };
 
+/**
+ * Extract all minor items
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
 const extractMinorItems = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -32,7 +50,12 @@ const extractMinorItems = function(jDeck, pCardRepository)
     });
 };
 
-
+/**
+ * Extract all Hazards
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
 const extractHazards = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -41,7 +64,13 @@ const extractHazards = function(jDeck, pCardRepository)
     });
 };
 
-const removeAvatars = function(jDeck, pCardRepository)
+/**
+ * Extract all Avatars
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
+ const removeAvatars = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
@@ -49,7 +78,14 @@ const removeAvatars = function(jDeck, pCardRepository)
     });
 };
 
-const extractMarshallingPoints = function(jDeck, pCardRepository)
+/**
+ * Extract all marshalling points
+ * 
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
+ const extractMarshallingPoints = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
@@ -57,6 +93,13 @@ const extractMarshallingPoints = function(jDeck, pCardRepository)
     });
 };
 
+/**
+ * Extract all characters
+ * 
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
 const extractCharacters = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -65,6 +108,14 @@ const extractCharacters = function(jDeck, pCardRepository)
     });
 };
 
+
+/**
+ * Extract all special characters
+ * 
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
 const extractCharactersSpecial = function(jDeck, pCardRepository)
 {
     return res = extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -73,6 +124,13 @@ const extractCharactersSpecial = function(jDeck, pCardRepository)
     });
 };
 
+/**
+ * Extract all characters with mind of 7+
+ * 
+ * @param {JSON} jDeck Deck
+ * @param {Object} pCardRepository Repository
+ * @returns 
+ */
 const extractCharactersMindMin7 = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
@@ -109,6 +167,12 @@ const copyGenericCards = function(res, jDeck)
     return nAdded;
 };
 
+/**
+ * Validate a given deck
+ * 
+ * @param {Object} jDeck 
+ * @returns Object or NULL
+ */
 const validateDeck = function(jDeck)
 {
     if (isEmpty(jDeck))
@@ -129,14 +193,22 @@ const validateDeck = function(jDeck)
     count += copyGenericCards(res.playdeck, jDeck.resources);
     count += copyGenericCards(res.playdeck, jDeck.hazards);
 
-    if (count === 0)
-        return null;
-    else
-        return res;
-}
+    return count === 0 ? null : res;
+};
 
+/**
+ * Validate a given deck
+ * @param {JSON} jDeck 
+ * @returns Deck or NULL
+ */
 exports.validate = validateDeck;
 
+/**
+ * Validate an ARDA deck
+ * @param {JSON} jDeck 
+ * @param {Object} pCardRepository 
+ * @returns Deck or NULL
+ */
 exports.validateArda = function(jDeck, pCardRepository)
 {
     jDeck = jDeck === null ? null : validateDeck(jDeck);
@@ -162,6 +234,13 @@ exports.validateArda = function(jDeck, pCardRepository)
     return jDeck;
 };
 
+/**
+ * Validate a singleplayer deck
+ * 
+ * @param {JSON} jDeck 
+ * @param {Object} pCardRepository 
+ * @returns Deck or NULL
+ */
 exports.validateSingleplayer = function(jDeck, pCardRepository)
 {
     jDeck = jDeck === null ? null : validateDeck(jDeck);
