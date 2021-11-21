@@ -14,7 +14,7 @@ class Arda {
     {
         const players = this.game._playboardManager.decks.getPlayers();
         if (players.length === 0)
-            return;
+            return;res
 
         for (let userid of players)
         {
@@ -32,7 +32,9 @@ class Arda {
                 this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        this.game._playboardManager.decks.getAdminDeck().mergeCharacterListsOnce();
+        let pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        if (pAdminDeck !== null)
+            pAdminDeck.mergeCharacterListsOnce();
     }
 
     assignOpeningChars(nCount)
@@ -56,13 +58,19 @@ class Arda {
                 this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        this.game._playboardManager.decks.getAdminDeck().addSpecialCharacers();
-        this.game._playboardManager.decks.getAdminDeck().shuffleCharacterDeck();
+        let pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        if (pAdminDeck !== null)
+        {
+            pAdminDeck.addSpecialCharacers();
+            pAdminDeck.shuffleCharacterDeck();
+        }
     }
 
     onShuffle(userid, socket, obj)
     {
         const deck = this.game._playboardManager.decks.getAdminDeck();
+        if (deck === null)
+            return;
 
         if (obj.target === "minor")
         {
@@ -79,6 +87,9 @@ class Arda {
     onRecycle(userid, socket, obj)
     {
         const deck = this.game._playboardManager.decks.getAdminDeck();
+        if (deck === null)
+            return;
+
         let isMinor = false;
 
         if (obj.type === "minor")
@@ -144,8 +155,8 @@ class Arda {
         
         if (_list !== null)
         {
-            Game.apis.chat.send(userid, " views " + type + " cards in " + pile);
-            Game.apis.meccgApi.reply("/game/arda/view", socket, {type: type, pile:pile, list: this.game._playboardManager.getCardList(_list) });
+            this.game.apis.chat.send(userid, " views " + type + " cards in " + pile);
+            this.game.apis.meccgApi.reply("/game/arda/view", socket, {type: type, pile:pile, list: this.game._playboardManager.getCardList(_list) });
         }
     }
   
@@ -210,8 +221,12 @@ class Arda {
         const listMP = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getCards().handMarshallingPoints(userid));
         this.game.apis.meccgApi.publish("/game/arda/hand/marshallingpoints", userid, {list: listMP});
 
-        const listChars = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getAdminDeck().getHandCharacters());
-        this.game.apis.meccgApi.publish("/game/arda/hand/characters", userid, {list: listChars});
+        const pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        if (pAdminDeck !== null)
+        {
+            const listChars = this.game._playboardManager.getCardList(pAdminDeck.getHandCharacters());
+            this.game.apis.meccgApi.publish("/game/arda/hand/characters", userid, {list: listChars});
+        }
     }
 
     onMoveArdaHandCard(userid, socket, obj)

@@ -98,18 +98,30 @@ class DeckManager {
         }
     }
 
+    restoreDeck(decks, requireAdmin)
+    {
+        for (let key of Object.keys(decks.deck))
+        {
+            if (decks.deck[key].ishost === requireAdmin)
+            {
+                let deck = this.newDeckInstance(key);
+                deck.restore(decks.deck[key]);
+                this._deck[key] = deck;
+            }
+        }
+    }
+
     restore(decks)
     {
         this.reset();
         this.restoreCardMap(decks.cardMap);
         this.restoreSiteMap(decks.siteMap);
 
-        for (let key of Object.keys(decks.deck))
-        {
-            let deck = this.newDeckInstance(key);
-            deck.restore(decks.deck[key]);
-            this._deck[key] = deck;
-        }
+        console.log("restore HOST deck");
+        this.restoreDeck(decks, true);
+
+        console.log("restore GUEST deck(s)");
+        this.restoreDeck(decks, false);
 
         this.uuid_count = Date.now();
         return true;

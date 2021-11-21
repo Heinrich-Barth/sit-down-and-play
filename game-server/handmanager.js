@@ -8,10 +8,20 @@ class HandManager
 
     getCardPils(playerId, type)
     {
-        if (typeof this.DECKS._deck[playerId] === "undefined" || typeof this.DECKS._deck[playerId][type] === "undefined")
+        if (typeof this.DECKS._deck[playerId] === "undefined")
+        {
+            console.log("Cannod find deck of player #" + playerId);
             return [];
-        else
+        }
+        else if (typeof this.DECKS._deck[playerId][type] === "undefined")
+        {
+            console.log("Cannod find " + type + " pile of player #" + playerId);
+            return [];
+        }
+        else 
+        {
             return this.DECKS._deck[playerId][type];
+        }
     }
 
     hand(playerId)

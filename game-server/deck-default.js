@@ -25,6 +25,10 @@ class Deck extends DeckCommons {
     restoreList(target, list)
     {
         this.clearArray(target);
+
+        if (list === undefined || target === undefined)
+            return;
+            
         for (let id of list)
         {
             if (typeof id === "string" && id !== "")

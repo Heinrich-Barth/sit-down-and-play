@@ -42,9 +42,23 @@ class DeckManagerArda extends DeckManager {
         this.shuffleAny(this.playdeck);
     }
 
+    restore(decks)
+    {
+        super.restore(decks);
+
+        for (let key of Object.keys(decks.deck))
+        {
+            if (decks.deck[key].ishost === false)
+                this.updateDeckData(key, this.adminUserId)
+        }
+
+        return true;
+    }
+
     addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
     {
         let pDeck = super.addDeck(playerId, jsonDeck, listAgents, gameCardProvider);
+        console.log("+++ add deck");
         if (super.deckCount() === 1)
         {
             this.adminUserId = playerId;

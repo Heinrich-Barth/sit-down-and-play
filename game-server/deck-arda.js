@@ -54,22 +54,6 @@ class Deck extends DeckDefault {
             data.typesMPs = this.typesMPs;
             data.listSpecialCharacters = this.listSpecialCharacters;
         }
-        else
-        {
-            data.playdeckMP = [];
-            data.discardPileMP = [];
-            data.handCardsCharacters = [];
-            data.discardPileCharacters = [];
-            data.playdeckCharacters = [];
-            data.handMinorItems = [];
-            data.discardPileMinorItems = [];
-            data.playdeckMinorItems = [];
-            data.playDeckCharacters7 = [];
-            data.typesCharacters = [];
-            data.typesMinors = [];
-            data.typesMPs = [];
-            data.listSpecialCharacters = [];
-        }
 
         return data;
     }
