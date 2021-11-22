@@ -38,11 +38,6 @@ const loadScoreStats = function()
 
 const g_pScores = loadScoreStats();
 
-exports.create =  function(isExtended)
-{
-    return new SCORES(isExtended);
-};
-
 class ScorintSheet {
 
     constructor(isExtended)
@@ -127,7 +122,7 @@ class ScorintSheet {
     }
 }
 
-class SCORES {
+class Scores {
     
     constructor(isExtended)
     {
@@ -209,3 +204,5 @@ class SCORES {
             return -1;
     }
 }
+
+module.exports = Scores;

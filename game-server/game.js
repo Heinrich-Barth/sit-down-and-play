@@ -1,4 +1,5 @@
 const TurnTimer = require("./turnTimer");
+const Scores = require("./scores");
 
 /**
  * Add ARDA specific routes
@@ -1366,7 +1367,7 @@ exports.newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _ga
     return new GameInstance(_MeccgApi, 
                             _Chat, 
                             require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer), 
-                            require("./scores.js").create(isArda),
+                            new Scores(isArda),
                             _eventManager,
                             isArda,
                             isSinglePlayer,
