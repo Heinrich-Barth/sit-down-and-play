@@ -22,6 +22,17 @@ class Deck extends DeckCommons {
         this.restoreList(this.playdeck, deck.playdeck);
     }
 
+    size()
+    {
+        return {
+            hand : this.handCards.length,
+            discard : this.discardPile.length,
+            sideboard : this.sideboard.length,
+            victory : this.victory.length,
+            playdeck : this.playdeck.length
+        }
+    }
+
     restoreList(target, list)
     {
         this.clearArray(target);

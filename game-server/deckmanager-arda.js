@@ -58,7 +58,6 @@ class DeckManagerArda extends DeckManager {
     addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
     {
         let pDeck = super.addDeck(playerId, jsonDeck, listAgents, gameCardProvider);
-        console.log("+++ add deck");
         if (super.deckCount() === 1)
         {
             this.adminUserId = playerId;

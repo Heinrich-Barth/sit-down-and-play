@@ -58,6 +58,14 @@ class DeckManager {
         return jData;
     }
 
+    size(playerid)
+    {
+        if (playerid == undefined || this._deck[playerid] === undefined)
+            return null;
+        else
+            return this._deck[playerid].size();
+    }
+
     resoteCardMapCloneCard(input)
     {
         /** overwrite */
@@ -330,7 +338,10 @@ class DeckManager {
     getFullPlayerCard(uuid)
     {
         if (uuid === "" || typeof this._cardMap[uuid] === "undefined")
+        {
+            console.log("Cannot find card by uuid " + uuid);
             return null;
+        }
         else
             return this._cardMap[uuid];
     }

@@ -260,10 +260,8 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
         dumpDeck: function ()
         {
-            for (var key in this.players.ids)
-                this._playboardManager.DumpDeck(this.players.ids[key]);
+            /** deprecated */
         },
-
 
         getFinalScore: function ()
         {
@@ -305,19 +303,18 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
         updateHandCounterPlayerOnly: function (player)
         {
-            var sizeHand = Game._playboardManager.Size.hand(player);
-            var sizePlaydeck = Game._playboardManager.Size.playdeck(player);
-            var sizeSideboard = Game._playboardManager.Size.sideboard(player);
-            var sizeDiscard = Game._playboardManager.Size.discard(player);
-            var sizeDiVictory = Game.scoring.getPlayerScore(player);
-
+            let size = Game._playboardManager.Size(player);
+            if (size === null)
+                return;
+                
+            var nScore = Game.scoring.getPlayerScore(player);
             Game.apis.meccgApi.publish("/game/update-deck-counter/player/generics", player, {
-                playdeck: sizePlaydeck,
-                sideboard: sizeSideboard,
-                discard: sizeDiscard,
-                hand: sizeHand,
-                victory: sizeDiVictory,
-                player: player
+                playdeck: size.playdeck,
+                sideboard: size.sideboard,
+                discard: size.discard,
+                hand: size.hand,
+                victory: nScore,
+                player: size.playdeck
             });
         },
 
@@ -332,15 +329,17 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
         updateHandCounterOnlyPlayer: function (player)
         {
-            var sizeHand = Game._playboardManager.Size.hand(player);
-            var sizePlaydeck = Game._playboardManager.Size.playdeck(player);
-            var nScore = Game.scoring.getPlayerScore(player);
+            let size = Game._playboardManager.Size(player);
+            if (size === null)
+                return;
 
+            var nScore = Game.scoring.getPlayerScore(player);
+ 
             Game.apis.meccgApi.publish("/game/update-deck-counter/player/hand", player, {
-                hand: sizeHand, 
-                playdeck: sizePlaydeck,
+                hand: size.hand, 
+                playdeck: size.playdeck,
                 score : nScore,
-                player: player
+                player: size.playdeck
             });
         },
 
@@ -454,8 +453,9 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
             sendCurrentHandSize: function ()
             {
                 var userid = Game.players.getCurrent();
-                let nSize = Game._playboardManager.Size.hand(userid);
-                Game.apis.chat.send(userid, " holds " + nSize + " card(s)");
+                let size = Game._playboardManager.Size(player);
+                if (size !== null)
+                    Game.apis.chat.send(userid, " holds " + size.hand + " card(s)");
             },
 
             startPoolPhase: function ()
@@ -680,16 +680,12 @@ var GameInstance = function(_MeccgApi, _Chat, _playboardManager, _score, _eventM
 
                 onCardDiscard: function (userid, socket, data)
                 {
-                    var card = Game._playboardManager.GetCardByUuid(data.uuid);
-                    if (card === null)
-                        return false;
-
-                    if (!Game._playboardManager.MoveCardTo(data.uuid, card.owner, "discardpile"))
+                    const card = Game._playboardManager.GetCardByUuid(data.uuid);
+                    if (card === null || !Game._playboardManager.MoveCardTo(data.uuid, card.owner, "discardpile"))
                         return false;
 
                     Game.updateHandCountersPlayer(card.owner);
-
-                    Game.apis.chat.send(userid, "Discarded 1 card. Current hand size is " + Game._playboardManager.Size.hand(card.owner));
+                    Game.apis.chat.send(userid, "Discarded 1 card.");
                     return true;
                 }
             },

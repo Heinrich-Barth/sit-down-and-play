@@ -12,13 +12,13 @@ class Arda {
 
     assignOpeningChars7()
     {
-        const players = this.game._playboardManager.decks.getPlayers();
+        const players = this.game._playboardManager.getDecks().getPlayers();
         if (players.length === 0)
             return;res
 
         for (let userid of players)
         {
-            const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+            const deck = this.game._playboardManager.getDecks().getPlayerDeck(userid);
             if (deck === null)
                 continue;
                 
@@ -32,17 +32,17 @@ class Arda {
                 this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        let pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        let pAdminDeck = this.game._playboardManager.getDecks().getAdminDeck();
         if (pAdminDeck !== null)
             pAdminDeck.mergeCharacterListsOnce();
     }
 
     assignOpeningChars(nCount)
     {
-        const players = this.game._playboardManager.decks.getPlayers();
+        const players = this.game._playboardManager.getDecks().getPlayers();
         for (let userid of players)
         {
-            const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+            const deck = this.game._playboardManager.getDecks().getPlayerDeck(userid);
             if (deck === null)
                 continue;
 
@@ -58,7 +58,7 @@ class Arda {
                 this.game.callbacks.card.onCardDrawSingle(userid);
         }
 
-        let pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        let pAdminDeck = this.game._playboardManager.getDecks().getAdminDeck();
         if (pAdminDeck !== null)
         {
             pAdminDeck.addSpecialCharacers();
@@ -68,7 +68,7 @@ class Arda {
 
     onShuffle(userid, socket, obj)
     {
-        const deck = this.game._playboardManager.decks.getAdminDeck();
+        const deck = this.game._playboardManager.getDecks().getAdminDeck();
         if (deck === null)
             return;
 
@@ -86,7 +86,7 @@ class Arda {
 
     onRecycle(userid, socket, obj)
     {
-        const deck = this.game._playboardManager.decks.getAdminDeck();
+        const deck = this.game._playboardManager.getDecks().getAdminDeck();
         if (deck === null)
             return;
 
@@ -114,7 +114,7 @@ class Arda {
             if (uuid === "")
                 continue;
                 
-            const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+            const card = this.game._playboardManager.getDecks().getFullPlayerCard(uuid);
             if (card !== null)
             {
                 const data = {uuid:uuid, code:card.code, hand:obj.type, clear : i == 0};
@@ -141,16 +141,16 @@ class Arda {
         if (type === "minor")
         {
             if (pile === "playdeck")
-                _list = this.game._playboardManager.decks.getCards().playdeckMinor(userid);
+                _list = this.game._playboardManager.getDecks().getCards().playdeckMinor(userid);
             else if (pile === "discard")
-                _list = this.game._playboardManager.decks.getCards().discardPileMinor(userid);
+                _list = this.game._playboardManager.getDecks().getCards().discardPileMinor(userid);
         }
         else if (type === "mps")
         {
             if (pile === "playdeck")
-                _list = this.game._playboardManager.decks.getCards().playdeckMPs(userid);
+                _list = this.game._playboardManager.getDecks().getCards().playdeckMPs(userid);
             else if (pile === "discard")
-                _list = this.game._playboardManager.decks.getCards().discardPileMPs(userid);
+                _list = this.game._playboardManager.getDecks().getCards().discardPileMPs(userid);
         }
         
         if (_list !== null)
@@ -162,7 +162,7 @@ class Arda {
   
     onDrawCard(userid, socket, obj)
     {
-        const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+        const deck = this.game._playboardManager.getDecks().getPlayerDeck(userid);
         if (deck === null)
             return;
 
@@ -192,7 +192,7 @@ class Arda {
         }
             
 
-        const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+        const card = this.game._playboardManager.getDecks().getFullPlayerCard(uuid);
         if (card === null)
             return;
 
@@ -215,13 +215,13 @@ class Arda {
 
     onGetHandMinorItems(userid)
     {
-        const listMinor = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getCards().handMinorItems(userid));
+        const listMinor = this.game._playboardManager.getCardList(this.game._playboardManager.getDecks().getCards().handMinorItems(userid));
         this.game.apis.meccgApi.publish("/game/arda/hand/minor", userid, {list: listMinor});
 
-        const listMP = this.game._playboardManager.getCardList(this.game._playboardManager.decks.getCards().handMarshallingPoints(userid));
+        const listMP = this.game._playboardManager.getCardList(this.game._playboardManager.getDecks().getCards().handMarshallingPoints(userid));
         this.game.apis.meccgApi.publish("/game/arda/hand/marshallingpoints", userid, {list: listMP});
 
-        const pAdminDeck = this.game._playboardManager.decks.getAdminDeck();
+        const pAdminDeck = this.game._playboardManager.getDecks().getAdminDeck();
         if (pAdminDeck !== null)
         {
             const listChars = this.game._playboardManager.getCardList(pAdminDeck.getHandCharacters());
@@ -235,7 +235,7 @@ class Arda {
             return;
 
         const uuid = obj.uuid;
-        const deck = this.game._playboardManager.decks.getPlayerDeck(userid);
+        const deck = this.game._playboardManager.getDecks().getPlayerDeck(userid);
         if (deck === null)
         {
             console.log("Cannot find deck of player " + userid);
@@ -254,7 +254,7 @@ class Arda {
         if (!bOk)
             return;
 
-        const card = this.game._playboardManager.decks.getFullPlayerCard(uuid);
+        const card = this.game._playboardManager.getDecks().getFullPlayerCard(uuid);
         if (card === null)
             return;
 

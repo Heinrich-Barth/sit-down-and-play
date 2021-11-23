@@ -361,27 +361,39 @@ const ROOM_MANAGER = {
         /* now, acitave endpoints for this player */
         pRoom.api.initGameEndpoint(socket);
 
-        /* draw this player's cards and prepare player's hand */
-        pRoom.game.inits.startPoolPhaseByPlayer(userid);
+        try
+        {
+            /* draw this player's cards and prepare player's hand */
+            pRoom.game.inits.startPoolPhaseByPlayer(userid);
 
-        /* draw this player's board and restore the game table */
-        pRoom.api.reply("/game/rejoin/immediately", socket, pRoom.game.getCurrentBoard(userid));
+            /* draw this player's board and restore the game table */
+            pRoom.api.reply("/game/rejoin/immediately", socket, pRoom.game.getCurrentBoard(userid));
 
-        /* notify other players */
-        if (isPlayer)
-            pRoom.chat.sendMessage(userid, " joined the game.");
-        else
-            pRoom.chat.sendMessage(userid, " joined as visitor.");
+            /* notify other players */
+            if (isPlayer)
+                pRoom.chat.sendMessage(userid, " joined the game.");
+            else
+                pRoom.chat.sendMessage(userid, " joined as visitor.");
 
-            /* add indicator */
-        if (isPlayer)
-            pRoom.api.publish("/game/player/indicator", "", { userid: userid, connected: true });
+                /* add indicator */
+            if (isPlayer)
+                pRoom.api.publish("/game/player/indicator", "", { userid: userid, connected: true });
 
-        /** additional game data */
-        pRoom.api.reply("/game/data/all", socket, pRoom.game.getPlayboardDataObject());
+            /** additional game data */
+            pRoom.api.reply("/game/data/all", socket, pRoom.game.getPlayboardDataObject());
 
-        console.log("User " + pPlayer.name + " rejoined the game " + room);
-        return true;
+            console.log("User " + pPlayer.name + " rejoined the game " + room);
+
+            return true;
+        }
+        catch (err)
+        {
+            console.error(err);
+            pRoom.game.removePlayer(userid);
+        }
+
+        return false;
+        
     },
 
     onNewMessage : function(socket, message)

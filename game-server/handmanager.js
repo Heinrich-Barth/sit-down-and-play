@@ -24,6 +24,17 @@ class HandManager
         }
     }
 
+    size(playerId)
+    {
+        if (typeof this.DECKS._deck[playerId] === "undefined")
+        {
+            console.log("Cannod find deck of player #" + playerId);
+            return null;
+        }
+        else
+            return this.DECKS._deck[playerId].size();
+    }
+
     hand(playerId)
     {
         return this.getCardPils(playerId, "handCards");

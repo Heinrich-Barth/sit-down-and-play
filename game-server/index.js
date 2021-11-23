@@ -83,11 +83,7 @@ class GameAPI {
     {
         const THIS = this;
         for (const path of this._vsPaths)
-        {
-            socket.on(path, (data) =>  { 
-                THIS.onPath(socket, path, data); 
-            });
-        }
+            socket.on(path, (data) => THIS.onPath(socket, path, data));
 
         socket.isingame = true;
     }
