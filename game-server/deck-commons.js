@@ -20,7 +20,8 @@ class DeckCommons {
     save(isAdmin)
     {
         return {
-            id : this._id
+            id : this._id,
+            ishost : isAdmin
         };
     }
 

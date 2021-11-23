@@ -38,7 +38,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 
         for (let companyid in playboard.companies)
         {
-            let _company = input[companyid];
+            let _company = playboard.companies[companyid];
             let newCompany = {
                 id: companyid,
                 playerId: this.AssertString(_company.playerId),

@@ -14,7 +14,7 @@ class Deck extends DeckCommons {
     }
 
     restore(deck)
-    {
+    {        
         this.restoreList(this.handCards, deck.handCards);
         this.restoreList(this.discardPile, deck.discardPile);
         this.restoreList(this.sideboard, deck.sideboard);

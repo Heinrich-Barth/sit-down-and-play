@@ -119,11 +119,22 @@ class DeckManager {
         }
     }
 
+    preprocessRestore(decks)
+    {
+        for (let key of Object.keys(decks.deck))
+        {
+            if (decks.deck[key].ishost === undefined)
+                decks.deck[key].ishost = false;
+        }
+    }
+
     restore(decks)
     {
         this.reset();
         this.restoreCardMap(decks.cardMap);
         this.restoreSiteMap(decks.siteMap);
+
+        this.preprocessRestore(decks);
 
         console.log("restore HOST deck");
         this.restoreDeck(decks, true);

@@ -1,6 +1,9 @@
 
 const UTILS = require("../meccg-utils");
 
+const GameStandard = require("./GameStandard");
+const GameArda = require("./GameArda");
+
 class GameAPI {
 
     constructor(io, room)
@@ -165,7 +168,6 @@ const createVisitor = function(displayname, timeAdded)
     return pPlayer;
 };
 
-const Game = require("./game.js");
 const Chat = require("./chat.js");
 
 const createRoomInstance = function(io, room)
@@ -217,6 +219,24 @@ const disconnectPlayer = function(socket)
     return null;
 }
 
+const newInstance = function (_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame)
+{
+    const pPlayboardManager = require("./playboard-management.js").setup(_agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer);
+    let pGame;
+
+    if (isArda)
+        pGame = new GameArda(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
+    else
+        pGame = new GameStandard(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
+
+    pGame.setSinglePlayer(isSinglePlayer);
+    pGame.setCallbackOnRestoreError(fnEndGame);
+    pGame.init();
+    pGame.onAfterInit(_eventManager);
+
+    return pGame;
+};
+
 exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame)
 {
     if (isSinglePlayer)
@@ -246,8 +266,8 @@ exports.newGame = function(io, room, _agentList, _eventManager, _gameCardProvide
         this.fnEndGame(this.name);
 
     };
-
-    pRoomInstance.game =  Game.newInstance(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame);
+    
+    pRoomInstance.game =  newInstance(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame);
 
     return pRoomInstance;
 }; 

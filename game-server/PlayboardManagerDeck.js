@@ -123,7 +123,6 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
     Restore(playboard)
     {
         super.Restore(playboard);
-
         this.getDecks().restore(playboard.decks);
      }
 

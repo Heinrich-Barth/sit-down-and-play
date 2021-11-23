@@ -110,8 +110,8 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
         for (let uuid in playboard.stagingarea)
         {
             this.stagingareas[uuid] = {
-                resources : this.ArrayUUIDClone(input[uuid].resources),
-                hazards : this.ArrayUUIDClone(input[uuid].hazards)
+                resources : this.ArrayUUIDClone(playboard.stagingarea[uuid].resources),
+                hazards : this.ArrayUUIDClone(playboard.stagingarea[uuid].hazards)
             };
         }
     }

@@ -364,7 +364,7 @@ const ROOM_MANAGER = {
         try
         {
             /* draw this player's cards and prepare player's hand */
-            pRoom.game.inits.startPoolPhaseByPlayer(userid);
+            pRoom.game.startPoolPhaseByPlayer(userid);
 
             /* draw this player's board and restore the game table */
             pRoom.api.reply("/game/rejoin/immediately", socket, pRoom.game.getCurrentBoard(userid));

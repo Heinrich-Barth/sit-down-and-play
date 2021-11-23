@@ -141,7 +141,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         this.characters = { };
         for (let characterid in playboard.characters)
         {
-            const _source = input[characterid];
+            const _source = playboard.characters[characterid];
             this.characters[characterid] = {
                 companyId : this.AssertString(_source.companyId),
                 character : this.AssertString(_source.character),

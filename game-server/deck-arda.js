@@ -36,7 +36,6 @@ class Deck extends DeckDefault {
         let data = super.save(isAdmin);
         
         data.handCardsMP = this.handCardsMP;
-        data.ishost = isAdmin;
 
         if (isAdmin)
         {
