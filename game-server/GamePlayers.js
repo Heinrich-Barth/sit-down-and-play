@@ -81,7 +81,7 @@ class GamePlayers extends GameBase
 
     getCurrentPlayerName()
     {
-        return this.players.names[this.players.getCurrentPlayerId()];
+        return this.players.names[this.getCurrentPlayerId()];
     }
 
     moveNext()
