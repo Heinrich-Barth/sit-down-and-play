@@ -340,6 +340,8 @@ class Deck extends DeckDefault {
             res.fromVictory(uuid) ||
             res.from(uuid, deck.discardPileMinorItems) ||
             res.from(uuid, deck.playdeckMinorItems) ||
+            res.from(uuid, deck.discardPileCharacters) ||
+            res.from(uuid, deck.playdeckCharacters) ||
             res.from(uuid, deck.playdeckMP) ||
             res.from(uuid, deck.discardPileMP);
         }
@@ -372,9 +374,14 @@ class Deck extends DeckDefault {
             console.log("Linked common minor items");
             this.handMinorItems = pAdmin.handMinorItems;
             this.discardPileMinorItems = pAdmin.discardPileMinorItems;
-            this.playdeckMinorItems = pAdmin.playdeckMinorItems;
 
+            this.playdeckMinorItems = pAdmin.playdeckMinorItems;
             this.playDeckCharacters7 = pAdmin.playDeckCharacters7;
+
+            this.copyIds(this.typesCharacters, pAdmin.typesCharacters);
+            this.copyIds(this.typesMinors, pAdmin.typesMinors);
+            this.copyIds(this.typesMPs, pAdmin.typesMPs);
+            this.copyIds(this.listSpecialCharacters, pAdmin.listSpecialCharacters);
 
             this.typesCharacters = pAdmin.typesCharacters;
             this.typesMinors = pAdmin.typesMinors;
