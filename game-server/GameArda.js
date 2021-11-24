@@ -109,6 +109,8 @@ class GameArda extends GameStandard
         }
         else if (obj.type === "charackters")
         {
+            this.clearPlayerHand();
+
             deck.recycleCharacter();
             this.publishChat(userid, "recycled all characters");
             this.reycled.characters = true;
@@ -131,10 +133,48 @@ class GameArda extends GameStandard
             }
         }
 
+        this.drawOpeningHand();
         this.publishToPlayers("/game/arda/hand/show", userid, {});
     }
 
-    onAssignCharacters(userid)
+    drawOpeningHand()
+    {
+        if (!this.reycled.characters || !this.reycled.minors)
+            return;
+
+        const players = this.getDeckManager().getPlayers();
+        for (let userid of players)
+            this.drawCardsFromPlaydeck(userid, 8);
+    }
+
+    clearPlayerHand()
+    {
+        let count = 0;
+        const pAdminDeck = this.getDeckManager().getAdminDeck();
+        const players = this.getDeckManager().getPlayers();
+        for (let userid of players)
+        {
+            const deck = this.getDeckManager().getPlayerDeck(userid);
+            if (deck === null)
+                continue;
+
+            let move = [];
+            for (let uuid of deck.getCardsInHand())
+                move.push(uuid);
+
+            count += move.length;
+            for (let uuid of move)
+            { 
+                if (deck.pop().fromAnywhere(uuid))
+                    pAdminDeck.push().toPlaydeck(uuid);
+            }
+        }
+        
+        this.publishChat(this.getHost(), count + " card(s) moved from hand into playdeck.");
+        this.publishToPlayers("/game/hand/clear", this.getHost(), {});
+    }
+
+    onAssignCharacters()
     {
         this.assignOpeningChars7();
         this.assignOpeningChars(8);
@@ -160,7 +200,14 @@ class GameArda extends GameStandard
             else if (pile === "discard")
                 _list = this.getDeckManager().getCards().discardPileMPs(userid);
         }
-        
+        else if (type === "charackters")
+        {
+            if (pile === "playdeck")
+                _list = this.getDeckManager().getCards().playdeckCharacters(userid);
+            else if (pile === "discard")
+                _list = this.getDeckManager().getCards().discardPileCharacters(userid);
+        }
+                
         if (_list !== null)
         {
             this.publishChat(userid, " views " + type + " cards in " + pile);

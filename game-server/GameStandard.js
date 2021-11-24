@@ -9,7 +9,6 @@ class GameStandard extends GamePlayers
     {
         super(_MeccgApi, _Chat, _playboardManager)
 
-        this._adminUser = "";
         this._fnEndGame = null;
         this._timeTimer = new TurnTimer();
     }
@@ -107,7 +106,7 @@ class GameStandard extends GamePlayers
             discard: size.discard,
             hand: size.hand,
             victory: nScore,
-            player: size.playdeck
+            player: player
         });
     }
 
@@ -131,7 +130,7 @@ class GameStandard extends GamePlayers
             hand: size.hand, 
             playdeck: size.playdeck,
             score : nScore,
-            player: size.playdeck
+            player: player
         });
     }
 
@@ -231,7 +230,7 @@ class GameStandard extends GamePlayers
     sendCurrentHandSize()
     {
         const userid = this.getCurrentPlayerId();
-        const size = this.getPlayboardManager().Size(player);
+        const size = this.getPlayboardManager().Size(userid);
         if (size !== null)
             this.publishChat(userid, " holds " + size.hand + " card(s)");
     }
@@ -325,6 +324,22 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "drew 1 card");
         else if (_list.length > 1)
             this.publishChat(userid, "drew " + _list.length + " cards");
+    }
+
+    drawCardsFromPlaydeck(userid, nCards)
+    {
+        if (userid === "" || userid === undefined || nCards === undefined || nCards < 1)
+            return;
+            
+        for (let i = 0; i < nCards; i++)
+        {
+            const _card = this.getPlayboardManager().DrawCard(userid, false);
+            if (_card !== null)
+                this.drawCard(userid, _card.uuid, _card.code, _card.type, 1);
+        }
+
+        this.updateHandCountersPlayer(userid);
+        this.publishChat(userid, "drew " + nCards + " card(s)");
     }
 
     onCardDrawSingle(userid, socket, obj)
