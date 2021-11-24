@@ -292,14 +292,14 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         var card = this.popCompanyCharacter(uuid);
         if (!this.addCompanyCharacterToCompany(targetCompany, targetcharacter, card))
         {
-            let sNew = getCardCode(uuid, "Unknown character");
+            let sNew = this.getCardCode(uuid, "Unknown character");
             console.log("Character " + sNew + " cannot join company " + targetCompany);
             return false;
         }
         else
         {
-            let sNew = getCardCode(uuid, "Unknown character");
-            let sHost = getCardCode(targetcharacter, "unknown host");
+            let sNew = this.getCardCode(uuid, "Unknown character");
+            let sHost = this.getCardCode(targetcharacter, "unknown host");
             console.log("Character " + sNew + " joined " + sHost + " under direct influence in company " + targetCompany);
             return true;
         }
