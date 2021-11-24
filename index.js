@@ -65,13 +65,14 @@ const getHtmlCspPage = function(page)
 
     const _gameHtml = getHtmlCspPage("game.html");
     const g_pEventManager = require("./eventmanager.js");
+    const RoomManager = require("./game-server/RoomManager");
 
     SERVER.cards = require("./plugins/cards.js");
     SERVER.cards.load(g_pConfig.cardUrl(), g_pConfig.imageUrl());
     
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
-    SERVER.roomManager = require("./game-server/room-manager.js").create(SERVER.getSocketIo, 
+    SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
     _gameHtml,
     SERVER.cards.getAgents, 
     g_pEventManager, 
