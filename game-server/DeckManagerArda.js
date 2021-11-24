@@ -1,6 +1,6 @@
-const DeckManager = require("./deckmanager");
-const HandManager = require("./handmanager-arda");
-const Deck = require("./deck-arda");
+const DeckManager = require("./DeckManager");
+const HandManagerArda = require("./HandManagerArda");
+const DeckArda = require("./DeckArda");
 
 class DeckManagerArda extends DeckManager {
 
@@ -19,12 +19,12 @@ class DeckManagerArda extends DeckManager {
 
     newDeckInstance(playerId)
     {
-        return new Deck(playerId);
+        return new DeckArda(playerId);
     }
 
     creatHandManager()
     {
-        return new HandManager(this);
+        return new HandManagerArda(this);
     }
 
     isArda()
@@ -106,7 +106,7 @@ class DeckManagerArda extends DeckManager {
 
     resoteCardMapCloneCard(input)
     {
-        return Deck.cloneCardEntry(input);
+        return DeckArda.cloneCardEntry(input);
     }
 }
 

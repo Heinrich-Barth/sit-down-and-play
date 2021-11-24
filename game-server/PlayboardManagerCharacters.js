@@ -4,9 +4,9 @@ const PlayboardManagerDeck = require("./PlayboardManagerDeck");
 
 class PlayboardManagerCharacters extends PlayboardManagerDeck
 {
-    constructor(_Decks, _listAgents, _eventManager, _gameCardProvider)
+    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
     {
-        super(_Decks, _listAgents, _eventManager, _gameCardProvider);
+        super(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer);
         
         this.characters = { };
     }

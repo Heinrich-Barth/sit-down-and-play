@@ -1,5 +1,4 @@
-const TurnTimer = require("./turnTimer");
-const Scores = require("./scores");
+const TurnTimer = require("./TurnTimer");
 
 const GamePlayers = require("./GamePlayers");
 

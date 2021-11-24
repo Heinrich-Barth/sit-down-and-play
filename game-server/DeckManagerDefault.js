@@ -1,8 +1,8 @@
-const DeckManager = require("./deckmanager");
+const DeckManager = require("./DeckManager");
 
-const HandManager = require("./handmanager");
+const HandManager = require("./HandManager");
 
-const Deck = require("./deck-default");
+const DeckDefault = require("./DeckDefault");
 
 class DeckManagerDefault extends DeckManager {
 
@@ -18,12 +18,12 @@ class DeckManagerDefault extends DeckManager {
 
     newDeckInstance(playerId)
     {
-        return new Deck(playerId);
+        return new DeckDefault(playerId);
     }
 
     resoteCardMapCloneCard(input)
     {
-        return Deck.cloneCardEntry(input);
+        return DeckDefault.cloneCardEntry(input);
     }
 }
 

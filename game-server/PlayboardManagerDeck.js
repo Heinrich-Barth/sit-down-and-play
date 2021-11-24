@@ -1,15 +1,21 @@
 const PlayboardManagerBase = require("./PlayboardManagerBase");
+const DeckManagerDefault = require("./DeckManagerDefault");
 
 class PlayboardManagerDeck extends PlayboardManagerBase {
 
 
-    constructor(_Decks, _listAgents, _eventManager, _gameCardProvider)
+    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
     {
         super(_eventManager);
         
-        this.decks = _Decks;
+        this.decks = this.requireDeckManager(isSinglePlayer);
         this.gameCardProvider = _gameCardProvider;
         this.agents = _listAgents === undefined ? [] : _listAgents;
+    }
+
+    requireDeckManager(isSinglePlayer)
+    {
+        return new DeckManagerDefault();
     }
 
     getDecks()
@@ -441,7 +447,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
       * Remove a card form owners hand
       * 
       * @param {String} _uuid
-      * @return {this.PopCardFromHand.card|nm$_playboard-management.this.PopCardFromHand.card}
+      * @return {card}
       */
     PopCardFromHand(_uuid)
     {

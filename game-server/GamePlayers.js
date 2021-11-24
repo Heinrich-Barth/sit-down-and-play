@@ -1,4 +1,4 @@
-const Scores = require("./scores");
+const Scores = require("./Scores");
 
 const GameBase = require("./GameBase");
 

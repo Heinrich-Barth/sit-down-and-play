@@ -1,6 +1,6 @@
-const DeckCommons = require("./deck-commons");
+const DeckCommons = require("./DeckCommons");
 
-class Deck extends DeckCommons {
+class DeckDefault extends DeckCommons {
 
     constructor(playerId)
     {
@@ -344,4 +344,4 @@ class Deck extends DeckCommons {
     }
 }
 
-module.exports = Deck;
+module.exports = DeckDefault;

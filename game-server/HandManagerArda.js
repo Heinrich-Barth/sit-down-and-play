@@ -1,4 +1,4 @@
-const HandManager = require("./handmanager");
+const HandManager = require("./HandManager");
 
 
 class HandManagerArda extends HandManager

@@ -1,6 +1,6 @@
-const DeckDefault = require("./deck-default");
+const DeckDefault = require("./DeckDefault");
 
-class Deck extends DeckDefault {
+class DeckArda extends DeckDefault {
 
     constructor(playerId)
     {
@@ -110,7 +110,6 @@ class Deck extends DeckDefault {
         this.shuffleAnyTimes(this.playdeckCharacters, 3);
         console.log("Added " + nSize + " characters with mind of 5-");
 
-        
         nSize = this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
     }
 
@@ -392,4 +391,4 @@ class Deck extends DeckDefault {
     
 }
 
-module.exports = Deck;
+module.exports = DeckArda;

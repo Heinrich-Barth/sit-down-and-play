@@ -3,9 +3,9 @@ const PlayboardManagerCharacters = require("./PlayboardManagerCharacters");
 
 class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 {
-    constructor(_Decks, _listAgents, _eventManager, _gameCardProvider)
+    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
     {
-        super(_Decks, _listAgents, _eventManager, _gameCardProvider);
+        super(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer);
         
         this.stagingareas = { };
     }
