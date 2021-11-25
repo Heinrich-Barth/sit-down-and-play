@@ -22,7 +22,7 @@ class GameStandard extends GamePlayers
     {
         super.init();
 
-        this.getMeccgApi().addListener("/game/card/state/set", this.onGameCardStateSet.bind(this)); //xxx
+        this.getMeccgApi().addListener("/game/card/state/set", this.onGameCardStateSet.bind(this)); 
         this.getMeccgApi().addListener("/game/card/state/glow", this.onGameStateGlow.bind(this));
         this.getMeccgApi().addListener("/game/card/state/reveal", this.onGameCardStateReveal.bind(this));
         this.getMeccgApi().addListener("/game/card/draw", this.onCardDraw.bind(this));
@@ -69,7 +69,6 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/character/join/company", this.onCharacterJoinCompany.bind(this));
 
         this.getMeccgApi().addListener("/game/discardopenly", this.onDiscardOpenly.bind(this));
-
     }
 
     /**
@@ -379,11 +378,14 @@ class GameStandard extends GamePlayers
 
         let nStored = 0, nDiscarded = 0;
         let list = [];
-
+        let affectedCompanyUuid = "";
         if (card.type === "character")
         {
             let _remove = [];
             let _uuid;
+            
+            affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
+
             list = this.getPlayboardManager().PopCharacterAndItsCards(obj.uuid);
 
             for (let i = 0; i < list.length; i++)
@@ -427,6 +429,9 @@ class GameStandard extends GamePlayers
         } 
         else
             this.publishChat(userid, "Could not store " + card.code);
+
+        /** update the company */
+        this.onRedrawCompany(userid,affectedCompanyUuid);
     }
 
     onCardMove(userid, socket, obj)
@@ -437,6 +442,7 @@ class GameStandard extends GamePlayers
             return;
 
         var list = [];
+        let affectedCompanyUuid;
         if (card.type !== "character" || obj.source !== "inplay")
         {
             /**
@@ -451,7 +457,10 @@ class GameStandard extends GamePlayers
                 list = [obj.uuid];
         } 
         else
+        {
+            affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
             list = this.getPlayboardManager().MoveCardCharacterTo(obj.uuid, card.owner, obj.target);
+        }
 
         if (list.length > 0)
         {
@@ -464,16 +473,22 @@ class GameStandard extends GamePlayers
         // now we have to remove the cards from the board again
         this.publishToPlayers("/game/card/remove", userid, list);
         this.publishChat(userid, "Moved " + list.length + " card(s) to " + obj.target);
+        this.onRedrawCompany(userid, affectedCompanyUuid);
     }
 
     onCardDiscard(userid, socket, data)
     {
         const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
-        if (card === null || !this.getPlayboardManager().MoveCardTo(data.uuid, card.owner, "discardpile"))
+        if (card === null)
+            return false;
+
+        const affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(data.uuid);
+        if (!this.getPlayboardManager().MoveCardTo(data.uuid, card.owner, "discardpile"))
             return false;
 
         this.updateHandCountersPlayer(card.owner);
         this.publishChat(userid, "Discarded 1 card.");
+        this.onRedrawCompany(userid, affectedCompanyUuid);
         return true;
     }
 
@@ -632,7 +647,7 @@ class GameStandard extends GamePlayers
         }
 
         // draw the company
-        this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(_id));
+        this.onRedrawCompany(userid, _id);
         this.removeEmptyCompanies();
 
         {
@@ -644,6 +659,15 @@ class GameStandard extends GamePlayers
         }
 
         return true;
+    }
+
+    onRedrawCompany(userid, companyId)
+    {
+        if (userid !== undefined && userid !== "" && companyId !== undefined && companyId !== "")
+        {
+            console.log("redraw company " + companyId);
+            this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(companyId));
+        }
     }
 
     onGameCompanyHighlight(userid, socket, jData)

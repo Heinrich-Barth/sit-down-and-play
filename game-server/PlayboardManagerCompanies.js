@@ -157,6 +157,27 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         return false;
     }
 
+    /**
+     * Process the influenced characters after the host has been 
+     * popped (i.e. because it is being discarded or similar).
+     * 
+     * Simply join the characters to this company under direct influence instead
+     * 
+     * @param {String} companyUuid 
+     * @param {Array} listCharacters List of character uuid
+     * @returns 
+     */
+     onPopInfluencedCharacters(companyUuid, listCharacters)
+     {
+        if (companyUuid === undefined || listCharacters === undefined)
+             return [];
+
+        for (let uuid of listCharacters)
+            this.joinCompanyFromBoard(uuid, companyUuid);
+
+        return [];
+    }
+
     PopOnGuardCard(cardUuid)
     {
         let _list, count, _uuid;
@@ -238,6 +259,48 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
      }
 
      /**
+      * Let's character join company from hand
+      * 
+      * @param {String} uuid Character UUID
+      * @param {String} companyId Target company uuid
+      * @param {String} playerId Player id
+      * @returns success state
+      */
+    joinCompanyFromHand(uuid, companyId, playerId)
+    {
+        const pDeck = super.getPlayerDeck(playerId);
+        if (pDeck === null)
+        {
+            console.log("Cannot find player deck");
+            return false;
+        }
+
+        pDeck.pop().fromHand(uuid);
+
+        this.companies[companyId].characters.push({ uuid: uuid, influenced : [] });
+        this.addNewCharacter(uuid,this.createNewCharacter(companyId, uuid));
+        return true;
+    }
+
+    /**
+     * Character joins company 
+     * @param {String} uuid Character UUID
+     * @param {String} companyId Company Id to join
+     * @returns success state
+     */
+    joinCompanyFromBoard(uuid, companyId)
+    {
+        var card = this.popCompanyCharacter(uuid);
+        if (!this.addCompanyCharacterToCompany(companyId, "", card))
+        {
+            console.log("Character " + uuid + " cannot join company " + companyId);
+            return false;
+        }
+        else
+            return true;
+    }
+
+     /**
       * Join a company
       * 
       * @param {String} uuid Character to join
@@ -248,31 +311,10 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
       */
     JoinCompany(uuid, source, companyId, playerId)
     {
-        var pDeck = super.getPlayerDeck(playerId);
-        if (pDeck === null)
-        {
-            console.log("Cannot find player deck");
-            return false;
-        }
-
         if (source === "hand")
-        {
-            pDeck.pop().fromHand(uuid);
-
-            this.companies[companyId].characters.push({ uuid: uuid, influenced : [] });
-            this.addNewCharacter(uuid,this.createNewCharacter(companyId, uuid));
-        }
-        else
-        {
-            var card = this.popCompanyCharacter(uuid);
-            if (!this.addCompanyCharacterToCompany(companyId, "", card))
-            {
-                console.log("Character " + uuid + " cannot join company " + companyId);
-                return false;
-            }
-        }
-  
-        return true;
+            return this.joinCompanyFromHand(uuid, companyId, playerId);
+        else 
+            return this.joinCompanyFromBoard(uuid, companyId);
     }
   
       /**
@@ -435,7 +477,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
           vsSites.push(cardUuid);
           return true;
       }
-  
+
     popCompanyCharacter0(uuid)
     {
         var card = {
@@ -662,6 +704,11 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         targetList.push(elem);
     }
 
+    /**
+     * Obtain the company object by its company id. Returns
+     * @param {String} companyId target id
+     * @returns JSON 
+     */
     GetFullCompanyByCompanyId(companyId)
     {
         if (companyId === "" || typeof this.companies[companyId] === "undefined")
@@ -670,32 +717,44 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
             return null;
         }
 
-        var company = {
+        let company = {
             id : companyId,
             characters : [],
             sites : this.GetCompanyAttachedLocationCards(companyId),
             playerId : this.companies[companyId].playerId
         };
 
-        var vsChars = this.companies[companyId].characters;
-        for (var i = 0; i < vsChars.length; i++)
+        let vsChars = this.companies[companyId].characters;
+        const lenChars = vsChars.length;
+        for (let i = 0; i < lenChars; i++)
             this._addCharacter(vsChars[i], company.characters);
 
         return company;
     }
-/*
-var company = {
-    id : companyId,
-    characters : [],
-    sites : PLAYBOARD_MANAGER.GetCompanyAttachedLocationCards(companyId),
-    playerId : PLAYBOARD_MANAGER.companies[companyId].playerId
-};
 
-var vsChars = PLAYBOARD_MANAGER.companies[companyId].characters;
-for (var i = 0; i < vsChars.length; i++)
-    addCharacter(vsChars[i], company.characters);
 
-*/    
+    /**
+     * Find the company of a given character under direct influence.
+     * 
+     * @param {String} characterUuid Character id to search amonst direct influence
+     * @returns UUID String of empty string
+     */
+    findHostsCompany(characterUuid)
+    {
+        if (characterUuid === undefined || characterUuid === "")
+            return "";
+
+        for (let companyUuid in this.companies)
+        {
+            for (let character of this.companies[companyUuid].characters)
+            {
+                if (character.uuid === characterUuid)
+                    return companyUuid;
+            }
+        }
+
+        return "";
+    }
 }
 
 module.exports = PlayboardManagerCompanies;

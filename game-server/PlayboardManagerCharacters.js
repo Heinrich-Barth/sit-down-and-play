@@ -217,9 +217,58 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         return vsCards;
     }
 
+    /**
+     * Process the influenced characters after the host has been 
+     * popped (i.e. because it is being discarded or similar).
+     * 
+     * You may overwrite this method to split them in a separate company
+     * 
+     * @param {String} companyUuid 
+     * @param {Array} listCharacters List of character uuid
+     * @returns 
+     */
+    onPopInfluencedCharacters(companyUuid, listCharacters)
+    {
+        if (companyUuid === undefined || listCharacters === undefined)
+            return [];
+
+        let cardList = [];
+        const len = listCharacters.length;
+        for (let charUuid of listCharacters)
+        {
+            const list = this.popCharacterCards(charUuid);
+            const lenList = list.length;
+            if (lenList === 0)
+                continue;
+
+            this.deleteCharacter0(charUuid);
+
+            for (let uuid of list)
+                cardList.push(uuid);
+        }
+
+        return cardList;
+    }
+
+
+    /**
+     * Delete an entry from the characters map if existent
+     * @param {String} uuid Character UUID
+     */
+    deleteCharacter0(uuid)
+    {
+        if (uuid !== undefined && uuid !== "" && this.characters[uuid] !== undefined)
+            delete this.characters[uuid];
+    }
+
+    /**
+     * Pop a character and its cards as well as all influenced characters and their cards.
+     * @param {String} characterUuid 
+     * @returns 
+     */
     PopCharacterAndItsCards(characterUuid)
     {
-        // get the list of affected company characters
+        /* get the list of affected company characters */
         var character = this.popCompanyCharacter(characterUuid); // { uuid: uuid, sourceCompany : "", influenced : [] }
         if (character === null)
             return [];
@@ -228,22 +277,9 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         if (cardList.length === 0)
             return [];
 
-        for (var i = 0; i < character.influenced.length; i++)
-        {
-            var list = this.popCharacterCards(character.influenced[i]);
-            if (list.length !== 0)
-            {
-                //console.log("delete influenced character " + character.influenced[i]);
-                delete this.characters[character.influenced[i]];
-                for (var y = 0; y < list.length; y++)
-                    cardList.push(list[y]);
-            }
-        }
-
-        if (typeof this.characters[character.uuid] !== "undefined")
-            delete this.characters[character.uuid];
-
-        return cardList;
+        const listRem = this.onPopInfluencedCharacters(character.sourceCompany, character.influenced);
+        this.deleteCharacter0(character.uuid);
+        return [...cardList, ...listRem];
     }
 
     readyResources(uuid)
