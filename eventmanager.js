@@ -15,7 +15,9 @@ EventManager.prototype.dump = function()
     let keys = Object.keys(this.events);
     keys.sort();
     if (keys.length > 0)
-        console.log(keys.length + " registered events\n" + keys.toString());
+    {
+        console.log(keys.length + " event(s) registered\n\t- " + keys.join("\n\t- "));
+    }
 };
 
 EventManager.prototype.trigger = function() 
