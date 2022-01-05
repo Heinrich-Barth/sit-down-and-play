@@ -163,7 +163,7 @@ class RegionMapPreferences extends Preferences {
         }
         return true;
     }    
-};
+}
 
 const g_pRegionMapPreferences = new RegionMapPreferences();
 

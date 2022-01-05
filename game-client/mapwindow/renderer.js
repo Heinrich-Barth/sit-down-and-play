@@ -1,21 +1,6 @@
 
 let g_isInit = false;
 
-const SelectedMovement = function(codeStart, regions, codeTarget)
-{
-    if (regions === undefined)
-        regions = [];
-
-    if (codeTarget === undefined)
-        codeTarget = "";
-
-    return {
-        start : codeStart,
-        regions: regions,
-        target: codeTarget
-    }
-};
-
 const MapInstanceRenderer = {
 
     _isMovementSelection : true,
@@ -28,12 +13,10 @@ const MapInstanceRenderer = {
 
         if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0))
         {
-            console.log("invalid1");
             MapInstanceRenderer.cancel();
         }
         else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "")
         {
-            console.log("invalid2");
             MapInstanceRenderer.cancel();
         }
         else
@@ -52,20 +35,29 @@ const MapInstanceRenderer = {
         parent.postMessage("/cancel", { });
     },
 
-    onInit : function(data, tapped)
+    getStartCode : function()
     {
-        MapBuilder.factory.create(data, tapped);
-
-        let sCode = "";
         let query = window.location.search;
         let pos = typeof query === "undefined" ? -1 : query.indexOf("=");
 
         if (pos !== -1)
-            sCode = decodeURI(query.substring(pos+1));
+            return decodeURI(query.substring(pos+1));
+        else
+            return "";
+    },
 
+    onInit : function(data, tapped)
+    {
+        const sCode = MapInstanceRenderer.getStartCode();
         MapInstanceRenderer._isMovementSelection = sCode !== "";
-        document.body.dispatchEvent(new CustomEvent("meccg-map-load-location", { "detail": sCode }));
 
+        let pInstance;
+        if (sCode !== "")
+            pInstance = new MapViewRegionsMovementFilterable(data, tapped);
+        else
+            pInstance = new MapViewChooseStartingHeaven(data, tapped);
+
+        pInstance.createInstance(sCode);
         g_isInit = true;
     }
 };
@@ -89,7 +81,7 @@ const fetchMap = function(tappedSites)
         if (response.status === 200)
             response.json().then((map) => MapInstanceRenderer.onInit(map, tappedSites));
         else
-            throw "Could not load map";
+            throw new Error("Could not load map");
     })
     .catch((err) => showErrorLoading(err));
 };
@@ -104,7 +96,7 @@ const fetchTappedSites = function()
         if (response.status === 200)
             response.json().then(fetchMap);
         else
-            throw "Could not load tapped sites";
+            throw new Error("Could not load tapped sites");
     })
     .catch((err) => showErrorLoading(err));
 };

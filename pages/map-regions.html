@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="robots" content="noindex, nofollow">
         <title>Plan your movement</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; {TPL_CSP}">
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; {TPL_CSP_X}">
         <meta name="robots" content="noindex">
         <link rel="stylesheet" href="/media/assets/css/tabletop.css" />
         <link rel="stylesheet" href="/media/assets/css/bootstrap.css" />
@@ -16,6 +14,7 @@
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
         <script src="/media/assets/js/leaflet.js"></script>
+        <base target="_self">
     </head>
 
 
@@ -38,7 +37,7 @@
                             <div id="site_movement_start_site" class="site_movement_start_site site-list fl"></div>
                         </div>
                         <div class="fl movement-icon">
-                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-compass.png" class="blue-box" title="through"></div>
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-compass.png" alt="move through" class="blue-box" title="through"></div>
                         </div>
                         <div class="fl padl10 blue-box card-box">
                             <div id="site_movement_start_region" class="site_movement_start_region site-list fl"></div>
@@ -46,7 +45,7 @@
                             <div id="site_movement_target_region" class="site_movement_target_region site-list fl"></div>
                         </div>
                         <div class="fl movement-icon">
-                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-start.png" class="blue-box" title="to"></div>
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-start.png" alt="move to" class="blue-box" title="to"></div>
                         </div>
                         <div class="fl padl10 blue-box card-box">
                             <div id="site_movement_target_site" class="site_movement_target_site site-list min-container"></div>
@@ -72,8 +71,15 @@
         <script src="/media/client/game/card-preview.js"></script>
         <script src="/media/client/game/cardlist.js"></script>
         <script src="/media/client/preferences.js?version=1"></script>
-        <script src="/media/client/mapwindow/preferences-regions.js?version=1"></script>
-        <script src="/media/client/mapwindow/mapview.js?v=1"></script>
+        <script src="/media/client/mapwindow/RegionMapPreferences.js?version=1"></script>
+
+        <script src="/media/client/mapwindow/MapView.js"></script>        
+        <script src="/media/client/mapwindow/MapViewCards.js"></script>  
+        <script src="/media/client/mapwindow/MapViewRegions.js"></script>  
+        <script src="/media/client/mapwindow/MapViewRegionsMovement.js"></script>
+        <script src="/media/client/mapwindow/MapViewRegionsMovementFilterable.js"></script>          
+        <script src="/media/client/mapwindow/MapViewChooseStartingHeaven.js"></script>
+
         <script src="/media/client/mapwindow/renderer.js?v=1"></script>
         <script src="/media/client/onready.js"></script>
     </body>

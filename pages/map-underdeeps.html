@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="robots" content="noindex, nofollow">
         <meta name="robots" content="noindex">
         <title>View Underdeeps - press ESC to close window</title>
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self';">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <link rel="stylesheet" href="/media/assets/css/tabletop.css" />
         <link rel="stylesheet" href="/media/assets/css/bootstrap.css" />
@@ -14,6 +12,7 @@
         <link rel="stylesheet" href="/media/assets/css/mapview.css" />
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
         <script src="/media/assets/js/leaflet.js"></script>
+        <base target="_self">
     </head>
 
 
@@ -24,8 +23,9 @@
                 <div id='map'></div>
             </div>
         </div>
-        
-        <script src="/media/client/mapwindow/underdeeps.js"></script>
+
+        <script src="/media/client/mapwindow/MapView.js"></script>        
+        <script src="/media/client/mapwindow/MapViewUnderdeeps.js"></script>
         
     </body>
 </html>
