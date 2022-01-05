@@ -29,7 +29,7 @@ PlayerSelector.prototype.player2Hex = function (sInput)
 {
     if (sInput === "")
         return "";   
-    else if (typeof this._playerHex[sInput] === "undefined")
+    else if (this._playerHex[sInput] === undefined)
         this._playerHex[sInput] = sInput.split("").map(c => c.charCodeAt(0).toString(16)).join("");
 
     return this._playerHex[sInput];
@@ -42,7 +42,7 @@ PlayerSelector.prototype.updateHandSize = function(username, nCount, nCountPlayd
 
     if (typeof nCountPlaydeck === "undefined")
         nCountPlaydeck = "?";
-    
+
     let pContainer = document.getElementById("player_selector_" + this.player2Hex(username));
     if (pContainer !== null)
     {
@@ -60,8 +60,8 @@ PlayerSelector.prototype.clearLastSeen = function()
 {
     const elem = document.getElementById("player_selector");
     const list = elem.getElementsByTagName("span");
-    for (let i = 0; i < list.length; i++)
-        list[i].setAttribute("class", "indicator-grey");
+    for (let lnk of list)
+        lnk.setAttribute("class", "indicator-grey");
 };
 
 
@@ -77,10 +77,10 @@ PlayerSelector.prototype.setCurrentPlayer = function(sPlayerId, bIsMe)
     if (list === null)
         list = [];
 
-    for (let i = 0; i< list.length; i++)
-        list[i].classList.remove("act");
+    for (let _elem of list)
+        _elem.classList.remove("act");
 
-    let jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
+    const jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
     if (jTarget === null)
         return;
         
@@ -97,22 +97,16 @@ PlayerSelector.prototype.setCurrentPlayer = function(sPlayerId, bIsMe)
  */
 PlayerSelector.prototype.addPlayers = function(sMyId, jMap)
 {
-    let sHexId;
-    let sName;
-    
     for (let _playerId in jMap)
     {
-        sName = jMap[_playerId];
+        let sName = jMap[_playerId];
         if (sName === "")
             sName = _playerId;
         
         if (_playerId === sMyId)
             sName = "You";
         
-        sHexId = this.player2Hex(_playerId);
-        if (_playerId.indexOf("<") !== -1 || _playerId.indexOf(">") !== -1)
-            _playerId = sHexId;
-
+        const sHexId = this.player2Hex(_playerId);
         if (document.getElementById("player_selector_" + sHexId) === null) /** indicator already available, so skipp this */
         {
             const elemA = document.createElement("a");
