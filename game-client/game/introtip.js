@@ -28,8 +28,8 @@
         
         divContent.innerHTML = `<h2><i class="fa fa-info-circle" aria-hidden="true"></i> Before you start</h2>
                             <h3><i class="fa fa-microphone" aria-hidden="true"></i> Join Audio Chat</h3>
-                            <p>You can join the <a href="https://meet.jit.si/${_room}" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Jitsi Audio Chat</a>
-                            or the <a href="https://discord.com/invite/EFqBJmT" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Discord</a> server.
+                            <p>You can join the <a href="https://meet.jit.si/${_room}" rel="noopener" rel="noreferrer" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Jitsi Audio Chat</a>
+                            or the <a href="https://discord.com/invite/EFqBJmT" rel="noopener" rel="noreferrer" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Discord</a> server.
                             <br>&nbsp;</p>
                             <h3><i class="fa fa-universal-access" aria-hidden="true"></i> How to play</h3>
                             <p>Simply <span class="text-white">drag &amp; drop</span> cards as you would intuitively do.</p>
