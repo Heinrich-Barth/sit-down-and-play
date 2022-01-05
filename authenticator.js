@@ -1,7 +1,6 @@
 
 
 class Authenticator {
-    constructor() {}
 
     signIn() {
         return true;
