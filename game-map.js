@@ -1,15 +1,16 @@
 
 
 let g_sRegionMap = "";
+const fs = require('fs');
 
 /**
  * Callback function
  * @returns Empty String
  */
-function getHtmlCspPage()
+const getHtmlCspPage = function(sFile)
 {
-    return "";
-}
+    return fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
+};
 
 /**
  * Show Region Map.
@@ -67,12 +68,9 @@ pCookiePreferences.addPreference("lord", true);
 pCookiePreferences.addPreference("fallenlord", true);
 pCookiePreferences.addPreference("dragon", false);
 
-exports.setup = function(SERVER, g_pExpress, fnGetHtmlCspPage)
+exports.setup = function(SERVER, isProduction, g_pExpress)
 {
-    if (fnGetHtmlCspPage !== undefined)
-        getHtmlCspPage = fnGetHtmlCspPage;
-
-    pCookiePreferences.setProduction(SERVER.environment.isProduction);
+    pCookiePreferences.setProduction(isProduction);
 
     /* Map images should be cached */
     SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));

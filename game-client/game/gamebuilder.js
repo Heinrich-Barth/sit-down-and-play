@@ -102,6 +102,21 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             
             return true;
         },
+
+        onRestoreHand: function(cards)
+        {
+            const container = document.getElementById("playercard_hand");
+            if (container === null)
+                return;
+
+            const hand = document.getElementById("playercard_hand_container");
+            if (hand !== null)
+            {
+                DomUtils.removeAllChildNodes(hand);
+                for (let card of cards)
+                    this.onDrawCard(card.code, card.uuid, card.type);    
+            }
+        },
         
         onAttachCardToCompanySite : function(companyId, code, cardUuid, state, reveal, owner)
         {                   
@@ -118,44 +133,30 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
         restoreBoard : function(jData)
         {
-            var _data;
-            for (var i = 0; i < jData.player.companies.length; i++)
-                CompanyManager.drawCompany(true, jData.player.companies[i]);
+            for (let company of jData.player.companies)
+                CompanyManager.drawCompany(true, company);
 
             CompanyManager.onRemoveEmptyCompanies();
 
-            for (var i = 0; i < jData.player.stage_hazards.length; i++)
-            {
-                _data = jData.player.stage_hazards[i];
+            for (let _data of jData.player.stage_hazards)
                 GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
-            }
             
-            for (var i = 0; i < jData.player.stage_resources.length; i++)
-            {
-                _data = jData.player.stage_resources[i];
+            for (let _data of jData.player.stage_resources)
                 GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
-            }
                 
 
-            for (var i = 0; i < jData.opponent.companies.length; i++)
-                CompanyManager.drawCompany(false, jData.opponent.companies[i]);
+            for (let _data of jData.opponent.companies)
+                CompanyManager.drawCompany(false, _data);
             
-            for (var i = 0; i < jData.opponent.stage_hazards.length; i++)
-            {
-                _data = jData.opponent.stage_hazards[i];
+            for (let _data of jData.opponent.stage_hazards)
                 GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
-            }
             
-            for (var i = 0; i < jData.opponent.stage_resources.length; i++)
-            {
-                _data = jData.opponent.stage_resources[i];
+            for (let _data of jData.opponent.stage_resources)
                 GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
-            }
-
             
             setTimeout(() => {
 
-                DomUtils.removeNode(document.getElementById("lidles-eye"))
+                DomUtils.removeNode(document.getElementById("lidles-eye"));
                 document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
                 
             }, 1500);
@@ -214,18 +215,14 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     GameBuilder.onDrawCard(jData.code, jData.uuid, jData.type);
             });
 
-            MeccgApi.addListener("/game/discardopenly", function(bIsMe, jData) 
+            MeccgApi.addListener("/game/card/hand", function(bIsMe, jData)
             {
                 if (bIsMe)
-                    return;
-
-
-                /* TODO
-                jData.code;
-                jData.owner;
-                jData.uuid;
-                */
+                    GameBuilder.onRestoreHand(jData.cards);
             });
+            
+
+            MeccgApi.addListener("/game/discardopenly", (bIsMe, jData) => { /** fallback */ });
 
             MeccgApi.addListener("/game/add-onguard", function(bIsMe, jData)
             {
@@ -254,8 +251,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     g_Game.TaskBarCards.onShowOnOfferRemove(jData.uuid);
             });
                        
-            MeccgApi.addListener("/game/state/save/receive", () => {});
-            MeccgApi.addListener("/game/state/save/current", () => {});
+            MeccgApi.addListener("/game/state/save/receive", () => { /** fallback */});
+            MeccgApi.addListener("/game/state/save/current", () => { /** fallback */});
             
             MeccgApi.addListener("/game/player/set-current", function(bIsMe, jData)
             {
@@ -283,14 +280,15 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "A player is in the lobby" }));
             });
 
-            MeccgApi.addListener("/game/roll-dices", function(bIsMe, jData)
+            MeccgApi.addListener("/game/dices/roll", function(bIsMe, jData)
             {
                 document.body.dispatchEvent(new CustomEvent("meccg-dice-rolled", { "detail": {
                     isme : bIsMe,
                     user : jData.user,
                     first : jData.first,
                     second : jData.second,
-                    total : jData.total
+                    total : jData.total,
+                    dice : jData.dice
                 } }));
             });
             
@@ -352,7 +350,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     div.querySelector("a.hand span").innerHTML = playload.hand;
                 }
                 
-                CompanyManager.updateHandSize(playload.player, playload.hand);
+                CompanyManager.updateHandSize(playload.player, playload.hand, playload.playdeck);
             });
             
             MeccgApi.addListener("/game/update-deck-counter/player/hand", function(bIsMe, jData)
@@ -426,8 +424,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     jTaskbar.classList.add("turn-opponent");
                 
                 let list = jTaskbar.querySelectorAll("a");
-                for (let i = 0; i < list.length; i++)
-                    list[i].classList.remove("act");
+                for (let elem of list)
+                    elem.classList.remove("act");
 
                 /** maybe notify on hand size */
                 GameBuilder.onResolveHandNotification(sPhase);
@@ -472,9 +470,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                  * update links in taskbar
                  */
                 list = document.querySelectorAll(".taskbar .taskbar-turn");
-                for (let i = 0; i < list.length; i++)
+                for (let jThis of list)
                 {
-                    var jThis = list[i];
                     if (jThis.getAttribute("data-phase") === sPhase)
                     {
                         jThis.classList.add("act");
@@ -506,8 +503,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
             MeccgApi.addListener("/game/score/final", function(bIsMe, jData)
             {
-                Scoring.showFinalScore(jData);
                 MeccgApi.disconnect();                    
+                Scoring.showFinalScore(jData.score, jData.stats);
             });
             
             MeccgApi.addListener("/game/rejoin/immediately", (bIsMe, jData) => GameBuilder.restoreBoard(jData));
@@ -521,6 +518,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 else if (jData.type === "success")
                     document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": jData.message }));
             });
+
+            MeccgApi.addListener("/game/hand/clear", () => DomUtils.removeAllChildNodes(document.getElementById("playercard_hand_container")));
         },
                                 
         queryConnectionStatus : function()
@@ -534,8 +533,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
         onError : (error) => console.error('There has been a problem with your fetch operation:', error)
     };
 
-    MeccgApi.setOnReconnectAttempt(GameBuilder.onDisconnected);
-    MeccgApi.setOnConnected(GameBuilder.onConnected);
+    document.body.addEventListener("meccg-connected", GameBuilder.onConnected);
+    document.body.addEventListener("meccg-disconnected", GameBuilder.onConnected);
 
     GameBuilder.initRestEndpoints();
 

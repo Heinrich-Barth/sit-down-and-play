@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="robots" content="noindex, nofollow">
         <title>Sit down and play</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <meta name="robots" content="noindex">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self';{TPL_CSP}">
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self';{TPL_CSP_X}">
 
         <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/game-mapview.css" />
@@ -18,22 +16,24 @@
         <link rel="stylesheet" href="/media/assets/css/contextmenu.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/scoring.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/question.css?version=1" />
-        <link rel="stylesheet" href="/media/assets/css/game-dices.css?version=1" />
+        <link rel="stylesheet" asy href="/media/assets/css/game-dices.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/game-preferences.css?version=1" />
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/media/assets/css/lobby.css" />
         <link rel="stylesheet" href="/media/assets/css/addcards.css" />
         <link rel="stylesheet" href="/media/assets/css/ingame-draggable-tips.css" />
         <link rel="stylesheet" href="/media/assets/css/watcher.css" />
+        <link rel="stylesheet" href="/media/personalisation/personalisation.css" />
         
         <script src="/media/client/httpsonly.js"></script>
         <script src="/media/assets/js/jquery.min.js?version=1"></script>
         <script src="/media/assets/js/jquery-ui.min.js?version=1"></script>
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+        <base target="_self">
     </head>
 
 
-    <body class="bg-game" data-is-game="true" data-is-watcher="{TPL_IS_VISITOR}" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
+    <body class="bg-game" data-is-game="true" data-is-watcher="{TPL_IS_VISITOR}" data-dice="{TPL_DICE}" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
 
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}">
 
@@ -136,7 +136,7 @@
         </div>
         
         <div id="lidles-eye">
-            <img src="/media/assets/images/splash-eye.png" title="Waiting...">
+            <img src="/media/assets/images/splash-eye.png" alt="Waiting" title="Waiting...">
         </div>
 
         <script type="text/javascript" nonce="START">
@@ -154,10 +154,15 @@
         <script src="/media/client/question.js?version=1"></script>
         <script src="/media/client/game/addcards.js?version=1"></script>
         <script src="/media/client/game/dice.js?version=1"></script>
+        <script src="/media/client/game/PreferenceChoise.js?version=1"></script>
+        <script src="/media/client/game/BackgroundChooser.js?version=1"></script>
+        <script src="/media/client/game/DiceChooser.js?version=1"></script>
         <script src="/media/client/game/added-cards-monitor.js?version=1"></script>
         <script src="/media/client/game/chat.js?version=1"></script>
         <script src="/media/client/preferences.js?version=1"></script>
         <script src="/media/client/game/preferences-game.js?version=1"></script>
+
+        
         <script src="/media/client/game/notify.js?version=1"></script>
         <script src="/media/client/game/cardlist.js?version=1"></script>
         <script src="/media/client/game/scoring.js?version=1"></script>
@@ -180,6 +185,7 @@
         <script src="/media/client/game/game-arda.js?version=1"></script>
         <script src="/media/client/game/introtip.js"></script>
         <script src="/media/client/game/savedgame.js"></script>
+        <script src="/media/client/game/dicestats.js"></script>
         <script src="/media/client/saveas.js"></script>
         <script src="/media/client/game/watchonly.js"></script>
         <script src="/media/client/onready.js"></script>

@@ -91,11 +91,6 @@ const MeccgApi =
         return MeccgPlayers.isChallenger(sid);
     },
     
-    isConnected : function()
-    {
-        return this.connected;
-    },
-    
     getTimeJoined : function()
     {
         return g_lTimeJoined;
@@ -135,6 +130,7 @@ const MeccgApi =
     
     disconnect : function()
     {       
+        MeccgApi.expectDisconnect();
         setTimeout(() => MeccgApi._socket.emit("/game/quit", {}), 1000);
         setTimeout(MeccgApi.onQuitGame, 5000);
     },
@@ -182,31 +178,17 @@ const MeccgApi =
         return lToken;
     },
     
-    _callbackReconnect : null,
-    _callbackConnected : null,
-    
-    setOnReconnectAttempt : function(pCallback)
-    {
-        this._callbackReconnect = pCallback;
-    },
-    setOnConnected : function(pCallback)
-    {
-        this._callbackConnected = pCallback;
-    },
-    
     onConnected : function()
     {
         if (!MeccgApi._ignoreDisconnection)
             document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Reconnected." }));
 
-        if (MeccgApi._callbackConnected !== null)
-            MeccgApi._callbackConnected();
+        document.body.dispatchEvent(new CustomEvent("meccg-connected", { "detail": true }));
     },
     
     onDisconnected : function()
     {
-        if (MeccgApi._callbackReconnect !== null)
-            MeccgApi._callbackReconnect();
+        document.body.dispatchEvent(new CustomEvent("meccg-disconnected", { "detail": true }));
     },
 
     onAuthenticationSuccess : function()
@@ -229,7 +211,9 @@ const MeccgApi =
             return;
         }
       
-        this._socket = io(window.location.host);
+        this._socket = io(window.location.host, {
+            reconnectionDelay: 500
+        });
 
         this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess);
 
@@ -250,6 +234,11 @@ const MeccgApi =
             MeccgApi.onDisconnected();
             document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
         });
+
+        this._socket.io.on("reconnect_attempt", (attemptNumber) => {
+            MeccgApi.onDisconnected();
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
+        });
         
         /** so do the login */
         this._socket.emit("/authenticate", { 
@@ -264,18 +253,12 @@ const MeccgApi =
     
     queryEndGame : function()
     {
-        let _question = createQuestionBox(function()
-        {
+        new Question().onOk(function() {
+
             MeccgApi.expectDisconnect();
             MeccgApi.send("/game/finalscore", {});
-        }, 
-        "Do you want to end this game?", 
-        "Let's see the final scorings.", 
-        "End this game", 
-        "Cancel",
-        "question-question-icon");
 
-        _question.show("");
+        }).show("Do you want to end this game?", "Let's see the final scorings.", "End this game");
     }
 };
 

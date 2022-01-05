@@ -83,7 +83,7 @@ class DeckManager {
         {
             const _card = this.resoteCardMapCloneCard(data[key]);
             if (_card === null)
-                throw "Cannot duplicate card";
+                throw new Error("Cannot duplicate card");
             else
                 this._cardMap[key] = _card;
         }
@@ -148,7 +148,7 @@ class DeckManager {
 
     creatHandManager()
     {
-        throw "please overwrite!";
+        throw new Error("please overwrite!");
     }
 
     isArda()
@@ -175,7 +175,7 @@ class DeckManager {
     
     newDeckInstance(playerId)
     {
-        throw "Overwrite newDeckInstance";
+        throw new Error("Overwrite newDeckInstance");
     }
 
     addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
@@ -244,7 +244,7 @@ class DeckManager {
     _tapSiteState(playerId, code, bTapped)
     {
         if (typeof this._siteMap[playerId] === "undefined")
-        this._siteMap[playerId] = {};
+            this._siteMap[playerId] = {};
         
         if (bTapped && typeof this._siteMap[playerId][code] === "undefined")
             this._siteMap[playerId][code] = true;
@@ -359,7 +359,8 @@ class DeckManager {
 
     dumpCards(playerId)
     {
+        /** deprecated */
     }
-};
+}
 
 module.exports = DeckManager;

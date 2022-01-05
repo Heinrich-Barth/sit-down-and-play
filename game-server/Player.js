@@ -4,15 +4,15 @@ class Player
 {
     constructor(displayname, jDeck, isAdmin, timeAdded)
     {
-        this.name = displayname,
-        this.deck = jDeck,
-        this.admin = isAdmin,
-        this.waiting = !isAdmin,
-        this.timestamp = timeAdded,
-        this.joined = false,
-        this.socket = null,
-        this.visitor  = false,
-        this.player_access_token_once  = Date.now()
+        this.name = displayname;
+        this.deck = jDeck;
+        this.admin = isAdmin;
+        this.waiting = !isAdmin;
+        this.timestamp = timeAdded;
+        this.joined = false;
+        this.socket = null;
+        this.visitor  = false;
+        this.player_access_token_once  = Date.now();
     }
 
     isConnected()

@@ -6,12 +6,12 @@ const GameRoom = require("./GameRoom");
  * @returns TRUE if the romm has been created, FALSE if it already existed
  */
 class RoomManager {
-    constructor(fnSocketIo, sGameHtmlPageUri, fnGetAgentList, pEventManager, pGameCardProvider)
+    constructor(fnSocketIo, sGameHtmlPageUri, pEventManager, pGameCardProvider, maxRooms, maxPlayers)
     {
         this.gamePageHtml = sGameHtmlPageUri;
         this._eventManager = pEventManager;
         this.gameCardProvider = pGameCardProvider;
-        this.fnGetAgentList = fnGetAgentList;
+        this.fnGetAgentList = pGameCardProvider.getAgents;
         this.fnSocketIo = fnSocketIo;
 
         this._rooms = {};
@@ -19,6 +19,30 @@ class RoomManager {
             games : 0,
             players : 0
         };
+
+        this.maxRooms = maxRooms;
+        this.maxPlayers = maxPlayers;
+    }
+
+    tooManyRooms()
+    {
+        return this.maxRooms > 0 && this.countRooms() > this.maxRooms;
+    }
+
+    countRooms()
+    {
+        return Object.keys(this._rooms).length;
+    }
+
+    tooManyPlayers(room)
+    {
+        return this.maxPlayers > 0 && this.countPlayersInRoom(room) > this.maxPlayers;
+    }
+
+    countPlayersInRoom(room)
+    {
+        const pRoom = this.getRoom(room);
+        return pRoom === null ? 0 : pRoom.getPlayerCount();
     }
 
     getAgentList()
@@ -248,8 +272,8 @@ class RoomManager {
                 keys.push(key);
         }
 
-        for (let i = 0; i < keys.length; i++)
-            this.kickPlayer(pRoom, keys[i]);
+        for (let _key of keys)
+            this.kickPlayer(pRoom, _key);
 
         if (this._rooms[room].isEmpty())
         {
@@ -512,27 +536,6 @@ class RoomManager {
         return true;
     }
 
-    isTooCrowded(room) 
-    {
-        const pRoom = this.getRoom(room);
-        if(pRoom === null)
-            return false;
-        else 
-        {
-            const size = pRoom.getPlayerCount();
-            if (size > 10)
-            {
-                console.log("There are " + size + " in the room already. Too crowded.");
-                return true;
-            }
-            else
-            {
-                console.log("There are only " + size + " other player(s) in the room. You can join.");
-                return false;
-            }
-        }
-    }
-
     roomExists(room)
     {
         return room !== undefined && room !== "" && this._rooms[room] !== undefined;
@@ -616,7 +619,14 @@ class RoomManager {
             return pRoom.updateEntryTime(userId);
     }
 
-    loadGamePage(room, userId, username, lTimeJoined) 
+    updateDice(room, userId, dice)
+    {
+        const pRoom = this.getRoom(room);
+        if (pRoom !== null)
+            pRoom.updateDice(userId, dice);
+    }
+
+    loadGamePage(room, userId, username, lTimeJoined, dice) 
     {
         const pRoom = this.getRoom(room);
         if (pRoom === null)
@@ -633,12 +643,14 @@ class RoomManager {
         const sLobbyToken = pPlayer.isAdmin() ? pRoom.lobbyToken : "";
         const isArda = pRoom.getGame().isArda() ? "true" : "false";
         const isSinglePlayer = pRoom.getGame().isSinglePlayer() ? "true" : "false";
+        const tplDice = dice === undefined || dice.indexOf(".") !== -1 ? "" : dice;
 
         return this.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
             .replace("{TPL_LOBBY_TOKEN}", sLobbyToken)
             .replace("{TPL_USER_ID}", userId)
+            .replace("{TPL_DICE}", tplDice)
             .replace("{TPL_API_KEY}", sSecret)
             .replace("{TPL_IS_ARDA}", isArda)
             .replace("{TPL_IS_VISITOR}", isVisitor)
@@ -661,6 +673,6 @@ class RoomManager {
         else
             return pRoom.isAccepted(userId);
     }
-};
+}
 
 module.exports = RoomManager;

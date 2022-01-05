@@ -31,13 +31,16 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/card/store", this.onCardStore.bind(this));
         this.getMeccgApi().addListener("/game/card/move", this.onCardMove.bind(this));
         this.getMeccgApi().addListener("/game/card/discard", this.onCardDiscard.bind(this));
+        this.getMeccgApi().addListener("/game/card/hand", this.onCardInHand.bind(this));
 
         this.getMeccgApi().addListener("/game/stagingarea/add/card", this.onStagingAreaAddCard.bind(this));
 
         this.getMeccgApi().addListener("/game/save", this.globalSaveGame.bind(this));
         this.getMeccgApi().addListener("/game/restore", this.globalRestoreGame.bind(this));
 
-        this.getMeccgApi().addListener("/game/roll-dices", this.rollDices.bind(this));
+        this.getMeccgApi().addListener("/game/dices/roll", this.rollDices.bind(this));
+        this.getMeccgApi().addListener("/game/dices/set", this.setDices.bind(this));
+
         this.getMeccgApi().addListener("/game/phase/set", this.phase.bind(this)); /* Set the current phase of the game turn */
         this.getMeccgApi().addListener("/game/add-cards-to-game", this.onGameAddCardsToGame.bind(this)); /* add a list of cards to the sideboard */
         
@@ -86,9 +89,8 @@ class GameStandard extends GamePlayers
 
     updateHandCountersPlayerAll()
     {
-        var list = this.getPlayerIds();
-        for (var i = 0; i < list.length; i++)
-            this.updateHandCounterPlayerOnly(list[i]);
+        for (let id of this.getPlayerIds())
+            this.updateHandCounterPlayerOnly(id);
     }
 
     updateHandCounterPlayerOnly(player)
@@ -160,38 +162,33 @@ class GameStandard extends GamePlayers
             data : this.getPlayboardManager().GetData()
         };
 
-        var _dataTarget;
-        var _playerId, _list, _temp, card;
-
-        var players = this.getPlayerIds();
-        for (var i = 0; i < players.length; i++)
+        let _dataTarget;
+        for (let _playerId of this.getPlayerIds())
         {
-            _playerId = players[i];
             if (_playerId === id)
                 _dataTarget = data.player;
             else
                 _dataTarget = data.opponent;
 
-            _list = this.getPlayboardManager().GetCompanyIds(_playerId);
-            for (var y = 0; y < _list.length; y++)
+            for (let _elem of this.getPlayboardManager().GetCompanyIds(_playerId))
             {
-                _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(_list[y]);
+                let _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(_elem);
                 if (_temp !== null)
                     _dataTarget.companies.push(_temp);
             }
 
-            _list = this.getPlayboardManager().GetStagingCards(_playerId, true);
-            for (var y = 0; y < _list.length; y++)
+            for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, true))
             {
-                card = this.getPlayboardManager().GetCardByUuid(_list[y]);
-                _dataTarget.stage_resources.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
+                let card = this.getPlayboardManager().GetCardByUuid(_elem);
+                if (card !== null)
+                    _dataTarget.stage_resources.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
             }
-
-            _list = this.getPlayboardManager().GetStagingCards(_playerId, false);
-            for (var y = 0; y < _list.length; y++)
+    
+            for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, false))
             {
-                card = this.getPlayboardManager().GetCardByUuid(_list[y]);
-                _dataTarget.stage_hazards.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
+                let card = this.getPlayboardManager().GetCardByUuid(_elem);
+                if (card !== null)
+                    _dataTarget.stage_hazards.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
             }
 
             this.updateHandCountersPlayer(_playerId);
@@ -219,8 +216,8 @@ class GameStandard extends GamePlayers
     startPoolPhaseByPlayer(id)
     {
         const _list = this.getPlayboardManager().GetCardsInHand(id);
-        for (let i = 0; i < _list.length; i++)
-            this.drawCard(id, _list[i].uuid, _list[i].code, _list[i].type, 1);
+        for (let card of _list)
+            this.drawCard(id, card.uuid, card.code, card.type, 1);
 
         this.updateHandCountersPlayer(id);
     }
@@ -313,8 +310,8 @@ class GameStandard extends GamePlayers
     onCardDraw(userid, socket, obj)
     {
         let _list = this.getPlayboardManager().GetCardsInHand(userid);
-        for (var i = 0; i < _list.length; i++)
-            this.drawCard(userid, _list[i].uuid, _list[i].code, _list[i].type, 1);
+        for (let card of _list)
+            this.drawCard(userid, card.uuid, card.code, card.type, 1);
 
         this.updateHandCountersPlayer(userid);
 
@@ -356,11 +353,9 @@ class GameStandard extends GamePlayers
         if (nCount < 1)
             return;
 
-        let _card;
-        let _cards = this.getPlayboardManager().GetTopCards(userid, nCount);
-        for (var i = 0; i < _cards.length; i++)
+        const _cards = this.getPlayboardManager().GetTopCards(userid, nCount);
+        for (let _card of _cards)
         {
-            _card = _cards[i];
             this.drawCard(userid, _card.uuid, _card.code, _card.type, nCount);
             this.publishChat(userid, "drew 1 card");
         }
@@ -382,15 +377,13 @@ class GameStandard extends GamePlayers
         if (card.type === "character")
         {
             let _remove = [];
-            let _uuid;
             
             affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
 
             list = this.getPlayboardManager().PopCharacterAndItsCards(obj.uuid);
 
-            for (let i = 0; i < list.length; i++)
+            for (let _uuid of list)
             {
-                _uuid = list[i];
                 if (_uuid === obj.uuid)
                 {
                     if (this.getPlayboardManager().AddToPile(_uuid, card.owner, "victory"))
@@ -476,6 +469,16 @@ class GameStandard extends GamePlayers
         this.onRedrawCompany(userid, affectedCompanyUuid);
     }
 
+    onCardInHand(userid, socket)
+    {
+        let res = [];
+        const _list = this.getPlayboardManager().GetCardsInHand(userid);
+        for (let card of _list)
+            res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
+
+        this.replyToPlayer("/game/card/hand", socket, { cards: res });
+    }
+
     onCardDiscard(userid, socket, data)
     {
         const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
@@ -525,9 +528,8 @@ class GameStandard extends GamePlayers
 
     onGameDrawCompanies(userid, socket, data)
     {
-        var list = this.getPlayboardManager().GetCompanyIds(userid);
-        for (var i = 0; i < list.length; i++)
-            this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(list[i]));
+        for (let _company of this.getPlayboardManager().GetCompanyIds(userid))
+            this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(_company));
     }
 
     onCharacterHostCard(userid, socket, obj)
@@ -788,14 +790,24 @@ class GameStandard extends GamePlayers
     
     rollDices(userid, socket, obj)
     {
-        const n1 = this.getMeccgApi().getRandomDiceRoll();
-        const n2 = this.getMeccgApi().getRandomDiceRoll();
+        const pDices = this.getPlayerDices();
+        const n1 = pDices.roll();
+        const n2 = pDices.roll();
         const nRes = n1 + n2;
+        const dice = pDices.getDice(userid);
 
-        this.publishToPlayers("/game/roll-dices", userid, {first: n1, second: n2, total: nRes, user: userid });
+        pDices.saveRoll(userid, nRes);
+
+        this.publishToPlayers("/game/dices/roll", userid, {first: n1, second: n2, total: nRes, user: userid, dice: dice });
         this.publishChat(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")");
     }
 
+    setDices(userid, socket, obj)
+    {
+        this.updateDices(userid, obj.type);
+    }
+
+    
     phase(userid, socket, sPhase) 
     {
         switch (sPhase)
@@ -817,9 +829,8 @@ class GameStandard extends GamePlayers
 
         if (sPhase === "site")
         {
-            var list = this.getPlayboardManager().GetCompanyIds(userid);
-            for (var i = 0; i < list.length; i++)
-                this.getPlayboardManager().CompanyArrivedAtDestination(list[i]);
+            for (let _company of this.getPlayboardManager().GetCompanyIds(userid))
+                this.getPlayboardManager().CompanyArrivedAtDestination(_company);
         } 
         else if (sPhase === "eot")
         {
@@ -837,9 +848,8 @@ class GameStandard extends GamePlayers
 
         if (sPhase === "organisation")
         {
-            var list = this.getPlayboardManager().GetCompanyIds(userid);
-            for (var i = 0; i < list.length; i++)
-                this.getPlayboardManager().ReadyCompanyCards(list[i]);
+            for (let _company of this.getPlayboardManager().GetCompanyIds(userid))
+                this.getPlayboardManager().ReadyCompanyCards(_company);
 
             this.publishToPlayers("/game/player/set-current", this.getCurrentPlayerId(), {name: this.getCurrentPlayerId(), displayname: this.getCurrentPlayerName()});
         }
@@ -941,14 +951,14 @@ class GameStandard extends GamePlayers
         {
             let assignments = data.assignments; 
             if (this.players.ids.length !== Object.keys(assignments).length)
-                throw "Player count missmatch";
+                throw new Error("Player count missmatch");
             else if (this.isArda() !== data.game.meta.arda)
-                throw "Arda missmatch";
+                throw new Error("Arda missmatch");
 
             for (let id of Object.keys(assignments))
             {
                 if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
-                    throw "Invalid player id detected.";
+                    throw new Error("Invalid player id detected.");
             }
 
             let playboard = data.game.playboard;
@@ -957,7 +967,7 @@ class GameStandard extends GamePlayers
             {
                 const _formerOwner = _map[_cardId].owner;
                 if (assignments[_formerOwner] === undefined)
-                    throw "Cannot find former owner " + _formerOwner;
+                    throw new Error("Cannot find former owner " + _formerOwner);
                 else
                     _map[_cardId].owner = assignments[_formerOwner];
             }
@@ -1033,9 +1043,9 @@ class GameStandard extends GamePlayers
             });
 
             if (error)
-                throw "Could not update ownership";
+                throw new Error("Could not update ownership");
             else if (!this.restore(playboard, data.game.scoring))
-                throw "Cannot restore game playboard";
+                throw new Error("Cannot restore game playboard");
 
             
             this.restorePlayerPhase(data.game.meta.phase, data.game.meta.players.turn, data.game.meta.players.current)

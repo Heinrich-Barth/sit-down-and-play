@@ -75,6 +75,12 @@ class GameRoom
         return this.getPlayerCount() === 0;
     }
 
+    updateDice(userid, dice)
+    {
+        const player = this.getPlayer(userid);
+        if (player !== null)
+            this.game.updateDices(userid, dice);
+    }
     
     updateEntryTime(userId)
     {
@@ -102,12 +108,11 @@ class GameRoom
     }
 
     destroy()
-    {
-        let _list = this.players;
-    
-        for (var i = 0; i < _list.length; i++)
-            _list[i].disconnect();
+    {   
+        for (let id in this.players)
+            this.players[id].disconnect();
 
+            
         this.players = null;
         this.visitors = null;
     }
@@ -177,9 +182,8 @@ class GameRoom
         const _list = this.players;
         this.players = [];
         
-        for (var i = 0; i < _list.length; i++)
+        for (let _player of _list)
         {
-            const _player = _list[i];
             if (_player.socket !== null)
                 _player.socket = GameRoom.disconnectPlayer(_player.socket)
         }

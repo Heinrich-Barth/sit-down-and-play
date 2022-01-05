@@ -50,10 +50,6 @@ let Arda = {
     onCardAction : function(e)
     {
         const elem = e.target;
-        const to = elem.getAttribute("data-to", "hand");
-        const uuid = elem.getAttribute("data-uuid");
-        const code = elem.getAttribute("data-code");
-
         const data = {
             code : elem.getAttribute("data-code"),
             uuid : elem.getAttribute("data-uuid"),
@@ -134,7 +130,7 @@ let Arda = {
 
     insertPlayerSelectIndicator : function()
     {
-
+        /** not needed here */
     },
     
     insertOnceAction : function(parent, html, title, dataType, playerId, label)
@@ -309,18 +305,21 @@ let Arda = {
     {
         let elem;
         
-        elem = !bHideDraftCharacters ? null : document.getElementById("arda-card-recycle-charackters");
-        if (elem !== null)
+        elem = document.getElementById("arda-card-recycle-charackters");
+        if (bHideDraftCharacters)
         {
             DomUtils.remove(elem);
             document.getElementById("arda-card-draw-charackters").classList.remove("hidden");
 
             elem = document.getElementById("arda_characters_hand");
             elem.classList.remove("hidden");
+
+            document.getElementById("arda-view-playdeck-charackters").classList.remove("hidden");
+            document.getElementById("arda-view-discard-charackters").classList.remove("hidden");
         }
 
-        elem = !bHideDraftMinors ? null : document.getElementById("arda-card-recycle-minor");
-        if (elem !== null)
+        elem = document.getElementById("arda-card-recycle-minor");
+        if (bHideDraftMinors)
         {
             DomUtils.remove(elem);
             document.getElementById("arda-card-draw-minor").classList.remove("hidden");
@@ -342,7 +341,7 @@ let Arda = {
 
     onRecycleDeck : function(e)
     {
-        let _question = createQuestionBox(function()
+        new Question().onOk(function()
         {
             const target = e.target.getAttribute("data-type");
             const next = e.target.getAttribute("data-next");
@@ -356,14 +355,7 @@ let Arda = {
                 document.getElementById(next).classList.remove("hidden");
 
             MeccgApi.send("/game/arda/recycle", { type: target });
-        }, 
-        "Do you want to reshuffle all cards into the playdeck?", 
-        "All cards will be reshuffled into the playdeck and a new hand will be drawn.", 
-        "Reshuffle everything", 
-        "Cancel",
-        "question-question-icon");
-
-        _question.show("");
+        }).show("Do you want to reshuffle all cards into the playdeck?", "All cards will be reshuffled into the playdeck and a new hand will be drawn.", "Reshuffle everything");
     },
     
     

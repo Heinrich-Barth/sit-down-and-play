@@ -22,7 +22,7 @@ class GameArda extends GameStandard
     {
         const players = this.getDeckManager().getPlayers();
         if (players.length === 0)
-            return;res
+            return;
 
         for (let userid of players)
         {
@@ -251,7 +251,7 @@ class GameArda extends GameStandard
         if (card === null)
             return;
 
-            this.updateCardOwnership(userid, card);
+        this.updateCardOwnership(userid, card);
 
         const data = {uuid:uuid, code:card.code, hand:obj.type, clear : false};
         this.publishToPlayers("/game/arda/draw", userid, data);

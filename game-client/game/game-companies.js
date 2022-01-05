@@ -255,8 +255,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 if (vsList.length === 0 || pContainer === null)
                     return 0;
 
-                for (var i = 0; i < vsList.length; i++)
-                    pContainer.appendChild(createNewCard(vsList[i]));
+                for (let elem of vsList)
+                    pContainer.appendChild(createNewCard(elem));
 
                 return vsList.length;
             },
@@ -266,8 +266,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 if (vsList.length === 0 || pContainer === null)
                     return 0;
 
-                for (var i = 0; i < vsList.length; i++)
-                    INSTANCE.character.add(vsList[i], pContainer, false, false);
+                for (let elem of vsList)
+                    INSTANCE.character.add(elem, pContainer, false, false);
 
                 return vsList.length;
             },
@@ -329,8 +329,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         removeEmptyCompanies: function (vsIds)
         {
-            for (var i = 0; i < vsIds.length; i++)
-                this.removeCompany(vsIds[i]);
+            for (let id of vsIds)
+                this.removeCompany(id);
 
             this.removeAllEmptyCompanies();      
         },
@@ -435,30 +435,27 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
          * @param {json} jsonCompany The Company JSON object
          * @returns {Boolean} success state
          */
-        drawCompany: function (bIsMe, jsonCompany)
+        drawCompany: function (_bIsMe, jsonCompany)
         {
-            if (typeof jsonCompany !== "object")
+            if (typeof jsonCompany !== "object" ||
+                typeof jsonCompany.id === "undefined" || typeof jsonCompany.characters === "undefined" ||
+                jsonCompany.characters.length === 0)
+            {
                 return false;
+            }
 
-            if (typeof jsonCompany.id === "undefined" || typeof jsonCompany.characters === "undefined")
-                return false;
-
-            if (jsonCompany.characters.length === 0)
-                return false;
-
-            var sHexPlayerCode = this.player2Hex(jsonCompany.playerId);
+            const sHexPlayerCode = this.player2Hex(jsonCompany.playerId);
             if (sHexPlayerCode === "")
                 MeccgUtils.logWarning("cannot obtain player hex code.");
                 
-            let pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
-            var id = jsonCompany.id;
-            var vsCharacters = jsonCompany.characters;
-            var elemContainer = null;
+            const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
+            const vsCharacters = jsonCompany.characters;
+            let elemContainer = null;
 
             /** check if this company is my own (i.e. non-opponent) */
-            bIsMe = MeccgPlayers.isChallenger(jsonCompany.playerId);
+            const bIsMe = MeccgPlayers.isChallenger(jsonCompany.playerId);
             
-            let pElemContainer = document.getElementById("company_" + id);
+            const pElemContainer = document.getElementById("company_" + jsonCompany.id);
             const existsAlready =  pElemContainer !== null;
             if (existsAlready)
             {
@@ -467,13 +464,13 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 ArrayList(pElemContainer).find(".company-characters").each(DomUtils.removeAllChildNodes);
             }
             else
-                elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, id);
+                elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, jsonCompany.id);
 
-            let elemList = elemContainer.querySelector(".company-characters");
-            for (var i = 0; i < vsCharacters.length; i++)
-                this.character.add(vsCharacters[i], elemList, false, true);
+            const elemList = elemContainer.querySelector(".company-characters");
+            for (let _char of vsCharacters)
+                this.character.add(_char, elemList, false, true);
 
-            this.drawLocations(id, jsonCompany.sites.current, jsonCompany.sites.regions, jsonCompany.sites.target, jsonCompany.sites.revealed, jsonCompany.sites.attached, jsonCompany.sites.current_tapped, jsonCompany.sites.target_tapped);
+            this.drawLocations(jsonCompany.id, jsonCompany.sites.current, jsonCompany.sites.regions, jsonCompany.sites.target, jsonCompany.sites.revealed, jsonCompany.sites.attached, jsonCompany.sites.current_tapped, jsonCompany.sites.target_tapped);
 
             if (!bIsMe)
             {
@@ -496,9 +493,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             });
 
             if (!existsAlready && bIsMe)
-            {
                 HandCardsDraggable.initOnCompany(elemContainer);
-            }
 
             ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id") }} )));
             elemContainer.classList.remove("hiddenVisibility");
@@ -553,12 +548,13 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         drawLocations: function (company, start, regions, target, isRevealed, attached, current_tapped, target_tapped)
         {
-            var code, img;
-            var companyElem = document.getElementById("company_" + company);
+            let code, img;
+
+            const companyElem = document.getElementById("company_" + company);
             if (companyElem === null)
                 return;
 
-            let bIsPlayer = this.isPlayersCompany(companyElem);
+            const bIsPlayer = this.isPlayersCompany(companyElem);
 
             ArrayList(companyElem.querySelectorAll(".site-container")).each(DomUtils.removeAllChildNodes);
 
@@ -580,7 +576,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 img = CardList.getImageSite(start);
                 companyElem.querySelector(".site-current").appendChild(createLocationCard(code, img, bIsPlayer));
 
-                ArrayList(companyElem).find(".site-current img.card-icon").each((img) => img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image")));
+                ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-image-path") + _img.getAttribute("data-img-image")));
                 
                 if (current_tapped)
                     ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
@@ -595,7 +591,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 img = CardList.getImageSite(target);
 
 
-                var pContainerTarget = companyElem.querySelector(".site-target");
+                const pContainerTarget = companyElem.querySelector(".site-target");
                 DomUtils.removeAllChildNodes(pContainerTarget);
                 pContainerTarget.appendChild(createLocationCard(code, img, bIsPlayer));
                 
@@ -616,10 +612,10 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             if (attached.length > 0)
                 this.onAttachCardToCompanySites(company, attached, true);
 
-            var pContainerReg = companyElem.querySelector(".site-regions");
+            const pContainerReg = companyElem.querySelector(".site-regions");
             DomUtils.removeAllChildNodes(pContainerReg);
 
-            for (var _reg of regions)
+            for (let _reg of regions)
             {
                 code = CardList.getSafeCode(_reg);
                 img = CardList.getImageRegion(_reg);
@@ -638,7 +634,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
             ArrayList(companyElem).find(".site-container").each(function(elem)
             {
-                let _isOnGuard = elem.classList.contains("site-onguard");
+                const _isOnGuard = elem.classList.contains("site-onguard");
 
                 const list = elem.querySelectorAll("div");
                 const len = list === null ? 0 : list.length;
@@ -655,12 +651,13 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         onDropOnGuard: function (companyUuid, pCard, bRevealOnDrop)
         {
-            if (pCard.getAttribute("data-location") !== "hand")
-                return false;
+            if (pCard.getAttribute("data-location") === "hand")
+            {
+                const uuid = pCard.getAttribute("data-uuid");
+                DomUtils.removeNode(pCard);
+                MeccgApi.send("/game/company/location/attach", {uuid: uuid, companyUuid: companyUuid, reveal: bRevealOnDrop});
+            }
 
-            const uuid = pCard.getAttribute("data-uuid");
-            DomUtils.removeNode(pCard);
-            MeccgApi.send("/game/company/location/attach", {uuid: uuid, companyUuid: companyUuid, reveal: bRevealOnDrop});
             return false;
         },
         
@@ -736,14 +733,23 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         onEnterOrganisationPhase: function (sCurrent, bIsMe)
         {
             if (bIsMe)
-                INSTANCE.readyCardsInContainer(document.getElementById("player_companies"));
+            {
+                const container = document.getElementById("player_companies");
+                INSTANCE.readyCardsInContainer(container);
+                INSTANCE.prefillEmptyMovementToCurrentSite(container)
+            }
             else
                 INSTANCE.readyCardsInContainer(document.getElementById("opponent_table").querySelector(".companies[data-player='" + this.player2Hex(sCurrent) + "']"));
         },
 
+        prefillEmptyMovementToCurrentSite(pCompanies)
+        {
+            /** todo */
+        },
+
         onEnterMovementHazardPhase: function (bIsMe)
         {
-
+            /** not needed here */
         },
 
         onArriveAtTarget: function (pSites)
@@ -879,8 +885,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         onRemoveCardsFromGame: function (listUuid)
         {
-            for (var i = 0; i < listUuid.length; i++)
-                DomUtils.removeNode(document.querySelector('div.card[data-uuid="' + listUuid[i] + '"]'));
+            for (let uuid of listUuid)
+                DomUtils.removeNode(document.querySelector('div.card[data-uuid="' + uuid + '"]'));
         },
 
         onRemoveEmptyCompanies: function ()

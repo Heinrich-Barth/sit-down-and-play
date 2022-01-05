@@ -154,14 +154,6 @@ const SavedGameManager =
         MeccgApi.send("/game/save", {});
     },
 
-    obtainPlayerNames : function(jGame)
-    {
-        let names = [];
-
-        for (let key of Object.keys(jGame.meta.players.names))
-            names.push(jGame.meta.players.names[key]);
-    },
-
     obtainSaveName : function(jGame)
     {
         let name = "";

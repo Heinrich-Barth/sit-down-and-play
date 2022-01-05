@@ -91,7 +91,7 @@ class GameBase {
     setGameAdminUser(id)
     {
         if (id !== undefined && id !== "" && this._adminUser === "")
-        this._adminUser = id;
+            this._adminUser = id;
     }
 
     reset()

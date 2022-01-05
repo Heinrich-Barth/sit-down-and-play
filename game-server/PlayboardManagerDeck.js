@@ -240,13 +240,10 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         if (vsList === null || vsList === undefined)
             return [];
             
-        var _newList = [ ];
-
-        for (var i = 0; i < vsList.length; i++)
+        let _newList = [];
+        for (let _uuid  of vsList)
         {
-            var _uuid = vsList[i];
-            var _card = this.getDecks().getFullPlayerCard(_uuid);
-
+            const _card = this.getDecks().getFullPlayerCard(_uuid);
             if (_card !== null && _card.code !== "")
                 _newList.push({uuid:_uuid,code:_card.code, type:_card.type, status:_card.status,owner: _card.owner});
         }
@@ -303,10 +300,10 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         if (typeof listUuids === "undefined")
             return [];
 
-        var res = [];
-        for (var i = 0; i < listUuids.length; i++)
+        let res = [];
+        for (let uuid of listUuids)
         {
-            var _card = this.GetCardByUuid(listUuids[i]);
+            var _card = this.GetCardByUuid(uuid);
             if (_card !== null)
                 res.push(_card);
         }
@@ -341,11 +338,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
 
             case "hand":
                 {
-                    let jCard = this.GetCardByUuid(uuid);
-                    if (jCard !== null)
+                    const _card = this.GetCardByUuid(uuid);
+                    if (_card !== null)
                     {
-                        if (jCard.agent === true)
-                            jCard.revealed = false;
+                        if (_card.agent === true)
+                            _card.revealed = false;
                     }
                 }
                 

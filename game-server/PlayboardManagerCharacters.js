@@ -1,7 +1,6 @@
 
 const PlayboardManagerDeck = require("./PlayboardManagerDeck");
 
-
 class PlayboardManagerCharacters extends PlayboardManagerDeck
 {
     constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
@@ -34,9 +33,6 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         return data;
     }
 
-
-
-  
     /**
      * Remove a card from the hand/deck or onboard company
      * 
@@ -67,10 +63,8 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      */
       addCompanyCharacterToCompany(targetCompanyId, hostingCharacterUuid, listAdded)
       {
-          
-          for (var y = 0; y < listAdded.length; y++)
+          for (let _uuid of listAdded)
           {
-              var _uuid = listAdded[y];
               this.characters[_uuid].companyId = targetCompanyId;
               this.characters[_uuid].parentUuid = hostingCharacterUuid;
           }
@@ -161,38 +155,15 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      */
     createCompanyCharacter(uuid, listInfluencedUUids)
     {
-        var list = [];
-        for (var i = 0; i < listInfluencedUUids.length; i++)
-            list.push(listInfluencedUUids[i]);
-
         return {
             uuid : uuid,
-            influenced : list
-        };
-    }
-
-    createNewCompanyWithCharacter(companyId, playerId, hostUuid, listInfluencedUUids, startingLocation)
-    {
-        var list = [];
-        for (var i = 0; i < listInfluencedUUids.length; i++)
-            list.push(listInfluencedUUids[i]);
-
-        return {
-                id : companyId,
-                playerId : playerId,
-                characters : [ this.createCompanyCharacter(hostUuid,listInfluencedUUids) ],
-                sites: {
-                    current: startingLocation,
-                    regions: [],
-                    target: "",
-                    attached : []
-                }
+            influenced : [...listInfluencedUUids]
         };
     }
 
     popCharacterCards(characterUuid)
     {
-        var pCharacter = this.getCharacterByUuid(characterUuid);
+        const pCharacter = this.getCharacterByUuid(characterUuid);
         if (pCharacter === null)
         {
             /** 
@@ -202,13 +173,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
             return [];
         }
 
-        var vsCards = [];
-        for (var i = 0; i < pCharacter.resources.length; i++)
-            vsCards.push(pCharacter.resources[i]);
-
-        for (var i = 0; i < pCharacter.hazards.length; i++)
-            vsCards.push(pCharacter.hazards[i]);
-
+        let vsCards = [...pCharacter.resources, ...pCharacter.hazards];
         vsCards.push(characterUuid);
 
         pCharacter.resources = [];
@@ -233,7 +198,6 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
             return [];
 
         let cardList = [];
-        const len = listCharacters.length;
         for (let charUuid of listCharacters)
         {
             const list = this.popCharacterCards(charUuid);
@@ -287,34 +251,29 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         if (!this.characterExists(uuid))
         {
             console.log("character does not exist: " + uuid);
-            return;
         }
-
-        var _companyCharacter = this.characters[uuid];
-        for (var i = 0; i < _companyCharacter.resources.length; i++)
-           super.readyCard(_companyCharacter.resources[i]);
+        else
+        {
+            for (let _card of this.characters[uuid].resources)
+                super.readyCard(_card);
+        }
     }
-
-
-    
+   
     /**
      * Let a character host a card from hand or stage
      * 
      * @param {String} company Company Id
      * @param {String} character Target Character Id
      * @param {String} uuid Card Uuid
-     * @param {String} playerId
-     * @param {Boolean} bFromHand
      * @returns {Boolean}
      */
-    CharacterHostCard(company, character, uuid, bFromHand, playerId)
+    CharacterHostCard(company, character, uuid)
     {
         const pCard = this.GetCardByUuid(uuid);
         if (pCard === null)
             return false;
 
-        playerId = pCard.owner;
-
+        const playerId = pCard.owner;
         const pDeck = super.getPlayerDeck(playerId);
         if (pDeck === null)
         {
@@ -350,9 +309,9 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         if (!super.isValidTarget(target))
             return [];
 
-        var list = this.PopCharacterAndItsCards(characterUuid);
-        for (var i = 0; i  < list.length; i++)
-            super.moveCard(list[i], target);
+        let list = this.PopCharacterAndItsCards(characterUuid);
+        for (let carduuid of list)
+            super.moveCard(carduuid, target);
         
         if (this.PopOnGuardCard(characterUuid))
         {
@@ -415,10 +374,9 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
          return true;
      }
  
-
-     addNewCharacter(uuid, character)
+     addNewCharacter(uuid, companyId)
      {
-        this.characters[uuid] = character;
+        this.characters[uuid] = this.createNewCharacter(companyId, uuid);
      }
 }
 

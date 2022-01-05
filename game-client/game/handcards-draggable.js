@@ -56,19 +56,7 @@ class CreateHandCardsDraggableUtils {
 
     static removeElementDraggable(jElem)
     {
-        try
-        {
-            if (jElem !== null && jElem.hasClass("ui-droppable"))
-            {
-                jElem.removeClass('ui-droppable');
-                jElem.droppable('destroy');
-            }
-        }
-        catch(e)
-        {
-            MeccgUtils.logError(e);
-        }
-
+        CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
     }
 
     /**
@@ -282,7 +270,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         }
     };
 
-    var HandCardsDraggable = {
+    const HandCardsDraggable = {
 
         _locationMessageId : 0,
 
@@ -440,12 +428,12 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
                         const source = elemDraggable.getAttribute("data-location");
                         const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
                         receivingCharacter.character_uuid = this.getAttribute("data-uuid");
-                        var redrawReceivingCompanyId = receivingCharacter.company_uuid;
-                        var redrawDonatingCompanyId = "";
+                        const redrawReceivingCompanyId = receivingCharacter.company_uuid;
+                        let redrawDonatingCompanyId = "";
                         
                         if (elemDraggable.getAttribute("data-card-type") === "character")
                         {
-                            var donatingCharacter;
+                            let donatingCharacter;
                             if (source === "hand")
                                 donatingCharacter = { character_uuid : elemDraggable.getAttribute("data-uuid"), company_uuid : "" };
                             else
@@ -472,7 +460,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
                         }
                         else 
                         {
-                            var donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
+                            let donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
                             donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
                             
                             if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) /* oneself cannot be the target */
@@ -617,18 +605,10 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
          */
         initCardInStagingArea: function (cardId, target, type)
         {
-            if (cardId === "")
+            if (cardId === "" || (type !== "resource" && type !== "hazard"))
                 return;
 
-            var isResource;
-            if (type === "hazard")
-                isResource = false;
-            else if (type === "resource")
-                isResource = true;
-            else
-                return;
-
-            var elemDiv = document.getElementById(cardId);
+            const elemDiv = document.getElementById(cardId);
             if (elemDiv === null)
             {
                 MeccgUtils.logWarning("Cannot find card container " + cardId);

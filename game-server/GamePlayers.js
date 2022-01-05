@@ -1,6 +1,7 @@
 const Scores = require("./Scores");
 
 const GameBase = require("./GameBase");
+const PlayerDices = require("./PlayerDices");
 
 class GamePlayers extends GameBase
 {
@@ -19,6 +20,17 @@ class GamePlayers extends GameBase
         };
 
         this.scoring = new Scores(this.isArda());
+        this.playerDices = new PlayerDices();
+    }
+
+    getPlayerDices()
+    {
+        return this.playerDices;
+    }
+
+    updateDices(userid, dice)
+    {
+        this.getPlayerDices().setDice(userid, dice);
     }
 
     joinGame(playerName, playerId, cards)
@@ -40,7 +52,7 @@ class GamePlayers extends GameBase
             ids: this.players.ids,
             names: this.players.names,
             current : this.players.current,
-            turn: this.players.turn
+            turn: this.players.turn,
         }
 
         data.scoring = this.scoring.save();
@@ -148,8 +160,8 @@ class GamePlayers extends GameBase
         let _ids = [];
         let players = this.players.ids;
         let _posDel = -1;
-
-        for (let i = 0; i < players.length; i++)
+        const sizePlayers = players.length;
+        for (let i = 0; i < sizePlayers; i++)
         {
             if (players[i] !== userId)
             {
@@ -196,7 +208,10 @@ class GamePlayers extends GameBase
 
     getFinalScore()
     {
-        return this.scoring.getScoreSheets();
+        return {
+            score: this.scoring.getScoreSheets(),
+            stats: this.playerDices.getStats()
+        };
     }
 
     sendPlayerList()

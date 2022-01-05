@@ -44,14 +44,14 @@ class ScoringContainers {
 
         for (let i = this._points_min; i <= this._points_max; i++)
         {
-            let _id = i < 0 ? ("score_m" + (i * -1)) : "score_" + i;
-            let _label  = i + " " + (i === 1 || i === -1 ? "Point" : "Points");
+            const _id = i < 0 ? ("score_m" + (i * -1)) : "score_" + i;
+            const _label  = i + " " + (i === 1 || i === -1 ? "Point" : "Points");
 
             const div = document.createElement("div");
             div.setAttribute("class", "score_label");
             div.innerHTML = `<input type="radio" name="score_points" id="${_id}" value="${i}"> <label for="${_id}" id="${_id}_points">${_label}</label>`;
             jChoose_score_type.appendChild(div);
-        };
+        }
 
         
         return jChoose_score_type;
@@ -291,6 +291,27 @@ const SCORING = {
         
         return val === null ? "" : val;
     },
+
+    sendScoreCard : function(sCardCode, isDefault)
+    {
+        fetch("/data/marshallingpoints?code=" + encodeURI(sCardCode) + "&standard=" + isDefault).then((response) => 
+        {
+            response.json().then((data) => 
+            {
+                let elem;
+                const points = data.points && data.points >= 0 ? data.points : 0;
+                elem = document.getElementById("score_" + points + "_points");
+                if (elem !== null)
+                    elem.click();
+
+                const kat = data.type && data.type !== "" ? data.type : "misc";
+                elem = document.getElementById("score_" + kat + "_label");
+                if (elem !== null)
+                    elem.click();
+            });
+        })
+        .catch(() => { /** ignore error */});
+    },
     
     scoreCard : function(sCardCode)
     {
@@ -302,23 +323,9 @@ const SCORING = {
         this._clickDefault("score-points-choose");
         
         document.getElementById("scoring-card").classList.remove("hidden");
-        const isDefault = document.body.getAttribute("data-game-arda") !== "true" ? "true" : "false";
-        fetch("/data/marshallingpoints?code=" + encodeURI(sCardCode) + "&standard=" + isDefault).then((response) => 
-        {
-            response.json().then((data) => 
-            {
-                let points = data.points && data.points >= 0 ? data.points : 0;
-                let elem = document.getElementById("score_" + points + "_points");
-                if (elem !== null)
-                    elem.click();
 
-                points = data.type && data.type !== "" ? data.type : "misc";
-                elem = document.getElementById("score_" + points + "_label");
-                if (elem !== null)
-                    elem.click();
-            });
-        })
-        .catch(() => {});
+        const isDefault = document.body.getAttribute("data-game-arda") !== "true" ? "true" : "false";
+        this.sendScoreCard(sCardCode, isDefault);
     },
 
     _clickDefault : function(id)
@@ -342,11 +349,11 @@ const SCORING = {
         let player;
         let points, total;
 
-        for (var key in jData)
+        for (let key in jData)
         {
             total = 0;
             player = MeccgPlayers.isChallenger(key) ? "self" : key;
-            for (var type in jData[key])
+            for (let type in jData[key])
             {
                 points = jData[key][type];
                 _elem = jTable.querySelector('tr[data-score-type="'  + type + '"] td[data-player="'+player+'"]');
@@ -385,9 +392,10 @@ const SCORING = {
         this._showScoreSheet(jData, true);
     },
     
-    showFinalScore : function(jData)
+    showFinalScore : function(jData, stats)
     {
-        this._showScoreSheet(jData, false);
+        this._showScoreSheet(jData, false);        
+        document.body.dispatchEvent(new CustomEvent("meccg-dice-stats", { "detail": stats }));
     },
     
     _updateStats : function(type, points)
@@ -533,9 +541,9 @@ function createScoringApp(_CardList)
             SCORING.showScoreSheetCards(jData);
         },
 
-        showFinalScore: function(jData)
+        showFinalScore: function(score, stats)
         {
-            SCORING.showFinalScore(jData);
+            SCORING.showFinalScore(score, stats);
         }
     };
 }

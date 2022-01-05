@@ -1,5 +1,15 @@
 const DeckDefault = require("./DeckDefault");
 
+/**
+ * Arda deck. Besides the standard deck features, it has common
+ * hands/piles for characters, MPs and minor items.
+ * 
+ * Multiple Arda deck instances share the ADMINs various arrays
+ * by reference. 
+ * 
+ * The first Deck instance is usually the admin which other arda deck instances
+ * reference from.
+ */
 class DeckArda extends DeckDefault {
 
     constructor(playerId)
@@ -26,11 +36,21 @@ class DeckArda extends DeckDefault {
         this.listSpecialCharacters = [];
     }
 
+    /**
+     * Get the number of cards allowed in an arda deck to avoid pollution
+     * @returns Number
+     */
     getMaxDeckSize()
     {
         return 1000;
     }
 
+    /**
+     * Save this deck. Only admin decks store additional hands and piles.
+     * 
+     * @param {Boolean} isAdmin 
+     * @returns JSON
+     */
     save(isAdmin)
     {
         let data = super.save(isAdmin);
@@ -57,6 +77,10 @@ class DeckArda extends DeckDefault {
         return data;
     }
 
+    /**
+     * Restore a saved deck (from savegame)
+     * @param {JSON} deck 
+     */
     restore(deck)
     {
         super.restore(deck);
@@ -81,6 +105,13 @@ class DeckArda extends DeckDefault {
         }
     }
 
+    /**
+     * Add a deck.
+     * @param {JSON} jsonDeck Deck
+     * @param {Array} listAgents Agent list
+     * @param {Object} _cardMap Card map to save card uuids of this deck
+     * @param {Object} gameCardProvider 
+     */
     addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
     {
         super.addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider);
@@ -110,27 +141,57 @@ class DeckArda extends DeckDefault {
         this.shuffleAnyTimes(this.playdeckCharacters, 3);
         console.log("Added " + nSize + " characters with mind of 5-");
 
-        nSize = this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
+        this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
     }
 
+    /**
+     * Check if given uuid is included in the given array
+     * 
+     * @param {String} uuid 
+     * @param {Array} list 
+     * @returns 
+     */
     isInTypeList(uuid, list)
     {
         return uuid !== "" && list.includes(uuid);
     }
 
+    /**
+     * Check if this id represents a character card
+     * @param {String} uuid 
+     * @returns boolean
+     */
     isTypeCharacter(uuid)
     {
         return this.isInTypeList(uuid, this.typesCharacters);
     }
+
+    /**
+     * Check if this id represents a MP card
+     * @param {String} uuid 
+     * @returns boolean
+     */
     isTypeMPs(uuid)
     {
         return this.isInTypeList(uuid, this.typesMPs);
     }
+
+    /**
+     * Check if this id represents a minor item card
+     * @param {String} uuid 
+     * @returns boolean
+     */
     isTypeMinorItem(uuid)
     {
         return this.isInTypeList(uuid, this.typesMinors);
     }
 
+    /**
+     * Add a source array to the target array.
+     * 
+     * @param {Array} listSource 
+     * @param {Array} listTarget 
+     */
     copyIds(listSource, listTarget)
     {
         const nLen = listSource.length;
@@ -138,33 +199,54 @@ class DeckArda extends DeckDefault {
             listTarget.push(listSource[i]);
     }
 
+    /**
+     * Shuffle given list various times
+     * @param {Array} list List to shuffle
+     * @param {Number} nTimes Number of times a list is to be shuffled
+     */
     shuffleAnyTimes(list, nTimes)
     {
         for (let i = 0; i < nTimes; i++)
             this.shuffleAny(list);
     }
 
+    /**
+     * Shuffle minor and MPs cards
+     */
     shuffleCommons()
     {
         this.shuffleMinorItems();
         this.shuffleMPs();
     }
 
+    /**
+     * Shuffle playdeck minor items
+     */
     shuffleMinorItems()
     {
         this.shuffleAny(this.playdeckMinorItems);
     }
 
+    /**
+     * Shuffle playdeck MPS
+     */
     shuffleMPs()
     {
         this.shuffleAny(this.playdeckMP);
     }
 
+    /**
+     * Create card uuid
+     */
     createNewCardUuid()
     {
         return "a" + super.createNewCardUuid();
     }
 
+    /**
+     * Draw MP card (reshuffles automatically if deck is exhausted)
+     * @returns Card uuid
+     */
     drawCardMarshallingPoints()
     {
         if (this.playdeckMP.length === 0 && this.discardPileMP.length > 0)
@@ -176,6 +258,10 @@ class DeckArda extends DeckDefault {
         return this.transferCard(this.playdeckMP, this.handCardsMP);
     }
 
+    /**
+     * Draw minor item card (reshuffles automatically if deck is exhausted)
+     * @returns Card uuid
+     */
     drawCardMinorItems()
     {
         if (this.playdeckMinorItems.length === 0 && this.discardPileMinorItems.length > 0)
@@ -187,6 +273,10 @@ class DeckArda extends DeckDefault {
         return this.transferCard(this.playdeckMinorItems, this.handMinorItems);
     }
 
+    /**
+     * Draw character card (reshuffles automatically if deck is exhausted)
+     * @returns Card uuid
+     */
     drawCardCharacter()
     {
         if (this.playdeckCharacters.length === 0 && this.discardPileCharacters.length > 0)
@@ -198,6 +288,10 @@ class DeckArda extends DeckDefault {
         return this.transferCard(this.playdeckCharacters, this.handCardsCharacters);
     }
 
+    /**
+     * Move all minor items from hands and discard piles into the playdeck and
+     * reshuffle
+     */
     recycleMinorItems()
     {
         this.moveList(this.discardPileMinorItems, this.playdeckMinorItems);
@@ -205,6 +299,10 @@ class DeckArda extends DeckDefault {
         this.shuffleAny(this.playdeckMinorItems);
     }
 
+    /**
+     * Move all characters from hands and discard piles into the playdeck and
+     * reshuffle
+     */
     recycleCharacter()
     {
         this.moveList(this.discardPileCharacters, this.playdeckCharacters);
@@ -212,37 +310,61 @@ class DeckArda extends DeckDefault {
         this.shuffleAny(this.playdeckCharacters);
     }
 
+    /**
+     * Store character uuid list
+     */
     addSpecialCharacers()
     {
         this.moveList(this.listSpecialCharacters, this.playdeckCharacters);
     }
 
+    /**
+     * Pop the first card from the MP playdeck
+     */
     popTopCardMarshallingPoints()
     {
         return this.popTopCardFrom(this.playdeckMP);
     }
 
+    /**
+     * Shuffle character playdeck
+     */
     shuffleCharacterDeck()
     {
         this.shuffleAny(this.playdeckCharacters);
     }
 
+    /**
+     * Get character hand list
+     * @returns Array of Strings
+     */
     getHandCharacters()
     {
         return this.handCardsCharacters;
     }
 
+    /**
+     * Move characters with mind 6+ to playdeck
+     */
     mergeCharacterListsOnce()
     {
         this.moveList(this.playDeckCharacters7, this.playdeckCharacters)
     }
 
+    /**
+     * Move top character to playdeck
+     * @returns Array of Strings
+     */
     drawOpeningCharacterToHand()
     {
         return this.transferCardToTop(this.playdeckCharacters, this.playdeck);
     }
 
-    drawOpeningCharacterMind7()
+    /**
+     * Move top character with mind 7+ to playdeck
+     * @returns Array of Strings
+     */
+     drawOpeningCharacterMind7()
     {
         return this.transferCardToTop(this.playDeckCharacters7, this.playdeck);
     }
@@ -256,6 +378,10 @@ class DeckArda extends DeckDefault {
         return this.playdeckMP;
     }
 
+    /**
+     * Obtain PUSH methods to move cards to any pile
+     * @returns Object
+     */
     push()
     {
         let res = super.push();
@@ -310,6 +436,10 @@ class DeckArda extends DeckDefault {
         return res;
     }
 
+    /**
+     * Obtain methods to pop cards form any pile
+     * @returns Object
+     */
     pop()
     {
         const deck = this;

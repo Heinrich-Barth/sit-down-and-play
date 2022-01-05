@@ -4,40 +4,18 @@
  */
 const fs = require('fs');
 
-/**
- * Load the configuration.
- * 
- * Your custom config file will be preferred (if available!).
- */
-const g_pConfig = require("./configuration.js");
 const UTILS = require("./meccg-utils");
 
 let SERVER = {
 
-    environment: {
-
-        startupTime: Date.now(),
-        port: process.env.PORT || 8080,
-
-        imageCDN: g_pConfig.imageUrl() || "",
-        imageExpires: g_pConfig.imageExpires() || 0,
-
-        isProduction : g_pConfig.isProduction(),
-
-        maxRooms : g_pConfig.maxRooms() || 10,
-        maxPlayersPerRoom : g_pConfig.maxPlayersPerRoom() || 10,
-
-        csp_header : UTILS.createContentSecurityPolicyMegaAdditionals(g_pConfig.imageDomain() || "", g_pConfig.cspReportUri() || ""),
-
-        expiresDate : new Date(Date.now()).toUTCString(),
-        expiresTime : Date.now(),
-        cacheDate : new Date(Date.now() + (g_pConfig.imageExpires() * 1000)).toUTCString()
-    },
+    environment: null,
 
     cacheResponseHeader : {
         etag: true,
-        maxage: g_pConfig.imageExpires() * 1000
+        maxage: 8640000 * 1000
     },
+
+    dices : [],
 
     gamesStarted : 0,
 
@@ -55,33 +33,36 @@ SERVER.getSocketIo = function()
 
 const getHtmlCspPage = function(page)
 {
-    const sHtmlCsp = SERVER.environment.csp_header;
-    let sHtml = fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
-    return sHtml.replace("{TPL_CSP}", sHtmlCsp).replace("{TPL_CSP_X}", sHtmlCsp);
+    return fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
 };
+
+/**
+ * Update server environment
+ */
+(function(sConfigFile){
+    const Configiration = require("./Configuration.js");
+
+    SERVER.environment = new Configiration(sConfigFile);
+
+})(__dirname + "/data/config.json");
 
  
 (function(){
 
-    const _gameHtml = getHtmlCspPage("game.html");
     const g_pEventManager = require("./eventmanager.js");
     const RoomManager = require("./game-server/RoomManager");
 
     SERVER.cards = require("./plugins/cards.js");
-    SERVER.cards.load(g_pConfig.cardUrl(), g_pConfig.imageUrl());
+    SERVER.cards.load(SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
     
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
     SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
-    _gameHtml,
-    SERVER.cards.getAgents, 
-    g_pEventManager, 
-    {
-        getCardType : SERVER.cards.getCardType,
-        getCardTypeSpecific : SERVER.cards.getCardTypeSpecific,
-        getCardMind : SERVER.cards.getCardMind,
-        getCardByCode : SERVER.cards.getCardByCode
-    });
+        getHtmlCspPage("game.html"),
+        g_pEventManager, 
+        SERVER.cards,
+        SERVER.environment.maxRooms(),
+        SERVER.environment.maxPlayersPerRoom());
     
     SERVER.authenticationManagement = require("./game-server/authentication.js");
     SERVER.authenticationManagement.setUserManager(SERVER.roomManager);
@@ -98,6 +79,16 @@ const getHtmlCspPage = function(page)
 const g_pAuthentication = require("./authentication");
 const g_pExpress = require('express');
 
+const cspAllowRemoteImages = function(sPath)
+{
+    return sPath.startsWith("/play") || 
+           sPath.startsWith("/arda") || 
+           sPath.startsWith("/singleplayer") || 
+           sPath.startsWith("/deckbuilder") || 
+           sPath.startsWith("/cards") || 
+           sPath.startsWith("/map/"); 
+}
+
 SERVER.instance = g_pExpress();
 
 (function()
@@ -106,8 +97,21 @@ SERVER.instance = g_pExpress();
     SERVER.instance.use(g_pExpress.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
     SERVER.instance.use(g_pExpress.json()); // for parsing application/json
 
-    SERVER.instance.use(function (req, res, next) {
-        res.setHeader('X-Robots-Tag','noindex, nofollow');
+    SERVER.instance.use(function (req, res, next) 
+    {
+        res.header('X-Robots-Tag','noindex, nofollow');
+
+        if (cspAllowRemoteImages(req.path))
+        {
+            res.header('Content-Security-Policy', SERVER.environment.createContentSecurityPolicyMegaAdditionals());
+            res.header('X-Content-Security-Policy', SERVER.environment.createContentSecurityPolicyMegaAdditionals());    
+        }
+        else
+        {
+            res.header('Content-Security-Policy', SERVER.environment.createContentSecurityPolicySelfOnly());
+            res.header('X-Content-Security-Policy', SERVER.environment.createContentSecurityPolicySelfOnly());
+        }
+
         next();
     });
 
@@ -140,10 +144,10 @@ SERVER.onListenSetupSocketIo = function ()
  */
 SERVER.expireResponse = function(res, sContentType)
 {
-    res.setHeader("Cache-Control", "no-store");
-    res.setHeader("Expires", SERVER.environment.expiresDate);
+    res.header("Cache-Control", "no-store");
+    res.header("Expires", SERVER.environment.expiresDate());
     if (sContentType !== undefined && sContentType !== "")
-        res.setHeader('Content-Type', sContentType);
+        res.header('Content-Type', sContentType);
     return res;
 }
 
@@ -155,10 +159,10 @@ SERVER.expireResponse = function(res, sContentType)
  */
 SERVER.cacheResponse = function(res, sContentType)
 {
-    res.setHeader("Cache-Control", "public, max-age=" + SERVER.environment.imageExpires);
-    res.setHeader("Expires", SERVER.environment.cacheDate);
+    res.header("Cache-Control", "public, max-age=" + SERVER.environment.imageExpires());
+    res.header("Expires", SERVER.environment.cacheDate());
     if (sContentType !== undefined && sContentType !== "")
-        res.setHeader('Content-Type', sContentType);
+        res.header('Content-Type', sContentType);
 
     return res;
 }
@@ -220,7 +224,7 @@ SERVER.validateCookies = function (res, req)
     if (req.cookies.userId === undefined ||
         req.cookies.room === undefined ||
         req.cookies.userId.length !== UTILS.uuidLength() ||
-        req.cookies.joined === undefined || req.cookies.joined < SERVER.environment.startupTime) 
+        req.cookies.joined === undefined || req.cookies.joined < SERVER.environment.startupTime()) 
     {
         SERVER.clearCookies(res);
         return false;
@@ -263,7 +267,7 @@ SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.ca
  */
 SERVER.instance.use("/blank", g_pExpress.static(__dirname + "/pages/blank.html", SERVER.cacheResponseHeader));
 
-if (!SERVER.environment.isProduction)
+if (!SERVER.environment.isProduction())
 {
     SERVER.instance.use("/api", g_pExpress.static(__dirname + "/api/http"));
     SERVER.instance.use("/api/swagger.css", g_pExpress.static(__dirname + "/api/swagger.css"));
@@ -288,6 +292,17 @@ SERVER.instance.get("/data/list/images", (req, res) => SERVER.cacheResponse(res,
  */
 SERVER.instance.get("/data/list/sites", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getSiteList()).status(200));
 
+const Personalisation = require("./Personalisation");
+
+SERVER.instance.get("/data/dices", (req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getDices()).status(200));
+SERVER.instance.get("/data/backgrounds", (req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getBackgrounds()).status(200));
+SERVER.instance.use("/media/personalisation/dice", g_pExpress.static(__dirname + "/media/personalisation/dice"));
+SERVER.instance.use("/media/personalisation/backgrounds", g_pExpress.static(__dirname + "/media/personalisation/backgrounds"));
+SERVER.instance.get("/media/personalisation/personalisation.css", (req, res) => {
+    res.setHeader('content-type', 'text/css');
+    Personalisation.writePersonalisationCss(res);
+    res.end();
+});
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
  */
@@ -366,7 +381,7 @@ SERVER.instance.get("/data/samplerooms", (req, res) => SERVER.expireResponse(res
 
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 
-if (SERVER.environment.imageCDN === "/data-images")
+if (SERVER.environment.imageUrl() === "/data-images")
     SERVER.instance.use("/data-images", g_pExpress.static(__dirname + "/data-images", SERVER.cacheResponseHeader));
 
 /**
@@ -381,11 +396,11 @@ SERVER.instance.get("/error/login", (req, res) => SERVER.clearCookies(res).sendF
 /**
  * Start the deckbuilder
  */
-SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("deckbuilder.html")).status(200));
+SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
 
-SERVER.instance.get("/converter", (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("converter.html")).status(200));
+SERVER.instance.get("/converter", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
 
-SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (req, res) => SERVER.cacheResponse(res, "text/html").send(getHtmlCspPage("card-browser.html")).status(200));
+SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
  
 /**
   * Home Page redirects to "/play"
@@ -400,15 +415,20 @@ SERVER.instance.post("/login", (req, res) => {
     else 
         res.redirect("/login");
 });
- 
+
+SERVER.instance.post("/csp-violation", (req, res) => {
+    /** this is not needed here */
+    res.status(204).end();
+});
+
 /**
   * About Page
   */
 SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
-require("./game-play")(SERVER, g_pAuthentication);
+require("./game-play")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
 
-require("./game-map").setup(SERVER, g_pExpress, getHtmlCspPage, g_pAuthentication);
+require("./game-map").setup(SERVER, SERVER.environment.isProduction(), g_pExpress);
 
 require("./game-rules").setup(SERVER, g_pExpress);
 
@@ -503,8 +523,8 @@ SERVER.instance.use(function(err, req, res, next)
 process.on('SIGTERM', SERVER.shutdown);
 process.on('SIGINT', SERVER.shutdown);
 
-console.log("Server started at port " + SERVER.environment.port);
-SERVER.instanceListener = SERVER._http.listen(SERVER.environment.port, SERVER.onListenSetupSocketIo);
+console.log("Server started at port " + SERVER.environment.port());
+SERVER.instanceListener = SERVER._http.listen(SERVER.environment.port(), SERVER.onListenSetupSocketIo);
 
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {

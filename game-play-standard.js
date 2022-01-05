@@ -15,6 +15,18 @@ class GamePlayRouteHandler
         this.pAuthentication = g_pAuthentication;
     }
 
+    static maxRooms = 5;
+    static maxPlayersPerRoom = 10;
+
+    static setMaxPlayers(nRooms, nPlayers)
+    {
+        if (nRooms > 0)
+            GamePlayRouteHandler.maxRooms = nRooms;
+
+        if (nPlayers > 0)
+            GamePlayRouteHandler.maxPlayersPerRoom = nPlayers;
+    }
+
     isArda()
     {
         return false;
@@ -155,7 +167,7 @@ class GamePlayRouteHandler
             const room = req.params.room.toLocaleLowerCase();
 
             if (!UTILS.isAlphaNumeric(room))
-                throw "Invalid room name";
+                throw new Error("Invalid room name");
 
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
@@ -164,10 +176,10 @@ class GamePlayRouteHandler
              * assert the username is alphanumeric only
              */
             if (!UTILS.isAlphaNumeric(displayname))
-                throw "Invalid data";
+                throw new Error("Invalid data");
 
             if (!this.m_pServerInstance.roomManager.roomExists(room))
-                throw "Room does not exist";
+                throw new Error("Room does not exist");
 
             const userId = UTILS.generateUuid();
 
@@ -197,7 +209,11 @@ class GamePlayRouteHandler
             const room = req.params.room.toLocaleLowerCase();
 
             if (!UTILS.isAlphaNumeric(room))
-                throw "Invalid room name";
+                throw new Error("Invalid room name");
+            else if (this.m_pServerInstance.roomManager.tooManyRooms())
+                throw new Error("Too many rooms");
+            else if (this.m_pServerInstance.roomManager.tooManyPlayers(room))
+                throw new Error("Too many players in room");
 
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
@@ -206,17 +222,17 @@ class GamePlayRouteHandler
              * assert the username is alphanumeric only
              */
             if (!UTILS.isAlphaNumeric(displayname) || jData.deck === undefined)
-                throw "Invalid data";
+                throw new Error("Invalid data");
 
-            if (this.m_pServerInstance.roomManager.isTooCrowded(room))
-                throw "Too crowded";
+            if (GamePlayRouteHandler.maxPlayersPerRoom > 0 && this.m_pServerInstance.roomManager.countPlayersInRoom(room) > GamePlayRouteHandler.maxPlayersPerRoom)
+                throw new Error("Too crowded");
 
             /**
              * Validate Deck first
              */
             const jDeck = this.validateDeck(jData.deck);
             if (jDeck === null)
-                throw "Invalid Deck";
+                throw new Error("Invalid Deck");
 
             /** Now, check if there already is a game for this Room */
             const userId = UTILS.generateUuid();
@@ -380,12 +396,14 @@ class GamePlayRouteHandler
             return;
         }
 
+        let dice = req.cookies.dice;
+        
         /**
          * At this point, the user is allowed to enter the room.
          * 
          * The user may have joined with a second window. In that case, they would have 2 active sessions open.
          */
-        let lTimeJoined = this.m_pServerInstance.roomManager.updateEntryTime(room, req.cookies.userId);
+        let lTimeJoined = this.m_pServerInstance.roomManager.updateEntryTime(room, req.cookies.userId, dice);
         if (lTimeJoined === 0) 
         {
             res.redirect(this.contextPlay + room + "/login");
@@ -394,7 +412,8 @@ class GamePlayRouteHandler
         {
             /* Force close all existing other sessions of this player */
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
-            this.m_pServerInstance.expireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, req.cookies.userId, req.cookies.username, lTimeJoined)).status(200);
+            this.m_pServerInstance.roomManager.updateDice(room, req.cookies.userId, dice);
+            this.m_pServerInstance.expireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, req.cookies.userId, req.cookies.username, lTimeJoined, dice)).status(200);
         }
     }
 }

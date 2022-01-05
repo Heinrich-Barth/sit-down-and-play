@@ -1,5 +1,8 @@
 const DeckCommons = require("./DeckCommons");
 
+/**
+ * Deck for standard game
+ */
 class DeckDefault extends DeckCommons {
 
     constructor(playerId)
@@ -13,6 +16,10 @@ class DeckDefault extends DeckCommons {
         this.playdeck = [];
     }
 
+    /**
+     * Restore a deck (from saved game)
+     * @param {JSON} deck 
+     */
     restore(deck)
     {        
         this.restoreList(this.handCards, deck.handCards);
@@ -22,6 +29,10 @@ class DeckDefault extends DeckCommons {
         this.restoreList(this.playdeck, deck.playdeck);
     }
 
+    /**
+     * Obtain deck size
+     * @returns JSON
+     */
     size()
     {
         return {
@@ -33,6 +44,11 @@ class DeckDefault extends DeckCommons {
         }
     }
 
+    /**
+     * Restore given list
+     * @param {Array} target Target list
+     * @param {Array} list List to copy
+     */
     restoreList(target, list)
     {
         this.clearArray(target);
@@ -47,6 +63,11 @@ class DeckDefault extends DeckCommons {
         }
     }
 
+    /**
+     * Save given deck
+     * @param {Boolean} isAdmin 
+     * @returns JSON
+     */
     save(isAdmin)
     {
         let data = super.save(isAdmin);
@@ -60,39 +81,65 @@ class DeckDefault extends DeckCommons {
         return data;
     }
 
+    /**
+     * Remove all entries from a given list. The reference is kept
+     * @param {Array} list 
+     */
     clearArray(list)
     {
         if (list !== null && list !== undefined)
             list.splice(0, list.length)
     }
 
+    /**
+     * Create new unique card id
+     * @returns String
+     */
     createNewCardUuid()
     {
         return "d" + super.createNewCardUuid();
     }
     
+    /**
+     * Shuffle playdeck
+     */
     shuffle()
     {
         this.shuffleAny(this.playdeck);
     }
 
-    shuffleDiscardpile()
+    /**
+     * Shuffle discard pile
+     */
+     shuffleDiscardpile()
     {
         this.shuffleAny(this.discardPile);
     }
 
+    /**
+     * Check if playdeck is empty
+     * @returns Boolean
+     */
     isEmptyPlaydeck()
     {
         return this.playdeck.length === 0;
     }
 
+    /**
+     * Move source list entries into target list. 
+     * The surce empty will be cleared.
+     * 
+     * @param {Array} listSource 
+     * @param {Array} listTarget 
+     * @returns Success state
+     */
     moveList(listSource, listTarget)
     {
         // move discardpile into playdeck and reshuffle
         if (listSource.length > 0)
         {
-            for (let i = 0; i < listSource.length; i++)
-                listTarget.push(listSource[i]);
+            for (const elem of listSource)
+                listTarget.push(elem);
                    
             listSource.splice(0, listSource.length)
             this.shuffleAny(listTarget);
@@ -112,28 +159,24 @@ class DeckDefault extends DeckCommons {
      */
     registerCardsToSideboard(cards, listAgents, _cardMap, gameCardProvider)
     {
-        var nAdded = 0;
-        var card,  _entry;
-
-        const nSize = cards.length;
-        for (var c = 0; c < nSize; c++)
+        let nAdded = 0;
+        let _entry;
+        
+        for (let card of cards)
         {
-            card = cards[c];
-            count = card.count;
-
-            for (var i = 0; i < count; i++)
+            for (let i = 0; i < card.count; i++)
             {
                 card.code = this.removeQuotes(card.code);
 
-                _entry = this.createCardEntry(card, this.isAgent(card.code, listAgents), _cardMap, gameCardProvider);
+                _entry = this.createCardEntry(card.code, this.isAgent(card.code, listAgents), _cardMap, gameCardProvider);
                 if (_entry === null)
                 {
-                    console.log("Cannot add card " + card.code + " to deck.");
+                    console.log("Cannot register card " + card.code + " to sideboard.");
                     break;
                 }
                 
                 nAdded++;
-                deck.sideboard.push(_entry.uuid);
+                this.sideboard.push(_entry.uuid);
                 _cardMap[_entry.uuid] = _entry;
             }
         }
@@ -141,6 +184,13 @@ class DeckDefault extends DeckCommons {
         return nAdded;
     }
 
+    /**
+     * Draw the next card from playdeck. If the playdeck is empty, 
+     * the discard pile will be reshuffled into the playdeck (automatically)
+     * first.
+     * 
+     * @returns Card id
+     */
     draw()
     {
         if (this.playdeck.length === 0 && this.discardPile.length > 0)
@@ -152,6 +202,10 @@ class DeckDefault extends DeckCommons {
         return this.transferCard(this.playdeck, this.handCards);
     }
 
+    /**
+     * Pop the top card from the playdeck
+     * @returns Card id
+     */
     popTopCard()
     {
         return this.popTopCardFrom(this.playdeck);
@@ -327,6 +381,13 @@ class DeckDefault extends DeckCommons {
         }
     }
     
+    /**
+     * Add given deck 
+     * @param {JSON} jsonDeck 
+     * @param {Array} listAgents 
+     * @param {Object} _cardMap 
+     * @param {Object} gameCardProvider 
+     */
     addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
     {
         const MAX_CARDS_PER_DECK = this.getMaxDeckSize();

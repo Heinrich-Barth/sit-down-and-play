@@ -5,7 +5,7 @@ class ViewCardListContainer {
 
     static CardList = null;
 
-    constructor(_CardList)
+    static init()
     {
         let elem = document.getElementById(ViewCardListContainer.CONTAINER_ID);
         if (elem !== null)
@@ -37,7 +37,12 @@ class ViewCardListContainer {
 
     static ShowViewContainer() 
     {
-        document.getElementById(ViewCardListContainer.CONTAINER_ID).classList.remove("hidden");
+        const container = document.getElementById(ViewCardListContainer.CONTAINER_ID);
+        if (container === null)
+            return;
+
+        container.classList.remove("hidden");
+        ViewCardListContainer.scrollToTop(container.querySelector(".container-data"));
     }
 
     static createCardContainer(code, uuid, type, bShowCardPreview) 
@@ -101,10 +106,16 @@ class ViewCardListContainer {
             bRevealPreview = true;
 
         let sHtml = "";
-        for (let i = 0; i < vsList.length; i++)
-            sHtml += ViewCardListContainer.createCardContainer(vsList[i].code, vsList[i].uuid, vsList[i].type, bRevealPreview);
+        for (let card of vsList)
+            sHtml += ViewCardListContainer.createCardContainer(card.code, card.uuid, card.type, bRevealPreview);
 
         return sHtml;
+    }
+
+    static scrollToTop(elem)
+    {
+        if (elem !== null)
+            elem.scrollTo(0,0);
     }
 }
 
@@ -114,18 +125,18 @@ class TaskBarCards
 
     constructor(_CardList, _CardPreview)
     {
-        new ViewCardListContainer();
         ViewCardListContainer.CardList = _CardList;
         TaskBarCards._cardPreview = _CardPreview;
+
+        ViewCardListContainer.init();
         
         const view = ViewCardListContainer.GetViewContainer();
         view.onclick = TaskBarCards.HideList;
         view.querySelector(".container-title-bar-shuffle").onclick = TaskBarCards.OnClickContainerShuffle;
 
-        let res = view.querySelectorAll(".container-title-bar-reveal a");
-        for (let i = 0; i < res.length; i++)
+        for (let elem of view.querySelectorAll(".container-title-bar-reveal a"))
         {
-            res[i].onclick = (e) => {
+            elem.onclick = (e) => {
                 const _data = e.target.getAttribute("data-type") || "";
                 TaskBarCards.HideList();
                 TaskBarCards.OnRevealToOpponent(_data);
@@ -143,7 +154,7 @@ class TaskBarCards
 
         document.querySelector(".card-dice").onclick = (e) => 
         {
-            MeccgApi.send("/game/roll-dices", "");
+            MeccgApi.send("/game/dices/roll", "");
             e.stopPropagation();
             return false;
         };
@@ -186,9 +197,8 @@ class TaskBarCards
         document.querySelector(".card-bar .discardpile").oncontextmenu = TaskBarCards.ShuffleDiscardpile;
         document.querySelector(".card-bar .playdeck").oncontextmenu = TaskBarCards.ShufflePlaydeck;
 
-        res = document.querySelectorAll(".taskbar .taskbar-turn");
-        for (let i = 0; i < res.length; i++)
-            res[i].onclick = TaskBarCards.OnTurnClick;
+        for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
+            elem.onclick = TaskBarCards.OnTurnClick;
     }    
 
     static OnClickContainerShuffle(e) 
@@ -232,12 +242,12 @@ class TaskBarCards
         if (vsList === null || typeof vsList === "undefined" || vsList.length === 0)
             return;
 
-        let type = "victory";
-        var sHtml = ViewCardListContainer.createListHtml(vsList, true);
+        const type = "victory";
+        const sHtml = ViewCardListContainer.createListHtml(vsList, true);
         if (sHtml === "")
             return;
 
-        var elem = ViewCardListContainer.insertHtmlIntoContainer(document.getElementById("view-score-sheet-card-list"), sHtml, type, "");
+        const elem = ViewCardListContainer.insertHtmlIntoContainer(document.getElementById("view-score-sheet-card-list"), sHtml, type, "");
         const hov = elem.querySelectorAll(".card-hand");
         const len = hov.length;
         for (let i = 0; i < len; i++)
@@ -254,14 +264,13 @@ class TaskBarCards
 
     onShow(jData) 
     {
-        let bICanSee = !GamePreferences.offerBlindly();
-        let elem = this._onShowList(jData, "Looking at your ", bICanSee);
+        const bICanSee = !GamePreferences.offerBlindly();
+        const elem = this._onShowList(jData, "Looking at your ", bICanSee);
         if (elem === null)
             return false;
 
-        const res = elem.querySelectorAll(".card-hand a");
-        for (let i = 0; i < res.length; i++) 
-            res[i].onclick = TaskBarCards.OnClickCardIconNonOffered;
+        for (let _dom of elem.querySelectorAll(".card-hand a"))
+            _dom.onclick = TaskBarCards.OnClickCardIconNonOffered;
 
         ViewCardListContainer.ShowViewContainer();
         return true;
@@ -276,9 +285,8 @@ class TaskBarCards
 
         if (bIsMe) 
         {
-            const res = elem.querySelectorAll(".card-hand a");
-            for (let i = 0; i < res.length; i++) 
-                res[i].onclick = TaskBarCards.OnClickCardIconOffered;
+            for (let _elem of elem.querySelectorAll(".card-hand a"))
+                _elem.onclick = TaskBarCards.OnClickCardIconOffered;
         }
         else
             this.flipCards(elem);
@@ -293,10 +301,9 @@ class TaskBarCards
 
     _addOfferedInfo(sIdentifier, sAddCss)
     {
-        let jContainer = ViewCardListContainer.GetViewContainer();
-        const res = jContainer.querySelectorAll(sIdentifier);
-        for (let i = 0; i < res.length; i++)
-            res[i].classList.add(sAddCss);
+        const jContainer = ViewCardListContainer.GetViewContainer();
+        for (let elem of jContainer.querySelectorAll(sIdentifier))
+            elem.classList.add(sAddCss);
 
         jContainer.classList.remove("hidden");
     }
@@ -334,7 +341,7 @@ class TaskBarCards
     {
         const res = jContainer.querySelectorAll("img.card-icon");
         const len = res === null ? 0 : res.length;
-        for (let i = 0; i < res.length; i++)
+        for (let i = 0; i < len; i++)
         {
             let jthis = res[i];
             const backside = jthis.getAttribute("data-image-backside") || "";
@@ -371,7 +378,7 @@ class TaskBarCards
 
     _onShowList(jData, sTitle, bICanSeeIt) 
     {
-        TaskBarCards.HideList() ;
+        TaskBarCards.HideList();
 
         if (typeof bICanSeeIt === "undefined")
             bICanSeeIt = false;
@@ -385,26 +392,25 @@ class TaskBarCards
             return null;
         }
 
-        var sHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
+        const sHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
         if (sHtml === "")
             return null;
-
             
-        var elem = ViewCardListContainer.insertHtml(sHtml, type, sTitle + type.toUpperCase());
-
+        const elem = ViewCardListContainer.insertHtml(sHtml, type, sTitle + type.toUpperCase());
+        
         /** I myself should not see my own offering cards so only the opponent knows it */
         if (bICanSeeIt) 
         {
             const res = elem.querySelectorAll(".card-hand");
-            for (let i = 0; i < res.length; i++)
+            for (let _elem of res)
             {
-                res[i].onmouseover = TaskBarCards.OnShowOnHover;
-                res[i].onmouseout = TaskBarCards.OnMouseOut;
+                _elem.onmouseover = TaskBarCards.OnShowOnHover;
+                _elem.onmouseout = TaskBarCards.OnMouseOut;
             }
         }
+
         return elem;
     }
-
 
     static OnClickCardIconOffered(e) 
     {
@@ -488,6 +494,9 @@ class TaskBarCards
         {
             document.getElementById("playercard_hand").classList.remove("hidden");
             elem.classList.add("act");
+
+            /** query cards in hand */
+            MeccgApi.send("/game/card/hand", {});
         }
 
         e.stopPropagation();

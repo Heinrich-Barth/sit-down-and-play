@@ -78,9 +78,9 @@ class ResolveHandSizeFirst
             if (nAllowed > 0 && nSize !== nAllowed) 
                 document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": this.createMessage(nAllowed, nSize) }));
         }
-        catch (e)
+        catch (err)
         {
-            MeccgUtils.logError(e);
+            MeccgUtils.logError(err);
         }
     }
 }

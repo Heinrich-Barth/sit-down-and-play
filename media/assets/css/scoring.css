@@ -195,3 +195,11 @@
     z-index: 500;
     cursor: default;
 }
+
+.scoring-sheet table.dice-stats {
+    margin-top: 20px;
+    font-size: 0.8em;
+}
+
+.scoring-sheet .dice-stats th,
+.scoring-sheet .dice-stats td { padding: 0 5px; text-align: center;}

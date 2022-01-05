@@ -95,8 +95,9 @@ div#arda_mps_hand { bottom: 10px; }
 }
 .arda-card-draw:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
 
-#arda_characters_hand .arda-pile-action { visibility: hidden;}
-
+#view_card_list_container .view-charackters .hideOnOffer,
+#view_card_list_container .view-charackters .view-card-list-actions .hand,
+#view_card_list_container .view-charackters .view-card-list-actions .sideboard,
 #view_card_list_container .view-mps .hideOnOffer,
 #view_card_list_container .view-mps .view-card-list-actions .hand,
 #view_card_list_container .view-mps .view-card-list-actions .sideboard,
@@ -105,4 +106,9 @@ div#arda_mps_hand { bottom: 10px; }
 #view_card_list_container .view-minor .view-card-list-actions .sideboard
 {
     display: none;
+}
+
+a#arda-card-recycle-charackters {
+    position: absolute;
+    left: -175px;
 }

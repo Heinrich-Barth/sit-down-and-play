@@ -1,22 +1,42 @@
 
+/**
+ * Commpn playdeck 
+ */
 class DeckCommons {
     
+    /**
+     * Create instance
+     * @param {String} playerId 
+     */
     constructor(playerId)
     {      
         this.id = playerId;
         this.g_deck_uuid_count = 0;
     }
 
+    /**
+     * Number of allowed cards per deck
+     * @returns Number
+     */
     getMaxDeckSize()
     {
         return 300;
     }
 
+    /**
+     * Get the deck owner
+     * @returns Id
+     */
     getPlayerId()
     {
         return this.id;
     }
 
+    /**
+     * Save this deck
+     * @param {Boolean} isAdmin 
+     * @returns JSON
+     */
     save(isAdmin)
     {
         return {
@@ -25,6 +45,12 @@ class DeckCommons {
         };
     }
 
+    /**
+     * Check if given code represents an agent
+     * @param {String} code 
+     * @param {Array} listAgents 
+     * @returns 
+     */
     isAgent(code, listAgents)
     {
         const nSize = code === "" ? -1 : listAgents.length;
@@ -37,21 +63,30 @@ class DeckCommons {
         return false;
     }
 
+    /**
+     * Add a card list to the deck
+     * 
+     * @param {JSON} cards 
+     * @param {Array} _targetList 
+     * @param {Object} _cardMap 
+     * @param {Array} listAgents 
+     * @param {Object} gameCardProvider 
+     * @returns 
+     */
     add(cards, _targetList, _cardMap, listAgents, gameCardProvider)
     {
         if (cards === undefined)
             return 0;
             
         let nSize = 0;
-        var _entry;
+        let _entry;
         let count;
         const MAX_CARDS_PER_DECK = this.getMaxDeckSize();
-        for (var key in cards)
+        for (let _key in cards)
         {
-            count = cards[key];
-            key = this.removeQuotes(key);
-            
-            for (var i = 0; i < count && nSize < MAX_CARDS_PER_DECK; i++)
+            count = cards[_key];
+            const key = this.removeQuotes(_key);
+            for (let i = 0; i < count && nSize < MAX_CARDS_PER_DECK; i++)
             {
                 _entry = this.createCardEntry(key, this.isAgent(key, listAgents), _cardMap, gameCardProvider);
                 if (_entry === null)
@@ -74,6 +109,11 @@ class DeckCommons {
         return nSize;
     }
 
+    /**
+     * Remove quotation marks from code
+     * @param {String} sCode 
+     * @returns sanatized string
+     */
     removeQuotes(sCode)
     {
         if (sCode.indexOf('"') === -1)
@@ -90,6 +130,10 @@ class DeckCommons {
             return Math.floor((Math.random() * max));
     }
 
+    /**
+     * Shuffle list
+     * @param {Array} inputList 
+     */
     shuffleAny(inputList)
     {
         var _newList = [ ];
@@ -107,6 +151,12 @@ class DeckCommons {
             inputList.push(_newList[i]);
     }
 
+    /**
+     * Move a card form source to target array
+     * @param {Array} listPlaydeck 
+     * @param {Array} listTarget 
+     * @returns card id
+     */
     transferCard(listPlaydeck, listTarget)
     {
         if (listPlaydeck.length === 0)
@@ -123,6 +173,12 @@ class DeckCommons {
         return _id;
     }
 
+    /**
+     * Transfer the top card from playdeck to target array
+     * @param {Array} listPlaydeck 
+     * @param {Array} listTarget 
+     * @returns 
+     */
     transferCardToTop(listPlaydeck, listTarget)
     {
         if (listPlaydeck.length === 0)
@@ -139,7 +195,12 @@ class DeckCommons {
         return _id;
     }
     
-
+    /**
+     * Get the first card from a given list
+     * 
+     * @param {Array} listPlaydeck 
+     * @returns value or emtpy string
+     */
     popTopCardFrom(listPlaydeck)
     {
         if (listPlaydeck.length === 0)
@@ -150,9 +211,16 @@ class DeckCommons {
         return _id;
     }
 
+    /**
+     * Check if a uuid is contained in a given array of objects
+     * @param {String} uuid 
+     * @param {Array} list 
+     * @returns boolean
+     */
     listContains(uuid, list)
     {
-        for(var i = 0; i < list.length; i++)
+        const len = list.length;
+        for(let i = 0; i < len; i++)
         {
             if (list[i].uuid === uuid)
                 return true;
@@ -161,16 +229,28 @@ class DeckCommons {
         return false;
     }
 
+    /**
+     * Create a new unique counter value
+     * @returns String
+     */
     createNewCardUuid()
     {
         return ++this.g_deck_uuid_count;
     }
 
+    /**
+     * Create unique id
+     * @returns ID
+     */
     requestNewCardUuid()
     {
         return this.getPlayerId() + "_" + this.createNewCardUuid();
     }
 
+    /**
+     * Create empty card entry
+     * @returns Object
+     */
     static createEmptyCardEntry()
     {
         return {
@@ -185,6 +265,11 @@ class DeckCommons {
         };
     }
 
+    /**
+     * Clone a given input object
+     * @param {JSON} input 
+     * @returns cloned instance of null
+     */
     static cloneCardEntry(input)
     {
         let data = DeckCommons.createEmptyCardEntry();
@@ -192,7 +277,7 @@ class DeckCommons {
         {
             if (input[key] === undefined)
                 return null;
-        };
+        }
 
         data.code = DeckCommons.assertString(input.code);
         data.type = DeckCommons.assertString(input.type);
@@ -205,11 +290,26 @@ class DeckCommons {
         return data;
     }
 
+    /**
+     * Return string value of given input object to
+     * assert it really is a string
+     * @param {Object} input 
+     * @returns String value or empty string
+     */
     static assertString(input)
     {
         return input !== undefined && typeof input === "string" ? input : "";
     }
 
+    /**
+     * Create a new card entry
+     * 
+     * @param {String} code 
+     * @param {Boolean} isAgent 
+     * @param {Object} _cardMap 
+     * @param {Object} gameCardProvider 
+     * @returns 
+     */
     createCardEntry(code, isAgent, _cardMap, gameCardProvider)
     {
         if (typeof code === "undefined")
