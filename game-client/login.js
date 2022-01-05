@@ -103,18 +103,18 @@ const createDeck = function()
     function toJson(sId)
     {
         let asLines = document.getElementById(sId).value.split('\n');
-        let jDeck = {};
+        let _deck = {};
 
-        for (_entry of asLines)
+        for (let _entry of asLines)
         {
             let sCount = getCount(_entry);
             let sCode = getCode(_entry);
 
             if (sCode !== "" && sCount !== "")
-                jDeck[sCode] = parseInt(sCount);
+                _deck[sCode] = parseInt(sCount);
         }
 
-        return jDeck;
+        return _deck;
     }
 
     let jDeck = {
@@ -167,7 +167,7 @@ const onLoadDecks = function(data)
         let nArray = parseInt(e.target.getAttribute("data-deck-list"));
 
         if (document.getElementById("toggle_isarda").checked)
-            delete document.getElementById("toggle_isarda").click();
+            document.getElementById("toggle_isarda").click();
 
         populateDeck(g_jDecks[nArray].decks[sKey]);
     });
