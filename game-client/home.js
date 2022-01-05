@@ -145,11 +145,11 @@ const fetchAndUpdateGames = function()
         {
             const sVal = document.getElementById("enter_room").value;
             if (sVal === "")
-                throw "Please provide a game name.";
+                throw new Error("Please provide a game name.");
             else if (!isAlphaNumeric(sVal))
-                throw "The room name has to be alphanumeric.";
+                throw new Error("The room name has to be alphanumeric.");
             else if (sVal.indexOf(" ") !== -1 || sVal.indexOf("/") !== -1)
-                throw "Invalid name.";
+                throw new Error("Invalid name.");
             else
                 window.location.href = "/play/" + sVal;
         }
