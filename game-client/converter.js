@@ -56,18 +56,18 @@
      function toJson(sId)
      {
          let asLines = document.getElementById(sId).value.split('\n');
-         let jDeck = {};
+         let deck = {};
  
-         for (_entry of asLines)
+         for (let _entry of asLines)
          {
              let sCount = getCount(_entry);
              let sCode = getCode(_entry);
  
              if (sCode !== "" && sCount !== "")
-                 jDeck[sCode] = parseInt(sCount);
+                deck[sCode] = parseInt(sCount);
          }
  
-         return jDeck;
+         return deck;
      }
  
      let jDeck = {
@@ -118,8 +118,8 @@
 };
   
 
- const onCheckCardCodes = function()
- {
+const onCheckCardCodes = function()
+{
     if (document.getElementById("invalid-cards-info") !== null)
     {
         DomUtils.removeAllChildNodes(document.getElementById("invalid-cards-info-result"));
@@ -130,39 +130,39 @@
     if (vsCards.length === 0)
         return;
 
-     const options = {
-         method: 'POST',
-         body: JSON.stringify(vsCards),
-         headers: {
-             'Content-Type': 'application/json'
-         }
-     }
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(vsCards),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
  
-     fetch("/data/decks/check", options).then((response) =>
-     {
-         if (response.status === 200)
-         {
-             response.json().then((data) => 
-             {
-                 if (data.valid === true)
-                     onPerformLogin();
-                 else
-                 {
-                     let sHtml = "";
-                     let nSize = data.codes.length;
-                     for (let i = 0; i < nSize; i++)
-                         sHtml += "<li>" + data.codes[i] + "</li>";
- 
-                     document.getElementById("invalid-cards-info-result").innerHTML = '<ul class="cookie_notice">' + sHtml + "</ul>";
-                     document.getElementById("invalid-cards-info").classList.remove("hidden");
-                 }
-             });
-         }
-     }).catch(() => 
-     {
-         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
-     });   
- };
+    fetch("/data/decks/check", options).then((response) =>
+    {
+        if (response.status === 200)
+        {
+            response.json().then((data) => 
+            {
+                if (data.valid === true)
+                    onPerformLogin();
+                else
+                {
+                    let sHtml = "";
+                    let nSize = data.codes.length;
+                    for (let i = 0; i < nSize; i++)
+                        sHtml += "<li>" + data.codes[i] + "</li>";
+
+                    document.getElementById("invalid-cards-info-result").innerHTML = '<ul class="cookie_notice">' + sHtml + "</ul>";
+                    document.getElementById("invalid-cards-info").classList.remove("hidden");
+                }
+            });
+        }
+    }).catch(() => 
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
+    });   
+};
  
 (function()
 {
