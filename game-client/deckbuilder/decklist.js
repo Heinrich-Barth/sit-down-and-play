@@ -93,23 +93,22 @@ var DeckList =
 
     toggleDeckPart : function(e)
     {
-        alert("Hallo");
         console.log(e.target);
     },
 
     removeExisting : function()
     {
         ArrayList(document.getElementById("deck_container")).find("div.card_of_deck_construct").each(DomUtils.removeNode);
-        ArrayList(document.getElementById("deck_container")).find("span.count_type_col").each((elem) => elem.innerHTML = "0");
-        ArrayList(document.querySelector(".deckbuilding-summary")).find("span").each((elem) => elem.innerHTML = "0");
+        ArrayList(document.getElementById("deck_container")).find("span.count_type_col").each((elem) => elem.innerText = "0");
+        ArrayList(document.querySelector(".deckbuilding-summary")).find("span").each((elem) => elem.innerText = "0");
     },
 
     prepareDeckList : function()
     {
-        var index = 0;
-        var html = "";
-        var htmlCharsAvatar = "";
-        for (var _val of ViewCards.config.vsTypesResource)
+        let index = 0;
+        let html = "";
+        let htmlCharsAvatar = "";
+        for (let _val of ViewCards.config.vsTypesResource)
         {
             index++;
             if (_val === "Site" || _val === "Region")
@@ -143,7 +142,7 @@ var DeckList =
         }
         
         html = "";
-        for (var _val of ViewCards.config.vsTypesHazard)
+        for (let _val of ViewCards.config.vsTypesHazard)
         {
             index++;
             if (_val === "Site" || _val === "Region")
@@ -174,7 +173,7 @@ var DeckList =
         if (pCard === undefined || pCard === null)
             return false;
         
-        sCode = pCard.index;
+        const sCode = pCard.index;
         if (sTargetDeck === "sideboard")
             this.addCardGeneric(pCard, sCode, "sideboard");
         else if (sTargetDeck === "avatar")
@@ -203,25 +202,25 @@ var DeckList =
     
     addCardToChars : function(pCard, index, isAvatar)
     {
-        var isHzard = false;
-        var _containerId = "deck_chars";
-        var targetType = isAvatar ? "avatar" : "character";
+        let isHzard = false;
+        const _containerId = "deck_chars";
+        const targetType = isAvatar ? "avatar" : "character";
 
-        var sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
+        const sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
         if (sTypeContainerId === "")
         {
             console.log("Cannot find sTypeContainerId for char " + isHzard);
             return false;
         }
         
-        var categoryContainer = document.getElementById(sTypeContainerId);
+        const categoryContainer = document.getElementById(sTypeContainerId);
         if (categoryContainer === null)
         {
             console.log("Cannot find categoryContainer for " + "#" + sTypeContainerId);
             return false;
         }
         
-        var pEntry = document.getElementById(targetType + "_" + index);
+        const pEntry = document.getElementById(targetType + "_" + index);
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");
@@ -230,19 +229,18 @@ var DeckList =
         }
         else
         {
-            const pCount = pEntry.querySelector(".count");
-            if (pCount !== null)
-                pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            const pElemCount = pEntry.querySelector(".count");
+            if (pElemCount !== null)
+                pElemCount.innerText = (parseInt(pElemCount.innerText) + 1);
         }
             
-        
         let pCount = categoryContainer.querySelector("h4 span");
         if (pCount !== null)
-            pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            pCount.innerText = (parseInt(pCount.innerText) + 1);
         
         pCount = document.getElementById(_containerId).querySelector("h3 span");
         if (pCount !== null)
-            pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            pCount.innerText = (parseInt(pCount.innerText) + 1);
 
         return true;
     },
@@ -276,26 +274,26 @@ var DeckList =
         }
         else
         {
-            const pCount = pEntry.querySelector(".count");
-            if (pCount !== null)
-                pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            const pElemCount = pEntry.querySelector(".count");
+            if (pElemCount !== null)
+                pElemCount.innerText = (parseInt(pElemCount.innerText) + 1);
         }
 
         const pCount = categoryContainer.querySelector("h4 span");       
         if (pCount !== null)
-            pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            pCount.innerText = (parseInt(pCount.innerText) + 1);
         
         const pTmp = document.getElementById(_containerId).querySelector("h3 span");
         if (pTmp !== null)
-            pTmp.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            pTmp.innerText = (parseInt(pCount.innerText) + 1);
 
         return true;
     },
     
-    addCardGeneric : function(pCard, index, pref)
+    addCardGeneric : function(pCard, index_, pref)
     {
-        index = pCard.index;
-        var pEntry = document.getElementById(pref + "_" + index);
+        const index = pCard.index;
+        const pEntry = document.getElementById(pref + "_" + index);
 
         /**
          * this is the first card of its title in the container list
@@ -305,8 +303,8 @@ var DeckList =
             /**
              * append this entry to its container
              */
-            var elem = document.getElementById(pref);
-            var sHtml = elem.innerHTML.trim();
+            const elem = document.getElementById(pref);
+            const sHtml = elem.innerHTML.trim();
 
             if (sHtml === "-" || sHtml === "")
                 DomUtils.empty(elem);
@@ -318,7 +316,7 @@ var DeckList =
         {
             const pCount = pEntry.querySelector(".count");
             if (pCount !== null)
-                pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+                pCount.innerText = (parseInt(pCount.innerText) + 1);
         }
             
         this.updateCount("count_" + pref);
@@ -374,14 +372,14 @@ var DeckList =
      */
     updateCount : function(id)
     {
-        var elem = document.getElementById(id);
+        const elem = document.getElementById(id);
         if (elem !== null)
-            elem.innerHTML = "" + (parseInt(elem.innerHTML) + 1);
+            elem.innerText = "" + (parseInt(elem.innerText) + 1);
     },
 
     updateDeckLink : function(id)
     {
-        var elem = document.getElementById(id);
+        const elem = document.getElementById(id);
         if (elem === null)
             return;
 
@@ -390,18 +388,15 @@ var DeckList =
             evt.preventDefault();
             evt.stopPropagation();
 
+            const pSpan = DomUtils.closestByType(this, "span")
+            const pDiv = pSpan === null ? null : DomUtils.closestByType(pSpan, "div");
+            if (pDiv !== null)
+            {
+                const sTargetDeck = pSpan.getAttribute("data-is-deck");
+                const index = parseInt(pDiv.getAttribute("data-index"));
+                document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": { index : index, target: sTargetDeck } }));
+            }
 
-            var pSpan = DomUtils.closestByType(this, "span")
-            if (pSpan === null)
-                return false;
-
-            var sTargetDeck = pSpan.getAttribute("data-is-deck");
-            var pDiv = DomUtils.closestByType(pSpan, "div");
-            if (pDiv === null)
-                return false;
-
-            const index = parseInt(pDiv.getAttribute("data-index"));
-            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": { index : index, target: sTargetDeck } }));
             return false;
         };
 
@@ -410,18 +405,16 @@ var DeckList =
             evt.preventDefault();
             evt.stopPropagation();
 
-            var pSpan = DomUtils.closestByType(this, "span")
-            if (pSpan === null)
-                return false;
+            const pSpan = DomUtils.closestByType(this, "span")
+            const pDiv = pSpan === null ? null : DomUtils.closestByType(pSpan, "div");
+            if (pDiv !== null)
+            {
+                const sTargetDeck = pSpan.getAttribute("data-is-deck");
+                const index = parseInt(pDiv.getAttribute("data-index"));
+                document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-remove-from-deck", { "detail": { index : index, target: sTargetDeck } }));
+                DeckList.reduceCurrentDeckCount(pDiv);
+            }
 
-            var sTargetDeck = pSpan.getAttribute("data-is-deck");
-            var pDiv = DomUtils.closestByType(pSpan, "div");
-            if (pDiv === null)
-                return false;
-
-            var index = parseInt(pDiv.getAttribute("data-index"));
-            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-remove-from-deck", { "detail": { index : index, target: sTargetDeck } }));
-            DeckList.reduceCurrentDeckCount(pDiv);
             return false;
         };
 
@@ -429,47 +422,41 @@ var DeckList =
         {
             const index = this.getAttribute("data-index");
             if (typeof index === "undefined")
-            {
-                console.log("no index");
                 return;
-            }
             
             const pCard = ViewCards.config.jsonData[index];
             if (pCard === null || typeof pCard === "undefined")
-            {
-                console.log("no card at " + index);
                 return;
-            }
            
-            const elem = document.getElementById("deck_card_view");
-            elem.innerHTML = '<img decoding="async" src="' + getImageUrlByCode(pCard.code) + '">';
-            elem.classList.remove("hidden");
+            const _elem = document.getElementById("deck_card_view");
+            _elem.innerHTML = '<img decoding="async" src="' + getImageUrlByCode(pCard.code) + '">';
+            _elem.classList.remove("hidden");
         };
         
         elem.onmouseout = function()
         {
-            const elem = document.getElementById("deck_card_view");
-            elem.classList.add("hidden");
-            DomUtils.empty(elem);
+            const _elem = document.getElementById("deck_card_view");
+            _elem.classList.add("hidden");
+            DomUtils.empty(_elem);
         };
     },
     
     increaseCurrentDeckCount : function(pDiv)
     {
-        var pCount = pDiv.querySelector(".count");
+        const pCount = pDiv.querySelector(".count");
         if (pCount !== null)
-            pCount.innerHTML = (parseInt(pCount.innerHTML) + 1);
+            pCount.innerText = (parseInt(pCount.innerText) + 1);
     },
     
     calculateAndUpdateDeckCounters : function()
     {
-        var pContainer = document.getElementById("deck_container");
-        var _size = 0;
+        const pContainer = document.getElementById("deck_container");
+        let _size = 0;
         
         ArrayList(pContainer).find("div.deck_part").each(function(pThis)
         {
             const _count = DeckList.calculateEntries(pThis, "count_deck_entry");
-            pThis.querySelector("span.count_type").innerHTML = _count;
+            pThis.querySelector("span.count_type").innerText = _count;
             _size += _count;
         });
 
@@ -477,31 +464,31 @@ var DeckList =
         // no sideboard
         _size -= DeckList.calculateEntryId("count_pool");
         _size -= DeckList.calculateEntryId("count_sideboard");
-        document.getElementById("deck_count").innerHTML = _size;
+        document.getElementById("deck_count").innerText = _size;
         
         ArrayList(pContainer).find("div.deck_part_col").each((pThis)  => {
 
             const elem = pThis.querySelector("span.count_type_col");
             if (elem !== null)
-                elem.innerHTML = DeckList.calculateEntries(pThis, "count_type");
+                elem.innerText = DeckList.calculateEntries(pThis, "count_type");
         });
 
-        document.getElementById("summary_resources").innerHTML = DeckList.getInnerHtml(document.getElementById("count_deck_r"));
-        document.getElementById("summary_hazards").innerHTML =  DeckList.getInnerHtml(document.getElementById("count_deck_h"));
-        document.getElementById("summary_sideboard").innerHTML = DeckList.getInnerHtml(document.getElementById("count_sideboard"));
-        document.getElementById("summary_characters").innerHTML = document.getElementById("count_deck_chars").innerHTML;
+        document.getElementById("summary_resources").innerText = DeckList.getInnerHtml(document.getElementById("count_deck_r"));
+        document.getElementById("summary_hazards").innerText =  DeckList.getInnerHtml(document.getElementById("count_deck_h"));
+        document.getElementById("summary_sideboard").innerText = DeckList.getInnerHtml(document.getElementById("count_sideboard"));
+        document.getElementById("summary_characters").innerText = document.getElementById("count_deck_chars").innerText;
     },
 
     getInnerHtml(elem)
     {
-        return elem === null ? "0" : elem.innerHTML;
+        return elem === null ? "0" : elem.innerText;
     },
 
     calculateEntryId : function(sId)
     {
         try
         {
-            return parseInt(document.getElementById(sId).innerHTML);
+            return parseInt(document.getElementById(sId).innerText);
         }
         catch (e)
         {
@@ -513,7 +500,7 @@ var DeckList =
     calculateEntries : function(pContainer, sClass)
     {
         let _count = 0;
-        ArrayList(pContainer).find("span." + sClass).each((_elem) => _count += parseInt(_elem.innerHTML));
+        ArrayList(pContainer).find("span." + sClass).each((_elem) => _count += parseInt(_elem.innerText));
         return _count;
     },
     
@@ -533,12 +520,12 @@ var DeckList =
     reduceCurrentDeckCount : function(pDiv)
     {
         const pCount = pDiv.querySelector(".count");
-        const nCount = parseInt(pCount.innerHTML) - 1;
-        pCount.innerHTML = nCount;
+        const nCount = parseInt(pCount.innerText) - 1;
+        pCount.innerText = nCount;
 
         if (nCount === 0)
         {
-            var elem = document.getElementById("deck_card_view");
+            const elem = document.getElementById("deck_card_view");
             elem.classList.add("hidden");
             DomUtils.empty(elem);
             this.removeEntry(pDiv);

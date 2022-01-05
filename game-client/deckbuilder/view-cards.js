@@ -103,7 +103,7 @@ const ViewCards =
         {
             console.log("ViewCards.config.vsCodeIndices not set for " + code);
             return null;
-        };
+        }
 
         var index = ViewCards.config.vsCodeIndices[code];
         if (typeof ViewCards.config.jsonData[index] === "undefined")
@@ -139,27 +139,27 @@ const ViewCards =
         ViewCards.config.vsCodeIndices = json["code-indices"];
         ViewCards.config.vsSets = json["sets"];
         
-        for (var _type in json["secondaries"])
+        for (let _type in json["secondaries"])
         {
             ViewCards.config.vsType.push(_type);
             ViewCards.config.vnIndicesCharacters[_type] = json["secondaries"][_type];
         }
 
-        for (var _align in json["alignment"])
+        for (let _align in json["alignment"])
             ViewCards.config.vsAlign.push(_align);
 
-        for (var _type in json["type"])
+        for (let _type in json["type"])
             ViewCards.config.vsCategory.push(_type);
 
         if (json["hazards"] !== undefined)
         {
-            for (var _type of json["hazards"])
+            for (let _type of json["hazards"])
                 ViewCards.config.vsTypesHazard.push(_type);
         }
 
         if (json["resources"] !== undefined)
         {
-            for (var _type of json["resources"])
+            for (let _type of json["resources"])
                 ViewCards.config.vsTypesResource.push(_type);
         }
     },
@@ -223,10 +223,10 @@ const ViewCards =
         let bAllowAllAlign = sAlign === "_allalign";
         let bAllowAllType = sType === "_alltype";
         
-        var vnIndicesCharacters = {};
+        let vnIndicesCharacters = {};
         
-        var _index = -1, _type, _align, _title, _text, _cate;
-        for (var card of ViewCards.config.jsonData) 
+        let _index = -1, _type, _align, _title, _text;
+        for (let card of ViewCards.config.jsonData) 
         {
             _index++;
 

@@ -11,7 +11,7 @@ class Preferences {
 
     static _emptyCallback()
     {
-
+        /** fallback */
     }
 
     static _getConfigValue(id, def)
@@ -39,7 +39,7 @@ class Preferences {
         if (typeof pCAllback === "undefined")
             pCAllback = Preferences._emptyCallback;
 
-            Preferences.config[id] = {
+        Preferences.config[id] = {
             title: title,
             value : initialValue,
             callback : pCAllback,
@@ -131,7 +131,7 @@ class Preferences {
 
     addConfiguration()
     {
-
+        /** to overwrite */
     }
 
     getGameCss()
@@ -156,7 +156,7 @@ class Preferences {
     
         const sUrl = this.getCookieUpdateUrl();
         if (sUrl !== undefined && sUrl !== null && sUrl !== "")
-            fetch(sUrl, options).then(() => {}).catch(() => console.log("error"));
+            fetch(sUrl, options).then(() => { /** just update */}).catch(() => console.log("error"));
     }
 
     init()
@@ -191,4 +191,4 @@ class Preferences {
         ArrayList(document.getElementById("config-panel")).find("input").each((_el) => _el.onchange = Preferences.onEventChange);
         ArrayList(document.getElementById("config-panel")).find("label[data-type=action]").each((_el) => _el.onclick = Preferences.onEventClick);
     }
-};
+}

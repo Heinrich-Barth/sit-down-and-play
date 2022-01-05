@@ -3,10 +3,10 @@ const SearchBar = {
     
     initFormFields : function()
     {
-        var vsOnChange = ["card_title", "card_text", "view_card_type", "view_card_align", "view_card_category", "view_card_set"];
-        var vsOnEnter = ["card_title", "card_text"];
+        const vsOnChange = ["card_title", "card_text", "view_card_type", "view_card_align", "view_card_category", "view_card_set"];
+        const vsOnEnter = ["card_title", "card_text"];
         
-        for (var _id of vsOnEnter)
+        for (let _id of vsOnEnter)
         {
             document.getElementById(_id).onkeydown = function(e)
             {
@@ -15,7 +15,7 @@ const SearchBar = {
             };
         }
 
-        for (var _id of vsOnChange)
+        for (let _id of vsOnChange)
             document.getElementById(_id).onchange = () => SearchBar.onTriggerSearch();
     },
 

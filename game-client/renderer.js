@@ -57,7 +57,7 @@ const MeccgApi =
     },
     getHash : function(input)
     {
-        return this.send("/get/hash", input).result;;
+        return this.send("/get/hash", input).result;
     },
     send : function(path, message)
     {

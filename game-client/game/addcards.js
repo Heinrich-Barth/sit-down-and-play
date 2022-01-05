@@ -35,7 +35,7 @@ const AddCardsInGame = {
             const asLines = sText.trim().split('\n');
             let jDeck = [];
 
-            for (_entry of asLines)
+            for (let _entry of asLines)
             {
                 const sCount = AddCardsInGame.getCount(_entry);
                 const sCode = AddCardsInGame.getCode(_entry);

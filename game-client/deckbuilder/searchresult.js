@@ -54,7 +54,7 @@ var SearchResult = {
         DomUtils.empty(document.getElementById("result"));
         DomUtils.empty(document.getElementById("linklist"));
 
-        var nSize = this.getResultSize(vnIndicesCharacters);
+        const nSize = this.getResultSize(vnIndicesCharacters);
         document.getElementById("size").innerHTML = nSize;
 
         if (nSize === 0)
@@ -63,12 +63,12 @@ var SearchResult = {
             return;
         }
 
-        for (var key in vnIndicesCharacters)
+        for (let key in vnIndicesCharacters)
         {
             if (key === "Site" || key === "" || key === "Region")
                 continue;
 
-            let _size = vnIndicesCharacters[key].length;
+            const _size = vnIndicesCharacters[key].length;
             if (_size === 0)
                 continue;
 
@@ -159,8 +159,6 @@ var SearchResult = {
                 
                 _div.appendChild(_elem);
             }
-
-            _div.appendChild
 
             document.getElementById("result").appendChild(_div);
         }
@@ -335,7 +333,7 @@ var SearchResult = {
         if (sId === "" || sId === null)
             return false;
 
-        ArrayList(document.getElementById("result")).find("div.category").each( (e) => e.classList.add("hidden") );
+        ArrayList(document.getElementById("result")).find("div.category").each( (_e) => _e.classList.add("hidden") );
         ArrayList(document).find("li.current").each((_elem) => _elem.classList.remove("current"));
 
         setTimeout(() => SearchResult.makeImagesVisible(sId), 10);

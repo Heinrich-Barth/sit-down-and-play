@@ -26,9 +26,9 @@ class CheckForCardsPlayed {
     {
         let jList = [];
 
-        for (let i = 0; i < list.length; i++)
+        for (let elem of list)
         {
-            let sId = list[i].getAttribute("data-uuid");
+            const sId = elem.getAttribute("data-uuid");
             if (sId !== null && sId !== "")
                 jList.push(sId);
         }
@@ -105,7 +105,7 @@ class CheckForCardsPlayed {
         if (elem !== null)
             elem.classList.add("card-highlight");
     }
-};
+}
 
 /**
  * Check for company cards

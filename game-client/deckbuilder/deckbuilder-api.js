@@ -69,13 +69,13 @@ const DeckbuilderApi =
     remove : function(sTarget, jsonCard)
     {
         const code = jsonCard.code
-        if (this._deck[sTarget] === undefined || this._deck[sTarget][jsonCard.code] === undefined)
+        if (this._deck[sTarget] === undefined || this._deck[sTarget][code] === undefined)
             return false;
 
-        if (this._deck[sTarget][jsonCard.code].count === 1)
-            delete this._deck[sTarget][jsonCard.code];
+        if (this._deck[sTarget][code].count === 1)
+            delete this._deck[sTarget][code];
         else
-            this._deck[sTarget][jsonCard.code].count--;
+            this._deck[sTarget][code].count--;
            
         if (jsonCard.count < jsonCard.limit)
             jsonCard.count++;
@@ -162,17 +162,16 @@ const DeckbuilderApi =
                 DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
         }
 
-        function addCardGroup(cards, groupkey, target)
+        function addCardGroup(cardList, groupkey, target)
         {
-            let size = 0;
-            let count, card;
-            for (let key in cards[groupkey])
+            let nSize = 0;
+            for (let key in cardList[groupkey])
             {
-                count = getCardCount(cards[groupkey][key]);
+                let count = getCardCount(cardList[groupkey][key]);
                 if (count < 1)
                     continue;
     
-                card = ViewCards.getCardFromCardCode(key);
+                const card = ViewCards.getCardFromCardCode(key);
                 if (card === null)
                     Notify.error("Cannot get " + groupkey + " card from code " + key);
                 else
@@ -182,11 +181,11 @@ const DeckbuilderApi =
                     else
                         doAddCard(card, count);
 
-                    size += count;
+                    nSize += count;
                 }
             }
     
-            return size;
+            return nSize;
         }
 
         let size = 0;
@@ -240,7 +239,8 @@ document.getElementById("save_deck").onclick = function()
 };
 
 document.body.addEventListener("meccg-deckbuilder-load-deck", DeckbuilderApi.onLoadDeck, false);
+
 document.body.addEventListener("meccg-deckbuilder-add-to-deck", DeckbuilderApi.onAdd, false);
 document.body.addEventListener("meccg-deckbuilder-remove-from-deck", DeckbuilderApi.onRemove, false);
 document.body.addEventListener("meccg-file-dropped-name", DeckbuilderApi.onUpdateDeckName, false);
-
+document.body.addEventListener("meccg-file-dropped", DeckbuilderApi.onLoadDeck, false);
