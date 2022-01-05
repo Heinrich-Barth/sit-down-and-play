@@ -2,10 +2,6 @@
 
 class ChatBox {
 
-    constructor() {
-        
-    }
-
     static getTimeString(lTime)
     {
         return lTime < 10 ? "0" + lTime : "" + lTime;

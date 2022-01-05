@@ -66,7 +66,7 @@ CardPreview.initMapViewCard = function(elem)
     };
     
     elem.onmouseout = () => CardPreview.hide(true, true);
-},
+};
 
 CardPreview.isLeft = function(elem)
 {

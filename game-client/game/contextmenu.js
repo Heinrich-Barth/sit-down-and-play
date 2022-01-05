@@ -219,11 +219,11 @@ const ContextMenu = {
             
     _getPosition : function(e)
     {
-        var posx = 0;
-        var posy = 0;
+        let posx = 0;
+        let posy = 0;
 
         if (!e)
-            var e = window.event;
+            e = window.event;
 
         if (e.pageX || e.pageY)
         {
@@ -273,7 +273,7 @@ const ContextMenu = {
     },
 
     callbacks : {
-        empty : function() { },
+        empty : function() { /** fallback */ },
 
         generic : function(e)
         {
@@ -326,7 +326,6 @@ const ContextMenu = {
             let uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
             let code = ContextMenu.getAttribute(pMenu, "data-card-code");
             ContextMenu.hightlightCard(uuid, code);
-            //MeccgApi.send("/game/card/state/glow", {uuid : uuid, code: code });  
         },
 
         flip : function(pMenu)
