@@ -8,11 +8,10 @@ const Arda = require("./game-arda");
 
 function _register(pEventManager)
 {
-    console.log("register custom events");
-
     pEventManager.addEvent("add-sample-rooms", function(targetList)
     {
         const SampleList = ["AmonHen", "Anduin", "Arnor", "Baranduin", "Beleriand", "Bree", "Bruinen", "Erebor", "EredLuin", "EredMithrin", "EredNimrais", "Eriador", "Esgaroth", "Fangorn", "Gondor", "GreatEastRoad", "Harad", "HelmsDeep", "Isengard", "Khazaddum", "Lothlorien", "Mirkwood", "MistyMountains", "Mordor", "MountDoom", "NorthSouthRoad", "Numenor", "Rhovanion", "Rhun", "Rivendell", "Rohan", "TheShire", "Weathertop"]
+        SampleList.sort();
         SampleList.forEach((e) => targetList.push(e));
         console.log("Sample room names loaded: " + SampleList.length);
     });
@@ -29,6 +28,8 @@ function _register(pEventManager)
     });
 
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
+
+    pEventManager.dump();
 }
 
 exports.registerEvents = (pEventManager) => _register(pEventManager);

@@ -28,7 +28,7 @@ const CardDataProvider = {
         {
             console.error(error.message);
             console.log(error);
-        };
+        }
     },
 
     createAgentList : function (jsonCards)
@@ -36,7 +36,7 @@ const CardDataProvider = {
         for (let card of jsonCards) 
         {
             if (card["type"] === "Character" && card["Secondary"] === "Agent") 
-            this._agentList.push(card.code);
+                this._agentList.push(card.code);
         }
     },
 
@@ -49,7 +49,7 @@ const CardDataProvider = {
         } 
         catch (error) 
         {
-        };
+        }
         
         return false;
     },
@@ -77,7 +77,7 @@ const CardDataProvider = {
         CardDataProvider.imageUrl = imageUrl;
 
         if (CardDataProvider.loadLocally("./data/cards-raw.json"))
-            console.log("Successfully loaded card data from local file.");
+            console.log("\t-- successfully loaded card data from local file ./data/cards-raw.json --");
         else if (cardsUrl !== undefined && cardsUrl !== "")
             CardDataProvider.loadFromUrl(cardsUrl);
         else
