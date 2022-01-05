@@ -90,7 +90,7 @@ class Notify {
         while (elem.firstChild) 
             elem.removeChild(elem.firstChild);
 
-            elem.parentNode.removeChild(elem);
+        elem.parentNode.removeChild(elem);
     }
 }
 

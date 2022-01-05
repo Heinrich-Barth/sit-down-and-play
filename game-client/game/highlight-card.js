@@ -8,8 +8,6 @@
  */
 class HighlightElement {
 
-    constructor() { }
-
     /**
      * Check if the element may have the event
      * 
@@ -62,7 +60,7 @@ class HighlightElement {
         if (this.addCss(sCompanyId))
             this.startEvent(sCompanyId, 4100);
     }
-};
+}
 
 /* accept custom event and trigger css animation */
 document.body.addEventListener("meccg-highlight", (e) => new HighlightElement().init(e.detail), false);
