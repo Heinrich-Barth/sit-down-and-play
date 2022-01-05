@@ -32,44 +32,9 @@ const createSecret = function ()
     return require('crypto').createHash('sha256').update(x, 'utf8').digest('hex');
 };
 
-exports.uuidLength = () => { return g_sUUIDLength; }
 
-/**
- * Check if the input is valid and alphanumeric
- * 
- * @param {String} sInput 
- * @returns 
- */
- exports.isAlphaNumeric = (sInput) => isAlphaNumeric(sInput);
-
- 
- /**
-  * Create a unique user id
-  * @returns UUID String
-  */
- exports.generateUuid = () => generateUuid();
-
- exports.generateFlatUuid = () => generateFlatUuid();
-
-
- /**
- * Create a unique secret 
- * @returns hashed SHA256 salt as HEX
- */
-exports.createSecret = () => createSecret();
-
-/**
- * Create a unique user id
- * @returns UUID String
- */
-exports.createContentSecurityPolicyMegaAdditionals = function(csp_image_domain, csp_report_uri)
+const joinMap = function(jEntries)
 {
-    const jEntries = {
-        "script-src": "'self' 'nonce-START'",
-        "img-src": "'self' " + csp_image_domain,
-        "report-uri": csp_report_uri
-    };
-
     let sVal = "";
     for (let key in jEntries) 
     {
@@ -79,3 +44,72 @@ exports.createContentSecurityPolicyMegaAdditionals = function(csp_image_domain, 
     
     return sVal.trim();
 };
+
+exports.uuidLength = () => { return g_sUUIDLength; }
+
+/**
+ * Check if the input is valid and alphanumeric
+ * 
+ * @param {String} sInput 
+ * @returns 
+ */
+exports.isAlphaNumeric = (sInput) => isAlphaNumeric(sInput);
+
+ 
+/**
+  * Create a unique user id
+  * @returns UUID String
+  */
+exports.generateUuid = () => generateUuid();
+
+exports.generateFlatUuid = () => generateFlatUuid();
+
+
+/**
+ * Create a unique secret 
+ * @returns hashed SHA256 salt as HEX
+ */
+exports.createSecret = () => createSecret();
+
+/**
+ * Create a unique user id
+ * @returns UUID String
+ */
+exports.createContentSecurityPolicyMegaAdditionals = function(csp_image_domain)
+{
+    if (csp_image_domain === undefined)
+        csp_image_domain = "";
+
+    const jEntries = {
+        "default-src" : "'none'",
+        "style-src": "'self'",
+        "connect-src": "'self'",
+        "font-src": "'self'",
+        "script-src": "'self' 'nonce-START'",
+        "frame-src": "'self'",
+        "img-src": "'self' " + csp_image_domain,
+        "report-uri": "/csp-violation"
+    };
+    
+    return joinMap(jEntries);
+};
+
+
+/**
+ * Create a unique user id
+ * @returns UUID String
+ */
+ exports.createContentSecurityPolicySelfOnly = function()
+ {
+    const jEntries = {
+        "default-src": "'none'",
+        "font-src": "'self'",
+        "script-src": "'self'",
+        "connect-src": "'self'",
+        "style-src": "'self'",
+        "img-src": "'self'",
+        "report-uri": "/csp-violation"
+    };
+ 
+    return joinMap(jEntries);
+ };
