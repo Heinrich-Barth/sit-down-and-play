@@ -2,7 +2,6 @@ const SaveJsonAsDialog = {
 
     onSaveFile : function(e)
     {
-        const sDate = new Date().toISOString().replace("T", "-").replace(":","-").replace(":", "-");
         SaveJsonAsDialog.onSave(e.detail.data, e.detail.name + ".meccg-savegame");
     },
 
