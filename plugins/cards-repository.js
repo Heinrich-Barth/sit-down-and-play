@@ -155,20 +155,32 @@ const CARDS = {
 
     removeUnwantedCards : function(_raw)
     {
-        let count = 0;
+        let countUl = 0;
+        let countAL = 0;
+        let _arr = [];
         for (let i = _raw.length - 1; i >= 0; i--)
         {
-            if (_raw[i].set_code === "MEUL" || _raw[i].code.indexOf(" AL (") !== -1)
+            if (_raw[i].set_code === "MEUL") 
             {
-                _raw.splice(i, 1);
-                count++;
+                countUl++;
             }
+            else if (_raw[i].code.indexOf(" AL (") !== -1)
+            {
+                countAL++;
+            }
+            else 
+            {
+                _arr.push(_raw[i]);
+            }
+
         }
 
-        if (count > 0)
-            console.log("\t- cards removed: " + count);
+        if (countUl > 0)
+            console.log("\t- cards removed (unlimited): " + countUl);
+        if (countAL > 0)
+            console.log("\t- cards removed (AL): " + countAL);
 
-        return _raw;
+        return _arr;
     },
 
     integrityCheck : function(_raw)
@@ -345,7 +357,7 @@ const CARDS = {
         this.identifyInLieuItems();
         this.removeUnusedFields();
         this.removeFlavourText();
-        console.log("Cards setup done.");
+        console.log("\t-- all data card loaded --");
     }
 };
 
