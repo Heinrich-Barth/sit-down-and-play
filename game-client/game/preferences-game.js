@@ -30,35 +30,14 @@ class GamePreferences extends Preferences {
         return true;
     }
 
-    _changeBackground(sNew)
-    {
-        if (GamePreferences._replaceBackground(sNew))
-            this.updateCookie("background", sNew);
-    }
-
     getCookieUpdateUrl()
     {
         return GamePreferences.URL;
     }
 
-    _bgEagle()
+    _dices()
     {
-        this._changeBackground("bg-eagle");
-    }
-
-    _bgRivendell()
-    {
-        this._changeBackground("bg-rivendell");
-    }
-
-    _bgEdoras()
-    {
-        this._changeBackground("bg-edoras");
-    }
-
-    _bgUnderdeeps()
-    {
-        this._changeBackground("bg-underdeeps");
+        document.body.dispatchEvent(new CustomEvent("meccg-dice-chooser"));
     }
 
     _chat(isActive)
@@ -86,7 +65,7 @@ class GamePreferences extends Preferences {
         const div = document.createElement("div");
         div.setAttribute("id", "question-fake-hide");
         div.setAttribute("class", "question-fake-hide");
-        div.innerHTML = `<a id="question-fake-hide-a" href="https://meet.jit.si/${g_sRoom}" target="_blank">Audio Chat</a>`;
+        div.innerHTML = `<a id="question-fake-hide-a" href="https://meet.jit.si/${g_sRoom}" rel="noopener" rel="noreferrer" target="_blank">Audio Chat</a>`;
         document.body.appendChild(div);
         document.getElementById("question-fake-hide-a").click();
         DomUtils.removeNode(document.getElementById("question-fake-hide"));
@@ -94,12 +73,12 @@ class GamePreferences extends Preferences {
     
     static useImagesDC()
     {
-        return true; /* Preferences._getConfigValue("images_errata_dc");*/
+        return true; 
     }
 
     static useImagesIC()
     {
-        return true; /*Preferences._getConfigValue("images_errata_ic");*/
+        return true; 
     }
 
     static discardOpenly()
@@ -124,15 +103,9 @@ class GamePreferences extends Preferences {
         this.createEntry0("discard_facedown");
         this.createEntry0("show_chat");
 
-        /*
-        createEntry0("images_errata_dc");
-        createEntry0("images_errata_ic");
-        */
-        this.createSection("Backgrounds");
+        this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
-        this.createEntry0("bg_rivendell");
-        this.createEntry0("bg_edoras");
-        this.createEntry0("bg_deeps");
+        this.createEntry0("game_dices");
 
         this.createSection("Game");
         this.createEntry0("game_save");
@@ -140,35 +113,17 @@ class GamePreferences extends Preferences {
         this.createEntry0("game_show_lobby");       
         this.createEntry0("game_addcards");       
         this.createEntry0("leave_game");
-
-        /*
-        this.createSection("Rules");
-        this.createEntry0("rules_wizard");       
-        this.createEntry0("rules_dragons");       
-        this.createEntry0("rules_dark-minions");       
-        this.createEntry0("rules_lidless-eye");
-        this.createEntry0("rules_against-the-shadow");       
-        this.createEntry0("rules_white-hand");       
-        this.createEntry0("rules_balrog");       
-        */
     }
 
     addConfiguration()
     {
-
         this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
-        /*
-        Preferences.addConfigToggle("auto_reveal", "Reveal cards automatically", true);
-        
-        */
         this.addConfigToggle("discard_facedown", "Discard cards face down", true);
         this.addConfigToggle("images_errata_dc", "Use Dreamcards Errata", true);
         this.addConfigToggle("images_errata_ic", "Use Errata", true);
-
-        this.addConfigAction("bg_default", "Eagle", false, "fa-picture-o", this._bgEagle.bind(this));
-        this.addConfigAction("bg_rivendell", "Rivendell (Jerry VanderStelt)", false, "fa-picture-o", this._bgRivendell.bind(this));
-        this.addConfigAction("bg_edoras", "Edoras (bakarov/Onur Bakar)", false, "fa-picture-o", this._bgEdoras.bind(this));
-        this.addConfigAction("bg_deeps", "Bridge (Paul Mmonteagle)", false, "fa-picture-o", this._bgUnderdeeps.bind(this));
+        
+        this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
+        this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
@@ -180,20 +135,8 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
-
-        /*
-        this.addConfigAction("rules_wizards", "The Wizards", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_dragons", "The Dragons", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_dark-minions", "Dark Minions", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_lidless-eye", "Lidless Eye", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_against-the-shadow", "Against the Shadow", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_white-hand", "The White Hand", false, "fa-eye", Preferences.callbacks._showRule);
-        this.addConfigAction("rules_balrog", "Balrog", false, "fa-eye", Preferences.callbacks._showRule);
-        */
     }
-
-
-};
+}
 
 const g_pGamesPreferences = new GamePreferences();
 g_pGamesPreferences.init();
