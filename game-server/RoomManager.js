@@ -505,12 +505,12 @@ class RoomManager {
 
         const pRoom = this._rooms[room];
         let bIsPlayer = true;
-        if (pRoom.hasPlayer(userId) !== undefined)
+        if (pRoom.hasPlayer(userId))
         {
             if (pRoom.getPlayer(userId).getTimestamp() !== joined)
                 return false;
         } 
-        else if (pRoom.hasVisitors(userId) !== undefined)
+        else if (pRoom.hasVisitors(userId))
         {
             bIsPlayer = false;
             if (pRoom.getVisitor(userId).getTimestamp() !== joined)
