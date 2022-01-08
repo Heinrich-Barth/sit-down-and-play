@@ -825,3 +825,4 @@ body.on-show-map-window .location-icon { display: none; }
     color: #fff;
 }
 
+.smallCaps { font-variant-caps: small-caps; }

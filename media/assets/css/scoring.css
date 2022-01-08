@@ -10,7 +10,7 @@
     z-index: 101;
 }
 
-.scoring-sheet table { color: white; width: 100%; }
+.scoring-sheet table { color: white; width: 100%; font-variant-caps: small-caps; }
 
 .scoring-card img {
     max-width: 300px;
@@ -188,7 +188,7 @@
     top: 50%;
     right: 50%;
     transform: translate(50%, -50%);
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 .scoring-sheet.final-score .menu-overlay
 {
@@ -203,3 +203,12 @@
 
 .scoring-sheet .dice-stats th,
 .scoring-sheet .dice-stats td { padding: 0 5px; text-align: center;}
+
+.scoring-sheet .dice-stats td { padding: 2px 3px; }
+.scoring-sheet .dice-stats th:nth-child(even), 
+.scoring-sheet .dice-stats td:nth-child(even) {
+    background-color: rgba(255,255,255,0.2);
+}
+#scoring-sheet table tbody tr:nth-child(even) {
+    background-color: rgba(255,255,255,0.1);
+}

@@ -16,11 +16,11 @@ class ViewCardListContainer {
         div.setAttribute("class", "hidden");
         div.innerHTML = `
                 <div class="view-card-list-container blue-box">
-                    <div class="container-title-bar">
+                    <div class="container-title-bar smallCaps">
                         <div class="container-title-bar-title fl"></div>
                         <div class="container-title-bar-divider hideOnOffer fl">&nbsp;&dash;&nbsp;</div>
                         <div class="container-title-bar-reveal hideOnOffer fl"><a href="#" title="show to your opponent" data-type="">reveal to opp.</a></div>
-                        <div class="container-title-bar-shuffle hideOnOffer fr">CLOSE & SHUFFLE</div>
+                        <div class="container-title-bar-shuffle hideOnOffer fr">Close &amp; Shuffle</div>
                         <div class="clear"></div>
                     </div>
                     <div class="container-data"></div>

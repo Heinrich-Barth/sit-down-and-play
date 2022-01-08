@@ -166,7 +166,7 @@ class ScoringContainers {
         div.setAttribute("id", "view-score-sheet-card-list");
         div.innerHTML = `<div class="view-card-list-container blue-box">
                             <div class="container-title-bar">
-                                <div class="container-title-bar-title text-center">Your Victory Pile</div>
+                                <div class="container-title-bar-title text-center smallCaps">Your Victory Pile</div>
                                 <div class="clear"></div>
                             </div>
                             <div class="container-data"></div>

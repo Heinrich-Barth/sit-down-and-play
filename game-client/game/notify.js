@@ -64,7 +64,7 @@ class Notify {
         div.classList.add(sClass);
         div.classList.add("notify");
         div.setAttribute("id", id);
-        div.innerHTML = `<div class="notification-text"><i class="fa ${sIcon}" aria-hidden="true"></i>${content}</div>
+        div.innerHTML = `<div class="notification-text"><i class="fa ${sIcon}" aria-hidden="true"></i><span>${content}</span></div>
             <div class="notification-line-countdown"></div>`
 
         document.getElementById("notifications").appendChild(div);
