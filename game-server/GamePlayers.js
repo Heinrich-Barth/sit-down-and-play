@@ -155,46 +155,40 @@ class GamePlayers extends GameBase
     {
         const nSize = this.players.ids.length;
         if (nSize <= 1)
-            return;
+            return false;
 
         let _ids = [];
         let players = this.players.ids;
         let _posDel = -1;
+
+        /** create a new array of players and exclude the player to be removed */
         const sizePlayers = players.length;
         for (let i = 0; i < sizePlayers; i++)
         {
-            if (players[i] !== userId)
-            {
-                _ids.push(players[i]);
-            }
-            else
-            {
+            if (players[i] === userId)
                 _posDel = i;
-                console.log("Player kicked from index list: " + userId)
-                this.publishToPlayers("/game/player/remove", "", { userid: userId });
-                /** todo: discard everything */
-            }
+            else
+                _ids.push(players[i]);
         }
 
+        /** check if the player has been in the list at all */
         if (_posDel < 1)
-            return;
+            return false;
 
+        /** update player id array and remove player from map */
         this.players.ids = _ids;
-
         if (this.players.names[userId] !== undefined)
             delete this.players.names[userId];
 
-        if (this.players.current !== 0)
-        {
-            if (this.players.current > _posDel)
-                this.players.current--;
-            else if (this.players.current === _posDel)
-            {
-                this.players.current--;
-                this.callbacks.global.phase(userId, null, "eot"); /** pass turn to next player */ //TODO
-            }
-        }
-    }
+        /** it might be that the removed player had its turn already. hence, the current player moved on place to the left */
+        if (this.players.current !== 0 && this.players.current >= _posDel)
+            this.players.current--;
+
+        /** all done. the player has left the game and we can now send the update */
+        console.log("Player kicked from index list: " + userId)
+        this.publishToPlayers("/game/player/remove", "", { userid: userId });
+        return true;
+}
 
     getCurrentTurn()
     {
