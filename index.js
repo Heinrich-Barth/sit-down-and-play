@@ -132,8 +132,6 @@ SERVER.onListenSetupSocketIo = function ()
 {
     SERVER._io = require('socket.io')(SERVER._http);
     SERVER._io.on('connection', SERVER.onIoConnection);
-
-    require("./keepalive").setup();
 };
 
 /**
@@ -280,7 +278,7 @@ if (!SERVER.environment.isProduction())
 /**
  * Simple PING
  */
-SERVER.instance.get("/ping", (req, res) => SERVER.expireResponse(res, "text/plain").send("pong").status(200));
+SERVER.instance.get("/ping", (req, res) => SERVER.expireResponse(res, "text/plain").send("" + Date.now()).status(200));
 
 /**
  * Show list of available images. 
