@@ -7,7 +7,7 @@ const fs = require('fs');
  * Callback function
  * @returns Empty String
  */
-const getHtmlCspPage = function(sFile)
+const getHtmlCspPage = function(page)
 {
     return fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
 };
