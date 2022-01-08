@@ -8,6 +8,20 @@ class DiceStats {
         pBody.appendChild(pTh);
     }
 
+    static toNumber(val)
+    {
+        try
+        {
+            return parseInt(val);
+        }
+        catch (err)
+        {
+            /** ignore */
+        }
+
+        return 0;
+    }
+
     static insertResults(users)
     {
         let bEmpty = true;
@@ -15,18 +29,24 @@ class DiceStats {
         
         for (let key in users)
         {
+            let count = 0;
+
             bEmpty = false;
             const tr = document.createElement("tr");
             DiceStats.addColumnCell(tr, "td", MeccgPlayers.getPlayerDisplayName(key));
             
-            for (let i = 1; i < 13; i++)
+            for (let i = 2; i < 13; i++)
             {
                 let res = users[key]["" + i];
                 if (res === undefined || res === "")
                     res = "-";
+                else
+                    count += DiceStats.toNumber(res);
 
                 DiceStats.addColumnCell(tr, "td", res);
             }
+
+            DiceStats.addColumnCell(tr, "td", count);
 
             tBody.appendChild(tr);
         }
@@ -39,8 +59,10 @@ class DiceStats {
         let tHead = document.createElement("thead");
         let tr = document.createElement("tr");
         DiceStats.addColumnCell(tr, "th", "");
-        for (let i = 1; i < 13; i++)
+        for (let i = 2; i < 13; i++)
             DiceStats.addColumnCell(tr, "th", i);
+
+        DiceStats.addColumnCell(tr, "th", "#");
 
         tHead.appendChild(tr);
         return tHead;
