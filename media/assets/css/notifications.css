@@ -2,20 +2,17 @@
 #notifications {
     position: fixed;
     top: 60px;
-    right: 45%;
-    padding: 20px;
+    left: 50%;
     z-index: 600;
+    transform: translateX(-50%);
 }
 
-.success { background: #98c593; }
-.failure{ background: rgb(195,34,34); }
-  
 .notify
 {  
-    box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
-    border-radius: 5px;
+    box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 55%);
+    border-radius: 3px;
     padding: 20px;
-    font-size: 20px;
+    font-size: 1.2em;
     color:#f0f0f0;  
     width:300px;
     box-sizing:border-box;
@@ -27,8 +24,8 @@
     
 }
 
-.notification-text { display: block; }
-.notification-text i { margin-right: 10px; }
+.notification-text { display: flex; }
+.notification-text span { padding-left: 10px; }
 .notification-line-countdown 
 {   
     animation: notification-line 3s linear forwards;
@@ -40,14 +37,11 @@
     bottom: 0;
 }
 
+.success { background: #6eb566; }
+.failure{ background: #e36666; }
+.info { background: #ffe891; color: #000; }
+
 @keyframes notification-line {
     from { width: 0%; }
     to { width: 100%; }
-}
-
-.info
-{
-    color: #000;
-    background: rgb(255,213,56);
-    background: linear-gradient(90deg, rgba(255,213,56,1) 0%, rgba(254,210,47,0.9248074229691877) 100%);
 }
