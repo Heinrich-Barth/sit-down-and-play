@@ -1,9 +1,16 @@
 
 
 #dice-content-tpl { display: none; }
-#dice_roll { position: absolute; z-index: 600; top: 10%; width: 98%; }
-#dice_roll .dice-result-list {     position: relative; margin: 0 auto; width: 250px; }
-#dice_roll .dice-content { text-align: center; color: white; padding: 10px; font-size: 0.9em; margin-bottom: 10px; display: inline-block; }
+#dice_roll { position: fixed;
+    z-index: 600;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%); }
+#dice_roll .dice-content { 
+    position:  relative;
+    text-align: center; 
+    color: white; padding: 5px; font-size: 0.9em; margin-bottom: 10px; display: inline-block; 
+}
 #dice_roll span.who  { color: #ffa500; }
 #dice_roll span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
 #dice_roll span.dice-info { font-style: italic; }
