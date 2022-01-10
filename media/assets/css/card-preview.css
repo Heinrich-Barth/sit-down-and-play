@@ -10,15 +10,18 @@
     border-radius: 5px;
 }
 
-.preview-zoom .preview-container img {
-    height: 100%;
-    max-width: 420px;
-    max-height: 800px;
-}
-
 .preview-left { left: 10px; }
 .preview-bottom { bottom: 10px; }
 .preview-top { top: 10px; }
 .preview-right { right: 10px; }
+
+.mapwindow .preview-container img {
+    width: 100%;
+    max-width: 500px;
+    height: auto !important;
+}
+
+.mapwindow .preview-top { top: 120px; }
+.mapwindow .preview-right { right: 225px; }
 
 .on-drag-event-generic .preview-container { display: none; }

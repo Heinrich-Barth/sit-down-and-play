@@ -60,11 +60,7 @@ CardPreview.hideAll = function()
 
 CardPreview.initMapViewCard = function(elem)
 {
-    elem.onmouseover = function()
-    {
-        CardPreview.show(this.src, true, true);
-    };
-    
+    elem.onmouseover = () => CardPreview.show(elem.src, false, true);
     elem.onmouseout = () => CardPreview.hide(true, true);
 };
 

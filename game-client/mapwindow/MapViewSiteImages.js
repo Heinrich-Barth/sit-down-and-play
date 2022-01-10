@@ -56,6 +56,8 @@
     {
         document.body.addEventListener("meccg-map-show-images", this.onShowImages.bind(this), false);
         document.body.addEventListener("meccg-map-search", this.onSearch.bind(this), false);
+
+        document.body.classList.add("mapwindow");
     }
 
     onSearch(e)
