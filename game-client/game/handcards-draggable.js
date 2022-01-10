@@ -175,12 +175,18 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         dropOnVicotry : function( event, ui ) 
         {
             /** it is OK to use jQuery object ui->raggable here */
-            const uuid = ui.draggable.attr("data-uuid");
-            const code = ui.draggable.attr("data-card-code");
-            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+            const elem = ui.draggable;
+            const uuid = elem.attr("data-uuid");
+            const code = elem.attr("data-card-code");
+            
+            /** remove from screen*/
+            CreateHandCardsDraggableUtils.removeDraggable(elem);
             
             MeccgApi.send("/game/card/store", { uuid: uuid });
-            document.body.dispatchEvent(new CustomEvent("meccg-score-card", { "detail": code }));
+
+            if (code !== undefined && code !== "")
+                document.body.dispatchEvent(new CustomEvent("meccg-score-card", { "detail": code }));
+                
             return false;
         },
 
