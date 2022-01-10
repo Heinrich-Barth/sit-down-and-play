@@ -30,7 +30,11 @@ body
     display: block;
 }
 
-.mapview { text-align: center;}
+.mapview { text-align: center;
+    width: 100% !important; 
+    height: 100% !important; 
+
+}
 
 select,
 input { display: block;   }
