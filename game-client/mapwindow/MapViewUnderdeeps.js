@@ -19,6 +19,11 @@ class MapViewUnderdeeps extends MapView {
         return -90.800;
     }
 
+    getZoomStart()
+    {
+        return 4;
+    }
+
 }
 
 /**

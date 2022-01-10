@@ -27,6 +27,11 @@ class MapView {
         return 0;
     }
 
+    getZoomStart()
+    {
+        return this.maxZoom - 1;
+    }
+
     flyTo(e)
     {
         let nZoom = this.instanceLeafletjsMap.getZoom();
@@ -36,10 +41,20 @@ class MapView {
         this.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], nZoom);
     }
 
+    removeOverlays()
+    {
+        DomUtils.removeNode(document.getElementById("map_view_layer_loading"));    
+        const sElems = document.querySelector(".map_view_layer");
+        if (sElems !== null && sElems !== undefined)
+            sElems.classList.remove("hide");
+    }
+
     createInstance()
     {
         if (this.assetFolder === "" || this.assetFolder.indexOf("..") !== -1)
             throw new Error("Invalid asset folder");
+
+        this.removeOverlays();
 
         this.instanceLeafletjsMap = L.map('map', 
         {
@@ -50,11 +65,9 @@ class MapView {
 
         const lat = this.getStartupLat();
         const lng = this.getStartLon();
-
-        const nZoom = this.maxZoom - 1;
         
         L.tileLayer('/media/maps/' + this.assetFolder + '/{z}/tile_{x}_{y}.jpg').addTo(this.instanceLeafletjsMap);
-        this.instanceLeafletjsMap.setView(L.latLng(lat, lng), nZoom);
+        this.instanceLeafletjsMap.setView(L.latLng(lat, lng), this.getZoomStart());
         
         return true;
     }

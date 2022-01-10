@@ -3,26 +3,22 @@ let g_isInit = false;
 
 const MapInstanceRenderer = {
 
-    _isMovementSelection : true,
+    _isMovementSelection: true,
 
-    sendResultMovement : function (e)
-    {
+    sendResultMovement: function (e) {
         const sCodeStart = e.detail.start;
         const vsRegions = e.detail.regions;
         const sCodeTarget = e.detail.target;
 
-        if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0))
-        {
+        if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0)) {
             MapInstanceRenderer.cancel();
         }
-        else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "")
-        {
+        else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "") {
             MapInstanceRenderer.cancel();
         }
-        else
-        {
+        else {
             parent.postMessage({
-                type : "set",
+                type: "set",
                 start: sCodeStart,
                 regions: vsRegions,
                 target: sCodeTarget,
@@ -30,40 +26,41 @@ const MapInstanceRenderer = {
         }
     },
 
-    cancel : function()
-    {
-        parent.postMessage("/cancel", { });
+    cancel: function () {
+        parent.postMessage("cancel", {});
     },
 
-    getStartCode : function()
-    {
+    getStartCode: function () {
         let query = window.location.search;
         let pos = typeof query === "undefined" ? -1 : query.indexOf("=");
 
         if (pos !== -1)
-            return decodeURI(query.substring(pos+1));
+            return decodeURI(query.substring(pos + 1));
         else
             return "";
     },
 
-    onInit : function(data, tapped)
-    {
+    onInit: function (data, tapped) {
         const sCode = MapInstanceRenderer.getStartCode();
         MapInstanceRenderer._isMovementSelection = sCode !== "";
 
-        let pInstance;
-        if (sCode !== "")
-            pInstance = new MapViewRegionsMovementFilterable(data, tapped);
-        else
-            pInstance = new MapViewChooseStartingHeaven(data, tapped);
+        new MapViewRegionsFilterable().createInstance(data.map);
+        new MapViewSiteImages(data, tapped).createInstance();
 
-        pInstance.createInstance(sCode);
+        const pMap = new MapViewRegions(data);
+        pMap.createInstance(sCode);
+        pMap.preselectRegionSite(sCode);
+
+        if (sCode === "")
+            new MapViewChooseStartingHeaven().createInstance();
+        else
+            new MapViewMovement(data, tapped).createInstance(sCode);
+
         g_isInit = true;
     }
 };
 
-const showErrorLoading = function(err)
-{
+const showErrorLoading = function (err) {
     let error = "Could not load map. Sorry.";
     if (err !== undefined)
         console.log('Error :-S', err);
@@ -74,40 +71,34 @@ const showErrorLoading = function(err)
     document.getElementById("map_view_layer_loading").innerHTML = `<p>${error}</p>`;
 };
 
-const fetchMap = function(tappedSites)
-{
-    fetch("/data/list/map").then((response) => 
-    {
+const fetchMap = function (tappedSites) {
+    fetch("/data/list/map").then((response) => {
         if (response.status === 200)
             response.json().then((map) => MapInstanceRenderer.onInit(map, tappedSites));
         else
             throw new Error("Could not load map");
     })
-    .catch((err) => showErrorLoading(err));
+        .catch((err) => showErrorLoading(err));
 };
 
-const fetchTappedSites = function()
-{
+const fetchTappedSites = function () {
     if (g_isInit)
         return;
 
-    fetch("/data/list/sites-tapped").then((response) => 
-    {
+    fetch("/data/list/sites-tapped").then((response) => {
         if (response.status === 200)
             response.json().then(fetchMap);
         else
             throw new Error("Could not load tapped sites");
     })
-    .catch((err) => showErrorLoading(err));
+        .catch((err) => showErrorLoading(err));
 };
 
-function onKeyUp(ev)
-{
-    switch(ev.which)
-    {
+function onKeyUp(ev) {
+    switch (ev.which) {
         /* ESC */
         case 27:
-            parent.postMessage({ type : "cancel" }, "*")
+            parent.postMessage({ type: "cancel" }, "*")
             break;
 
         /* ENTER */
@@ -125,7 +116,6 @@ document.body.addEventListener("keyup", onKeyUp, false);
 document.body.addEventListener("meccg-map-selected-movement", MapInstanceRenderer.sendResultMovement, false);
 document.body.addEventListener("meccg-map-cancel", MapInstanceRenderer.cancel, false);
 
-(function() 
-{
+(function () {
     fetchTappedSites();
 })();

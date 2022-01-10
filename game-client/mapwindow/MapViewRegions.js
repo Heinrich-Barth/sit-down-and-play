@@ -1,13 +1,15 @@
+
+
 /**
  * Add region marker and add site layers per region.
  * If a region is clied, the sites in it will be shown in a list
  * and if a site is clicked, it will be added to the movement
  */
-class MapViewRegions extends MapViewCards {
+class MapViewRegions extends MapView {
 
-    constructor(images)
+    constructor(jMap)
     {
-        super(images, "regions");
+        super("regions");
 
         this.MARKER = {
             region : null,
@@ -26,6 +28,9 @@ class MapViewRegions extends MapViewCards {
             pos_end : null
         };
 
+        this.jMap = jMap.map === undefined ? {} : jMap.map;
+        this.jMapSiteRegion = jMap.mapregions === undefined ? {} : jMap.mapregions;
+
         this.jMarkerRegions = {};
         this.jMarkerSites = {};
         this.jMarkerUnderdeeps = {};
@@ -34,14 +39,17 @@ class MapViewRegions extends MapViewCards {
         this.vsVisibleSites = [];
         this.vsVisibleUnderdeeps = [];
     }
+    
+    getMapData()
+    {
+        return this.jMap;
+    }
 
     fireRegionClick(sRegionTitle)
     {
         if (sRegionTitle !== "" && typeof this.jMarkerRegions[sRegionTitle] !== "undefined")
             this.jMarkerRegions[sRegionTitle].fire('click');
     }
-
-
 
     getStartupLat()
     {
@@ -91,8 +99,23 @@ class MapViewRegions extends MapViewCards {
         this.MARKER.dark = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-dark.png"});
         this.MARKER.ruins = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-ruins.png"});
         this.MARKER.shadow = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-shadow.png"});
+    
+        if (!super.createInstance())
+            return false;
+    
+        this.loadExistingMarker(this.jMap);
+        this.showRegionMarker();
 
-        return super.createInstance();
+        document.body.addEventListener("meccg-map-search", this.onSearch.bind(this), false);
+
+        return true;
+    }
+
+    onSearch(e)
+    {
+        const region = e.detail.region;
+        if (region !== "")
+            this.fireRegionClick(region);
     }
 
     destroyMarker(jMarkers)
@@ -125,14 +148,12 @@ class MapViewRegions extends MapViewCards {
 
     showRegionMarker()
     {
-        const pThis = this;
         for (let key in this.jMarkerRegions)
         {
             let _marker = this.jMarkerRegions[key];
             
-            _marker.off('click', (e) => pThis.onRegionClick(e.target.region));
-            _marker.on('click', (e) => pThis.onRegionClick(e.target.region));
-            
+            _marker.off('click', this.onClickRegionMarker.bind(this));
+            _marker.on('click', this.onClickRegionMarker.bind(this));
             _marker.addTo(this.getMapInstance());
         }
     }
@@ -202,6 +223,7 @@ class MapViewRegions extends MapViewCards {
         
         this.hideVisibleSites();
         this.showSitesInRegion(regionCode);
+        this.fireRegionClick(regionCode);
     }
 
     hideVisibleSites()
@@ -247,31 +269,23 @@ class MapViewRegions extends MapViewCards {
         });
         
         if (sSiteTitle !== "")
-        {
-            const pThis = this;
-            elem.on('click', function (e) 
-            {
-                pThis.onSiteMarkerClick(sSiteTitle);
-                pThis.flyTo(e);
-            });
-        }
+            elem.on('click', this.onSiteMarkerClick.bind(this));
         
         return elem;
     }
 
-    onSiteMarkerClick(sTitle)
+    onSiteMarkerClick(e)
     {
-        ArrayList(document.getElementById("found_sites")).find("img").each(function(el)
-        {
-            if (el.getAttribute("data-location-type") === "location")
-                return;
-            
-            const _code = el.getAttribute("data-code");
-            if (_code !== null && _code.startsWith(sTitle))
-                el.classList.remove("hide");
-            else
-                el.classList.add("hide");
-        });
+        this.flyTo(e);
+        this.dispatchClickEvent(e.target.region, e.target.site);
+    }
+
+    dispatchClickEvent(region, site)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-map-show-images", { "detail":  {
+            region: region,
+            site : site
+        } }));
     }
 
     getTargetMakerJson(region, site, jSiteCard)
@@ -301,6 +315,7 @@ class MapViewRegions extends MapViewCards {
     {
         this.onRegionClick(e.target.region);
         this.flyTo(e);
+        this.dispatchClickEvent(e.target.region, e.target.site);
     }
 
     createMarker(region, site, lat, lon, jSiteCard, isSiteCard)
@@ -399,6 +414,13 @@ class MapViewRegions extends MapViewCards {
         }
         
         return null;
+    }
+
+    preselectRegionSite(sSite)
+    {
+        const _region = this.getRegionBySiteCode(sSite);
+        if (_region !== null)
+            this.onRegionClick(_region.title);
     }
 
     /**

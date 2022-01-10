@@ -2,12 +2,7 @@
  * Adds a search icon to the map and allows to filter by region or
  * search for any site in the list
  */
-class MapViewRegionsMovementFilterable extends MapViewRegionsMovement  {
-
-    constructor(jMap, jTappedSites)
-    {
-        super(jMap, jTappedSites);
-    }
+class MapViewRegionsFilterable {
 
     insertTemplate()
     {
@@ -31,16 +26,10 @@ class MapViewRegionsMovementFilterable extends MapViewRegionsMovement  {
         document.body.appendChild(div);
     }
 
-    createInstance(sStartSiteCode)
+    createInstance(map)
     {
-        if (super.createInstance(sStartSiteCode))
-        {
-            this.insertTemplate();
-            this.initFilters();    
-            return true;
-        }
-        else
-            return false;
+        this.insertTemplate();
+        this.initFilters(map);    
     }
 
     appendOption(value, text)
@@ -51,18 +40,32 @@ class MapViewRegionsMovementFilterable extends MapViewRegionsMovement  {
         return opt;
     }
 
+    /**
+    * Get the "site"
+    * @return String
+    */ 
+    getCurrentSite()
+    {
+        const yourSelect = document.getElementById("sitelist");
+        return yourSelect.options[ yourSelect.selectedIndex ].value;
+    }
+ 
+     /**
+      * Get the "region"
+      * @return String
+      */ 
+    getCurrentRegion()
+    {
+        const yourSelect = document.getElementById("region");
+        return yourSelect.options[ yourSelect.selectedIndex ].value;
+    }
+
     onSelChange()
     {
         const sRegionTitle = this.getCurrentRegion();
-        if (sRegionTitle === "")
-            return false;
-        
-        this.updateRegionSiteList(sRegionTitle);
+        if (sRegionTitle !== "")
+            this.performSearch(sRegionTitle, "");
 
-        if (!this.ignoreMarkerClickOnce())
-            this.fireRegionClick(sRegionTitle);
-        
-        this.setIgnoreMarkerClickOnce(false);
         this.hideSearchTemplatePane();
     }
 
@@ -86,18 +89,17 @@ class MapViewRegionsMovementFilterable extends MapViewRegionsMovement  {
             jElem.classList.add("hide");
     }
 
-    initFilters()
+    initFilters(jMap)
     {
         const sel = document.getElementById('region');
         if (sel === null)
             return;
         
-        // load regions
         let _region;
-        const voRegions = this.getMapData();
-        for (let key in voRegions)
+
+        for (let key in jMap)
         {
-            _region = voRegions[key];
+            _region = jMap[key];
             
             const count = Object.keys(_region.sites).length;
             if (count > 0)
@@ -121,27 +123,22 @@ class MapViewRegionsMovementFilterable extends MapViewRegionsMovement  {
         }
     }
 
+    performSearch(region, text)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-map-search", { "detail":  {
+            region: region,
+            text : text
+        } }));
+    }
+
     onSearchByTitle()
     {
         const sText = document.getElementById("card_text").value.trim().toLowerCase();
-        if (sText.length < 3)
-            return;
-
-        const showAlignment = this.createSearchLimitations();
-        const map = this.getMapData();
-        for (let _region in map)
+        if (sText.length > 2)
         {
-            if (_region.toLowerCase().indexOf(sText) > -1)
-                this.getRegionImages(map[_region]);
-
-            for (let _site in map[_region].sites)
-            {
-                if (_site.toLowerCase().indexOf(sText)  > -1)
-                    this.getSiteImages(map[_region].sites[_site], showAlignment);
-            }
+            this.performSearch("", sText);
+            this.hideSearchTemplatePane();
         }
-
-        this.fillSiteList();
     }
 
 }
