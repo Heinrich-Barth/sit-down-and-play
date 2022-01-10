@@ -1,32 +1,4 @@
 
-
-let g_sRegionMap = "";
-const fs = require('fs');
-
-/**
- * Callback function
- * @returns Empty String
- */
-const getHtmlCspPage = function(page)
-{
-    return fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
-};
-
-/**
- * Show Region Map.
- * 
- * Since the map will be used regularly and many times per game, the HTML will be prepared
- * exactly ONCE and then be loaded from a cached variable
- * instead of creating it many times over and over again.
- */
-const getRegionMap = function()
-{
-    if (g_sRegionMap === "")
-        g_sRegionMap = getHtmlCspPage("map-regions.html");
-
-    return g_sRegionMap;
-};
-
 const getTappedSites = function(SERVER, cookies)
 {
     try
@@ -79,11 +51,7 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
      * Show Map Pages
      */
     SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/pages/map-underdeeps.html", SERVER.cacheResponseHeader));
-
-    /**
-     * Region Map. Importantly, this must not be cached!
-     */
-    SERVER.instance.get("/map/regions", (req, res) => SERVER.expireResponse(res, "text/html").send(getRegionMap()).status(200));
+    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/pages/map-regions.html", SERVER.cacheResponseHeader));
 
     /**
      * Provide the map data with all regions and sites for the map windows
