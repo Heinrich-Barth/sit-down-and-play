@@ -29,20 +29,23 @@ CardPreview.show = function(img, bLeft, bTop)
     if (img === undefined || img === "" || img.indexOf(".") === -1)
         return;
     
-    if (typeof bTop === "undefined")
-        bTop = true;
+    CardPreview.hideAll();
 
-    const elem = CardPreview.getTargetContainer(bLeft, bTop);
-    if (elem !== null)
-    {
-        elem.innerHTML = `<img src="${img}">`;
-        elem.classList.remove("hidden");
-    }
+    const elem = CardPreview.getTargetContainer(bLeft !== false, bTop !== false);
+    const pImage = document.createElement("img");
+    pImage.setAttribute("src", img);
+    pImage.onmousemove = CardPreview.hideAll;
+    elem.appendChild(pImage);
+    elem.classList.remove("hidden");
 };
 
 CardPreview.hide = function(bLeft, bTop)
 {
-    const elem = CardPreview.getTargetContainer(bLeft, bTop);
+    CardPreview.hideElement(CardPreview.getTargetContainer(bLeft, bTop));
+};
+
+CardPreview.hideElement = function(elem)
+{
     if (elem !== null)
     {
         elem.classList.add("hidden");
@@ -52,16 +55,20 @@ CardPreview.hide = function(bLeft, bTop)
 
 CardPreview.hideAll = function()
 {
-    CardPreview.hide(true, true);
-    CardPreview.hide(true, false);
-    CardPreview.hide(false, true);
-    CardPreview.hide(false, false);
+    const elem = document.getElementById("preview-container-wrapper");
+    if (elem === null)
+        return;
+
+    const list = elem.getElementsByTagName("div");
+    const len = list === null ? 0 : list.length;
+    for (let i = 0; i < len; i++)
+        CardPreview.hideElement(list[i]);
 };
 
 CardPreview.initMapViewCard = function(elem)
 {
     elem.onmouseover = () => CardPreview.show(elem.src, false, true);
-    elem.onmouseout = () => CardPreview.hide(true, true);
+    elem.onmouseout = () => CardPreview.hide(false, true);
 };
 
 CardPreview.isLeft = function(elem)
@@ -151,46 +158,43 @@ CardPreview._doHoverOnGuard = function()
         CardPreview.show(CardPreview._getImage(elem), CardPreview.isLeft(elem), CardPreview.isTop(elem));
 };
 
-CardPreview._initView = function(sId)
+CardPreview.insertCss = function()
 {
-    let elem = document.getElementById(sId);
-    if (elem !== null)
-        elem.onmouseover = CardPreview._hidePreviewBox;
-};
-
-CardPreview._hidePreviewBox = function()
-{
-    this.classList.add("hidden");
-    DomUtils.removeAllChildNodes(this);
-};
-
-CardPreview._isReady = false;
-
-CardPreview.onDocumentReady = function()
-{
-    if (CardPreview._isReady)
-        return;
-
     /** add CSS  */
     const link = document.createElement("link");
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("type", "text/css");
     link.setAttribute("href","/media/assets/css/card-preview.css");
     document.head.appendChild(link);
+};
+
+CardPreview.appendContainerElement = function(jCont, sId, sClass)
+{
+    const pCont = document.createElement("div");
+    pCont.setAttribute("id", sId);
+    pCont.setAttribute("class", "hidden " + sClass);
+    pCont.onmouseover = CardPreview.hideAll;
+    jCont.appendChild(pCont);
+}
+
+CardPreview.insertContainer = function()
+{
 
     /** insert container */
     const jCont = document.createElement("div");
     jCont.setAttribute("class", "preview-container");
-    jCont.innerHTML = '<div id="preview_left" class="hidden preview-left preview-top"></div><div id="preview_right" class="hidden preview-right preview-top"></div><div id="preview_left_bottom" class="hidden preview-left preview-bottom"></div><div id="preview_right_bottom" class="hidden preview-right preview-bottom"></div>';
+    jCont.setAttribute("id", "preview-container-wrapper");
+
+    CardPreview.appendContainerElement(jCont, "preview_left", "preview-left preview-top");
+    CardPreview.appendContainerElement(jCont, "preview_right", "preview-right preview-top");
+    CardPreview.appendContainerElement(jCont, "preview_left_bottom", "preview-left preview-bottom");
+    CardPreview.appendContainerElement(jCont, "preview_right_bottom", "preview-right preview-bottom");
 
     document.body.prepend(jCont);
+};
 
-    CardPreview._initView("preview_left");
-    CardPreview._initView("preview_left_bottom");
-    CardPreview._initView("preview_right");
-    CardPreview._initView("preview_right_bottom");
 
-    CardPreview._isReady = true;
-}
-
-document.body.addEventListener("meccg-init-ready", CardPreview.onDocumentReady, false);
+(function() {
+    CardPreview.insertCss();
+    CardPreview.insertContainer();
+})();
