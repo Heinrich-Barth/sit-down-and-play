@@ -8,6 +8,7 @@ class MapViewMovement extends MapViewMovementSelection {
     {
         super();
 
+        console.log(jMap);
         this.jMap = jMap.map === undefined ? {} : jMap.map;
         this.jMapSiteRegion = jMap.mapregions === undefined ? {} : jMap.mapregions;
         this.CardList = new CardList(jMap.images, []);
@@ -181,6 +182,7 @@ class MapViewMovement extends MapViewMovementSelection {
      */
      getRegionBySiteCode(sCode)
      {
+         console.log(this.jMapSiteRegion);
          if (sCode === ""  || typeof this.jMapSiteRegion[sCode] === "undefined")
              return null;
          else
