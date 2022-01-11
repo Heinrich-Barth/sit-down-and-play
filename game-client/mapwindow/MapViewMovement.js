@@ -181,7 +181,6 @@ class MapViewMovement extends MapViewMovementSelection {
      */
      getRegionBySiteCode(sCode)
      {
-         console.log(this.jMapSiteRegion);
          if (sCode === ""  || typeof this.jMapSiteRegion[sCode] === "undefined")
              return null;
          else

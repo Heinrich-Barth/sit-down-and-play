@@ -51,10 +51,10 @@ const MapInstanceRenderer = {
         pMap.createInstance(sCode);
         pMap.preselectRegionSite(sCode);
 
-        if (sCode === "" || sCode === undefined)
+        if (sCode === "")
             new MapViewChooseStartingHeaven().createInstance();
         else
-            new MapViewMovement(data).createInstance(sCode);
+            new MapViewMovement(data, tapped).createInstance(sCode);
 
         g_isInit = true;
     }
