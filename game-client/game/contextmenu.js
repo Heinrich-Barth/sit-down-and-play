@@ -26,6 +26,9 @@ const ContextMenu = {
 
         pLink.setAttribute("href", "#");
         pLink.setAttribute("data-action", item.action);
+        if (item.tipp !== undefined && item.tipp !== null && item.tipp !== "")
+            pLink.setAttribute("title", "Tipp: " + item.tipp);
+
         pLink.onclick = ContextMenu.callbacks.generic;
 
         let li = document.createElement("li");
@@ -112,6 +115,7 @@ const ContextMenu = {
 
         pCard.setAttribute("data-contextmenu-site-arrive-company", companyId);
         pCard.oncontextmenu = ContextMenu.contextActions.onContextSiteArrive; 
+        pCard.ondblclick = ContextMenu.contextActions.onDoubleClickSiteArrive;
         pCard.classList.add("context-cursor");
     },
 
@@ -144,6 +148,18 @@ const ContextMenu = {
             ContextMenu.callbacks.doRotate("_site", code, e.altKey ? "ready" : "tap");
         },
 
+        onDoubleClickSiteArrive : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target !== null && e.target !== undefined)
+            {
+                const companyId = ContextMenu.getAttribute(e.target, "data-contextmenu-site-arrive-company");
+                if (companyId !== "")
+                    MeccgApi.send("/game/company/arrive", {company : companyId });
+            }
+        },
 
         onDoubleClick : function(e)
         {
@@ -361,7 +377,7 @@ const ContextMenu = {
         }
     },
     
-    addItem : function(sAction, sLabel, sIcon, sClasses, callback)
+    addItem : function(sAction, sLabel, sIcon, sClasses, callback, tipp)
     {
         if (typeof callback === "undefined")
             callback = ContextMenu.callbacks.empty;
@@ -371,20 +387,21 @@ const ContextMenu = {
             icon : sIcon,
             label: sLabel,
             classes: sClasses,
+            tipp: tipp === undefined || tipp === null ? "" : tipp,
             callback : callback
         }
     },
 
     createContextMenus : function()
     {
-        this.addItem("ready", "Ready card", "fa-heart", "context-menu-item-rotate context-menu-item-generic context-menu-item-location", ContextMenu.callbacks.rotate);
-        this.addItem("tap", "Tap card (90°)", "fa-arrow-circle-right", "context-menu-item-rotate context-menu-item-generic context-menu-item-location", ContextMenu.callbacks.rotate);
+        this.addItem("ready", "Ready card", "fa-heart", "context-menu-item-rotate context-menu-item-generic context-menu-item-location", ContextMenu.callbacks.rotate, "ALT+Doubleclick to untap");
+        this.addItem("tap", "Tap card (90°)", "fa-arrow-circle-right", "context-menu-item-rotate context-menu-item-generic context-menu-item-location", ContextMenu.callbacks.rotate, "Doubleclick to tap");
         this.addItem("tap_91", "Forced tap card (90°)", "fa-lock", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("wound", "Wound card (180°)", "fa-arrow-circle-down", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("rot270", "Rotate 270°", "fa-arrow-circle-left", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
-        this.addItem("glow_action", "Highlight card (5s)", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow);
+        this.addItem("glow_action", "Highlight card (5s)", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow, "CTRL+Doubleclick to untap");
         this.addItem("flipcard", "Flip Card", "fa-eye-slash", "context-menu-item-flipcard context-menu-item-generic", ContextMenu.callbacks.flip);
-        this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive);
+        this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive, "Doubleclick on opponents target site to indicate NO MORE HAZARDS");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard"];
         this.data.types["location"] = ["ready", "tap", "arrive"];
