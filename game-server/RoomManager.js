@@ -510,7 +510,7 @@ class RoomManager {
             if (pRoom.getPlayer(userId).getTimestamp() !== joined)
                 return false;
         } 
-        else if (pRoom.hasVisitors(userId))
+        else if (pRoom.hasVisitor(userId))
         {
             bIsPlayer = false;
             if (pRoom.getVisitor(userId).getTimestamp() !== joined)
