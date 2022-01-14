@@ -6,6 +6,7 @@ class DiceContainer {
     static _count = 1;
     static _timeout = 2500;
     static _folder = "black";
+    static _fallback = "/media/client/game/dice"
 
     getPlayerName(id)
     {
@@ -35,9 +36,9 @@ class DiceContainer {
     {
         let folder = asset;
         if (folder === "" || folder === undefined || folder.indexOf("..") !== -1)
-            folder = "black";
-    
-        return "/media/personalisation/dice/" + folder + "/dice-" + nVal + ".png";
+            return DiceContainer._fallback + "/dice-" + nVal + ".png";
+        else
+            return "/media/personalisation/dice/" + folder + "/dice-" + nVal + ".png";
     }
 
     static createResultElement(id, sName, first, second, total, asset)
@@ -98,6 +99,15 @@ class DiceContainer {
         DiceContainer._jPlayerMap = e.detail.map;
     }
 }
+
+(function()
+{
+    const styleSheet = document.createElement("link")
+    styleSheet.setAttribute("rel", "stylesheet");
+    styleSheet.setAttribute("type", "text/css");
+    styleSheet.setAttribute("href", "/media/client/game/dice/dice.css");
+    document.head.appendChild(styleSheet);
+})();
 
 document.body.addEventListener("meccg-dice-rolled", DiceContainer.OnShow, false);
 document.body.addEventListener("meccg-players-updated", DiceContainer.OnPlayers, false);
