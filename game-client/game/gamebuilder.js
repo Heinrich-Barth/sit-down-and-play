@@ -139,20 +139,20 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             CompanyManager.onRemoveEmptyCompanies();
 
             for (let _data of jData.player.stage_hazards)
-                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn);
             
             for (let _data of jData.player.stage_resources)
-                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn);
                 
 
             for (let _data of jData.opponent.companies)
                 CompanyManager.drawCompany(false, _data);
             
             for (let _data of jData.opponent.stage_hazards)
-                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn);
             
             for (let _data of jData.opponent.stage_resources)
-                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, "", _data.type, _data.state, _data.revealed, _data.owner, _data.turn);
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn);
             
             setTimeout(() => {
 
@@ -162,18 +162,12 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }, 1500);
         },
         
-        onAddCardToStagingArea : function(bIsMe, cardCode, uuid, target, type, state, revealed, owner, turn)
+        onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type, state, revealed, turn)
         {
-            if (uuid === "" || cardCode === "" || type === "")
-            {
-                MeccgUtils.logWarning("invalid card data");
+            const cardId = Stagingarea.onAddCardToStagingArea(bIsMe, uuid, cardCode, type, state, revealed, turn);
+            if (cardId === "")
                 return false;
-            }
-
-            if (turn === undefined)
-                turn = 1;
             
-            var cardId = Stagingarea.onAddCardToStagingArea(bIsMe, uuid, "", cardCode, type, state, revealed, turn);
             if (bIsMe)
                 HandCardsDraggable.initCardInStagingArea(cardId, "", type);
             
@@ -336,7 +330,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             MeccgApi.addListener("/game/card/state/glow", (bIsMe, jData) =>g_Game.CompanyManager.onMenuActionGlow(jData.uuid));
             MeccgApi.addListener("/game/card/state/highlight", (bIsMe, jData) => g_Game.CompanyManager.onMenuActionHighlight(jData.uuid));
 
-            MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, "", jData.type, jData.state, jData.revealed, jData.owner, jData.turn));
+            MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn));
 
             MeccgApi.addListener("/game/update-deck-counter/player/generics", function(bIsMe, playload)
             {

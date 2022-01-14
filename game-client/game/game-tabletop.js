@@ -9,7 +9,7 @@ g_Game.onDocumentReady = function()
     g_Game.Scoring = createScoringApp(g_Game.CardList);
     g_Game.HandCardsDraggable = createHandCardsDraggable(g_Game.CardPreview,MeccgApi);
     g_Game.CompanyManager = createCompanyManager(g_Game.CardList, g_Game.CardPreview, g_Game.HandCardsDraggable);
-    g_Game.Stagingarea = createStagingArea(g_Game.CardList, g_Game.CardPreview);
+    g_Game.Stagingarea = new StagingArea(g_Game.CardList, g_Game.CardPreview);
 
     g_Game.GameBuilder = createGameBuilder(g_Game.CardList, 
         g_Game.CardPreview, 
