@@ -160,4 +160,20 @@ class ResolveHandSizeContainer
         elemContainer.prepend(div);
         return idSizerValue;
     }
+
+    static createHandContainer()
+    {
+        const handContent = document.getElementById("playercard-hand-content");
+        if (handContent === null)
+            return;
+
+        const _handSizer = handContent === null ? null : handContent.querySelector(".hand-card-sizer")
+        const _sizerId = ResolveHandSizeContainer.create(_handSizer, "Always ask to resolve to", 8, "cards.");
+        if (_sizerId !== "")
+            ResolveHandSizeFirst.create("playercard_hand_container", _sizerId, "cards");
+
+        ResolveHandSizeContainer.create(_handSizer, "Stage points are ", 0, "");
+        ResolveHandSizeContainer.create(_handSizer, "Unused general influence is", 20, "");
+    }
 }
+
