@@ -18,15 +18,15 @@ const DropZone = {
 
         const reader = new FileReader();
         reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
-        reader.onerror = () => Notify.error("Cannot read given file.");
+        reader.onerror = () => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot read given file." }));
         reader.readAsText(file);
     },
 
     onFileRead : function(sText, file)
     {
         if (sText === undefined || sText.trim() === "")
-            Notify.error("File seems to be empty...");
-        
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "File seems to be empty..." }));
+
         try
         {
             let json = JSON.parse(sText);

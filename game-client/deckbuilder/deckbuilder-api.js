@@ -173,7 +173,7 @@ const DeckbuilderApi =
     
                 const card = ViewCards.getCardFromCardCode(key);
                 if (card === null)
-                    Notify.error("Cannot get " + groupkey + " card from code " + key);
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot get " + groupkey + " card from code " + key }));
                 else
                 {
                     if (target !== "" && target !== undefined)

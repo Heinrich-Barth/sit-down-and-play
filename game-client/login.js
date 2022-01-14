@@ -194,7 +194,7 @@ const validateUserName = function()
     const sName = document.getElementById("user").value.trim();
     if (sName === "")
     {
-        Notify.error("Enter valid username first");
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Enter valid username first." }));
         focusUsername();
         return "";
     }
@@ -215,7 +215,7 @@ const onPerformLogin = function()
     let sUrl = stripHashFromUrl();
     if (sUrl === "")
     {
-        Notify.error("Invalid room");
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Invalid room" }));
         return false;
     }
 
