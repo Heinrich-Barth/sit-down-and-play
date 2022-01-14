@@ -25,26 +25,26 @@ const MeccgPlayers = {
      */
     setPlayerNames : function(bIsMe, jMap)
     {
-        if (MeccgPlayers.usermap === null)
+        if (this.usermap === null)
         {
-            MeccgPlayers.usermap = jMap;
-            MeccgPlayers.onPlayerListReceived();
+            this.usermap = jMap;
+            this.onPlayerListReceived();
         }
     },
 
     getPlayers()
     {
-        return MeccgPlayers.usermap;
+        return this.usermap;
     },
 
     getPlayerDisplayName : function(sId)
     {
-        if (sId === null || typeof sId === "undefined" || sId === "" || typeof MeccgPlayers.usermap[sId] === "undefined")
+        if (sId === null || typeof sId === "undefined" || sId === "" || typeof this.usermap[sId] === "undefined")
             return "(unknown)";
         else if (sId === "Game")
             return "Game";
         else
-            return MeccgPlayers.usermap[sId];
+            return this.usermap[sId];
     },
 
     /**
@@ -55,10 +55,10 @@ const MeccgPlayers = {
      */
     addPlayer : function(bIsMe, jData)
     {
-        if (MeccgPlayers.usermap !== null && MeccgPlayers.usermap[jData.userid] === undefined)
+        if (this.usermap !== null && this.usermap[jData.userid] === undefined)
         {            
-            MeccgPlayers.usermap[jData.userid] = jData.name;
-            MeccgPlayers.onPlayerListReceived();
+            this.usermap[jData.userid] = jData.name;
+            this.onPlayerListReceived();
         }
     },
  
@@ -70,10 +70,19 @@ const MeccgPlayers = {
         }}));
     },
 
+    onChatMessage : function(bIsMe, jData)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+            name : this.getPlayerDisplayName(jData.userid),
+            message : jData.message
+        }}));
+    },
+
     onDocumentReady : function()
     {
-        MeccgApi.addListener("/game/set-player-names", this.setPlayerNames);
-        MeccgApi.addListener("/game/player/add", this.addPlayer);
+        MeccgApi.addListener("/game/set-player-names", this.setPlayerNames.bind(this));
+        MeccgApi.addListener("/game/player/add", this.addPlayer.bind(this));
+        MeccgApi.addListener("/game/chat/message", this.onChatMessage.bind(this));
     }
 };
 
