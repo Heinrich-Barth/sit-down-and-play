@@ -5,7 +5,7 @@ const Navigation = {
     {
         var styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
-        styleSheet.setAttribute("href", "/media/assets/css/navigation.css");
+        styleSheet.setAttribute("href", "/media/client/navigation/navigation.css");
         document.head.appendChild(styleSheet)
     },
 
