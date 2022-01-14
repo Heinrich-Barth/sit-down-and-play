@@ -1,15 +1,25 @@
 
 
-class Notify {
+class Notification {
 
     static count = 0;
 
     static _timeout = 3000;
 
+    insertCss()
+    {
+        var styleSheet = document.createElement("link")
+        styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("href", "/media/client/notification/notification.css");
+        document.head.appendChild(styleSheet)
+    }
+
     init()
     {
         if (document.getElementById("notifications") === null)
         {
+            this.insertCss();
+
             const div = document.createElement("div");
             div.setAttribute("id", "notifications");
             document.body.appendChild(div);
@@ -18,43 +28,43 @@ class Notify {
 
     static error(content)
     {
-        new Notify().msg(content, "failure", "fa-exclamation-triangle");
+        new Notification().msg(content, "failure", "fa-exclamation-triangle");
     }
 
     static OnError(e)
     {
-        Notify.error(e.detail);
+        Notification.error(e.detail);
     }
 
     static success(content)
     {
-        new Notify().msg(content, "success", "fa-check-square-o");
+        new Notification().msg(content, "success", "fa-check-square-o");
     }
 
     static OnSuccess(e)
     {
-        Notify.success(e.detail);
+        Notification.success(e.detail);
     }
     
     static info(content)
     {
-        new Notify().msg(content, "info", "fa-bell");
+        new Notification().msg(content, "info", "fa-bell");
     }
 
     static OnInfo(e)
     {
-        Notify.info(e.detail);
+        Notification.info(e.detail);
     }
 
     _requestId()
     {
-        if (Notify.count === 100)
+        if (Notification.count === 100)
         {
-            Notify.count = 0;
+            Notification.count = 0;
             return 0;
         }
         else
-            return ++Notify.count;
+            return ++Notification.count;
     }
 
     addMessage(content, sClass, sIcon)
@@ -73,7 +83,7 @@ class Notify {
 
     addTimeout(id)
     {
-        setTimeout(() => Notify.removeMessage(id), Notify._timeout);
+        setTimeout(() => Notification.removeMessage(id), Notification._timeout);
     }
 
     msg(content, sClass, sIcon)
@@ -94,10 +104,10 @@ class Notify {
     }
 }
 
-document.body.addEventListener("meccg-notify-success", Notify.OnSuccess, false);
-document.body.addEventListener("meccg-notify-info", Notify.OnInfo, false);
-document.body.addEventListener("meccg-notify-error", Notify.OnError, false);
+document.body.addEventListener("meccg-notify-success", Notification.OnSuccess, false);
+document.body.addEventListener("meccg-notify-info", Notification.OnInfo, false);
+document.body.addEventListener("meccg-notify-error", Notification.OnError, false);
 
 (function() {
-    new Notify().init();
+    new Notification().init();
 })();
