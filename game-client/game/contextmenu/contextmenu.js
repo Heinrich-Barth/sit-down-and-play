@@ -435,8 +435,18 @@ const ContextMenu = {
         document.body.appendChild(pCont);
     },
 
+    insertCss : function()
+    {
+        const styleSheet = document.createElement("link")
+        styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("type", "text/css");
+        styleSheet.setAttribute("href", "/media/client/game/contextmenu/contextmenu.css");
+        document.head.appendChild(styleSheet);
+    },
+
     onReady : function()
     {
+        ContextMenu.insertCss();
         ContextMenu.createContextMenus();
         ContextMenu.insertContainers();
     }
