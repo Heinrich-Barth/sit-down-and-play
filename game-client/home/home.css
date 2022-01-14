@@ -1,0 +1,100 @@
+
+body {
+      
+  background: url("background.png"); 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+
+
+  line-height: 1.75em;
+  color: #fff;
+  letter-spacing: 0.025em;
+
+
+}
+
+body, p
+{
+  font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+  font-weight: 300;
+  font-size: 14.4px;
+  font-stretch: 100%;
+}
+
+.center { text-align: center;}
+
+input, button
+{
+  padding: 0.65em 0.75em;
+  border-radius: 5px;
+  outline: none;
+  display: inline;
+  text-decoration: none;
+}
+
+
+input[type="text"] 
+{
+  color: #39454b;
+  border: solid 2px #e5e6e7;
+  width: 250px; 
+}
+
+button 
+{
+  text-align: center;
+  background-color: #98c593;
+  color: #ffffff;
+  cursor: pointer;
+  border: 0;
+  line-height: 20px;
+}
+
+button:hover
+{
+  background-color: #65bd5b;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 300;
+  text-decoration: none;
+}
+
+h1, h2 {
+  text-transform: uppercase;
+  color: #ffa500;
+}
+
+p {
+  color: #fff;
+}
+
+.hidden {
+  display: none;
+}
+
+a, a:active, a:visited {
+  color: #ff0;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+a:hover { color: #ffa500; }
+
+#active_games table:nth-child(2)
+{
+  margin-top: 20px;
+}
+
+#active_games table { width: 100%; border-spacing: 0; }
+#active_games th, td { text-align: left;}
+#active_games tr td:first-child { width: 30px; text-align:right; padding-right: 10px;}
+#active_games tr th:last-child { width: 100%; max-width: 45%;}
+#active_games tbody tr:hover { background-color: rgba(255, 255, 255, 0.2);}
+#active_games a { display: block; }
+.join-game { text-align: center;}
