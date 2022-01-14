@@ -1,6 +1,8 @@
 
 const AddCardsInGame = {
 
+    _added : false,
+
     removeQuotes : function(sCode) 
     {
         if (sCode.indexOf('"') === -1)
@@ -62,9 +64,23 @@ const AddCardsInGame = {
         return null;
     },
 
+    insertCss : function()
+    {
+        if (!this._added)
+        {
+            const styleSheet = document.createElement("link")
+            styleSheet.setAttribute("rel", "stylesheet");
+            styleSheet.setAttribute("type", "text/css");
+            styleSheet.setAttribute("href", "/media/client/game/addcards/addcards.css");
+            document.head.appendChild(styleSheet);
+            this._added = true;
+        }
+    },
+
     onEvent : function()
     {
-        AddCardsInGame.createHtml();
+        this.insertCss();
+        this.createHtml();
 
         const elem = document.getElementById("add-cards-wrapper");
         elem.classList.remove("hide");
@@ -119,19 +135,19 @@ const AddCardsInGame = {
         button.setAttribute("type", "button");
         button.setAttribute("class", "button buttonCancel");
         button.setAttribute("value", "Cancel");
-        button.onclick = AddCardsInGame.onClose;
+        button.onclick = this.onClose;
         jTarget.appendChild(button);
 
         button = document.createElement("input");
         button.setAttribute("type", "button");
         button.setAttribute("class", "button buttonUpdate");
         button.setAttribute("value", "Add to sideboard");
-        button.onclick = AddCardsInGame.onAdd;
+        button.onclick = this.onAdd.bind(this);
         jTarget.appendChild(button);
 
-        jTarget.querySelector("textarea").onkeyup = AddCardsInGame.onOnChange;
+        jTarget.querySelector("textarea").onkeyup = this.onOnChange;
         const _div = div.querySelector(".config-panel-overlay");
-        _div.onclick = AddCardsInGame.onClose;
+        _div.onclick = this.onClose;
         
         document.body.appendChild(div);
     },
@@ -146,7 +162,4 @@ const AddCardsInGame = {
     }
 };
 
-
-
-
-document.body.addEventListener("meccg-cards-add-ingame", AddCardsInGame.onEvent, false);
+document.body.addEventListener("meccg-cards-add-ingame", AddCardsInGame.onEvent.bind(AddCardsInGame), false);
