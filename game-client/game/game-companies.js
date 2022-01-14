@@ -8,6 +8,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
     const CARDID_PREFIX = "ingamecard_";
 
+    const g_pPlayerSelector = new PlayerSelector();
+
     function createCompanyHtml(companyId, id)
     {
         const div = document.createElement("div");
