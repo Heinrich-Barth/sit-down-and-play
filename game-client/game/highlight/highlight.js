@@ -62,5 +62,13 @@ class HighlightElement {
     }
 }
 
+(function() {
+    const styleSheet = document.createElement("link")
+    styleSheet.setAttribute("rel", "stylesheet");
+    styleSheet.setAttribute("type", "text/css");
+    styleSheet.setAttribute("href", "/media/client/game/highlight/highlight.css");
+    document.head.appendChild(styleSheet);
+})();
+
 /* accept custom event and trigger css animation */
 document.body.addEventListener("meccg-highlight", (e) => new HighlightElement().init(e.detail), false);

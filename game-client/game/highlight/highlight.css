@@ -1,0 +1,38 @@
+.glowing-green
+{
+    animation-name: glowGreen;
+    animation-duration: 4s;
+}
+
+.card-highlight { animation: glowGreen linear 1s 2 forwards; }
+.glowing { animation: glowYellow 1s 5 forwards; }
+
+@keyframes glowGreen {
+    0% {
+      box-shadow: 0 0 10px -10px #099b04;
+    }
+    50% {
+        box-shadow: 0 0 10px 10px #099b04;
+    }
+    99% {
+        box-shadow: 0 0 10px -10px #099b04;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes glowYellow {
+    0% {
+        box-shadow: 0 0 10px -10px #ffa500;
+      }
+      50% {
+          box-shadow: 0 0 10px 10px #ffa500;
+      }
+      99% {
+          box-shadow: 0 0 10px -10px #ffa500;
+      }
+      100% {
+          box-shadow: none;
+      }
+}
