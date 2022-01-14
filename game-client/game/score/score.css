@@ -134,7 +134,7 @@
 
 .scoring-card select.req {
     border: 2px solid red;
-    animation: glowRed linear 1s 1 forwards; 
+    animation: scoreGlowRed linear 1s 1 forwards; 
 }
 
 .scoring-card .score-type 
@@ -157,7 +157,7 @@
 }
 
 
-@keyframes glowRed 
+@keyframes scoreGlowRed 
 {
     0% {
         box-shadow: 0 0 10px -10px #9b0404;
