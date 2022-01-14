@@ -3,10 +3,11 @@ const Navigation = {
 
     insertCss : function()
     {
-        var styleSheet = document.createElement("link")
+        const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("type", "text/css");
         styleSheet.setAttribute("href", "/media/client/navigation/navigation.css");
-        document.head.appendChild(styleSheet)
+        document.head.appendChild(styleSheet);
     },
 
     isGame : function()
