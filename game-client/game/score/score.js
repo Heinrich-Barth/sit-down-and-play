@@ -547,3 +547,12 @@ function createScoringApp(_CardList)
         }
     };
 }
+
+(function()
+{
+    const styleSheet = document.createElement("link")
+    styleSheet.setAttribute("rel", "stylesheet");
+    styleSheet.setAttribute("type", "text/css");
+    styleSheet.setAttribute("href", "/media/client/game/score/score.css");
+    document.head.appendChild(styleSheet);
+})();
