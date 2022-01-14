@@ -21,6 +21,13 @@ class ChatBox {
         if (document.getElementById("chatbox") !== null)
             return;
 
+
+        const styleSheet = document.createElement("link")
+        styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("type", "text/css");
+        styleSheet.setAttribute("href", "/media/client/game/chat/chat.css");
+        document.head.appendChild(styleSheet);
+
         const div = document.createElement("div");
         div.setAttribute("class", "chatbox blue-box");
         div.setAttribute("id", "chatbox");
@@ -59,7 +66,7 @@ class ChatBox {
 
     isValidInput(sText) 
     {
-        return sText.indexOf("<") === -1 && sText.indexOf(">") === -1;
+        return sText !== undefined && sText.indexOf("<") === -1 && sText.indexOf(">") === -1;
     }
 
     static ToggleView(e) 
@@ -71,15 +78,12 @@ class ChatBox {
             elem.classList.add("hidden");
     }
 
-    static OnChatMessageReceived(bIsMe, jData) 
+    static OnChatMessageReceived(e) 
     {
-        new ChatBox().message(MeccgPlayers.getPlayerDisplayName(jData.userid), jData.message);
+        new ChatBox().message(e.detail.name, e.detail.message);
     }
 }
 
 document.body.addEventListener("meccg-chat-view", ChatBox.ToggleView, false);
+document.body.addEventListener("meccg-chat-message", ChatBox.OnChatMessageReceived, false);
 document.body.addEventListener("meccg-init-ready", () => new ChatBox().create(), false);
-
-MeccgApi.addListener("/game/chat/message", ChatBox.OnChatMessageReceived);
-
-

@@ -1,0 +1,17 @@
+.chatbox {
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    width: 294px;
+    height: 53px;
+    font-size: 0.65em;
+    color: #fff;
+    display: block;
+    padding: 0.65em 0.75em;
+    outline: none;
+    overflow-y: auto;
+}
+.chatbox div { line-break: normal;  }
+.chatbox span { font-size: 0.8em; padding-right: 3px;}
+.chatbox b { color: #ffa500; }
+#chatbox.hide { visibility: hidden; }
