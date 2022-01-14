@@ -72,3 +72,11 @@ class Question {
         return this;
     }
 }
+
+(function(){
+    const styleSheet = document.createElement("link")
+    styleSheet.setAttribute("rel", "stylesheet");
+    styleSheet.setAttribute("type", "text/css");
+    styleSheet.setAttribute("href", "/media/client/question/question.css");
+    document.head.appendChild(styleSheet)
+})();

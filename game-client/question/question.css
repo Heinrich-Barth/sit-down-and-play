@@ -40,10 +40,10 @@
 }
 
 .question-question-icon {
-    background: url("/media/assets/images/icons/question-icon-question.png") 0 0 no-repeat;
+    background: url("question-icon-question.png") 0 0 no-repeat;
 }
 .question-voice-icon {
-    background: url("/media/assets/images/icons/question-icon-voice.png") 0 0 no-repeat;
+    background: url("question-icon-voice.png") 0 0 no-repeat;
 }
 .question-question {
     padding-left: 140px;
