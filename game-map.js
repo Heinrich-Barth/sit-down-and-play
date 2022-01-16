@@ -52,7 +52,8 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
      */
     SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/pages/map-underdeeps.html", SERVER.cacheResponseHeader));
     SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/pages/map-regions.html", SERVER.cacheResponseHeader));
-
+    SERVER.instance.use("/map/regions/edit", g_pExpress.static(__dirname + "/pages/map-regions-marking.html"));
+    
     /**
      * Provide the map data with all regions and sites for the map windows
      */

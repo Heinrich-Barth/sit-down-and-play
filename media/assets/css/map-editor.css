@@ -1,0 +1,31 @@
+
+.map-editor img.glow 
+{
+    opacity: 1 !important;
+    animation: glowRed linear 1s infinite forwards; 
+}
+
+@keyframes glowRed 
+{
+    0% {
+        box-shadow: 0 0 10px -10px #9b0404;
+    }
+    50% {
+        box-shadow: 0 0 10px 10px #9b0404;
+    }
+    99% {
+        box-shadow: 0 0 10px -10px #9b0404;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+
+.map-editor .config-wrapper-map { display: none; }
+.map-editor .mapchooser { top: 5px; }
+.map-editor .side-panel-sites-in-region { top: 80px; max-height: 90%;}
+.mapchooser select { width: 200px; display: inline; }
+.mapchooser span { margin-left: 10px; font-size: 1em; color: white }
+
+.mapchooser span:hover { color: #ffa500; cursor: pointer;}

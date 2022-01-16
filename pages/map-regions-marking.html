@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="robots" content="noindex, nofollow">
+        <title>Plan your movement</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="robots" content="noindex">
+        <link rel="stylesheet" href="/media/assets/css/tabletop.css" />
+        <link rel="stylesheet" href="/media/assets/css/bootstrap.css" />
+        <link rel="stylesheet" href="/media/assets/css/leaflet.css" />
+        <link rel="stylesheet" href="/media/assets/css/mapview.css?v=3" />
+        <link rel="stylesheet" href="/media/assets/css/map-editor.css" />
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
+        <script src="/media/assets/js/leaflet.js"></script>
+        <base target="_self">
+    </head>
+
+
+    <body class="bgblack preview-zoom">
+
+        <div id="map_view_layer_loading">
+            <p>...loading...</p>
+            <img src="/media/assets/images/loading.gif" width="100" alt="loading">
+        </div>
+
+        <div id="map_view_layer" class="map_view_layer hide">
+            <div class="mapview map">
+                <div class="map-title">
+                </div>
+                <div class="map-inline fl">
+                    <div id="map"></div>
+                
+                    <div id="site_movement" class="side_panel hide">
+                        <div class="fl padl10 blue-box card-box">
+                            <div id="site_movement_start_site" class="site_movement_start_site site-list fl"></div>
+                        </div>
+                        <div class="fl movement-icon">
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-compass.png" alt="move through" class="blue-box" title="through"></div>
+                        </div>
+                        <div class="fl padl10 blue-box card-box">
+                            <div id="site_movement_start_region" class="site_movement_start_region site-list fl"></div>
+                            <div id="site_movement_other_region" class="site_movement_other_region cursor-remove site-list fl"></div>
+                            <div id="site_movement_target_region" class="site_movement_target_region site-list fl"></div>
+                        </div>
+                        <div class="fl movement-icon">
+                            <div class="fl"><img src="/media/assets/images/icons/icon-mapview-start.png" alt="move to" class="blue-box" title="to"></div>
+                        </div>
+                        <div class="fl padl10 blue-box card-box">
+                            <div id="site_movement_target_site" class="site_movement_target_site site-list min-container"></div>
+                        </div>
+                        <div class="fl side_panel panel-buttons blue-box">
+                            <div class="cursor-pointer map-action-image fa fa-check-circle" id="movement_accept" title="accept movement"></div>
+                            <div class="cursor-pointer map-action-image fa fa-times-circle" id="movement_cancel" title="cancel movement"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <div class="side_panel side-panel-sites-in-region fr blue-box">
+                    <div id="found_sites" class="cursor-pointer"></div>
+                </div>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript" nonce="START"></script>
+
+        <script src="/media/client/game/libraries.js"></script>
+        <script src="/media/client/notification/notification.js?version=1"></script>
+        <script src="/media/client/game/card-preview.js"></script>
+        <script src="/media/client/game/cardlist.js"></script>
+        <script src="/media/client/preferences.js?version=1"></script>
+        <script src="/media/client/mapwindow/RegionMapPreferences.js?version=1"></script>
+        <script src="/media/client/mapwindow/MapView.js"></script>        
+        <script src="/media/client/mapwindow/MapViewSiteImages.js"></script>  
+        <script src="/media/client/mapwindow/MapViewRegions.js"></script>  
+        <script src="/media/client/mapwindow/MapViewPositioning.js"></script>  
+
+        <script src="/media/client/mapwindow/renderer.js?v=1"></script>
+        <script src="/media/client/onready.js"></script>
+    </body>
+</html>

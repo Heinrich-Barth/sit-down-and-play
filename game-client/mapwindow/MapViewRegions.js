@@ -107,6 +107,7 @@ class MapViewRegions extends MapView {
         this.showRegionMarker();
 
         document.body.addEventListener("meccg-map-search", this.onSearch.bind(this), false);
+        document.body.addEventListener("meccg-map-updatemarker", this.onUpdateMarker.bind(this), false);
 
         return true;
     }
@@ -149,12 +150,39 @@ class MapViewRegions extends MapView {
     showRegionMarker()
     {
         for (let key in this.jMarkerRegions)
+            this.showRegionMarkerElement(this.jMarkerRegions[key]);
+    }
+
+    showRegionMarkerElement(_marker)
+    {
+        _marker.on('click', this.onClickRegionMarker.bind(this));
+        _marker.addTo(this.getMapInstance());
+    }
+
+    onUpdateMarker(e)
+    {
+        const data = e.detail;
+        if (this.jMap[data.region] === undefined)
+            return;
+
+        let _marker = null;
+        if (!data.isSite)
         {
-            let _marker = this.jMarkerRegions[key];
-            
-            _marker.off('click', this.onClickRegionMarker.bind(this));
-            _marker.on('click', this.onClickRegionMarker.bind(this));
-            _marker.addTo(this.getMapInstance());
+            this.jMap[data.region].area = [data.lat, data.lng];
+            _marker = this.createMarker(data.region, "", data.lat, data.lng, null, false);
+        }
+        else if (this.jMap[data.region].sites[data.title] !== undefined)
+        {
+            this.jMap[data.region].sites[data.title].area = [data.lat, data.lng];
+            _marker = this.createMarker(data.region, data.title, data.lat, data.lng, this.jMap[data.region].sites[data.title], true);
+        }
+
+        if (!data.isSite)
+            this.showRegionMarkerElement(_marker);
+        else
+        {
+            this.activeRegion = "";
+            this.onRegionClick(data.region);
         }
     }
 
@@ -223,7 +251,6 @@ class MapViewRegions extends MapView {
         
         this.hideVisibleSites();
         this.showSitesInRegion(regionCode);
-        this.fireRegionClick(regionCode);
     }
 
     hideVisibleSites()
@@ -277,20 +304,20 @@ class MapViewRegions extends MapView {
     onSiteMarkerClick(e)
     {
         this.flyTo(e);
-        this.dispatchClickEvent(e.target.region, e.target.site);
+        this.dispatchClickEvent(e.target.region, e.target.site, false);
     }
 
-    dispatchClickEvent(region, site)
+    dispatchClickEvent(region, site, isRegion)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-map-show-images", { "detail":  {
             region: region,
-            site : site
+            site : site,
+            isRegion : isRegion
         } }));
     }
 
     getTargetMakerJson(region, site, jSiteCard)
     {
-        // region marker
         if (site === "" || jSiteCard === null)
             return this.jMarkerRegions;
 
@@ -315,8 +342,10 @@ class MapViewRegions extends MapView {
     {
         this.onRegionClick(e.target.region);
         this.flyTo(e);
-        this.dispatchClickEvent(e.target.region, e.target.site);
+        this.dispatchClickEvent(e.target.region, e.target.site, true);
     }
+
+
 
     createMarker(region, site, lat, lon, jSiteCard, isSiteCard)
     {              
@@ -420,7 +449,7 @@ class MapViewRegions extends MapView {
     {
         const _region = this.getRegionBySiteCode(sSite);
         if (_region !== null)
-            this.onRegionClick(_region.title);
+            this.fireRegionClick(_region.title);
     }
 
     /**

@@ -40,12 +40,22 @@ const MapInstanceRenderer = {
             return "";
     },
 
-    onInit: function (data, tapped) {
+    onInitEditor: function (data) {
+
+        MapInstanceRenderer._isMovementSelection = false;
+
+        new MapViewSiteImages(data).createInstance();
+
+        const pMap = new MapViewPositioning(data);
+        pMap.createInstance();
+    },
+
+    onInitDefault: function (data, tapped) {
         const sCode = MapInstanceRenderer.getStartCode();
         MapInstanceRenderer._isMovementSelection = sCode !== "";
 
         new MapViewRegionsFilterable().createInstance(data.map);
-        new MapViewSiteImages(data, tapped).createInstance();
+        new MapViewSiteImages(data).createInstance();
 
         const pMap = new MapViewRegions(data);
         pMap.createInstance(sCode);
@@ -56,6 +66,21 @@ const MapInstanceRenderer = {
         else
             new MapViewMovement(data, tapped).createInstance(sCode);
 
+        g_isInit = true;
+    },
+
+    isEditor: function()
+    {
+        return typeof MapViewPositioning !== "undefined";
+    },
+
+    onInit: function (data, tapped) {
+
+        if (!MapInstanceRenderer.isEditor())
+            MapInstanceRenderer.onInitDefault(data, tapped);
+        else
+            MapInstanceRenderer.onInitEditor(data);
+        
         g_isInit = true;
     }
 };

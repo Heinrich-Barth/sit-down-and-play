@@ -3,27 +3,24 @@
  */
  class MapViewSiteImages  {
 
-    constructor(jMap, jTappedSites)
+    constructor(jMap)
     {
         this.CardPreview = CardPreview;
         this.CardList = new CardList(jMap.images, []);
 
         this._temp = null;
         this.jMap = jMap.map === undefined ? {} : jMap.map;
-        this.jMapSiteRegion = jMap.mapregions === undefined ? {} : jMap.mapregions;
-
-        if (jTappedSites !== undefined)
-            this.jTappedSites = jTappedSites;
     }
 
-    createEntry(jEntry, isSite, region)
+    createEntry(jEntry, isSite, region, siteSitle)
     {
         this._temp.push({ 
             set_code : jEntry["set_code"], 
             image : jEntry["image"], 
             code: jEntry["code"], 
             site: isSite === true, 
-            region: region
+            region: region,
+            siteSitle : siteSitle === undefined ? "" : siteSitle
         });
     }
 
@@ -62,19 +59,14 @@
 
     onSearch(e)
     {
-        const text = e.detail.text;
-
-        if(text === "")
-            return;
-        else
-            console.log("todo");
+        const region = e.detail.region === undefined ? "" : e.detail.region;
+        const text = e.detail.text === undefined ? "" : e.detail.text;
+        
+        this.showImages(region, text);
     }
 
-    onShowImages(e)
+    showImages(region, site)
     {
-        const region = e.detail.region === undefined ? "" : e.detail.region;
-        const site = e.detail.site === undefined ? "" : e.detail.site;
-
         if (region === "" && site === "")
             return;
         
@@ -88,28 +80,38 @@
         for (let key in jRegion.sites)
         {
             if (site === "" || site === key)
-                this.getSiteImages(jRegion.sites[key], showAlignment, region);
+                this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
         }
         
         this.fillSiteList();
         this.lazyloadImages();
+
+        document.body.dispatchEvent(new CustomEvent("meccg-map-show-images-done", { "detail":  "found_sites" }));
     }
 
-    createImage(code, isSite, isTapped, region)
+    onShowImages(e)
+    {
+        const region = e.detail.region === undefined ? "" : e.detail.region;
+        const site = e.detail.site === undefined ? "" : e.detail.site;
+
+        this.showImages(region, site);
+    }
+
+    createImage(code, isSite, region, siteTitle)
     {
         const sType = isSite ? "site" : "location";
-        const sTapped = isTapped !== undefined && isTapped ? 'site-is-tapped' : "site-image";
-        const sTitle = MapViewSiteImages.removeQuotes(code) + " (" + sType + ")";
+        const sTitle = siteTitle === "" ? region : siteTitle;
         const sUrl = isSite ? this.CardList.getImageSite(code) : this.CardList.getImageRegion(code);
         
         const img = document.createElement("img");
         img.setAttribute("decoding", "async");
-        img.setAttribute("class", sTapped);
+        img.setAttribute("class", "site-image");
         img.setAttribute("data-src", sUrl);
         img.setAttribute("src", MapViewSiteImages.getCardBacksideImageUrl());
         img.setAttribute("data-code", code);
         img.setAttribute("data-location-type", sType);
         img.setAttribute("title", sTitle);
+        img.setAttribute("data-site", sTitle)
         img.setAttribute("data-region", region)
         img.onclick = this.onClickCard.bind(this);
         return img;
@@ -122,12 +124,13 @@
         const code = elem.getAttribute("data-code");
         const isSite = "site" === elem.getAttribute("data-location-type");
         const regionName = elem.getAttribute("data-region");
-
+        const title = elem.getAttribute("data-site");
         document.body.dispatchEvent(new CustomEvent("meccg-map-siteclick", { "detail":  {
             region: regionName,
             code: code,
             imgage: image,
-            isSite : isSite
+            isSite : isSite,
+            title : title
         } }));
     }
 
@@ -171,7 +174,7 @@
             this.createEntry(j, false, region);
     }
 
-    getSiteImages(j, showAlignment, region)
+    getSiteImages(j, showAlignment, region, site)
     {
         this.verifyTempArray();
 
@@ -179,19 +182,19 @@
             showAlignment = this.createSearchLimitations();
         
         if (typeof j.hero !== "undefined" && showAlignment.hero)
-            this.createEntry(j.hero, true, region);
+            this.createEntry(j.hero, true, region, site);
 
         if (typeof j.minion !== "undefined" && showAlignment.minion)
-            this.createEntry(j.minion, true, region);
+            this.createEntry(j.minion, true, region, site);
 
         if (typeof j.balrog !== "undefined" && showAlignment.balrog)
-            this.createEntry(j.balrog, true, region);
+            this.createEntry(j.balrog, true, region, site);
         
         const keys = MapViewSiteImages.getAdditionalAlignKeys();
         for(let key of keys)
         {
             if (typeof j[key] !== "undefined" && showAlignment[key])
-                this.createEntry(j[key], true, region);
+                this.createEntry(j[key], true, region, site);
         }
     }
 
@@ -221,11 +224,6 @@
         setTimeout(() => this.lazyloadImageClasses("img.site-is-tapped"), 50);
     }
 
-    isSiteTapped(code)
-    {
-        return this.jTappedSites[code] !== undefined;
-    }
-
     destroy()
     {
         DomUtils.removeAllChildNodes(document.getElementById("found_sites"));
@@ -241,6 +239,6 @@
         
         const jTarget = document.getElementById("found_sites");
         for (let _card of res)
-            jTarget.appendChild(this.createImage(_card.code, _card.site, this.isSiteTapped(_card.code), _card.region));
+            jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle));
     }
 }
