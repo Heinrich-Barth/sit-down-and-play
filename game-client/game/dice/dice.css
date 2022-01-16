@@ -9,7 +9,7 @@
 #dice_roll .dice-content { 
     position:  relative;
     text-align: center; 
-    color: white; padding: 5px; font-size: 0.9em; margin-bottom: 10px; display: inline-block; 
+    color: white; padding: 5px; font-size: 0.9em; margin-bottom: 10px; display: block; 
 }
 #dice_roll span.who  { color: #ffa500; }
 #dice_roll span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
