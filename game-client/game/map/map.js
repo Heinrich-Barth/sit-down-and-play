@@ -43,11 +43,11 @@ const MapWindow = {
     {
         document.body.classList.remove("on-show-map-window");
 
-        let pMap = document.getElementById("map-window");
+        const pMap = document.getElementById("map-window");
         if (!pMap.classList.contains("hide"))
             pMap.classList.add("hide");
 
-        let sCompany = document.getElementById("map-iframe").getAttribute("data-company") || "";
+        const sCompany = document.getElementById("map-iframe").getAttribute("data-company") || "";
         DomUtils.removeAllChildNodes(pMap);
         return sCompany;
     },
@@ -66,6 +66,16 @@ const MapWindow = {
         return false;
     },
 
+    insertCss()
+    {
+        const styleSheet = document.createElement("link")
+        styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("type", "text/css");
+        styleSheet.setAttribute("href", "/media/client/game/map/map.css");
+        document.head.appendChild(styleSheet);
+    },
+
+
     /**
      * Create the map container and assign the custom event listener, but only if necessary
      * (avoids duplicate creation and assignment)
@@ -75,6 +85,8 @@ const MapWindow = {
         let elem = document.getElementById("map-window");
         if (elem === null)
         {
+            this.insertCss();
+
             const div = document.createElement("div");
             div.setAttribute("id", "map-window");
             div.setAttribute("class", "map-window hide");
@@ -176,4 +188,4 @@ const MapWindow = {
 };
 
 document.body.addEventListener("meccg-map-show", MapWindow.onShowMapMessageEvent, false);
-document.body.addEventListener("meccg-init-ready", MapWindow.init, false);
+document.body.addEventListener("meccg-init-ready", MapWindow.init.bind(MapWindow), false);
