@@ -246,32 +246,34 @@ const DropFunctions = {
     
     dropOnAddNew : function( event, ui ) 
     {
-        if (ui.draggable.attr("data-card-type") !== "character")
-            return false;
-        
-        const uuid = ui.draggable.attr("data-uuid");
-        const source = ui.draggable.attr("data-location");
-        
-        if (source === "hand")
-            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+        if (ui.draggable.attr("data-card-type") === "character")
+        {
+            const uuid = ui.draggable.attr("data-uuid");
+            const source = ui.draggable.attr("data-location");
+            
+            if (source === "hand")
+                CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
 
-        HandCardsDraggable.onCreateNewCompany(uuid, source);
+            HandCardsDraggable.onCreateNewCompany(uuid, source);
+        }
+
         return false;
     },
     
     dropOnAddCompanyCharacter :  function( event, ui, companyUuid ) 
     {
         const pCard = ui.draggable[0];
-        if (pCard.getAttribute("data-card-type") !== "character")
-            return false;
+        if (pCard.getAttribute("data-card-type") === "character")
+        {
+            const source = pCard.getAttribute("data-location");
+            const uuid = pCard.getAttribute("data-uuid");
+            if (source === "hand")
+                DomUtils.removeNode(pCard);
+    
+            HandCardsDraggable.onJoinCompany(uuid, source, companyUuid);
+            DropFunctions.getApi().send("/game/draw/company", companyUuid);
+        }
 
-        const source = pCard.getAttribute("data-location");
-        const uuid = pCard.getAttribute("data-uuid");
-        if (source === "hand")
-            DomUtils.removeNode(pCard);
-
-        HandCardsDraggable.onJoinCompany(uuid, source, companyUuid);
-        DropFunctions.getApi().send("/game/draw/company", companyUuid);
         return false;
     }
 };
@@ -721,16 +723,7 @@ const HandCardsDraggable = {
      */
     onAddResourcesToCharacter: function (uuid, elem, bFromHand)
     {
-        if (uuid === "")
-            return false;
-
-        const pHost = DomUtils.findParentByClass(elem, "company-character");
-        const company = DomUtils.findParentByClass(pHost, "company");
-        const characterUuid = pHost === null ? null : pHost.getAttribute("data-character-uuid");
-        const companyId = company === null ? null : company.getAttribute("data-company-id");
-
-        if (characterUuid !== null && companyId !== null)
-            HandCardsDraggable.getApi().send("/game/character/host-card", {uuid: uuid, companyId: companyId, characterUuid: characterUuid, fromHand: bFromHand}, true);
+        HandCardsDraggable.onAddHazardsToCharacter(uuid, elem, bFromHand);
     },
 
     /**
