@@ -1,8 +1,8 @@
 
 const Lobby = {
 
-    _room : g_sRoom,
-    _token : g_sLobbyToken,  
+    _room : "",
+    _token : "",
 
     _hide : function()
     {
@@ -134,31 +134,52 @@ const Lobby = {
         document.getElementById("lobby").classList.remove("hide");
     },
 
-    init : function()
+    insertCss()
     {
-        if (Lobby._room === "" || Lobby._token === "" || document.getElementById("lobby-wrapper") !== null)
+        const styleSheet = document.createElement("link")
+        styleSheet.setAttribute("rel", "stylesheet");
+        styleSheet.setAttribute("type", "text/css");
+        styleSheet.setAttribute("href", "/media/client/game/lobby/lobby.css");
+        document.head.appendChild(styleSheet);
+    },
+
+    init : function(sRoom, sLobbyToken)
+    {
+        if (sRoom === "" || sRoom === undefined || sLobbyToken === "" || sLobbyToken === undefined || document.getElementById("lobby-wrapper") !== null)
             return;
+
+        this.insertCss();
+
+        Lobby._room = sRoom;
+        Lobby._token = sLobbyToken;
 
         let div = document.createElement("div");
         div.setAttribute("id", "lobby-wrapper");
         div.setAttribute("class", "lobby-wrapper blue-box cursor-pointer");
-        div.innerHTML =`<div class="icons" id=""><i class="fa fa-user-circle" aria-hidden="true"></i></div>`;
+        div.setAttribute("title", "Waiting room / grant or deny access");
+        div.innerHTML =`<div class="icons"><i class="fa fa-user-circle" aria-hidden="true"></i></div>`;
+        div.onclick = Lobby._loadList;
         document.body.appendChild(div);
 
         div = document.createElement("div");
         div.setAttribute("id", "lobby");
         div.setAttribute("class", "hide");
-        div.innerHTML = `<div class="menu-overlay lobby-overlay"></div>
-                        <div class="lobby-requests blue-box">
-                            <div class="lobby-list"></div>
-                            <div class="player-list"></div>
-                        </div>`;
+
+        let _overlay = document.createElement("div");
+        _overlay.setAttribute("class", "menu-overlay lobby-overlay");
+        _overlay.onclick = Lobby._hide;
+
+        let _req = document.createElement("div");
+        _req.setAttribute("class", "lobby-requests blue-box");
+        _req.innerHTML = `<div class="lobby-list"></div><div class="player-list"></div>`;
+        
+        div.appendChild(_overlay);
+        div.appendChild(_req);
+
         document.body.appendChild(div);
 
-        document.getElementById("lobby").querySelector(".lobby-overlay").onclick = Lobby._hide;
-        document.getElementById("lobby-wrapper").onclick = Lobby._loadList;
         document.getElementById("interface").classList.add("is-admin");
     },
 };
 
-(function() { Lobby.init(); })();
+setTimeout(() => Lobby.init(g_sRoom, g_sLobbyToken), 200);
