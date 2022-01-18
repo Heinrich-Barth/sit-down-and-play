@@ -145,10 +145,11 @@ const Lobby = {
 
     init : function(sRoom, sLobbyToken)
     {
+        if (document.getElementById("lobby-wrapper") === null)
+            this.insertCss();
+
         if (sRoom === "" || sRoom === undefined || sLobbyToken === "" || sLobbyToken === undefined || document.getElementById("lobby-wrapper") !== null)
             return;
-
-        this.insertCss();
 
         Lobby._room = sRoom;
         Lobby._token = sLobbyToken;

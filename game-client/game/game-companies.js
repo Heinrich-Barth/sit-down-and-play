@@ -115,7 +115,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         
 
         const pTemp = document.createElement("div");
-        pTemp.setAttribute("class", "company-character-influenced pad10");
+        pTemp.setAttribute("class", "company-character-influenced");
 
         div.appendChild(pCharacterContainer);
         div.appendChild(pTemp);      
@@ -169,9 +169,15 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         pDiv.setAttribute("data-card-code", CardList.getSafeCode(card.code));
         pDiv.setAttribute("data-card-type", card.type);
         pDiv.setAttribute("draggable", "true");
-        pDiv.setAttribute("data-revealed", card.revealed === true ? "true" : "false");
-        pDiv.appendChild(pImage);
+        pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
 
+        if (card.token !== undefined && card.token > 0)
+        {
+            pDiv.setAttribute("data-token", card.token);
+            pDiv.setAttribute("title", "Tokens: " + card.token);
+        }       
+
+        pDiv.appendChild(pImage);
         return pDiv;
     }
 
@@ -299,6 +305,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                     pContainerResources.classList.add("hosts_nothing");
                 else
                     pContainerResources.classList.remove("hosts_nothing");
+
+                pContainerResources.setAttribute("data-stack-size", nAdded);
 
                 this.addInfluenced(jsonCharacter.influenced, pCharacter.querySelector(".company-character-influenced"));
                 

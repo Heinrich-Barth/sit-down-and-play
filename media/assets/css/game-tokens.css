@@ -1,0 +1,24 @@
+div.card[data-token]:after {
+    position: absolute;
+    left: 2px;
+    bottom: 5px;
+    padding: 2px;
+    font-size: 0.8em;
+    background: #ffa500;
+    border-radius: 15px;
+    line-height: 1em;
+    content: "10+";
+}
+
+.area-opponent div.card[data-token] { position: relative; }
+.area-opponent div.card[data-token]:after { transform: translateX(50%); }
+div.card[data-token="1"]:after { content: "1"; }
+div.card[data-token="2"]:after { content: "2"; }
+div.card[data-token="3"]:after { content: "3"; }
+div.card[data-token="4"]:after { content: "4"; }
+div.card[data-token="5"]:after { content: "5"; }
+div.card[data-token="6"]:after { content: "6"; }
+div.card[data-token="7"]:after { content: "7"; }
+div.card[data-token="8"]:after { content: "8"; }
+div.card[data-token="9"]:after { content: "9"; }
+div.card[data-token="10"]:after { content: "10"; }

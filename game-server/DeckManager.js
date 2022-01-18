@@ -357,6 +357,30 @@ class DeckManager {
             return this._cardMap[uuid];
     }
 
+    updateToken(uuid, bAdd)
+    {
+        const card = this.getFullPlayerCard(uuid);
+        if (card !== null)
+        {
+            if (card.token === undefined)
+            {
+                if (bAdd)
+                    card.token = 1;
+            }
+            else
+            {
+                if (bAdd)
+                    card.token++;
+                else if (card.token > 0)
+                    card.token--;
+            }
+
+            return card.token;
+        }
+        else
+            return -1;
+    }
+
     dumpCards(playerId)
     {
         /** deprecated */

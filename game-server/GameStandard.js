@@ -37,7 +37,8 @@ class GameStandard extends GamePlayers
 
         this.getMeccgApi().addListener("/game/save", this.globalSaveGame.bind(this));
         this.getMeccgApi().addListener("/game/restore", this.globalRestoreGame.bind(this));
-
+        this.getMeccgApi().addListener("/game/card/token", this.onCardToken.bind(this));
+        
         this.getMeccgApi().addListener("/game/dices/roll", this.rollDices.bind(this));
         this.getMeccgApi().addListener("/game/dices/set", this.setDices.bind(this));
 
@@ -181,14 +182,14 @@ class GameStandard extends GamePlayers
             {
                 let card = this.getPlayboardManager().GetCardByUuid(_elem);
                 if (card !== null)
-                    _dataTarget.stage_resources.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
+                    _dataTarget.stage_resources.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner, token: card.token === undefined ? 0 : card.token});
             }
     
             for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, false))
             {
                 let card = this.getPlayboardManager().GetCardByUuid(_elem);
                 if (card !== null)
-                    _dataTarget.stage_hazards.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner});
+                    _dataTarget.stage_hazards.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner, token: card.token === undefined ? 0 : card.token});
             }
 
             this.updateHandCountersPlayer(_playerId);
@@ -467,6 +468,16 @@ class GameStandard extends GamePlayers
         this.publishToPlayers("/game/card/remove", userid, list);
         this.publishChat(userid, "Moved " + list.length + " card(s) to " + obj.target);
         this.onRedrawCompany(userid, affectedCompanyUuid);
+    }
+
+    onCardToken(userid, socket, data)
+    {
+        const nCount = data.uuid !== undefined ? this.getPlayboardManager().getDecks().updateToken(data.uuid, data.add !== false) : 0;
+        if (nCount != -1)
+        {
+            this.publishToPlayers("/game/card/token", userid, {uuid: data.uuid, count: nCount });
+            this.publishChat(userid, "updates token of " + data.code + " to " + nCount);
+        }
     }
 
     onCardInHand(userid, socket)

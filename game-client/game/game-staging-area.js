@@ -23,7 +23,7 @@ class StagingArea
             return "";
     }
 
-    createNewCard(uuid, code, type, id, cssState, turn)
+    createNewCard(uuid, code, type, id, cssState, turn, token)
     {
         if (uuid === "")
             return null;
@@ -40,6 +40,9 @@ class StagingArea
         jDiv.setAttribute("draggable", "true");
         jDiv.setAttribute("data-revealed", true);
         jDiv.setAttribute("title", safeCode + ", since turn " + turn);
+
+        if (token !== undefined && token > 0)
+            jDiv.setAttribute("data-token", token);
 
         let jImage = document.createElement("img");
         jImage.setAttribute("class", "card-icon");
@@ -80,7 +83,7 @@ class StagingArea
             img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image"));
     }
 
-    insertNewCard(uuid, isPlayer, code, type, state, turn)
+    insertNewCard(uuid, isPlayer, code, type, state, turn, token)
     {
         let isResource;
         if (type === "hazard")
@@ -92,7 +95,7 @@ class StagingArea
         
         const id = "stagecard_" + uuid;
         const css = this.getCardStateCss(state);
-        const res = this.createNewCard(uuid, code, type, id, css, turn);
+        const res = this.createNewCard(uuid, code, type, id, css, turn, token);
         if (res === null)
             return "";
 
@@ -109,20 +112,23 @@ class StagingArea
      * @param {String} code
      * @param {String} type
      * @param {String} state
+     * @param {Boolean} revealed
+     * @param {Number} turn
+     * @param {Number} token
      * @returns {String} ID of card container
      */
-    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn)
+    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn, token)
     {
         if (uuid === "" || code === "" || type === "")
             return "";
 
-        const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn);
+        const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn, token);
         if (id === "")
             return "";
     
         this.CardPreview.addHover(id, true, bIsMe);
         
-        if (revealed)
+        if (revealed === undefined || revealed !== false)
             this.revealCard(id);
 
         this.markCard(id);

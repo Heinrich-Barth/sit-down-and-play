@@ -188,13 +188,13 @@ const ContextMenu = {
             e.preventDefault();
             e.stopPropagation();
 
-            if (e.target === null)
-                return false;
+            if (e.target !== null)
+            {
+                const sCode = ContextMenu._getCardCode(e.target);
+                const sUuid = ContextMenu.getAttribute(e.target, "data-uuid");
+                ContextMenu.show(e, sUuid, sCode, "", "card");
+            }
 
-            let sCode = ContextMenu._getCardCode(e.target);
-            let sUuid = ContextMenu.getAttribute(e.target, "data-uuid");
-
-            ContextMenu.show(e, sUuid, sCode, "", "card");
             return false;
         },
 
@@ -203,16 +203,16 @@ const ContextMenu = {
             e.preventDefault();
             e.stopPropagation();
 
-            if (e.target === null)
-                return false;
-            
-            let sCode = e.target.getAttribute("data-context-code");
-            let sCompany = e.target.getAttribute("data-contextmenu-site-arrive-company");
-            if (sCompany === null)
-                sCompany = "";
-
-            if (typeof sCode !== "undefined" && sCode !== null && sCode !== "")
-                ContextMenu.show(e, "_site", sCode, sCompany, "location");
+            if (e.target !== null)
+            {
+                const sCode = e.target.getAttribute("data-context-code");
+                let sCompany = e.target.getAttribute("data-contextmenu-site-arrive-company");
+                if (sCompany === null)
+                    sCompany = "";
+    
+                if (typeof sCode !== "undefined" && sCode !== null && sCode !== "")
+                    ContextMenu.show(e, "_site", sCode, sCompany, "location");
+            }
             
             return false;
         },
@@ -288,8 +288,29 @@ const ContextMenu = {
         MeccgApi.send("/game/card/state/glow", {uuid : uuid, code: code });  
     },
 
+    onToken : function(bAdd)
+    {
+        const pMenu = document.getElementById("contextmenu");
+        if (pMenu !== null)
+        {
+            const uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
+            const code = ContextMenu.getAttribute(pMenu, "data-card-code");
+            MeccgApi.send("/game/card/token", {uuid : uuid, code: code, add: bAdd !== false });
+        }
+    },
+
     callbacks : {
         empty : function() { /** fallback */ },
+
+        tokenRemove : function(e)
+        {
+            ContextMenu.onToken(false);
+        },
+
+        tokenAdd : function(e)
+        {
+            ContextMenu.onToken(true);
+        },
 
         generic : function(e)
         {
@@ -401,9 +422,11 @@ const ContextMenu = {
         this.addItem("rot270", "Rotate 270°", "fa-arrow-circle-left", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("glow_action", "Highlight card (5s)", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow, "CTRL+Doubleclick to untap");
         this.addItem("flipcard", "Flip Card", "fa-eye-slash", "context-menu-item-flipcard context-menu-item-generic", ContextMenu.callbacks.flip);
+        this.addItem("token_add", "Add token", "fa-plus", "context-menu-item-generic", ContextMenu.callbacks.tokenAdd);
+        this.addItem("token_remove", "Remove token", "fa-minus", "context-menu-item-generic", ContextMenu.callbacks.tokenRemove);
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive, "Doubleclick on opponents target site to indicate NO MORE HAZARDS");
 
-        this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard"];
+        this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive"];
         this.data.types["arrive"] = ["arrive"];
 
@@ -427,7 +450,7 @@ const ContextMenu = {
         div.onclick = ContextMenu.callbacks.hide;
 
         const nav = document.createElement("nav");
-        nav.setAttribute("class", "context-menu blue-box");
+        nav.setAttribute("class", "context-menu smallCaps blue-box");
 
         pCont.appendChild(div);
         pCont.appendChild(nav);
