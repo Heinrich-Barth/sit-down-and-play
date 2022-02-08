@@ -338,6 +338,28 @@ const SCORING = {
         if (sId1 !== null && sId1 !== "")
             document.getElementById(sId1).dispatchEvent(new Event("click"));
     },
+
+    _getTargetCell(jTable, type, player)
+    {
+        if (type === undefined || player === undefined || type === "" || player === "" || player === null || type === null)
+            return null;
+    
+        const elem = jTable.querySelector('tr[data-score-type="'  + type + '"]');
+        if (elem === null)
+        {
+            console.log("Cannot obtain cell of type " + type);
+            return null;
+        }
+        
+        const cell = elem.querySelector('td[data-player="'+player+'"]');
+        if (cell === null)
+        {
+            console.log("Cannot obtain cell of type " + type + " for player " + player);
+            return null;
+        }
+        else
+            return cell;
+    },
     
     _showScoreSheet : function(jData, bAllowUpdate)
     {
@@ -356,12 +378,16 @@ const SCORING = {
             for (let type in jData[key])
             {
                 points = jData[key][type];
-                _elem = jTable.querySelector('tr[data-score-type="'  + type + '"] td[data-player="'+player+'"]');
+                _elem = this._getTargetCell(jTable, type, player);
+                if (_elem === null)
+                    continue;
+
                 if (player === "self")
                     _elem = _elem.querySelector("span");
                 
-                _elem.innerHTML = points;
-                
+                if (_elem !== null)
+                    _elem.innerText = points;
+
                 if (type !== "stage")
                     total += points;
             }
