@@ -1,0 +1,1370 @@
+{
+    "players": {
+        "4a0f0e50-fb72-4607-95b8-618cf8ea90c2": "Phil"
+    },
+    "date": "2022-02-09T20:41:23.552Z",
+    "arda": false,
+    "data": {
+        "meta": {
+            "phase": "start",
+            "admin": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+            "arda": false,
+            "players": {
+                "ids": [
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2"
+                ],
+                "names": {
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2": "Phil"
+                },
+                "current": 0,
+                "turn": 1
+            }
+        },
+        "playboard": {
+            "counter": 1,
+            "decks": {
+                "admin": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                "uuid_count": 0,
+                "cardMap": {
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d1": {
+                        "code": "Bow of Yew (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d1",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d2": {
+                        "code": "Cram (TD)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d2",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d3": {
+                        "code": "Shield of Iron-bound Ash (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d3",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d4": {
+                        "code": "Elladan (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d4",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d5": {
+                        "code": "Elrond (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d5",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d6": {
+                        "code": "Erkenbrand (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d6",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7": {
+                        "code": "Orophin (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d8": {
+                        "code": "Alatar [H] (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d8",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d9": {
+                        "code": "Alatar [H] (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d9",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d10": {
+                        "code": "Alatar [H] (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d10",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d11": {
+                        "code": "Alatar [H] (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d11",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d12": {
+                        "code": "Beretar (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d12",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d13": {
+                        "code": "Bofur (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d13",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d14": {
+                        "code": "Balin [H] (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d14",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d15": {
+                        "code": "Haldir (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d15",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d16": {
+                        "code": "Rúmil (FB)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d16",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d17": {
+                        "code": "Elrohir (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d17",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d18": {
+                        "code": "Gildor Inglorion (TW)",
+                        "type": "character",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d18",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d19": {
+                        "code": "Goldberry (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d19",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d20": {
+                        "code": "Meneldor (RS)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d20",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d21": {
+                        "code": "Rangers of the North (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d21",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d22": {
+                        "code": "Orcrist (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d22",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d23": {
+                        "code": "The Mithril-coat [H] (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d23",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d24": {
+                        "code": "Horse Mane's Helm (TI)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d24",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d25": {
+                        "code": "Sword of Gondolin (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d25",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d26": {
+                        "code": "Crown of Flowers (DM)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d26",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d27": {
+                        "code": "Elven Blade (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d27",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d28": {
+                        "code": "Gates of Morning (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d28",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d29": {
+                        "code": "Gates of Morning (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d29",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d30": {
+                        "code": "Gates of Morning (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d30",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d31": {
+                        "code": "Rescue Prisoners (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d31",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d32": {
+                        "code": "Rescue Prisoners (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d32",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d33": {
+                        "code": "Rescue Prisoners (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d33",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d34": {
+                        "code": "Safe from the Shadow (AS)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d34",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d35": {
+                        "code": "The Windlord Found Me (DM)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d35",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d36": {
+                        "code": "Dark Quarrels (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d36",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d37": {
+                        "code": "Dodge (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d37",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d38": {
+                        "code": "Dodge (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d38",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d39": {
+                        "code": "Escape (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d39",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d40": {
+                        "code": "Lock Nor Bar May Hinder (DF)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d40",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d41": {
+                        "code": "Many Turns and Doublings (TD)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d41",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d42": {
+                        "code": "Many Turns and Doublings (TD)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d42",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d43": {
+                        "code": "Many Turns and Doublings (TD)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d43",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d44": {
+                        "code": "Muster (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d44",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d45": {
+                        "code": "Risky Blow (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d45",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d46": {
+                        "code": "Risky Blow (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d46",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d47": {
+                        "code": "Risky Blow (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d47",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d48": {
+                        "code": "Shimmer of Hope (DF)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d48",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d49": {
+                        "code": "The Cock Crows (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d49",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d50": {
+                        "code": "The Cock Crows (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d50",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d51": {
+                        "code": "Vilya (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d51",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d52": {
+                        "code": "Book of Mazarbul (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d52",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d53": {
+                        "code": "Barrow-wight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d53",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d54": {
+                        "code": "Barrow-wight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d54",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d55": {
+                        "code": "Barrow-wight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d55",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d56": {
+                        "code": "Chill Douser (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d56",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d57": {
+                        "code": "Chill Douser (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d57",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d58": {
+                        "code": "Chill Douser (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d58",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d59": {
+                        "code": "Corpse-candle (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d59",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d60": {
+                        "code": "Corpse-candle (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d60",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d61": {
+                        "code": "Corpse-candle (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d61",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d62": {
+                        "code": "Ibûn (DF)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d62",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d63": {
+                        "code": "Slayer (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d63",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d64": {
+                        "code": "Slayer (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d64",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d65": {
+                        "code": "Slayer (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d65",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d66": {
+                        "code": "Stirring Bones (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d66",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d67": {
+                        "code": "Stirring Bones (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d67",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d68": {
+                        "code": "Ta-Fa-Lisch (DF)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d68",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d69": {
+                        "code": "All Dead, All Rotten (TI)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d69",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d70": {
+                        "code": "Alone and Unadvised (AS)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d70",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d71": {
+                        "code": "Alone and Unadvised (AS)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d71",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d72": {
+                        "code": "Alone and Unadvised (AS)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d72",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d73": {
+                        "code": "Covetous Thoughts (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d73",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d74": {
+                        "code": "Lure of Expedience (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d74",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d75": {
+                        "code": "Lure of Expedience (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d75",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d76": {
+                        "code": "Lure of Expedience (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d76",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d77": {
+                        "code": "Lure of Nature (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d77",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d78": {
+                        "code": "Lure of Nature (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d78",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d79": {
+                        "code": "Lure of Nature (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d79",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d80": {
+                        "code": "The Moon Is Dead (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d80",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d81": {
+                        "code": "The Moon Is Dead (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d81",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d82": {
+                        "code": "The Moon Is Dead (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d82",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d83": {
+                        "code": "Dragon-sickness (TD)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d83",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d84": {
+                        "code": "Haunted Place (TI)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d84",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d85": {
+                        "code": "Twilight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d85",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d86": {
+                        "code": "Twilight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d86",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d87": {
+                        "code": "Ambusher (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d87",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d88": {
+                        "code": "Corsairs of Umbar (TW)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d88",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d89": {
+                        "code": "Corsairs of Umbar (TW)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d89",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d90": {
+                        "code": "Dawn Comes Early (DF)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d90",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d91": {
+                        "code": "Foolish Words (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d91",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d92": {
+                        "code": "Foolish Words (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d92",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d93": {
+                        "code": "Ghosts (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d93",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d94": {
+                        "code": "Ghosts (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d94",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d95": {
+                        "code": "Out of Practice (DF)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d95",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d96": {
+                        "code": "Seized by Terror (DM)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d96",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d97": {
+                        "code": "The Oldest (FB)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d97",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d98": {
+                        "code": "The Ring's Betrayal (TW)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d98",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d99": {
+                        "code": "Twilight (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d99",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d100": {
+                        "code": "Veils Flung Away (LE)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d100",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d101": {
+                        "code": "Wielder's Curse (GW)",
+                        "type": "hazard",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d101",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d102": {
+                        "code": "Asfaloth (RS)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d102",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d103": {
+                        "code": "Banishment (NE)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d103",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d104": {
+                        "code": "Beyond All Towers Strong and High (WR)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d104",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d105": {
+                        "code": "Blue Mountain Dwarves (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d105",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d106": {
+                        "code": "Bow of Yew (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d106",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d107": {
+                        "code": "Dark Quarrels (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d107",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d108": {
+                        "code": "Dark Quarrels (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d108",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d109": {
+                        "code": "Elf-friend (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d109",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d110": {
+                        "code": "Forewarned is Forearmed (DM)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d110",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d111": {
+                        "code": "Great-shield of Rohan (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d111",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d112": {
+                        "code": "Healing Song (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d112",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d113": {
+                        "code": "Marvels Told (TD)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d113",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d114": {
+                        "code": "Of the Green-elves (FB)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d114",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d115": {
+                        "code": "Promptings of Wisdom (WH)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d115",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    },
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d116": {
+                        "code": "The Cock Crows (TW)",
+                        "type": "resource",
+                        "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d116",
+                        "state": 0,
+                        "owner": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                        "revealed": true,
+                        "agent": false,
+                        "turn": 0
+                    }
+                },
+                "siteMap": {},
+                "deck": {
+                    "4a0f0e50-fb72-4607-95b8-618cf8ea90c2": {
+                        "ishost": true,
+                        "handCards": [
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d1",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d2",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d4",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d5",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d6"
+                        ],
+                        "discardPile": [],
+                        "sideboard": [
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d87",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d88",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d89",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d90",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d91",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d92",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d93",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d94",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d95",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d96",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d97",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d98",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d99",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d100",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d101",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d102",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d103",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d104",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d105",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d106",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d107",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d108",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d109",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d110",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d111",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d112",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d113",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d114",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d115",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d116"
+                        ],
+                        "victory": [],
+                        "playdeck": [
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d58",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d36",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d28",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d60",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d68",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d52",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d66",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d51",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d35",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d69",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d32",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d63",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d39",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d86",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d84",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d23",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d41",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d79",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d34",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d65",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d76",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d80",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d33",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d8",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d54",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d56",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d73",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d19",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d21",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d46",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d22",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d82",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d50",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d47",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d45",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d74",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d30",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d81",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d59",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d11",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d78",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d15",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d71",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d25",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d27",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d77",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d10",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d26",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d57",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d20",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d64",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d43",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d55",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d83",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d12",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d37",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d67",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d24",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d70",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d14",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d40",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d42",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d62",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d31",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d44",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d18",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d13",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d16",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d49",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d75",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d53",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d61",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d38",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d29",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d9",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d85",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d17",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d72",
+                            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d48"
+                        ]
+                    }
+                }
+            },
+            "characters": {
+                "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7": {
+                    "companyId": "company_1",
+                    "character": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7",
+                    "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7",
+                    "parentUuid": "",
+                    "resources": [
+                        "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d3"
+                    ],
+                    "hazards": []
+                }
+            },
+            "stagingarea": {
+                "4a0f0e50-fb72-4607-95b8-618cf8ea90c2": {
+                    "resources": [],
+                    "hazards": []
+                }
+            },
+            "companies": {
+                "company_1": {
+                    "id": "company_1",
+                    "playerId": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2",
+                    "characters": [
+                        {
+                            "uuid": "4a0f0e50-fb72-4607-95b8-618cf8ea90c2_d7",
+                            "influenced": []
+                        }
+                    ],
+                    "sites": {
+                        "current": "",
+                        "regions": [],
+                        "target": "",
+                        "attached": []
+                    }
+                }
+            }
+        },
+        "scoring": {
+            "4a0f0e50-fb72-4607-95b8-618cf8ea90c2": {
+                "scores": {
+                    "ally": 0,
+                    "character": 0,
+                    "faction": 0,
+                    "item": 0,
+                    "kill": 0,
+                    "misc": 0
+                },
+                "total": 0
+            }
+        }
+    }
+}
