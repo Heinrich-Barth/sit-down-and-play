@@ -64,7 +64,7 @@ class RoomManager {
     _createRoom(room, isArda, isSinglePlayer, userId) 
     {
         if (this._rooms[room] === undefined)
-            this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame, userId);
+            this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
     
         return this._rooms[room];
     }
@@ -454,7 +454,7 @@ class RoomManager {
     
     endGame(room)
     {
-        if (this._rooms[room] === undefined)
+        if (this._rooms === undefined || this._rooms[room] === undefined)
             return;
 
         let pRoom = this._rooms[room];
