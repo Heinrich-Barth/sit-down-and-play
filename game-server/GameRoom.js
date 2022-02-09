@@ -112,9 +112,8 @@ class GameRoom
         for (let id in this.players)
             this.players[id].disconnect();
 
-            
-        this.players = null;
-        this.visitors = null;
+        this.players = {};
+        this.visitors = {};
     }
 
     sendMessage(userid, message)
@@ -177,16 +176,27 @@ class GameRoom
         return null;
     }
 
-    endGame()
+    forceDisconnect(_list)
     {
-        const _list = this.players;
-        this.players = [];
-        
+        if (_list === undefined || _list === null)
+            return;
+
         for (let _player of _list)
         {
             if (_player.socket !== null)
                 _player.socket = GameRoom.disconnectPlayer(_player.socket)
         }
+    }
+
+    endGame()
+    {
+        let _list = this.players;
+        this.players = {};
+        this.forceDisconnect(_list);
+        
+        _list = this.visitors;
+        this.visitors = {};
+        this.forceDisconnect(_list);
 
         try
         {
@@ -239,7 +249,7 @@ class GameRoom
             console.log("Setting up game " + room);
 
         const pRoomInstance = new GameRoom(io, room, fnEndGame);
-        pRoomInstance.createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame, adminUser);
+        pRoomInstance.createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
         return pRoomInstance;
     }
 }
