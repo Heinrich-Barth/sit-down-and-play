@@ -29,7 +29,7 @@ class Chat {
      * @param {String} userid Userid
      * @param {String} text Text message
      */
-     sendMessage(userid, text)
+    sendMessage(userid, text)
     {
         if (this._endpoint === undefined || this._endpoint === "" || this._api === null || text.indexOf(">") !== -1 || text.indexOf("<") !== -1)
             return;

@@ -188,7 +188,7 @@ class GamePlayers extends GameBase
         console.log("Player kicked from index list: " + userId)
         this.publishToPlayers("/game/player/remove", "", { userid: userId });
         return true;
-}
+    }
 
     getCurrentTurn()
     {
