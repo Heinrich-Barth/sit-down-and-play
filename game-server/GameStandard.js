@@ -966,6 +966,7 @@ class GameStandard extends GamePlayers
             else if (this.isArda() !== data.game.meta.arda)
                 throw new Error("Arda missmatch");
 
+            /** check that the player ids to be used are really in this game */
             for (let id of Object.keys(assignments))
             {
                 if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
@@ -978,7 +979,7 @@ class GameStandard extends GamePlayers
             {
                 const _formerOwner = _map[_cardId].owner;
                 if (assignments[_formerOwner] === undefined)
-                    throw new Error("Cannot find former owner " + _formerOwner);
+                    throw new Error("Cannot find former owner " + _formerOwner + " of card " + _cardId + ". Cannot restore game.");
                 else
                     _map[_cardId].owner = assignments[_formerOwner];
             }
@@ -992,10 +993,19 @@ class GameStandard extends GamePlayers
                 {
                     console.log("Cannot find owner " + key + " in siteMap");
                     error = true;
-                    return;
                 }
-                playboard.decks.siteMap[newkey] = playboard.decks.siteMap[key];
-                delete playboard.decks.siteMap[key];
+                else
+                {
+                    playboard.decks.siteMap[newkey] = playboard.decks.siteMap[key];
+
+                    /** 
+                     * It might be, that the OLD and NEW ids are identical (immediate restoring)
+                     * This would cause the player to be removed from the game; therefore
+                     * make sure we do not remove a valid sitemap.
+                     */
+                    if (newkey !== key)
+                        delete playboard.decks.siteMap[key];
+                }
             });
 
             keys = Object.keys(playboard.decks.deck);
@@ -1006,10 +1016,13 @@ class GameStandard extends GamePlayers
                 {
                     console.log("Cannot find owner " + key + " in deck");
                     error = true;
-                    return;
                 }
-                playboard.decks.deck[newkey] = playboard.decks.deck[key];
-                delete playboard.decks.deck[key];
+                else
+                {
+                    playboard.decks.deck[newkey] = playboard.decks.deck[key];
+                    if (newkey !== key)
+                        delete playboard.decks.deck[key];
+                }
             });
 
             keys = Object.keys(playboard.stagingarea);
@@ -1020,10 +1033,13 @@ class GameStandard extends GamePlayers
                 {
                     console.log("Cannot find owner " + key + " in stagingarea");
                     error = true;
-                    return;
                 }
-                playboard.stagingarea[newkey] = playboard.stagingarea[key];
-                delete playboard.stagingarea[key];
+                else
+                {
+                    playboard.stagingarea[newkey] = playboard.stagingarea[key];
+                    if (newkey !== key)
+                        delete playboard.stagingarea[key];    
+                }
             });
 
             keys = Object.keys(data.game.scoring);
@@ -1034,10 +1050,13 @@ class GameStandard extends GamePlayers
                 {
                     console.log("Cannot find owner " + key + " in scoring");
                     error = true;
-                    return;
                 }
-                data.game.scoring[newkey] = data.game.scoring[key];
-                delete data.game.scoring[key];
+                else
+                {
+                    data.game.scoring[newkey] = data.game.scoring[key];
+                    if (newkey !== key)
+                        delete data.game.scoring[key];
+                }
             });
 
             keys = Object.keys(playboard.companies);
@@ -1048,16 +1067,15 @@ class GameStandard extends GamePlayers
                 {
                     console.log("Cannot find owner " + key + " in companies");
                     error = true;
-                    return;
                 }
-                playboard.companies[key].playerId = newkey;
+                else
+                    playboard.companies[key].playerId = newkey;
             });
 
             if (error)
                 throw new Error("Could not update ownership");
             else if (!this.restore(playboard, data.game.scoring))
                 throw new Error("Cannot restore game playboard");
-
             
             this.restorePlayerPhase(data.game.meta.phase, data.game.meta.players.turn, data.game.meta.players.current)
             this.publishToPlayers("/game/restore", userid, { success : true });
