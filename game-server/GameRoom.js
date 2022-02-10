@@ -181,8 +181,9 @@ class GameRoom
         if (_list === undefined || _list === null)
             return;
 
-        for (let _player of _list)
+        for (let _id of Object.keys(_list))
         {
+            let _player = _list[_id];
             if (_player.socket !== null)
                 _player.socket = GameRoom.disconnectPlayer(_player.socket)
         }
