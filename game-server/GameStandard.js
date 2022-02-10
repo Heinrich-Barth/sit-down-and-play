@@ -1,6 +1,7 @@
 const TurnTimer = require("./TurnTimer");
 
 const GamePlayers = require("./GamePlayers");
+const SaveGameEvaluation = require("./SaveGameEvaluation");
 
 class GameStandard extends GamePlayers
 {
@@ -956,23 +957,50 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/view-cards/reveal/remove", userid, {uuid: sUuid});
     }
 
+    saveGameCheckPlayers(assignments)
+    {
+        if (this.players.ids.length !== Object.keys(assignments).length)
+        {
+            console.log("Player count missmatch");
+            return false;
+        }
+        
+        let success = true;
+
+        /** check that the player ids to be used are really in this game */
+        for (let id of Object.keys(assignments))
+        {
+            if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
+            {
+                console.log("Expected player id is not part of this room: " + assignments[id]);
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+
     globalRestoreGame(userid, socket, data)
     {
+        const pEval = new SaveGameEvaluation(data.assignments);
+        data.game = pEval.evaluate(data.game, this.isArda());
+        if (data.game === null)
+        {
+            let message = pEval.getMessageString();
+            console.log(message);
+            this.publishChat(userid, " savegame is invalid");
+            this.publishChat(userid, message);
+            
+            return;
+        }
+
+        let assignments = data.assignments; 
+        if (!this.saveGameCheckPlayers(assignments))
+            return;
+
         try
         {
-            let assignments = data.assignments; 
-            if (this.players.ids.length !== Object.keys(assignments).length)
-                throw new Error("Player count missmatch");
-            else if (this.isArda() !== data.game.meta.arda)
-                throw new Error("Arda missmatch");
-
-            /** check that the player ids to be used are really in this game */
-            for (let id of Object.keys(assignments))
-            {
-                if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
-                    throw new Error("Invalid player id detected.");
-            }
-
             let playboard = data.game.playboard;
             let _map = playboard.decks.cardMap;
             for (let _cardId of Object.keys(_map))
