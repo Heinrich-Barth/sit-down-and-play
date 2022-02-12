@@ -27,7 +27,7 @@ const onLoginCheck = function(SERVER, req, res)
         const room = req.params.room.toLocaleLowerCase();
 
         if (!UTILS.isAlphaNumeric(room))
-            throw "Invalid room name";
+            throw  new Error("Invalid room name");
 
         const jData = JSON.parse(req.body.data);
         const displayname = jData.name;
@@ -36,17 +36,17 @@ const onLoginCheck = function(SERVER, req, res)
          * assert the username is alphanumeric only
          */
         if (!UTILS.isAlphaNumeric(displayname) || jData.deck === undefined)
-            throw "Invalid data";
+            throw new Error("Invalid data");
 
         if (SERVER.roomManager.isTooCrowded(room))
-            throw "Too crowded";
+            throw new Error("Too crowded");
 
         /**
          * Validate Deck first
          */
         const jDeck = SERVER.cards.validateDeck(jData.deck);
         if (jDeck === null)
-            throw "Invalid Deck";
+            throw new Error("Invalid Deck");
 
         /**
          * Now, check if there already is a game for this Room
