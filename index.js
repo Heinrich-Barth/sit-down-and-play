@@ -132,6 +132,13 @@ SERVER.onListenSetupSocketIo = function ()
 {
     SERVER._io = require('socket.io')(SERVER._http);
     SERVER._io.on('connection', SERVER.onIoConnection);
+    SERVER._io.engine.on("connection_error", (err) => {
+        console.error("There is a connection error.");
+        console.log(err.req);      // the request object
+        console.log(err.code);     // the error code, for example 1
+        console.log(err.message);  // the error message, for example "Session ID unknown"
+        console.log(err.context);  // some additional error context
+    });
 };
 
 /**
