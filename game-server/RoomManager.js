@@ -498,6 +498,12 @@ class RoomManager {
         pRoom.getGame().removePlayer(userid);
     }
 
+    verifyApiKey(room, roomKey)
+    {
+        const pRoom = this.getRoom(room);
+        return pRoom !== null && pRoom.getSecret() === roomKey;
+    }
+
     allowJoin(room, expectSecret, userId, joined, player_access_token_once) 
     {
         if (room === "" || this._rooms[room] === undefined || this._rooms[room].getSecret() !== expectSecret)

@@ -131,13 +131,33 @@ const PLUGINS = {
 SERVER.onListenSetupSocketIo = function () 
 {
     SERVER._io = require('socket.io')(SERVER._http);
-    SERVER._io.on('connection', SERVER.onIoConnection);
-    SERVER._io.engine.on("connection_error", (err) => {
-        console.error("There is a connection error.");
-        console.log(err.req);      // the request object
-        console.log(err.code);     // the error code, for example 1
-        console.log(err.message);  // the error message, for example "Session ID unknown"
-        console.log(err.context);  // some additional error context
+    SERVER._io.on('connection', SERVER.onIoConnection.bind(SERVER));
+
+    SERVER._io.engine.on("connection_error", (err) => console.error("There is a connection error ("+ err.code + "): " + err.message));
+
+    SERVER._io.use((socket, next) => 
+    {
+        const token = socket.handshake.auth.authorization;
+        const room = socket.handshake.auth.room;
+        const userid = socket.handshake.auth.userId;
+
+        try
+        {
+            if (SERVER.roomManager.verifyApiKey(room, token))
+            {
+                socket.auth = true;
+                socket.room = room;
+                socket.userid = userid;
+                console.log("auth is ok");
+                next();
+            }
+            else
+                socket.disconnect("invalid authentication");
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
     });
 };
 

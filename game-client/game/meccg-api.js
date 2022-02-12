@@ -194,6 +194,14 @@ const MeccgApi =
 
         document.body.dispatchEvent(new CustomEvent("meccg-connected", { "detail": true }));
     },
+
+    onReconnected : function()
+    {
+        MeccgApi.onConnected();
+
+        /** maybe need to authenticate again */
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Reconnected." }));
+    },
     
     onDisconnected : function()
     {
@@ -210,6 +218,65 @@ const MeccgApi =
         MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
     },
 
+    setupSocketConnection()
+    {
+        this._socket = io(window.location.host, 
+        {
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 1000,
+            reconnectionAttempts: 4,
+            timeout: 1000,
+            auth: {
+                authorization: g_sApiKey,
+                room: g_sRoom,
+                userId : g_sUserId
+            }
+        });
+
+        this._socket.on("error", MeccgApi.onSocketError.bind(MeccgApi));
+        this._socket.on("connect_error", MeccgApi.onSocketError.bind(MeccgApi));
+
+        this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess.bind(MeccgApi));
+
+        this._socket.on('disconnect', () => 
+        {
+            if (MeccgApi._ignoreDisconnection)
+                MeccgApi.disconnectSocket();
+            else
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost" }));
+
+            MeccgApi.onDisconnected();
+        });
+        
+        /** reconnected successfully */
+        this._socket.on('reconnect', MeccgApi.onReconnected.bind(MeccgApi));
+
+        this._socket.on("reconnect_attempt", (attemptNumber) => 
+        {
+            if (!MeccgApi._ignoreDisconnection)
+            {
+                MeccgApi.onDisconnected();
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
+            }
+        });
+
+        /** If the auto-reconnect failed within reconnectionAttempts, reload the page and start afresh */
+        this._socket.on("reconnect_failed", () => 
+        {
+            if (!MeccgApi._ignoreDisconnection)
+                window.location.reload()
+        });
+
+        /** This is it. Only refresh will help */
+        this._socket.on("reconnect_error", () => window.location.reload());
+    },
+
+    onSocketError : function(error)
+    {
+        console.error(error);
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": error.name + ': ' + error.message }));
+    },
+
     onDocumentReady : function()
     {
         const lJoined = MeccgApi.getTimeJoined();
@@ -220,42 +287,8 @@ const MeccgApi =
             return;
         }
       
-        this._socket = io(window.location.host, {
-            reconnectionDelay: 500
-        });
-
-        this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess);
-
-        this._socket.on('disconnect', () => 
-        {
-            if (!MeccgApi._ignoreDisconnection)
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost" }));
-
-            MeccgApi.onDisconnected();
-        });
-        
-        /** reconnected successfully */
-        this._socket.on('reconnect', MeccgApi.onConnected);
-
-        this._socket.io.on("reconnect_attempt", (attemptNumber) => {
-            MeccgApi.onDisconnected();
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
-        });
-
-        /** This is it. Only refresh will help */
-        this._socket.io.on("reconnect_error", () => window.location.reload());
-
-        this._socket.io.on("reconnect_failed", () => {
-            MeccgApi.onDisconnected();
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
-        });
-
-        this._socket.io.on("error", (error) => {
-            console.error(error);
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": error.name + ': ' + error.message }));
-        });
-          
-    
+        this.setupSocketConnection();
+   
         /** so do the login */
         this._socket.emit("/authenticate", { 
             token: g_sApiKey, 
@@ -275,6 +308,18 @@ const MeccgApi =
             MeccgApi.send("/game/finalscore", {});
 
         }).show("Do you want to end this game?", "Let's see the final scorings.", "End this game");
+    },
+
+    disconnectSocket : function()
+    {
+        try
+        {
+            this._socket.disconnect();
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
     }
 };
 

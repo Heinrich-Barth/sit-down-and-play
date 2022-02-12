@@ -25,20 +25,6 @@ const AuthenticationManagement = {
     triggerAuthenticationProcess: function (socket)
     {
         /**
-         * I expect a plain connection which is not in any way authenticated.
-         * Authentication works like this:
-         *  a) connect
-         *  b) receive a plain input
-         *  c) reply to connection with /authenticate and send plain input
-         *  d) await reply at /authenticate with hased input. 
-         *  
-         *  If d) is correct, the connection remains intact. It will be destroyed
-         *  automatically after 1second after connection
-         */
-        socket.room = "";
-        socket.auth = false;
-
-        /**
          * if the user/application authenticates correctly, we grant permission to send the deck
          * and their username
          * 
@@ -54,12 +40,8 @@ const AuthenticationManagement = {
             }
             else 
             {
-
-                socket.auth = true;
-                socket.room = data.room;
                 socket.username = data.dispayName;
                 socket.userid = data.userId;
-                socket.room = data.room;
                 socket.joined = data.joined;
 
                 console.log(socket.username + " (#" + socket.id + ") " + " authenticated successfully to room " + socket.room);
@@ -113,5 +95,5 @@ const AuthenticationManagement = {
     }
 };
 
-exports.setUserManager = (pUserManager) => AuthenticationManagement.setUserManager(pUserManager);
-exports.triggerAuthenticationProcess = (socket) => AuthenticationManagement.triggerAuthenticationProcess(socket);
+exports.setUserManager = AuthenticationManagement.setUserManager;
+exports.triggerAuthenticationProcess = AuthenticationManagement.triggerAuthenticationProcess;
