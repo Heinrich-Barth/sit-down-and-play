@@ -466,8 +466,6 @@ require("./health").setup(SERVER);
 
 SERVER.onIoConnection = function (socket) 
 {
-    socket.auth = false;
-    socket.userid = "";
     socket.username = "";
 
     SERVER.authenticationManagement.triggerAuthenticationProcess(socket);
@@ -493,29 +491,7 @@ SERVER.onIoConnection = function (socket)
     });
 
     /** Player has reconnected. Send an update all */
-    socket.on('reconnect', () => 
-    {
-        if (socket.auth) 
-            SERVER.roomManager.onReconnected(socket.userid, socket.room);
-    });
-
-    /**
-     * Destroy session if not authenticated within 1second after connection
-     * @return {void}
-     */
-    setTimeout(function () 
-    {
-        if (!socket.auth) 
-        {
-            let name = socket.username;
-            if (name === undefined)
-                name = "unknown";
-                
-            console.log("Disconnecting socket of " + name + " (" + socket.id + ") due to missing authentication.");
-            socket.disconnect('unauthorized');
-        }
-
-    }, 1000 * 60 * 2);
+    socket.on('reconnect', () => SERVER.roomManager.onReconnected(socket.userid, socket.room));
 };
 
 /** 404 - not found */
