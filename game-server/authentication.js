@@ -2,7 +2,7 @@
 
 function isAlphaNumeric(sInput)
 {
-    return typeof sInput !== "undefined" && sInput.trim() !== "" && /^[0-9a-zA-Z]{1,}$/.test(sInput);
+    return typeof sInput !== "undefined" && sInput.trim() !== "" && /^[0-9a-zA-Z]+$/.test(sInput);
 }
 
 const AuthenticationManagement = {  
