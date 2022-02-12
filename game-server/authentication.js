@@ -106,9 +106,6 @@ const AuthenticationManagement = {
          * Player is now at their table
          */
         socket.on('/game/rejoin', () => console.log("# deprectaed /game/rejoin"));
-        socket.on('/game/player/isalive', () => { });
-        socket.on('/game/player/time', () => { });
-
     },
 
     setUserManager : function(pUserManager) {
