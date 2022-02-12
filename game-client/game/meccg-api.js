@@ -234,21 +234,28 @@ const MeccgApi =
             MeccgApi.onDisconnected();
         });
         
-        /** reconnected entirely */
+        /** reconnected successfully */
         this._socket.on('reconnect', MeccgApi.onConnected);
-
-        /** reconnecting attempt */
-        this._socket.on('reconnecting', (attemptNumber) => 
-        {
-            MeccgApi.onDisconnected();
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
-        });
 
         this._socket.io.on("reconnect_attempt", (attemptNumber) => {
             MeccgApi.onDisconnected();
             document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
         });
-        
+
+        /** This is it. Only refresh will help */
+        this._socket.io.on("reconnect_error", () => window.location.reload());
+
+        this._socket.io.on("reconnect_failed", () => {
+            MeccgApi.onDisconnected();
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Attempt to reconnect " + attemptNumber }));
+        });
+
+        this._socket.io.on("error", (error) => {
+            console.error(error);
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": error.name + ': ' + error.message }));
+        });
+          
+    
         /** so do the login */
         this._socket.emit("/authenticate", { 
             token: g_sApiKey, 
