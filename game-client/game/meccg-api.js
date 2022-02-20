@@ -17,6 +17,19 @@ const MeccgPlayers = {
         return this.myId;
     },
 
+    visitorAddNameToOpponent: function(e)
+    {
+        const id = e.detail.id;
+        const player = e.detail.player;
+
+        if (id === "" || id === undefined || player === "" || player === undefined || this.usermap[player] === undefined)
+            return;
+
+        const elem = document.getElementById(id);
+        if (elem !== null)
+            elem.setAttribute("title", this.usermap[player]);
+    },
+
     /**
      * Set the user map
      * 
@@ -323,8 +336,10 @@ const MeccgApi =
     }
 };
 
-document.body.addEventListener("meccg-query-end-game", MeccgApi.queryEndGame, false);
+document.body.addEventListener("meccg-query-end-game", MeccgApi.queryEndGame.bind(MeccgApi), false);
 document.body.addEventListener("meccg-api-init", () => {
     MeccgPlayers.onDocumentReady();
     MeccgApi.onDocumentReady();
 }, false);
+
+document.body.addEventListener("meccg-visitor-addname", MeccgPlayers.visitorAddNameToOpponent.bind(MeccgPlayers), false);

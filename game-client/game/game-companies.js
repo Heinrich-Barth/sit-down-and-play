@@ -474,7 +474,16 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 ArrayList(pElemContainer).find(".company-characters").each(DomUtils.removeAllChildNodes);
             }
             else
+            {
                 elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, jsonCompany.id);
+                if (document.body.getAttribute("data-is-watcher") === "true")
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-visitor-addname", { "detail": {
+                        id: "companies_opponent_" + sHexPlayerCode,
+                        player: jsonCompany.playerId
+                    }}));
+                }
+            }                
 
             const elemList = elemContainer.querySelector(".company-characters");
             for (let _char of vsCharacters)
