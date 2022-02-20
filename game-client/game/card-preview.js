@@ -1,6 +1,8 @@
 
 const CardPreview = { };
 
+CardPreview.isVisitor = false;
+
 CardPreview.getTargetContainer = function(bLeft, bTop)
 {
     if (bLeft)
@@ -115,7 +117,7 @@ CardPreview.init = function(cardDiv, bLeft, bTop)
 
 CardPreview._getImage = function(elem)
 {
-    let bAlways = CardPreview._isMyCard(elem);
+    let bAlways = CardPreview.isVisitor || CardPreview._isMyCard(elem);
     let src = elem.getAttribute("src") || "";
 
     if (!bAlways || !CardPreview._isBackside(src))
@@ -170,6 +172,8 @@ CardPreview.onDocumentReady = function()
 {
     if (CardPreview._isReady)
         return;
+
+    CardPreview.isVisitor = document.body.getAttribute("data-is-watcher") === "true";
 
     /** add CSS  */
     const link = document.createElement("link");
