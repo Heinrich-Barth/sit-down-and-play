@@ -439,54 +439,63 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             });
         },
 
+        requireCompanyContainer : function(bIsMe, compnanyId, playerId)
+        {
+            const pElemContainer = document.getElementById("company_" + compnanyId);
+            if (pElemContainer !== null)
+            {
+                pCheckForCardsPlayed.loadBefore(pElemContainer);
+                ArrayList(pElemContainer).find(".company-characters").each(DomUtils.removeAllChildNodes);
+
+                return pElemContainer;
+            }
+            else
+            {
+
+                const sHexPlayerCode = this.player2Hex(playerId);
+                if (sHexPlayerCode === "")
+                    return null;
+
+                const elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, compnanyId);
+                if (document.body.getAttribute("data-is-watcher") === "true")
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-visitor-addname", { "detail": {
+                        id: "companies_opponent_" + sHexPlayerCode,
+                        player: playerId
+                    }}));
+                }
+
+                return elemContainer;
+            }   
+        },
+
         /**
          * draw a company on screen
          * 
          * @param {json} jsonCompany The Company JSON object
          * @returns {Boolean} success state
          */
-        drawCompany: function (_bIsMe, jsonCompany)
+        drawCompany: function (bIsMe, jsonCompany)
         {
             if (typeof jsonCompany !== "object" ||
-                typeof jsonCompany.id === "undefined" || typeof jsonCompany.characters === "undefined" ||
+                typeof jsonCompany.id === "undefined" || 
+                typeof jsonCompany.characters === "undefined" ||
                 jsonCompany.characters.length === 0)
             {
                 return false;
             }
 
-            const sHexPlayerCode = this.player2Hex(jsonCompany.playerId);
-            if (sHexPlayerCode === "")
-                MeccgUtils.logWarning("cannot obtain player hex code.");
-                
-            const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
-            const vsCharacters = jsonCompany.characters;
-            let elemContainer = null;
-
-            /** check if this company is my own (i.e. non-opponent) */
-            const bIsMe = MeccgPlayers.isChallenger(jsonCompany.playerId);
+            const existsAlready = document.getElementById("company_" + jsonCompany.id);
+            const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId);
             
-            const pElemContainer = document.getElementById("company_" + jsonCompany.id);
-            const existsAlready =  pElemContainer !== null;
-            if (existsAlready)
-            {
-                elemContainer = pElemContainer;
-                pCheckForCardsPlayed.loadBefore(pElemContainer);
-                ArrayList(pElemContainer).find(".company-characters").each(DomUtils.removeAllChildNodes);
-            }
-            else
-            {
-                elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, jsonCompany.id);
-                if (document.body.getAttribute("data-is-watcher") === "true")
-                {
-                    document.body.dispatchEvent(new CustomEvent("meccg-visitor-addname", { "detail": {
-                        id: "companies_opponent_" + sHexPlayerCode,
-                        player: jsonCompany.playerId
-                    }}));
-                }
-            }                
+            if (elemContainer === null)
+                return false;
 
             const elemList = elemContainer.querySelector(".company-characters");
-            for (let _char of vsCharacters)
+            if (elemList === null)
+                return false;
+                
+            for (let _char of jsonCompany.characters)
                 this.character.add(_char, elemList, false, true);
 
             this.drawLocations(jsonCompany.id, jsonCompany.sites.current, jsonCompany.sites.regions, jsonCompany.sites.target, jsonCompany.sites.revealed, jsonCompany.sites.attached, jsonCompany.sites.current_tapped, jsonCompany.sites.target_tapped);
@@ -517,10 +526,19 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id") }} )));
             elemContainer.classList.remove("hiddenVisibility");
 
-            pCheckForCardsPlayed.loadAfter(elemContainer);
-            pCheckForCardsPlayed.mark();
-          
+            
+            this.highlightNewCardsAtTable(elemContainer);
             return true;
+        },
+
+        highlightNewCardsAtTable(elemContainer)
+        {
+            if (elemContainer !== null)
+            {
+                const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
+                pCheckForCardsPlayed.loadAfter(elemContainer);
+                pCheckForCardsPlayed.mark();
+            }
         },
 
         initSingleCardEvent : function(pCardDiv, isOnGuardCard)
