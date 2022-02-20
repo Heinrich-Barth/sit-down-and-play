@@ -3,13 +3,19 @@
  */
  class MapViewSiteImages  {
 
-    constructor(jMap)
+    constructor(jMap, tapped)
     {
         this.CardPreview = CardPreview;
         this.CardList = new CardList(jMap.images, []);
 
         this._temp = null;
+        this.tapped = tapped === undefined ? {} : tapped;
         this.jMap = jMap.map === undefined ? {} : jMap.map;
+    }
+
+    isSiteTapped(code)
+    {
+        return code !== undefined && code !== "" && this.tapped[code] !== undefined;
     }
 
     createEntry(jEntry, isSite, region, siteSitle)
@@ -20,7 +26,8 @@
             code: jEntry["code"], 
             site: isSite === true, 
             region: region,
-            siteSitle : siteSitle === undefined ? "" : siteSitle
+            siteSitle : siteSitle === undefined ? "" : siteSitle,
+            tapped : this.isSiteTapped(jEntry["code"])
         });
     }
 
@@ -97,7 +104,7 @@
         this.showImages(region, site);
     }
 
-    createImage(code, isSite, region, siteTitle)
+    createImage(code, isSite, region, siteTitle, isTapped)
     {
         const sType = isSite ? "site" : "location";
         const sTitle = siteTitle === "" ? region : siteTitle;
@@ -105,7 +112,11 @@
         
         const img = document.createElement("img");
         img.setAttribute("decoding", "async");
-        img.setAttribute("class", "site-image");
+        if (isTapped !== true)
+            img.setAttribute("class", "site-image");
+        else
+            img.setAttribute("class", "site-image site-is-tapped");
+
         img.setAttribute("data-src", sUrl);
         img.setAttribute("src", MapViewSiteImages.getCardBacksideImageUrl());
         img.setAttribute("data-code", code);
@@ -239,6 +250,6 @@
         
         const jTarget = document.getElementById("found_sites");
         for (let _card of res)
-            jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle));
+            jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle, _card.tapped));
     }
 }

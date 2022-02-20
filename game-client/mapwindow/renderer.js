@@ -55,7 +55,7 @@ const MapInstanceRenderer = {
         MapInstanceRenderer._isMovementSelection = sCode !== "";
 
         new MapViewRegionsFilterable().createInstance(data.map);
-        new MapViewSiteImages(data).createInstance();
+        new MapViewSiteImages(data, tapped).createInstance();
 
         const pMap = new MapViewRegions(data);
         pMap.createInstance(sCode);
@@ -64,7 +64,7 @@ const MapInstanceRenderer = {
         if (sCode === "")
             new MapViewChooseStartingHeaven().createInstance();
         else
-            new MapViewMovement(data, tapped).createInstance(sCode);
+            new MapViewMovement(data).createInstance(sCode);
 
         g_isInit = true;
     },
