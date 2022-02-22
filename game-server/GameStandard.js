@@ -463,12 +463,26 @@ class GameStandard extends GamePlayers
                 this.onGetTopCardFromHand(card.owner, socket, list.length);
 
             this.updateHandCountersPlayer(userid);
+
+            let listCodes = [];
+            for (let _uid of list)
+            {
+                let _card = this.getPlayboardManager().GetCardByUuid(_uid);
+                if (_card !== null)
+                    listCodes.push({
+                        code: _card.code,
+                        owner: _card.owner});
+            }
+
+            this.publishToPlayers("/game/event/cardmoved", userid, {list: listCodes, target: obj.target, source: obj.source});
         }
 
         // now we have to remove the cards from the board again
         this.publishToPlayers("/game/card/remove", userid, list);
         this.publishChat(userid, "Moved " + list.length + " card(s) to " + obj.target);
         this.onRedrawCompany(userid, affectedCompanyUuid);
+
+        
     }
 
     onCardToken(userid, socket, data)
@@ -592,19 +606,26 @@ class GameStandard extends GamePlayers
                 this.updateHandCounterOnlyPlayer(userid);
         }
 
-        let sWho = this.getCardCode(cardUuid, "Character") + " ";
-        let sHow = "";
+        const sWho = this.getCardCode(cardUuid, "Character") + " ";
         if (!this.getPlayboardManager().JoinCharacter(cardUuid, targetcharacter, targetCompany, userid))
-            sHow = "cannot join under direct influence";
+        {
+            this.publishChat(userid, sWho + "cannot join under direct influence")
+        }
         else
         {
             this.removeEmptyCompanies();
+            console.log(isFromHand);
+            console.log("+++ -" );
+            if (isFromHand)
+            {
+                const _code = this.getCharacterCode(targetcharacter, "");
+                if (_code !== "")
+                    this.publishToPlayers("/game/event/fromHand", userid, {code: _code, user: userid});
+            }
 
             let sChar = this.getCharacterCode(targetcharacter, "a character");
-            sHow = "joined " + sChar + " under direct influence";
+            this.publishChat(userid, sWho + "joined " + sChar + " under direct influence");
         }
-
-        this.publishChat(userid, sWho + sHow);
     }
 
     onCharacterJoinCompany(userid, socket, data)
@@ -622,10 +643,14 @@ class GameStandard extends GamePlayers
             return;
         }
 
+        console.log("onCharacterJoinCompany " + _source);
         if (_source === "hand")
         {
             this.updateHandCounterOnlyPlayer(userid);
             this.publishToPlayers("/game/remove-card-from-hand", userid, _uuid);
+            const _code = this.getCardCode(_uuid, "");
+            if (_code !== "")
+                this.publishToPlayers("/game/event/fromHand", userid, {code: _code, user: userid});
         }
 
         this.removeEmptyCompanies();
@@ -658,6 +683,10 @@ class GameStandard extends GamePlayers
         {
             this.updateHandCounterOnlyPlayer(userid);
             this.publishToPlayers("/game/remove-card-from-hand", userid, _uuid);
+
+            const _code = this.getCardCode(_uuid, "");
+            if (_code !== "")
+                this.publishToPlayers("/game/event/fromHand", userid, {code: _code, user: userid});
         }
 
         // draw the company

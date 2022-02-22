@@ -439,7 +439,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             });
         },
 
-        requireCompanyContainer : function(bIsMe, compnanyId, playerId)
+        requireCompanyContainer : function(bIsMe, compnanyId, playerId, pCheckForCardsPlayed)
         {
             const pElemContainer = document.getElementById("company_" + compnanyId);
             if (pElemContainer !== null)
@@ -484,9 +484,10 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             {
                 return false;
             }
+            const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
 
             const existsAlready = document.getElementById("company_" + jsonCompany.id);
-            const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId);
+            const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId, pCheckForCardsPlayed);
             
             if (elemContainer === null)
                 return false;
@@ -527,15 +528,14 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             elemContainer.classList.remove("hiddenVisibility");
 
             
-            this.highlightNewCardsAtTable(elemContainer);
+            this.highlightNewCardsAtTable(elemContainer, pCheckForCardsPlayed);
             return true;
         },
 
-        highlightNewCardsAtTable(elemContainer)
+        highlightNewCardsAtTable(elemContainer, pCheckForCardsPlayed)
         {
             if (elemContainer !== null)
             {
-                const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
                 pCheckForCardsPlayed.loadAfter(elemContainer);
                 pCheckForCardsPlayed.mark();
             }
