@@ -6,6 +6,25 @@
 
 .card-highlight { animation: glowGreen linear 1s 2 forwards; }
 .glowing { animation: glowYellow 1s 5 forwards; }
+.staging-area-player .mark-red img {
+    border: 2px solid #e36666;
+    animation: glowRed linear 1s 2 forwards;
+}
+
+@keyframes glowRed {
+    0% {
+      box-shadow: 0 0 10px -10px #e36666;
+    }
+    50% {
+        box-shadow: 0 0 10px 10px #e36666;
+    }
+    99% {
+        box-shadow: 0 0 10px -10px #e36666;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
 
 @keyframes glowGreen {
     0% {

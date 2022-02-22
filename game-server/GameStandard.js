@@ -183,14 +183,34 @@ class GameStandard extends GamePlayers
             {
                 let card = this.getPlayboardManager().GetCardByUuid(_elem);
                 if (card !== null)
-                    _dataTarget.stage_resources.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner, token: card.token === undefined ? 0 : card.token});
+                {
+                    _dataTarget.stage_resources.push({uuid: card.uuid, 
+                        target: "", 
+                        code: card.code, 
+                        type: card.type.toLowerCase(), 
+                        state: card.state, 
+                        revealed: card.revealed, 
+                        owner: card.owner, 
+                        token: card.token === undefined ? 0 : card.token,
+                        secondary : card.secondary
+                    });
+                }
             }
     
             for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, false))
             {
                 let card = this.getPlayboardManager().GetCardByUuid(_elem);
                 if (card !== null)
-                    _dataTarget.stage_hazards.push({uuid: card.uuid, target: "", code: card.code, type: card.type.toLowerCase(), state: card.state, revealed: card.revealed, owner: card.owner, token: card.token === undefined ? 0 : card.token});
+                    _dataTarget.stage_hazards.push({uuid: card.uuid, 
+                        target: "", 
+                        code: card.code, 
+                        type: card.type.toLowerCase(), 
+                        state: card.state, 
+                        revealed: card.revealed, 
+                        owner: card.owner,
+                        token: card.token === undefined ? 0 : card.token,
+                        secondary : card.secondary
+                    });
             }
 
             this.updateHandCountersPlayer(_playerId);
@@ -251,11 +271,20 @@ class GameStandard extends GamePlayers
         }
 
         let card = this.getPlayboardManager().GetCardByUuid(_uuid);
-        let type = card.type;
         card.turn = this.getCurrentTurn();
 
         this.publishToPlayers("/game/remove-card-from-hand", "", _uuid);
-        this.publishToPlayers("/game/add-to-staging-area", userid, {uuid: _uuid, target: "", code: card.code, type: type, state: card.state, revealed: card.revealed, owner: card.owner, turn: card.turn });
+        this.publishToPlayers("/game/add-to-staging-area", userid, {
+            uuid: _uuid, 
+            target: "", 
+            code: card.code, 
+            type: card.type, 
+            state: card.state, 
+            revealed: card.revealed, 
+            owner: card.owner, 
+            turn: card.turn,
+            secondary : card.secondary
+        });
         this.updateHandCountersPlayer(userid);
         this.publishChat(userid, "added " + card.code + " to staging area");
     }

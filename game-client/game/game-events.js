@@ -30,40 +30,86 @@ class GameEvents
         if (e.detail !== "organisation")
             return;
             
-        const cards = this.findCard("Kesä (NW)", "Talvi (NW)");
-        if (cards === null)
-            return;
-
-        let uuid = cards.getAttribute("data-uuid");
-        let code = cards.getAttribute("data-card-code");
-        MeccgApi.send("/game/card/state/reveal", {uuid : uuid, code: code });  
+        this.autoFlip();
+        this.markNonPermanentEvents();
     }
 
-    findCard(...codes)
+    markNonPermanentEvents()
     {
-        if (codes.length === 0)
-            return null;
+        const currentTurn = this.getCurrentTurn();
+        if (currentTurn === -1)
+            return;
 
-        const pArea = document.getElementById("staging_area_resources_player");
+        this.forEachCardIn(this.getCardsInStagingArea(), function(card) 
+        {
+            const sec = card.getAttribute("data-secondary");
+            if (sec !== null && sec !== "" && sec.indexOf("permanent event") === -1)
+            {
+                const turn = GameEvents.getAttributeInteger(card.getAttribute("data-turn"));
+                if (turn !== -1 && turn < currentTurn)
+                    card.classList.add("mark-red");
+            }
+        });
+    }
+
+    static getAttributeInteger(val)
+    {
+        try
+        {
+            if (val !== null && val !== undefined && val !== "")
+                return parseInt(val);
+        }
+        catch (err)
+        {
+            /** ignore */
+        }
+
+        return -1;
+    }
+
+    autoFlip()
+    {
+        const codes = ["Kesä (NW)", "Talvi (NW)"];
+        this.forEachCardIn(this.getCardsInStagingArea(), function(card) 
+        {
+            for (let code of codes)
+            {
+                if (code === card.getAttribute("data-card-code"))
+                {
+                    let uuid = card.getAttribute("data-uuid");
+                    MeccgApi.send("/game/card/state/reveal", {uuid : uuid, code: code }); 
+                }
+            }
+        });
+    }
+
+    getCardsInStagingArea()
+    {
+        const pArea = document.getElementById("staging-area-player");
         if (pArea === null)
             return null;
 
         const list = pArea.getElementsByClassName("card");
+        return list === null || list.length === 0 ? null : list;
+    }
+
+    forEachCardIn(list, fnCall)
+    {
         if (list === null || list.length === 0)
-            return null;
+            return;
 
         const len = list.length;
         for (let i = 0; i < len; i++)
         {
-            let card = list[i];
-            for (let code of codes)
+            try
             {
-                if (code === card.getAttribute("data-card-code"))
-                    return card;
+               fnCall(list[i]);
+            }
+            catch(err)
+            {
+                console.error(err);
             }
         }
-
-        return null;
     }
 
     getCurrentTurn()
@@ -98,6 +144,8 @@ class GameEvents
             this.pallandoInPlay = true;
             this.pallandoIsMine = false;
         }
+
+        this.markNonPermanentEvents();
     }
 
     /**

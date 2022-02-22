@@ -23,7 +23,7 @@ class StagingArea
             return "";
     }
 
-    createNewCard(uuid, code, type, id, cssState, turn, token)
+    createNewCard(uuid, code, type, id, cssState, turn, token, secondary)
     {
         if (uuid === "")
             return null;
@@ -41,7 +41,7 @@ class StagingArea
         jDiv.setAttribute("data-revealed", true);
         jDiv.setAttribute("title", safeCode + ", since turn " + turn);
         jDiv.setAttribute("data-turn", turn);
-
+        jDiv.setAttribute("data-secondary", secondary === undefined ? "" : secondary.toLowerCase());
         if (token !== undefined && token > 0)
             jDiv.setAttribute("data-token", token);
 
@@ -84,7 +84,7 @@ class StagingArea
             img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image"));
     }
 
-    insertNewCard(uuid, isPlayer, code, type, state, turn, token)
+    insertNewCard(uuid, isPlayer, code, type, state, turn, token, secondary)
     {
         let isResource;
         if (type === "hazard")
@@ -96,7 +96,7 @@ class StagingArea
         
         const id = "stagecard_" + uuid;
         const css = this.getCardStateCss(state);
-        const res = this.createNewCard(uuid, code, type, id, css, turn, token);
+        const res = this.createNewCard(uuid, code, type, id, css, turn, token, secondary);
         if (res === null)
             return "";
 
@@ -116,14 +116,15 @@ class StagingArea
      * @param {Boolean} revealed
      * @param {Number} turn
      * @param {Number} token
+     * @param {String} secondary
      * @returns {String} ID of card container
      */
-    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn, token)
+    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn, token, secondary)
     {
         if (uuid === "" || code === "" || type === "")
             return "";
 
-        const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn, token);
+        const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn, token, secondary);
         if (id === "")
             return "";
     

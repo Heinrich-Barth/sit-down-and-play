@@ -334,6 +334,7 @@ class DeckCommons {
         data.revealed = !isAgent;
         data.agent = isAgent;
         data.turn = 0;
+        data.secondary = gameCardProvider.getCardTypeSpecific(code);
         return data;
     }
 }
