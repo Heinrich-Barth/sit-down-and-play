@@ -40,6 +40,7 @@ class StagingArea
         jDiv.setAttribute("draggable", "true");
         jDiv.setAttribute("data-revealed", true);
         jDiv.setAttribute("title", safeCode + ", since turn " + turn);
+        jDiv.setAttribute("data-turn", turn);
 
         if (token !== undefined && token > 0)
             jDiv.setAttribute("data-token", token);

@@ -448,6 +448,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     case "organisation":
 
                         CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
+
                         break;
                     case "movement":
                         CompanyManager.onEnterMovementHazardPhase(bIsMe);
@@ -485,6 +486,10 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                         document.querySelector(".area.area-player").setAttribute("data-turn-phase", sPhase);
                     }
                 }
+
+                if (bIsMe)
+                    document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
+
             });
 
             MeccgApi.addListener("/game/company/arrive", function(bIsMe, jData)

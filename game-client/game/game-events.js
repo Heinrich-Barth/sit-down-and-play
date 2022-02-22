@@ -25,6 +25,64 @@ class GameEvents
         this.triggerEvent("Pallando [H] (TW)", bIsMe, GameEvents.Type_Enter, data);
     }
 
+    onProgressToPhase(e)
+    {
+        if (e.detail !== "organisation")
+            return;
+            
+        const cards = this.findCard("Kesä (NW)", "Talvi (NW)");
+        if (cards === null)
+            return;
+
+        let uuid = cards.getAttribute("data-uuid");
+        let code = cards.getAttribute("data-card-code");
+        MeccgApi.send("/game/card/state/reveal", {uuid : uuid, code: code });  
+    }
+
+    findCard(...codes)
+    {
+        if (codes.length === 0)
+            return null;
+
+        const pArea = document.getElementById("staging_area_resources_player");
+        if (pArea === null)
+            return null;
+
+        const list = pArea.getElementsByClassName("card");
+        if (list === null || list.length === 0)
+            return null;
+
+        const len = list.length;
+        for (let i = 0; i < len; i++)
+        {
+            let card = list[i];
+            for (let code of codes)
+            {
+                if (code === card.getAttribute("data-card-code"))
+                    return card;
+            }
+        }
+
+        return null;
+    }
+
+    getCurrentTurn()
+    {
+        try
+        {
+            const turn = document.getElementById("game_turns");
+            const val = turn === null ? "" : turn.innerText;
+            if (val !== "")
+                return parseInt(val);
+        }
+        catch(err)
+        {
+
+        }
+
+        return -1;
+    }
+
     /**
      * Check for things if the board has been restored
      */
@@ -124,3 +182,4 @@ MeccgApi.addListener("/game/event/fromHand", GameEvents.INSTANCE.onPlayFromHand.
 MeccgApi.addListener("/game/event/cardmoved", GameEvents.INSTANCE.onMoveToPile.bind(GameEvents.INSTANCE));
 
 document.body.addEventListener("meccg-api-connected", GameEvents.INSTANCE.onBoardRestored.bind(GameEvents.INSTANCE), false);
+document.body.addEventListener("meccg-event-phase", GameEvents.INSTANCE.onProgressToPhase.bind(GameEvents.INSTANCE), false);
