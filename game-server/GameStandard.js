@@ -459,14 +459,22 @@ class GameStandard extends GamePlayers
         this.onRedrawCompany(userid,affectedCompanyUuid);
     }
 
+    identifyCardOwnerWhenMoving(userid, cardOwner, target)
+    {
+        if (target === "victory" || target === "hand")
+            return userid;
+        else
+            return cardOwner;
+    }
+
     onCardMove(userid, socket, obj)
     {
-        var drawTop = obj.drawTop;
-        var card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
+        const drawTop = obj.drawTop;
+        const card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
         if (card === null)
             return;
 
-        var list = [];
+        let list = [];
         let affectedCompanyUuid;
         if (card.type !== "character" || obj.source !== "inplay")
         {
@@ -474,12 +482,9 @@ class GameStandard extends GamePlayers
              * the victory pile is different: usually, the target of your deck pils is always the card owner,
              * yet the victory condition allows to take ownership of cards
              */
-            let _targetPlayer = card.owner;
-            if (obj.target === "victory" || obj.target === "hand")
-                _targetPlayer = userid;
-                
+            const _targetPlayer = this.identifyCardOwnerWhenMoving(userid, card.owner, obj.target);
             if (this.getPlayboardManager().MoveCardTo(obj.uuid, _targetPlayer, obj.target))
-                list = [obj.uuid];
+                list.push(obj.uuid);
         } 
         else
         {
@@ -497,11 +502,9 @@ class GameStandard extends GamePlayers
             let listCodes = [];
             for (let _uid of list)
             {
-                let _card = this.getPlayboardManager().GetCardByUuid(_uid);
+                const _card = this.getPlayboardManager().GetCardByUuid(_uid);
                 if (_card !== null)
-                    listCodes.push({
-                        code: _card.code,
-                        owner: _card.owner});
+                    listCodes.push({code: _card.code, owner: _card.owner});
             }
 
             this.publishToPlayers("/game/event/cardmoved", userid, {list: listCodes, target: obj.target, source: obj.source});
@@ -511,8 +514,6 @@ class GameStandard extends GamePlayers
         this.publishToPlayers("/game/card/remove", userid, list);
         this.publishChat(userid, "Moved " + list.length + " card(s) to " + obj.target);
         this.onRedrawCompany(userid, affectedCompanyUuid);
-
-        
     }
 
     onCardToken(userid, socket, data)

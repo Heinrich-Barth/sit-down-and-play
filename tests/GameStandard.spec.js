@@ -12,16 +12,16 @@ describe('globalRestoreGame(userid, socket, data)', () => {
     const _MeccgApi = {
         publish: function()
         {
-
+            /** not needed */
         }
     }
     const _Chat = {
         sendMessage : function()
         {
-
+            /** not needed */
         }
     }
-    const eventManager = { trigger: function() {} };
+    const eventManager = { trigger: function() { /** not needed */ } };
     const pPlayboardManager = new PlayboardManager([], eventManager, {}, false);
     const instance = new GameStandard(_MeccgApi, _Chat, pPlayboardManager)
 
@@ -40,5 +40,17 @@ describe('globalRestoreGame(userid, socket, data)', () => {
         
         instance.globalRestoreGame("100", null, data);
         expect(15).toEqual(15);
+    });
+});
+
+describe('identifyCardOwnerWhenMoving(userid, cardOwner, target)', () => {
+
+    const instance = new GameStandard();
+
+    it('identifyCardOwnerWhenMoving()', () => {
+        
+        expect(instance.identifyCardOwnerWhenMoving("userid", "cardOwner", "victory")).toEqual("userid");
+        expect(instance.identifyCardOwnerWhenMoving("userid", "cardOwner", "hand")).toEqual("userid");
+        expect(instance.identifyCardOwnerWhenMoving("userid", "cardOwner", "play")).toEqual("cardOwner");
     });
 });
