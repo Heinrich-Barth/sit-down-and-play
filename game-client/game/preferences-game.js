@@ -73,12 +73,12 @@ class GamePreferences extends Preferences {
     
     static useImagesDC()
     {
-        return true; 
+        return Preferences._getConfigValue("images_errata_dc"); 
     }
 
     static useImagesIC()
     {
-        return true; 
+        return true;
     }
 
     static discardOpenly()
@@ -113,14 +113,16 @@ class GamePreferences extends Preferences {
         this.createEntry0("game_show_lobby");       
         this.createEntry0("game_addcards");       
         this.createEntry0("leave_game");
+
+        this.createSection("Images");
+        this.createEntry0("images_errata_dc");
     }
 
     addConfiguration()
     {
         this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
         this.addConfigToggle("discard_facedown", "Discard cards face down", true);
-        this.addConfigToggle("images_errata_dc", "Use Dreamcards Errata", true);
-        this.addConfigToggle("images_errata_ic", "Use Errata", true);
+        this.addConfigToggle("images_errata_dc", "Use CoE Errata", true);
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
