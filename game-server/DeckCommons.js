@@ -331,8 +331,8 @@ class DeckCommons {
         data.uuid = this.requestNewCardUuid();
         data.state = 0;
         data.owner = this.getPlayerId();
-        data.revealed = !isAgent;
-        data.agent = isAgent;
+        data.revealed = isAgent !== true
+        data.agent = isAgent === true;
         data.turn = 0;
         data.secondary = gameCardProvider.getCardTypeSpecific(code);
         return data;

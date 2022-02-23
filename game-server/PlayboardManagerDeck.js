@@ -419,6 +419,19 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
     {
         return this.getDecks().addCardsToSideboardDuringGame(playerId, jsonDeck, this.agents, this.gameCardProvider);
     }
+
+    /**
+     * Add a card to the hand of a given player DURING the game!
+     * 
+     * @param {String} playerId Target player
+     * @param {String} code Card Code
+     * @param {Boolean} bAsCharacter Consider this card as a character OR a ressource
+     * @returns {Number} Number of cards added or -1
+     */
+    ImportCardsToHand(playerId, code, bAsCharacter)
+    {
+        return this.getDecks().importCardsToHand(playerId, code, bAsCharacter, this.gameCardProvider);
+    }
     
     isValidTarget(target)
     {

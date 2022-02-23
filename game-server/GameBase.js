@@ -180,6 +180,11 @@ class GameBase {
         return this.getPlayboardManager().AddDeckCardsToSideboard(playerId, cards);
     }
 
+    importCardDuringGame(playerId, code, bAsCharacter)
+    {
+        return this.getPlayboardManager().ImportCardsToHand(playerId, code, bAsCharacter);
+    }
+
     replyToPlayer(path, socket, obj)
     {
         this.apis.meccgApi.reply(path, socket, obj);

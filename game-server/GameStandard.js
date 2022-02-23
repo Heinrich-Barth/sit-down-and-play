@@ -35,7 +35,8 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/card/hand", this.onCardInHand.bind(this));
         this.getMeccgApi().addListener("/game/card/token", this.onCardToken.bind(this));
         this.getMeccgApi().addListener("/game/card/add", this.onGameAddCardsToGame.bind(this)); /* add a list of cards to the sideboard */
-
+        this.getMeccgApi().addListener("/game/card/import", this.onCardImport.bind(this));
+        
         this.getMeccgApi().addListener("/game/stagingarea/add/card", this.onStagingAreaAddCard.bind(this));
 
         this.getMeccgApi().addListener("/game/save", this.globalSaveGame.bind(this));
@@ -643,8 +644,6 @@ class GameStandard extends GamePlayers
         else
         {
             this.removeEmptyCompanies();
-            console.log(isFromHand);
-            console.log("+++ -" );
             if (isFromHand)
             {
                 const _code = this.getCharacterCode(targetcharacter, "");
@@ -931,6 +930,12 @@ class GameStandard extends GamePlayers
             this.publishChat(this.getCurrentPlayerId(), " starts turn no. " + nNewTurn);
         else
             this.publishChat(this.getCurrentPlayerId(), " is now in " + sPhase + " phase");
+    }
+
+    onCardImport(userid, socket, data)
+    {
+        if (this.importCardDuringGame(userid, data.code, data.type === "character"))
+            this.onGetTopCardFromHand(userid, null, 1);
     }
 
     onGameAddCardsToGame(userid, socket, data)

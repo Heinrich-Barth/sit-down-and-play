@@ -113,6 +113,8 @@ const ContextMenu = {
         if (pCard === null || companyId === "" || companyId === undefined)
             return;
 
+        const code = e.detail.code;
+        pCard.setAttribute("data-context-code", code);
         pCard.setAttribute("data-contextmenu-site-arrive-company", companyId);
         pCard.oncontextmenu = ContextMenu.contextActions.onContextSiteArrive; 
         pCard.ondblclick = ContextMenu.contextActions.onDoubleClickSiteArrive;
@@ -224,9 +226,10 @@ const ContextMenu = {
 
             if (e.target !== null)
             {
-                let sCompany = e.target.getAttribute("data-contextmenu-site-arrive-company");
+                const sCode = e.target.getAttribute("data-context-code");
+                const sCompany = e.target.getAttribute("data-contextmenu-site-arrive-company");
                 if (sCompany !== null && sCompany !== "")
-                    ContextMenu.show(e, "", "", sCompany, "arrive");
+                    ContextMenu.show(e, "", sCode, sCompany, "arrive");
             }
 
             return false;
@@ -280,7 +283,7 @@ const ContextMenu = {
     getAttribute : function(element, sKey)
     {
         let val = element === null ? null : element.getAttribute(sKey);
-        return val === null ? "" : val;
+        return val === null || val === undefined ? "" : val;
     },
 
     hightlightCard : function(uuid, code)
@@ -395,6 +398,20 @@ const ContextMenu = {
             elem.setAttribute("data-card-code", "");
             elem.setAttribute("data-card-uuid", "");
             elem.setAttribute("data-company", "");
+        },
+
+        addRessource : function(pMenu)
+        {
+            let code = ContextMenu.getAttribute(pMenu, "data-card-code");
+            if (code !== "")
+                MeccgApi.send("/game/card/import", {code : code, type: "resource" });
+        },
+
+        addCharacter: function(pMenu)
+        {
+            let code = ContextMenu.getAttribute(pMenu, "data-card-code");
+            if (code !== "")
+                MeccgApi.send("/game/card/import", {code : code, type: "character" });
         }
     },
     
@@ -412,7 +429,7 @@ const ContextMenu = {
             callback : callback
         }
     },
-
+    
     createContextMenus : function()
     {
         this.addItem("ready", "Ready card", "fa-heart", "context-menu-item-rotate context-menu-item-generic context-menu-item-location", ContextMenu.callbacks.rotate, "ALT+Doubleclick to untap");
@@ -425,9 +442,11 @@ const ContextMenu = {
         this.addItem("token_add", "Add token", "fa-plus", "context-menu-item-generic", ContextMenu.callbacks.tokenAdd);
         this.addItem("token_remove", "Remove token", "fa-minus", "context-menu-item-generic", ContextMenu.callbacks.tokenRemove);
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive, "Doubleclick on opponents target site to indicate NO MORE HAZARDS");
+        this.addItem("add_ressource", "Add this site as a ressource", "fa-clipboard", "context-menu-item-arrive", ContextMenu.callbacks.addRessource, "Adds this site as RESSOURCE to your hand and will be played facedown.");
+        this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
-        this.data.types["location"] = ["ready", "tap", "arrive"];
+        this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character"];
         this.data.types["arrive"] = ["arrive"];
 
         this.data.specialClasses["card"] = "";

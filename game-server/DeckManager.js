@@ -204,6 +204,23 @@ class DeckManager {
         return typeof this._deck[playerId] === "undefined" ? -1 : this._deck[playerId].registerCardsToSideboard(jsonDeck, listAgents, this._cardMap, gameCardProvider);
     }
 
+    importCardsToHand(playerId, code, bAsCharacter, gameCardProvider)
+    {
+        if (typeof this._deck[playerId] === "undefined")
+        {
+            console.log("Could not find deck " + playerId);
+            return false;
+        }
+        else if (code === "")
+        {
+            console.log("Invalid code provded.");
+            return false;
+        }
+        else
+            return this._deck[playerId].importCardsToHand(code, bAsCharacter, this._cardMap, gameCardProvider);
+
+    }
+
     getCards() 
     {
         if (this._handManager === null)
