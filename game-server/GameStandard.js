@@ -33,18 +33,18 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/card/move", this.onCardMove.bind(this));
         this.getMeccgApi().addListener("/game/card/discard", this.onCardDiscard.bind(this));
         this.getMeccgApi().addListener("/game/card/hand", this.onCardInHand.bind(this));
+        this.getMeccgApi().addListener("/game/card/token", this.onCardToken.bind(this));
+        this.getMeccgApi().addListener("/game/card/add", this.onGameAddCardsToGame.bind(this)); /* add a list of cards to the sideboard */
 
         this.getMeccgApi().addListener("/game/stagingarea/add/card", this.onStagingAreaAddCard.bind(this));
 
         this.getMeccgApi().addListener("/game/save", this.globalSaveGame.bind(this));
         this.getMeccgApi().addListener("/game/restore", this.globalRestoreGame.bind(this));
-        this.getMeccgApi().addListener("/game/card/token", this.onCardToken.bind(this));
         
         this.getMeccgApi().addListener("/game/dices/roll", this.rollDices.bind(this));
         this.getMeccgApi().addListener("/game/dices/set", this.setDices.bind(this));
 
         this.getMeccgApi().addListener("/game/phase/set", this.phase.bind(this)); /* Set the current phase of the game turn */
-        this.getMeccgApi().addListener("/game/add-cards-to-game", this.onGameAddCardsToGame.bind(this)); /* add a list of cards to the sideboard */
         
         this.getMeccgApi().addListener("/game/view-cards/reveal-pile", this.viewReveal.bind(this));
         this.getMeccgApi().addListener("/game/view-cards/list", this.viewList.bind(this));

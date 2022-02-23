@@ -101,7 +101,7 @@ const AddCardsInGame = {
             {
                 AddCardsInGame.onClose();
                 document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Cards were added to your sideboard." }));
-                MeccgApi.send("/game/add-cards-to-game", { cards: jDeck });        
+                MeccgApi.send("/game/card/add", { cards: jDeck });        
             }
         }
 
