@@ -256,3 +256,7 @@ span.builder-white { color: #fff !important; font-weight: bold;}
 #deck_container h2,
 #deckname
 { font-size: 15px; }
+
+#notifications {
+    padding: 0px;
+}
