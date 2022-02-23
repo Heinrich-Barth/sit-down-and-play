@@ -859,12 +859,11 @@ class GameStandard extends GamePlayers
     
     rollDices(userid, socket, obj)
     {
-        const pDices = this.getPlayerDices();
-        const n1 = pDices.roll();
-        const n2 = pDices.roll();
+        const n1 = obj.r1;
+        const n2 = obj.r2;
         const nRes = n1 + n2;
+        const pDices = this.getPlayerDices();
         const dice = pDices.getDice(userid);
-
         pDices.saveRoll(userid, nRes);
 
         this.publishToPlayers("/game/dices/roll", userid, {first: n1, second: n2, total: nRes, user: userid, dice: dice });

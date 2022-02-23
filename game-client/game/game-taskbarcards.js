@@ -119,6 +119,27 @@ class ViewCardListContainer {
     }
 }
 
+
+class DiceRoller 
+{
+    static getDiceValue()
+    {
+        let val = Math.floor(Math.random() * 10) + 1;
+        return val >= 1 && val <= 6 ? val : DiceRoller.getDiceValue();
+    }
+        
+    static rollDice()
+    {
+        let val = 0;
+
+        const times = 50 + Math.floor(Math.random() * 100);
+        for (let i = 0; i < times; i++)
+            val = DiceRoller.getDiceValue();
+
+        return val;
+    }
+}
+
 class TaskBarCards 
 {
     static _cardPreview = null;
@@ -154,7 +175,9 @@ class TaskBarCards
 
         document.querySelector(".card-dice").onclick = (e) => 
         {
-            MeccgApi.send("/game/dices/roll", "");
+            const val1 = DiceRoller.rollDice();
+            const val2 = DiceRoller.rollDice();
+            MeccgApi.send("/game/dices/roll", { r1: val1, r2: val2 });
             e.stopPropagation();
             return false;
         };
