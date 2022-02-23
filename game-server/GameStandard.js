@@ -148,9 +148,10 @@ class GameStandard extends GamePlayers
         return true;
     }
 
-    getCurrentBoard(id)
+    createEmptyBoardData()
     {
-        var data = {
+        const _data = this.getPlayboardManager().GetData();
+        return {
             player: {
                 companies: [],
                 stage_hazards: [],
@@ -162,58 +163,52 @@ class GameStandard extends GamePlayers
                 stage_resources: []
             },
 
-            data : this.getPlayboardManager().GetData()
+            data : _data
         };
+    }
+
+    getCurrentBoardCompanies(_dataTarget, _playerId)
+    {
+        for (let _elem of this.getPlayboardManager().GetCompanyIds(_playerId))
+        {
+            const _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(_elem);
+            if (_temp !== null)
+                _dataTarget.companies.push(_temp);
+        }
+    }
+
+    getCurrentBoardStaging(_dataTarget, _playerId, bResources)
+    {
+        for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, bResources))
+        {
+            let card = this.getPlayboardManager().GetCardByUuid(_elem);
+            if (card !== null)
+            {
+                _dataTarget.push({uuid: card.uuid, 
+                    target: "", 
+                    code: card.code, 
+                    type: card.type.toLowerCase(), 
+                    state: card.state, 
+                    revealed: card.revealed, 
+                    owner: card.owner, 
+                    token: card.token === undefined ? 0 : card.token,
+                    secondary : card.secondary
+                });
+            }
+        }
+    }
+
+    getCurrentBoard(id)
+    {
+        const data = this.createEmptyBoardData();
 
         let _dataTarget;
         for (let _playerId of this.getPlayerIds())
         {
-            if (_playerId === id)
-                _dataTarget = data.player;
-            else
-                _dataTarget = data.opponent;
-
-            for (let _elem of this.getPlayboardManager().GetCompanyIds(_playerId))
-            {
-                let _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(_elem);
-                if (_temp !== null)
-                    _dataTarget.companies.push(_temp);
-            }
-
-            for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, true))
-            {
-                let card = this.getPlayboardManager().GetCardByUuid(_elem);
-                if (card !== null)
-                {
-                    _dataTarget.stage_resources.push({uuid: card.uuid, 
-                        target: "", 
-                        code: card.code, 
-                        type: card.type.toLowerCase(), 
-                        state: card.state, 
-                        revealed: card.revealed, 
-                        owner: card.owner, 
-                        token: card.token === undefined ? 0 : card.token,
-                        secondary : card.secondary
-                    });
-                }
-            }
-    
-            for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, false))
-            {
-                let card = this.getPlayboardManager().GetCardByUuid(_elem);
-                if (card !== null)
-                    _dataTarget.stage_hazards.push({uuid: card.uuid, 
-                        target: "", 
-                        code: card.code, 
-                        type: card.type.toLowerCase(), 
-                        state: card.state, 
-                        revealed: card.revealed, 
-                        owner: card.owner,
-                        token: card.token === undefined ? 0 : card.token,
-                        secondary : card.secondary
-                    });
-            }
-
+            _dataTarget = _playerId === id ? data.player : data.opponent;
+            this.getCurrentBoardCompanies(_dataTarget, _playerId);
+            this.getCurrentBoardStaging(_dataTarget.stage_resources, _playerId, true);
+            this.getCurrentBoardStaging(_dataTarget.stage_hazards, _playerId, false);
             this.updateHandCountersPlayer(_playerId);
         }
 
