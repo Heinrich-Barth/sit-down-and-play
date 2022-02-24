@@ -124,7 +124,7 @@ class DiceRoller
 {
     static getDiceValue()
     {
-        let val = Math.floor(Math.random() * 10) + 1;
+        let val = Math.trunc(Math.random() * 10) + 1;
         return val >= 1 && val <= 6 ? val : DiceRoller.getDiceValue();
     }
         
@@ -381,7 +381,7 @@ class TaskBarCards
     {
         var jViewContainer = ViewCardListContainer.GetViewContainer();
         if (jViewContainer === null || jViewContainer.classList.contains("hidden"))
-            return false;
+            return;
 
         var jContainer = jViewContainer.querySelector(".view-card-list-container");
 
@@ -394,8 +394,6 @@ class TaskBarCards
             MeccgApi.send("/game/view-cards/list/close", { offered: true });
         else if (isOffer)
             MeccgApi.send("/game/view-cards/list/close", { offered: false });
-
-        return false;
     }
 
 
