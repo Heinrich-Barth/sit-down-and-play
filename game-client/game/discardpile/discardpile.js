@@ -23,7 +23,7 @@ class DiscardPileAtTable
             return;
 
         const elem = document.createElement("div");
-        elem.setAttribute("class", "discardpiles hide");
+        elem.setAttribute("class", "discardpiles fr hide");
         elem.setAttribute("id", this.id);
         list[0].appendChild(elem);
     }

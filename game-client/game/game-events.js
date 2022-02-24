@@ -212,8 +212,11 @@ class GameEvents
             const list = document.querySelectorAll('div[data-card-code="' + data.code +'"]');
             this.pallandoInPlay = list !== null && list.length > 0;
             if (!this.pallandoInPlay)
+            {
                 document.body.dispatchEvent(new CustomEvent("meccg-discardpile-hide", { "detail": {} }));
-            
+                this.pallandoIsMine = false;
+                this.pallandoOwner = "";
+            }
         }
         else
         {
