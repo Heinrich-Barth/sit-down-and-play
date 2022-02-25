@@ -288,12 +288,29 @@ const onCheckCardCodes = function()
     });   
 };
 
+const randomNumber = function(max)
+{
+    return max <= 1 ? 0 : Math.floor(Math.random() * max);
+};
+
+const loadSampleUserName = function()
+{
+    fetch("/data/samplenames").then((response) => response.json().then((filtered) => 
+    {
+        if (filtered.length > 0)
+            document.getElementById("user").value = filtered[randomNumber(filtered.length)];
+    }));
+};
+
 (function () {
 
 
     const sUserName = document.getElementById("user").value;
     if (sUserName === "")
+    {
+        loadSampleUserName();
         document.getElementById("user").focus();
+    }
     else
         document.getElementById("user").value = sUserName;
    
