@@ -124,6 +124,11 @@ var DeckList =
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "character_" + index, "type" : _val, "resource":true});
                 htmlCharsAvatar += '<div id="character_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
             }
+            else if (_val === "Agent")
+            {
+                ViewCards.config.vsDeckContainerIds.push({ "id" : "agent_" + index, "type" : _val, "resource":true});
+                htmlCharsAvatar += '<div id="agent_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
+            }
             else
             {
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "resource_" + index, "type" : _val, "resource":true});

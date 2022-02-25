@@ -145,18 +145,22 @@ const DeckbuilderApi =
 
         function doAddCard(card, count)
         {
-            if (card.type === "Character")
+            const type = card.type.toLowerCase();
+            if (type === "character")
             {
-                if (card.Secondary === "Character")
+                const secondary = card.Secondary.toLowerCase();
+                if (secondary === "character")
                     DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_CHARACTER);
-                else if (card.Secondary === DeckbuilderApi.DECK_AVATAR)
+                else if (secondary === "agent")
+                    DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_CHARACTER);
+                else if (secondary === "avatar")
                     DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_AVATAR);
                 else
                     DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
             }
-            else if (card.type === "Resource")
+            else if (type === "resource")
                 DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_RESOURCE);
-            else if (card.type === "Hazard")
+            else if (type === "hazard")
                 DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_HAZARD);
             else
                 DeckbuilderApi.onInitAddCard(card, count, DeckbuilderApi.DECK_SIDEBOARD);
