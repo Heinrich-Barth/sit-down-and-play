@@ -2,11 +2,13 @@
 
 .bg-nature, .bgnature
 {
+    background-color: #000;
     background: url("/media/assets/backgrounds/nature.webp") no-repeat center center fixed;
 }
 
 .bg-game
 { 
+    background-color: #000;
     background: url("/media/assets/backgrounds/eagle.webp") no-repeat center center fixed;
     background-size: cover;
 }

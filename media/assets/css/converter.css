@@ -9,5 +9,6 @@ input#deckname {
 }
 body
 {
+    background-color: #000;
     background: url("/media/assets/backgrounds/nature.webp") no-repeat center center fixed;
 }
