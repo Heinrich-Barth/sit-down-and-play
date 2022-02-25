@@ -4,7 +4,7 @@
     animation-duration: 4s;
 }
 
-.card-highlight { animation: glowGreen linear 1s 2 forwards; }
+.card-highlight img { animation: glowGreen linear 1s 2 forwards; }
 .glowing { animation: glowYellow 1s 5 forwards; }
 .staging-area-player .mark-red img {
     border: 2px solid #e36666;
