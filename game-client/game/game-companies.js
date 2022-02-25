@@ -156,7 +156,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             pImage.setAttribute("data-owner", "");
         else
         {
-            let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : "other";
+            let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : card.owner;
             pImage.setAttribute("data-owner", bIsMyCard);
         }
             
