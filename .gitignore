@@ -19,3 +19,4 @@ pages/rules-*.html
 keepalive.js
 
 media/assets/backgrounds/*
+plugins/namelist.json
