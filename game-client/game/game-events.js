@@ -13,6 +13,7 @@ class GameEvents
         this.pallandoOwner = "";
         this.eventCodes = { };
         this.myId = g_sUserId;
+        this.isWatcher = document.body.getAttribute("data-is-watcher") === "true";
     }
 
     /**
@@ -176,7 +177,8 @@ class GameEvents
             this.triggerEvent(_data.code, bIsMe, GameEvents.Type_Leave, _d);
         }
 
-        if ((data.target === "discard" || data.target === "discardpile") && this.pallandoInPlay)
+        if ((this.pallandoInPlay || this.isWatcher) &&
+            (data.target === "discard" || data.target === "discardpile"))
         {
             const card = data.list[data.list.length-1];
             if (card.owner !== this.pallandoOwner)

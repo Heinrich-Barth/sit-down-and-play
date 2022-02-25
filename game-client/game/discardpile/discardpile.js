@@ -23,9 +23,18 @@ class DiscardPileAtTable
             return;
 
         const elem = document.createElement("div");
-        elem.setAttribute("class", "discardpiles fr hide");
+        elem.classList.add("discardpiles");
+        elem.classList.add("fr");
+        if (!DiscardPileAtTable.isWatching())
+            elem.classList.add("hide");
+
         elem.setAttribute("id", this.id);
         list[0].appendChild(elem);
+    }
+
+    static isWatching()
+    {
+        return document.body.getAttribute("data-is-watcher") === "true";
     }
     
     updateDiscardContainers(e)
@@ -94,5 +103,8 @@ class DiscardPileAtTable
 
     document.body.addEventListener("meccg-players-updated", pInstance.updateDiscardContainers.bind(pInstance), false);
     document.body.addEventListener("meccg-discardpile-add", pInstance.addCardToContainers.bind(pInstance), false);
-    document.body.addEventListener("meccg-discardpile-hide", pInstance.hideDiscardPiles.bind(pInstance), false);
+
+    /** allow spectators to always see discard piles */
+    if (!DiscardPileAtTable.isWatching())
+        document.body.addEventListener("meccg-discardpile-hide", pInstance.hideDiscardPiles.bind(pInstance), false);
 })();
