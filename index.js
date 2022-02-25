@@ -23,7 +23,8 @@ let SERVER = {
     cards : null,
     _io : null,
     _sampleRooms : [],
-    _navigation : []
+    _navigation : [],
+    _sampleNames : []
 };
 
 SERVER.getSocketIo = function()
@@ -54,7 +55,7 @@ const getHtmlCspPage = function(page)
 
     SERVER.cards = require("./plugins/cards.js");
     SERVER.cards.load(SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
-    
+
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
     SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
@@ -69,6 +70,7 @@ const getHtmlCspPage = function(page)
 
     g_pEventManager.trigger("add-sample-rooms", SERVER._sampleRooms);
     g_pEventManager.trigger("main-navigation", SERVER._navigation);
+    g_pEventManager.trigger("add-sample-names", SERVER._sampleNames);
 
 })();
 
@@ -403,6 +405,7 @@ SERVER.instance.post("/data/decks/check", function (req, res)
 });
 
 SERVER.instance.get("/data/samplerooms", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
+SERVER.instance.get("/data/samplenames", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleNames).status(200));
 
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 

@@ -27,6 +27,32 @@ function _register(pEventManager)
         targetList.push(navigationEntry("/about", "About"));
     });
 
+    pEventManager.addEvent("add-sample-names", function(targetList)
+    {
+        const fs = require('fs')
+        fs.readFile(__dirname + '/namelist.json', 'utf8', function (err,data) 
+        {
+            if (err) 
+            {
+                console.log("No sample user names available.");
+                return;
+            }
+
+            try{
+                const json = JSON.parse(data);
+                for (let elem of json)
+                {
+                    if (elem !== "" && typeof elem === "string")
+                        targetList.push(elem.trim());
+                }
+            }
+            catch (ex)
+            {
+                console.error(ex);
+            }
+        });
+    });
+
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
 
     pEventManager.dump();
