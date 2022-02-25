@@ -22,7 +22,7 @@ class GameEvents
      */
     onPlayFromHand(bIsMe, data)
     {
-        this.triggerEvent("Pallando [H] (TW)", bIsMe, GameEvents.Type_Enter, data);
+        this.triggerEvent(data.code, bIsMe, GameEvents.Type_Enter, data);
     }
 
     onProgressToPhase(e)
@@ -138,11 +138,18 @@ class GameEvents
         {
             this.pallandoInPlay = true;
             this.pallandoIsMine = true;
+            this.pallandoOwner = this.myId;
         }
-        else if (document.getElementById("opponent_table").querySelectorAll('div[data-card-code="Pallando [H] (TW)"]').length > 0)
+        else 
         {
-            this.pallandoInPlay = true;
-            this.pallandoIsMine = false;
+            const list = document.getElementById("opponent_table").querySelectorAll('div[data-card-code="Pallando [H] (TW)"]');
+            if (list.length > 0)
+            {
+                this.pallandoInPlay = true;
+                this.pallandoIsMine = false;
+                const img = list[0].querySelector("img");
+                this.pallandoOwner = img.getAttribute("data-owner");
+            }
         }
 
         this.markNonPermanentEvents();
@@ -191,7 +198,7 @@ class GameEvents
     {
         try
         {
-            if (this.eventCodes[code] !== undefined)
+            if (code !== undefined && code !== "" && this.eventCodes[code] !== undefined)
                 this.eventCodes[code](isMe, type, data);
         }
         catch (err)
@@ -209,7 +216,7 @@ class GameEvents
     {
         if (GameEvents.Type_Leave === type)
         {
-            const list = document.querySelectorAll('div[data-card-code="' + data.code +'"]');
+            const list = document.querySelectorAll('div[data-card-code="Pallando [H] (TW)"]');
             this.pallandoInPlay = list !== null && list.length > 0;
             if (!this.pallandoInPlay)
             {
