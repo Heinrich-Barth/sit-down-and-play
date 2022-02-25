@@ -53,9 +53,10 @@
     top: auto;
 }
 
-
 .game-watch-only .company-host,
 .game-watch-only .company
 {
     height: auto !important;
 }
+
+.game-watch-only .chatbox { height: 20px; }
