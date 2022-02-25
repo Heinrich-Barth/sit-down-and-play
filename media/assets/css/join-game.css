@@ -179,7 +179,6 @@ box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
 
 textarea {
     width: 100%;
-    margin-top: 10px;
     height: 55px;
     font-size: 10px;
     border-radius: 5px;
@@ -262,3 +261,8 @@ input:not(:checked) ~ .challenge-deck { display: none };
 .arda-text { text-align: left; margin-left: 113px;}
 
 .isLoggingIn button { display: none;}
+
+.fields h2 {
+    font-size: 1.17em;
+    text-align: left;
+}

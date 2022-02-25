@@ -7,3 +7,7 @@ input#deckname {
     background: transparent;
     color: #fff;
 }
+body
+{
+    background: url("/media/assets/images/poster_nature.jpg") no-repeat center center fixed;
+}
