@@ -80,7 +80,7 @@ class MapData
         }
         catch(err)
         {
-            console.error(err);
+            console.warn(err.message);
             this.clear();
         }
     }
@@ -386,7 +386,7 @@ class MapData
                 jMapData[key]["area"] = jPos[key]
         
             let _item = jMapData[key];
-            if (typeof _item["sites"] === "undefiened")
+            if (typeof _item["sites"] === "undefined")
                 continue;
         
             _item = _item["sites"];        
