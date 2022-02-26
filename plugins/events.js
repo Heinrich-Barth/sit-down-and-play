@@ -48,7 +48,7 @@ function _register(pEventManager)
             }
             catch (ex)
             {
-                console.error(ex);
+                console.warn(ex.message);
             }
         });
     });

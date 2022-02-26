@@ -9,7 +9,7 @@ const getRemovableKeysArray = function()
     }
     catch (err)
     {
-        console.error(err);
+        console.warn(err);
     }
 
     return [];
@@ -84,7 +84,7 @@ const CARDS = {
     identifyQuests : function()
     {
         for (var card of this._raw) 
-            card.isQuest = card.Race.startsWith("Quest-Side-");
+            card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
     },
 
     identifyInLieuItems : function()
