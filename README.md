@@ -53,6 +53,7 @@ Open your terminal and access this project folder. THen run the following comman
 npm install
 npm run local
 ````
+
 Your app should now be running on [localhost:8080](http://localhost:8080/).
 
 The application will make use of the local data files using `ENV` variables.
@@ -66,6 +67,14 @@ The application will make use of the local data files using `ENV` variables.
 `MAPPOS` is the filename of your position marker geo coordinates (map-positions-example.json)
 
 Card data and images *are not part of this project* and you will have to provide them.
+
+### In Production
+
+You can start this app via `node start`, but you will have to set your own ENV variables. They will not be taken from the start command automatically.
+
+### Unit Testing
+
+You can execute unit tests via `node test`
 
 ### Providing Card Data
 
