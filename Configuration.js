@@ -22,9 +22,10 @@ class Configuration {
 
         this._port = Configuration.assertString(process.env.PORT, 8080);
 
-        this._imageUrl = Configuration.assertString(process.env.IMAGE_PATH);
-        this._cardsUrl = Configuration.assertString(process.env.CARDURL, "/data-images");
-        
+        this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
+        this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "cards.json");
+        this._mapPositions = Configuration.assertUrlOrDataDirectory(process.env.MAPPOS, "map-positions.json");
+
         if (sLocalConfig !== undefined && sLocalConfig !== "")
             this.loadConfig(sLocalConfig);
     }
@@ -35,6 +36,30 @@ class Configuration {
             return def === undefined ? "" : def;
         else
             return input;
+    }
+
+    static assertUrlOrDirectory(input)
+    {
+        let val = Configuration.assertString(input, "");
+        if (val === "" || val.indexOf("..") !== -1)
+            return "";
+        else if (val.indexOf("//") > -1)
+            return val;
+        else if (val.startsWith("/"))
+            return __dirname + val;
+        else 
+            return __dirname + "/" + val;
+    }
+
+    static assertUrlOrDataDirectory(input, def)
+    {
+        let val = Configuration.assertString(input, def);
+        if (val.indexOf("//") > -1)
+            return val;
+        else if (val.startsWith("/"))
+            return __dirname + "/data" + val;
+        else
+            return __dirname + "/data/" + val;
     }
 
     isValid(input)
@@ -65,6 +90,11 @@ class Configuration {
         }
     }
 
+    mapPositionsFile()
+    {
+        return this._mapPositions;
+    }
+
     port()
     {
         return this._port;
@@ -90,9 +120,19 @@ class Configuration {
         return this._imageExpires;
     }
 
+    hasLocalImages()
+    {
+        return this._imageUrl !== "" && this._imageUrl.indexOf("//") === -1;
+    }
+
+    imageFolder()
+    {
+        return this._imageUrl.indexOf("//") !== -1 ? "" : this._imageUrl;
+    }
+
     imageUrl()
     {
-        return this._imageUrl;
+        return this._imageUrl.indexOf("//") !== -1 ? this._imageUrl : "/data/images";
     }
 
     static extractDomain(sInput)
