@@ -54,7 +54,8 @@ const getHtmlCspPage = function(page)
     const RoomManager = require("./game-server/RoomManager");
 
     SERVER.cards = require("./plugins/cards.js");
-    SERVER.cards.load(SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
+    SERVER.cards.setConfiguration(SERVER.environment.mapPositionsFile(), SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
+    SERVER.cards.load();
 
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
@@ -409,8 +410,11 @@ SERVER.instance.get("/data/samplenames", (req, res) => SERVER.expireResponse(res
 
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 
-if (SERVER.environment.imageUrl() === "/data-images")
-    SERVER.instance.use("/data-images", g_pExpress.static(__dirname + "/data-images", SERVER.cacheResponseHeader));
+if (SERVER.environment.hasLocalImages())
+{
+    console.log("Card images are accessed locally from " + SERVER.environment.imageFolder());
+    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.environment.imageFolder(), SERVER.cacheResponseHeader));
+}
 
 /**
  * Error endpoint.
@@ -511,8 +515,6 @@ SERVER.instance.use(function(req, res, next)
 /* 500 - Any server error */
 SERVER.instance.use(function(err, req, res, next) 
 {
-    console.log(err);
-
     res.status(500);
     res.format({
       html: () => res.sendFile(__dirname + "/pages/error-500.html"),
