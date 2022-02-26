@@ -41,7 +41,7 @@ const getHtmlCspPage = function(page)
  * Update server environment
  */
 (function(sConfigFile){
-    const Configiration = require("./Configuration.js");
+    const Configiration = require("./Configuration");
 
     SERVER.environment = new Configiration(sConfigFile);
 
