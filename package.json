@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "local": "PORT=8090 IMAGE_PATH=/data/card-images CARDURL=cards.json MAPPOS=map-positions-example.json node index.js",
     "test": "jest --config ./jest.config.json"
   },
   "dependencies": {
