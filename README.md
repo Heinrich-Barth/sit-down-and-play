@@ -14,7 +14,9 @@ This project aims to provide an easy way to setup and maintain a card game serve
 
 Although the gameplay is guided by Middle-earth Collectible Card Game, you can easily adapt it to your own game.
 
-Most importantly, you will need to provide the card data and its images. A description of the JSON format will be given below.
+*Generic sample data is provided to play around a bit.*
+
+However, you will need to provide the card data and its images for the full experience. See section below on how to start.
 
 ### Feature Overview
 
@@ -32,6 +34,7 @@ This project allows to
 * Play a game
 * Play a shared deck game (arda)
 * Browse cards
+* Browse maps and edit position markers
 * Build a deck
 
 ## Disclaimer
@@ -40,37 +43,42 @@ Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron
 
 *MECCG* assets are not included in this repository. 
 
-## Preparations
-
-Card data and images *are not part of this project* and you will have to provide them.
-
-You have to provide certain configuration data using the file ``./data/config.json``. Changes will be ignored via ``.gitignore``. The sample file ``./data/config-example.json`` shows a mock configuration.
-
-### Providing Card Data
-
-The card data file is centra, because all further data is generated from it (which images and sites to use, etc.). 
-
-There are two ways to provide for this json object:
-
-* deploy the card data json file to ``./card-data/cards-raw.json``. This file will be ignored via ``.gitignore``. See the section *Providing your own cards* down below for more detailed information.
-* setup a dedicated CDN server and provide the endpoint to query the json from via your configuration file.
-
-### Providing Card Images
-
-The image URL is being constructed as part of the `plugins/imagelist.js` module. Your own endpoint may be added via the configuration file. Importantly, you can also use a CDN server (*HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations).
-
-## Running Locally
+## Getting started
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
 Open your terminal and access this project folder. THen run the following commands:
 
-```
-$ npm install
-$ npm start
-```
-
+````
+npm install
+npm run local
+````
 Your app should now be running on [localhost:8080](http://localhost:8080/).
+
+The application will make use of the local data files using `ENV` variables.
+
+`PORT` sets the app's port (8080) 
+
+`IMAGE_PATH` allows you to point to the subdirectory where your card images are stored. You can also use an URL to load external resources via a CDN or similar. If you use local images, these will be made available via the url path `/data/images`.
+
+`CARDURL` allows to specify where the card data is retreived from. Usually, this is a local file inside your `./data` directory (cards.json). You can also provide an URL.
+
+`MAPPOS` is the filename of your position marker geo coordinates (map-positions-example.json)
+
+Card data and images *are not part of this project* and you will have to provide them.
+
+### Providing Card Data
+
+The card data file is central, because all further data is generated from it (which images and sites to use, etc.). 
+
+There are two ways to provide for this json object:
+
+* deploy the card data json file to ``cards.json``. See the section *Providing your own cards* down below for more detailed information.
+* setup a dedicated CDN server and provide the endpoint to query the json from via your configuration file.
+
+### Providing Card Images
+
+The image URL is being constructed as part of the `plugins/imagelist.js` module. Your own endpoint may be added via the configuration file. Importantly, you can also use a CDN server (*HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations).
 
 ### Security
 
@@ -386,11 +394,7 @@ However, the data structure itself is quite simple, because a simple JSON array 
 ```
 
 
-You can either store this file locally at
-
-`./data/cards-raw.json`
-
-or make it available via your CDN.
+You can either store this file locally at or make it available via your CDN.
 
 The images can either be obtained via a remote server or from your local file system. The configuration file needs to be updated accordingly (see above).
 
