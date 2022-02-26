@@ -29,9 +29,18 @@ const replaceType = function(file)
  */
 const getFileList = function(sDirectory, _fs)
 {
-    let _list = [];
-    _fs.readdirSync(sDirectory).forEach(file => _list.push(file));
-    return _list;
+    try
+    {
+        let _list = [];
+        _fs.readdirSync(sDirectory).forEach(file => _list.push(file));
+        return _list;
+    }
+    catch(err)
+    {
+        console.warn(err.message);
+    }
+
+    return [];
 }
 
 /**
@@ -56,7 +65,7 @@ const createDecks = function(_fs, _list, sDirectory, sReplacePrefix)
         }
         catch (err)
         {
-            console.log(err);
+            console.warn(err.message);
         }
     }
     
