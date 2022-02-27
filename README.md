@@ -45,7 +45,7 @@ Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron
 
 ## Getting started
 
-Make sure you have [Node.js](http://nodejs.org/) installed.
+Make sure you have [Node.js](http://nodejs.org/) installed. You will find further details about development and adaptation at the end of this page.
 
 Open your terminal and access this project folder. THen run the following commands:
 
@@ -349,11 +349,12 @@ Whenever a player wants to join the table, you will receive a notification and t
 
 ![Game List](readme-data/arda-6.png)
 
-## Adaptation Mechanisms
+## Development and Adaptations
 
 You have the following default adaptation possibilities:
 
 * Providing your own map
+* Adding markers to your map
 * Providing your own cards
 
 ### Providing your own map
@@ -376,7 +377,6 @@ do
     width=$maxTiles
     a=$((256*$width))
 
-
     echo "${i}.\tmkdir ./${i}"
     mkdir "./${i}"
 
@@ -392,6 +392,82 @@ do
 done
 ```
 
+During startup, all sites and regions will be extracted from your `cards.json`. 
+
+Sites will be grouped by their regions and various alignments. The resulting format will be as follows
+
+```
+{
+    "map": {
+        "Arthedain": {
+            "title": "Arthedain",
+            "code": "Arthedain (TW)",
+            "region_type": "",
+            "area": [
+                78.5343113218071,
+                -108.14941406250001
+            ],
+            "sites": {
+                "Bree": {
+                    "area": [
+                        78.63000556774836,
+                        -107.35839843750001
+                    ],
+                    "underdeep": false,
+                    "hero": {
+                        "code": "Bree [H] (TW)",
+                        "hold": "Border-hold"
+                    }
+                }
+            }
+        },
+        "Rhudaur": {
+            "title": "Rhudaur",
+            "code": "Rhudaur (TW)",
+            "region_type": "",
+            "area": [
+                79.24538842837468,
+                -101.73339843750001
+            ],
+            "sites": {
+                "Rivendell": {
+                    "area": [
+                        79.38390485685704,
+                        -100.76660156250001
+                    ],
+                    "underdeep": false,
+                    "hero": {
+                        "code": "Rivendell [H] (TW)",
+                        "hold": "Haven"
+                    }
+                }
+            }
+        }
+    },
+    "mapregions": {
+        "Bree [H] (TW)": "Arthedain",
+        "Rivendell [H] (TW)": "Rhudaur"
+    },
+    "alignments": [
+        "hero"
+    ],
+    "images": {
+
+    }
+}
+```
+Map positions (i.e. their geo coordinates on you rmap) will me merged from your `map-positions.json` automatically.
+
+### Adding markers to your map
+
+You can edit your map quite conveniently by accessing the map editor via the URL path `/map/regions/edit`. 
+
+Select the region from the list. This will load all images (sites and regions) in a list. 
+
+To add a marker, click on an image first. Thereafter, click on the map. The position marker will be added to the map immediately. You can repeat these steps for every site and re-locate the markers at any time.
+
+You can save your changes to your clipboard by clicking on the save icon. Thereafter, you have to manually merge these into your `map-positions.json`. The changes will be available after a restart the application.
+
 ### Providing your own cards
 
 Now, this is not trivial at all, because you will have to put quite a lot of effort into your data.
@@ -401,7 +477,6 @@ However, the data structure itself is quite simple, because a simple JSON array 
 ```
 [{ ... }, { ... }, ...]
 ```
-
 
 You can either store this file locally at or make it available via your CDN.
 
@@ -413,6 +488,7 @@ The basic card data object is similar to this
 {
     "alignment": "Hero|Minion|Neutral",
     "type": "Resource|Hazard|Character|Site|Region",
+    "uniqueness": boolean,
     "title": "Precious Gold Ring",
     "normalizedtitle": "precious gold ring",
     "code": "Precious Gold Ring (TW) [H]",
@@ -423,6 +499,8 @@ The basic card data object is similar to this
 ```
 
 Each card is identified by its unique `code` and all quotes will be stripped when loading to avoid invalid html tags. 
+
+If a card's `uniqueness` is `true`, the deckbuilder will only add it to your deck once. Otherwise, a card can be added up to three times.
 
 Importantly, the general code should look similar to this:
 
