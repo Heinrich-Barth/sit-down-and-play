@@ -51,14 +51,14 @@ var DeckList =
         <div class="pos-rel deck_part">
             <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
             <input type="checkbox" id="checkbox_sb">
-            <div id="sideboard" class="d_container pt5">
-                <label data-no-arrow="true" class="no-pad-top no-arrow">Characters</label>
+            <div id="sideboard" class="d_container no-pad-top">
+                <h4>Characters</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
 
-                <label data-no-arrow="true">Resources</label>
+                <h4>Resources</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_resources"></div>
 
-                <label data-no-arrow="true">Hazards</label>
+                <h4>Hazards</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
                 <div class="clearfix"> </div>
             </div>
