@@ -5,6 +5,6 @@
  */
 (function()
 {
-    if (location.protocol !== "https:" && window.location.href.toLocaleLowerCase().indexOf("http://localhost:") !== -1) 
+    if (location.protocol !== "https:" && location.hostname !== "localhost") 
         location.protocol = "https:";
 })();
