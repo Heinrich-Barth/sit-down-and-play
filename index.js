@@ -386,8 +386,15 @@ SERVER.instance.post("/data/decks/check", function (req, res)
     let vsUnknown = [];
 
     const jData = req.body;
-    const nSize = jData.length;
 
+    /* Prevents DoS. */
+    if (!(jData instanceof Array)) 
+    { 
+        SERVER.expireResponse(res, "application/json").send({valid : false, codes : [] }).status(200);
+        return;
+    }
+
+    const nSize = jData.length;
     for (let i = 0; i < nSize; i++)
     {
         const code = jData[i];
