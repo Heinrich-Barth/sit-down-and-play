@@ -385,14 +385,11 @@ SERVER.instance.post("/data/decks/check", function (req, res)
     let bChecked = false;
     let vsUnknown = [];
 
-    const jData = req.body;
+    const jData = [];
 
     /* Prevents DoS. */
-    if (!(jData instanceof Array)) 
-    { 
-        SERVER.expireResponse(res, "application/json").send({valid : false, codes : [] }).status(200);
-        return;
-    }
+    if (req.body instanceof Array)
+        jData = req.body;
 
     const nSize = jData.length;
     for (let i = 0; i < nSize; i++)
