@@ -10,6 +10,7 @@
         "code": "Galva (TW)",
         "ImageName": "character.webp",
         "set_code": "DUMMY",
+        "full_set": "Dummy Set",
         "text": ""
     },
     {
@@ -23,6 +24,7 @@
         "code": "Adrazar (TW)",
         "ImageName": "character.webp",
         "set_code": "DUMMY",
+        "full_set": "Dummy Set",
         "text": ""
     },
     {
@@ -37,6 +39,7 @@
         "code": "Marvels Told (TD)",
         "ImageName": "resource.webp",
         "set_code": "DUMMY",
+        "full_set": "Dummy Set",
         "text": ""
     },
     {
@@ -50,6 +53,7 @@
         "code": "Orc-guard (TW)",
         "ImageName": "hazard.webp",
         "set_code": "DUMMY",
+        "full_set": "Dummy Set",
         "text": ""
     },
     {
@@ -64,6 +68,7 @@
         "code": "Smoke Rings (DM)",
         "ImageName": "resource.webp",
         "set_code": "DUMMY",
+        "full_set": "Dummy Set",
         "text": ""
     },
     {
@@ -80,7 +85,8 @@
         "trimCode": "[H] (TW)",
         "Site": "Haven",
         "set_code": "DUMMY",
-        "text": "Site Path From Lórien: [w] [b] [w] [w] Site Path From Grey Havens: [f] [w] [w]  \"'His house was perfect, whether you liked food, or sleep, or work, or story-telling, or singing, or just sitting and thinking best, or a pleasant mixture of them all. Evil things did not come into that valley.'\"-Hob "
+        "full_set": "Dummy Set",
+        "text": ""
     },
     {
         "Home": "",
@@ -95,7 +101,8 @@
         "ImageName": "region.webp",
         "set_code": "DUMMY",
         "title-du": "Rhudaur",
-        "text": "Angmar, Arthedain, Cardolan, High Pass, Hollin "
+        "full_set": "Dummy Set",
+        "text": ""
     },
     {
         "Home": "tap",
@@ -109,7 +116,8 @@
         "code": "Arthedain (TW)",
         "ImageName": "region.webp",
         "set_code": "DUMMY",
-        "text": "Arthedain, Dunland, Enedhwaith, Eriadoran Coast, Hollin, Rhudaur, The Shire "
+        "full_set": "Dummy Set",
+        "text": ""
     },
     {
         "Home": "",
@@ -124,6 +132,7 @@
         "ImageName": "site.webp",
         "Site": "Border-hold",
         "set_code": "DUMMY",
-        "text": "Nearest Darkhaven: Carn Dûm Playable: Information, Items (minor, gold ring) Automatic-attacks: Dúnedain-each character faces 1 strike with 7 prowess (detainment against covert company) Special: Agent minions may be brought into play under direct influence at this site. "
+        "full_set": "Dummy Set",
+        "text": ""
     }
 ]
