@@ -27,7 +27,7 @@ const CARDS = {
 
     sort: function () 
     {
-        this._raw.sort( (card1, card2) => card1.title.replace('"', "").localeCompare(card2.title.replace('"', ""), "de-DE"));
+        this._raw.sort( (card1, card2) => card1.title.replace(/"/g, '').localeCompare(card2.title.replace(/"/g, ''), "de-DE"));
     },
 
     stripQuotes : function()
