@@ -10,7 +10,7 @@ exports.identifyQuests = function(jsonCards)
 
     for (card of jsonCards) 
     {
-        if (card.Race.startsWith("Quest-Side-"))
+        if (card.Race !== undefined && card.Race.startsWith("Quest-Side-"))
         {
             list[card.code] = "";
             images_to_code[card.ImageName] = card.code;

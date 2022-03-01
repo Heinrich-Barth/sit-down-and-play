@@ -14,25 +14,29 @@ This project aims to provide an easy way to setup and maintain a card game serve
 
 Although the gameplay is guided by Middle-earth Collectible Card Game, you can easily adapt it to your own game.
 
-Most importantly, you will need to provide the card data and its images. A description of the JSON format will be given below.
+*Generic sample data is provided to play around a bit.*
+
+However, you will need to provide the card data and its images for the full experience. See section below on how to start.
 
 ### Feature Overview
 
 Here are some essential features of this project:
 
 * Intuitive gameplay via drag and drop.
-* No user identity management needed.
-* A database server is not needed at all.
-* No persistence needed, all works *in-memory*
+* All works *in-memory* (no persistence necessary).
+* No user identity management needed (database server is not needed).
 
 ### What you can do
 
 This project allows to
 
-* Play a game
+* Play a game (see below for further details)
 * Play a shared deck game (arda)
 * Browse cards
+* Browse maps and edit position markers
 * Build a deck
+
+Special information about *development* can be accessed in a dedicated [README_development.md](README_development.md).
 
 ## Disclaimer
 
@@ -40,39 +44,32 @@ Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron
 
 *MECCG* assets are not included in this repository. 
 
-## Preparations
+## Getting started
 
-Card data and images *are not part of this project* and you will have to provide them.
-
-You have to provide certain configuration data using the file ``./data/config.json``. Changes will be ignored via ``.gitignore``. The sample file ``./data/config-example.json`` shows a mock configuration.
-
-### Providing Card Data
-
-The card data file is centra, because all further data is generated from it (which images and sites to use, etc.). 
-
-There are two ways to provide for this json object:
-
-* deploy the card data json file to ``./card-data/cards-raw.json``. This file will be ignored via ``.gitignore``. See the section *Providing your own cards* down below for more detailed information.
-* setup a dedicated CDN server and provide the endpoint to query the json from via your configuration file.
-
-### Providing Card Images
-
-The image URL is being constructed as part of the `plugins/imagelist.js` module. Your own endpoint may be added via the configuration file. Importantly, you can also use a CDN server (*HTTPS* is required. Otherwise the request will be blocked due to content-transport-policy limitations).
-
-## Running Locally
-
-Make sure you have [Node.js](http://nodejs.org/) installed.
+Make sure you have [Node.js](http://nodejs.org/) installed. You will find further details about development and adaptation at the end of this page.
 
 Open your terminal and access this project folder. THen run the following commands:
 
-```
-$ npm install
-$ npm start
-```
+````
+npm install
+npm run local
+````
 
 Your app should now be running on [localhost:8080](http://localhost:8080/).
 
-### Security
+The application will make use of the local data files using `ENV` variables.
+
+`PORT` sets the app's port (8080) 
+
+`IMAGE_PATH` allows you to point to the subdirectory where your card images are stored. You can also use an URL to load external resources via a CDN or similar. If you use local images, these will be made available via the url path `/data/images`.
+
+`CARDURL` allows to specify where the card data is retreived from. Usually, this is a local file inside your `./data` directory (cards.json). You can also provide an URL.
+
+`MAPPOS` is the filename of your position marker geo coordinates (map-positions-example.json)
+
+Card data and images *are not part of this project* and you will have to provide them.
+
+## Security
 
 This project does not require any databases or other storage containers. Everything is held in memory only.
 
@@ -332,130 +329,11 @@ Whenever a player wants to join the table, you will receive a notification and t
 
 ![Game List](readme-data/arda-6.png)
 
-## Adaptation Mechanisms
-
-You have the following default adaptation possibilities:
-
-* Providing your own map
-* Providing your own cards
-
-### Providing your own map
-
-To provide your own map, "simply" create all the necessary tiles and deploy them to 
-
-`/media/maps/regions/`
-
-A map file usually has a resolution of 5.376x5.376px or 13.312x13.312px
-
-The following script uses imagemagic to create tiles from a map saved as map.jpg.
-
-```
-#!/bin/bash
-
-maxTiles=1
-
-for i in `seq 1 8`
-do
-    width=$maxTiles
-    a=$((256*$width))
-
-
-    echo "${i}.\tmkdir ./${i}"
-    mkdir "./${i}"
-
-    echo "${i}.\tconvert ./map.jpg -resize ${a}x${a} ./${i}/map.jpg into tiles $maxTiles"
-    convert ./map.jpg -resize ${a}x${a} ./${i}/map.jpg
-
-    echo "${i}.\tcreate tiles"
-    convert ./${i}/map.jpg -crop 256x256 -set filename:tile "%[fx:page.x/256]_%[fx:page.y/256]" +repage +adjoin "./${i}/tile_%[filename:tile].jpg"
-
-    echo "--------"
-
-    maxTiles=$(($maxTiles*2))
-done
-```
-
-### Providing your own cards
-
-Now, this is not trivial at all, because you will have to put quite a lot of effort into your data.
-
-However, the data structure itself is quite simple, because a simple JSON array of card data properties is all that is required:
-
-```
-[{ ... }, { ... }, ...]
-```
-
-
-You can either store this file locally at
-
-`./data/cards-raw.json`
-
-or make it available via your CDN.
-
-The images can either be obtained via a remote server or from your local file system. The configuration file needs to be updated accordingly (see above).
-
-The basic card data object is similar to this
-
-```
-{
-    "alignment": "Hero|Minion|Neutral",
-    "type": "Resource|Hazard|Character|Site|Region",
-    "title": "Precious Gold Ring",
-    "normalizedtitle": "precious gold ring",
-    "code": "Precious Gold Ring (TW) [H]",
-    "ImageName": "metw_preciousgoldring.jpg",
-    "set_code": "METW",
-    "Region": "title of the respective region (for sites only)",
-}
-```
-
-Each card is identified by its unique `code` and all quotes will be stripped when loading to avoid invalid html tags. 
-
-Importantly, the general code should look similar to this:
-
-`NAME [ALIGNMENT] (SET)`
-
-e.g.
-
-`Precious Gold Ring [H] (TW)`
-
-*Importantly,* a region does not have an alignment in its code and follows the notation
-
-`NAME (SET)`
-
-The `alignment` value allows to differentiate hazard cards ("neutral") from non-hazards.
-
-The `type` has implications on a card's playability:
-
-* Only *Characters* can create a company.
-* A *Resource* or *Hazard* can be attached to a chatacter or placed in the staging/event area.
-* A *Region* or *Site* will only be available in the map to choose from.
-
-The `set_code` is required and only used for image path purposes (see above). You may limit your cards to exactly one set also.
-
-## Architecture
-
-The HTTP server handles everything but the in-game communication.
-
-The in-game communication is handled via `socket.io` websockets and a reconnection attempt is triggerd automatically should a connection be lost (may happen depending on your internet connection stability).
-
-A websocket requires "knowledge" of the game room's individual access key, your temporary user id and a one-time access token.
-
-Once you successfully connect via the websocket, your one-time access token is invalidated automatically to avoid deny unwanted  connections from other machines.
-
-All these information are served with the game's HTML file in a dedicated `script` block.
-
-Strong content-security-policy (CSP) restrictions are imposed on the game page to really limit connectivity to the sources absolutely essential to play the game - so in theory, a cross-site scripting (XSS) attacks should not be possible. Code injections would be denied as well. Even potential image src attacks should be impossible, because each card graphic is validated by its code (and other images would be blocked due to the CSP settings.
-
-The deck data is also matched against the available card data and used as a read-only source to create a new and individual deck object. The number of cards in your deck is also limited to 300.
-
-### API / Endpoint description
-
-The various endpoints can be found in the `./api` directory.
-
-### Third Party Libraries
+## Dependencies
 
 Of cource, this project would not be possible without the work of others, and credit should be given.
+
+### Third Party Libraries
 
 The following third-party libraries. Be aware of their respective licenses.
 
@@ -466,35 +344,17 @@ The following third-party libraries. Be aware of their respective licenses.
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)
 * leafletjs 1.6.0 (BSD 2-Clause "Simplified" License)
 
-#### HTML / CSS 
+### HTML / CSS 
 
 * Some CSS is taken from https://html5up.net (MIT License)
 * The CSS colours and some design ideas were taken from https://github.com/mtgred/netrunner (MIT License)
 * Font Awesome Free, see https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 
-#### Icons and Backgrounds
+### Icons and Backgrounds
 
 * All icon licenses are "free for commercial use" with no link back Icons were taken from https://www.iconfinder.com/
 * The background image was taken from https://www.pexels.com/ Unfotunately, I cannot remember the link exactly anymore.
 
 ## License
 
-This source code is licensed using the MIT License.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+All information is given in a dedicated [README_license.md](README_license.md).

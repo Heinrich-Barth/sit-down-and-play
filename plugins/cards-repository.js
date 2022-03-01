@@ -9,7 +9,7 @@ const getRemovableKeysArray = function()
     }
     catch (err)
     {
-        console.error(err);
+        console.warn(err);
     }
 
     return [];
@@ -27,7 +27,7 @@ const CARDS = {
 
     sort: function () 
     {
-        this._raw.sort( (card1, card2) => card1.title.replace('"', "").localeCompare(card2.title.replace('"', ""), "de-DE"));
+        this._raw.sort( (card1, card2) => card1.title.replace(/"/g, '').localeCompare(card2.title.replace(/"/g, ''), "de-DE"));
     },
 
     stripQuotes : function()
@@ -84,7 +84,7 @@ const CARDS = {
     identifyQuests : function()
     {
         for (var card of this._raw) 
-            card.isQuest = card.Race.startsWith("Quest-Side-");
+            card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
     },
 
     identifyInLieuItems : function()

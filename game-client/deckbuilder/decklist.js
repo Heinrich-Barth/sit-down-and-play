@@ -51,7 +51,17 @@ var DeckList =
         <div class="pos-rel deck_part">
             <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
             <input type="checkbox" id="checkbox_sb">
-            <div id="sideboard" class="d_container pt5">-</div>
+            <div id="sideboard" class="d_container no-pad-top">
+                <h4>Characters</h4>
+                <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
+
+                <h4>Resources</h4>
+                <div class="pos-rel fl w48 deck_part_col" id="sb_resources"></div>
+
+                <h4>Hazards</h4>
+                <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
+                <div class="clearfix"> </div>
+            </div>
         </div>
 
         <div id="deckentry-tpl" class="hidden">
@@ -83,10 +93,13 @@ var DeckList =
         const list = document.getElementById("deck_container").querySelectorAll("label");
         for (let _element of list)
         {
-            _element.setAttribute("data-open", "fa-chevron-down");
-            _element.setAttribute("data-close", "fa-chevron-up");
-            _element.classList.add("fa");
-            _element.classList.add("fa-chevron-down");
+            if (!_element.hasAttribute("data-no-arrow"))
+            {
+                _element.setAttribute("data-open", "fa-chevron-down");
+                _element.setAttribute("data-close", "fa-chevron-up");
+                _element.classList.add("fa");
+                _element.classList.add("fa-chevron-down");
+            }
         }
             
     },
@@ -180,7 +193,7 @@ var DeckList =
         
         const sCode = pCard.index;
         if (sTargetDeck === "sideboard")
-            this.addCardGeneric(pCard, sCode, "sideboard");
+            this.addCardSideboard(pCard, sCode);
         else if (sTargetDeck === "avatar")
             this.addCardToChars(pCard, sCode, true);
         else if (sTargetDeck === "chars" || sTargetDeck === "character")
@@ -195,8 +208,8 @@ var DeckList =
 
     getTargetContainerIdDeck : function(pCard, isResource)
     {
-        var type = pCard.Secondary;
-        for (var _set of ViewCards.config.vsDeckContainerIds)
+        const type = pCard.Secondary;
+        for (let _set of ViewCards.config.vsDeckContainerIds)
         {
             if (_set.type === type && isResource === _set.resource)
                 return _set.id;
@@ -248,6 +261,19 @@ var DeckList =
             pCount.innerText = (parseInt(pCount.innerText) + 1);
 
         return true;
+    },
+
+    addCardSideboard : function(pCard, index)
+    {
+        let _containerId;
+        if (pCard.type === "Hazard")
+            _containerId = "sb_hazards";
+        else if (pCard.type === "Character")
+            _containerId = "sb_chars";
+        else
+            _containerId = "sb_resources";
+
+        return this.addCardGeneric(pCard, index, _containerId);
     },
     
     addCardToDeck : function(pCard, index)

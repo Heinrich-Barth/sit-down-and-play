@@ -3,9 +3,9 @@
 const MapData = require("./MapData");
 const pMapData = new MapData();
 
-exports.init = function(jsonCards)
+exports.init = function(jsonCards, mapPositionsFile)
 {
-    pMapData.init(jsonCards, "./data/map-positions.json");
+    pMapData.init(jsonCards, mapPositionsFile);
 }
 
 exports.getMapdata = function(_imageList)
