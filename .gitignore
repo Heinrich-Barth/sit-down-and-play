@@ -10,6 +10,7 @@ npm-debug.log
 data/cards-raw.json
 data/config.json
 data/test
+data/decks
 data/map-positions.json
 
 media/maps/*
