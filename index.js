@@ -123,7 +123,7 @@ SERVER.instance = g_pExpress();
 })();
 
 const PLUGINS = {
-    decklist : require("./plugins/decklist.js").load(require("./game-server/decklist.js"), __dirname)
+    decklist : require("./game-server/decklist.js").load(SERVER.environment.deckListFolder())
 };
 
 /**
@@ -385,11 +385,8 @@ SERVER.instance.post("/data/decks/check", function (req, res)
     let bChecked = false;
     let vsUnknown = [];
 
-    const jData = [];
-
     /* Prevents DoS. */
-    if (req.body instanceof Array)
-        jData = req.body;
+    const jData = req.body instanceof Array ? req.body : [];
 
     const nSize = jData.length;
     for (let i = 0; i < nSize; i++)

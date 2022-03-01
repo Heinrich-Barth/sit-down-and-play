@@ -21,6 +21,7 @@ class Configuration {
         this._maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
 
         this._port = Configuration.assertString(process.env.PORT, 8080);
+        this._deckDirectory = Configuration.assertString(process.env.DECKLISTFOLDER, "/data/decks");
 
         this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
         this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "cards.json");
@@ -57,9 +58,9 @@ class Configuration {
         if (val.indexOf("//") > -1)
             return val;
         else if (val.startsWith("/"))
-            return __dirname + "/data" + val;
+            return __dirname + val;
         else
-            return __dirname + "/data/" + val;
+            return __dirname + "/" + val;
     }
 
     isValid(input)
@@ -133,6 +134,14 @@ class Configuration {
     imageUrl()
     {
         return this._imageUrl.indexOf("//") !== -1 ? this._imageUrl : "/data/images";
+    }
+
+    deckListFolder()
+    {
+        if (this._deckDirectory.startsWith("/"))
+            return __dirname + this._deckDirectory;
+        else 
+            return __dirname + "/" + this._deckDirectory;
     }
 
     static extractDomain(sInput)

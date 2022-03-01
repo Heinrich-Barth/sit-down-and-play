@@ -20,3 +20,4 @@ pages/rules-*.html
 keepalive.js
 
 plugins/namelist.json
+data-local/

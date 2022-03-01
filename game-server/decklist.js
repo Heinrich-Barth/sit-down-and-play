@@ -1,3 +1,4 @@
+const fs = require('fs');
 
 /**
  * Replace the givne prefix from a name
@@ -27,12 +28,12 @@ const replaceType = function(file)
  * @param {Object} _fs 
  * @returns Array of file names
  */
-const getFileList = function(sDirectory, _fs)
+const getFileList = function(sDirectory)
 {
     try
     {
         let _list = [];
-        _fs.readdirSync(sDirectory).forEach(file => _list.push(file));
+        fs.readdirSync(sDirectory).forEach(file => _list.push(file));
         return _list;
     }
     catch(err)
@@ -51,7 +52,7 @@ const getFileList = function(sDirectory, _fs)
  * @param {String} sReplacePrefix 
  * @returns JSON
  */
-const createDecks = function(_fs, _list, sDirectory, sReplacePrefix)
+const createDecks = function(_list, sDirectory, sReplacePrefix)
 {
     let decks = { };
 
@@ -61,7 +62,7 @@ const createDecks = function(_fs, _list, sDirectory, sReplacePrefix)
         try
         {
             let name = stripPrefix(replaceType(_list[i]), sReplacePrefix).trim();
-            decks[name] = JSON.parse(_fs.readFileSync(sDirectory + _list[i], 'utf8'));
+            decks[name] = JSON.parse(fs.readFileSync(sDirectory + _list[i], 'utf8'));
         }
         catch (err)
         {
@@ -72,13 +73,31 @@ const createDecks = function(_fs, _list, sDirectory, sReplacePrefix)
     return decks;
 }
 
+
+/**
+ * Load a deck
+ * @param {Array} list 
+ * @param {String} name 
+ * @param {Object} _data 
+ */
+const load0 = function(list, name, _data)
+{
+    if (_data !== null)
+    {
+        list.push({
+            name: name,
+            decks : _data
+        });
+    }
+}
+ 
 /**
  * Obtain all decks in a given directory.
  * @param {String} sDirectory 
  * @param {String} sReplacePrefix 
  * @returns Array of decks
  */
-exports.getDecks = function (sDirectory, sReplacePrefix) 
+const getDecks = function (sDirectory, sReplacePrefix) 
 {
     if (sDirectory === undefined || sDirectory === "")
         return [];
@@ -89,7 +108,29 @@ exports.getDecks = function (sDirectory, sReplacePrefix)
     if (sReplacePrefix === undefined)
         sReplacePrefix = "";
 
-    const _fs = require('fs');
-    const _list = getFileList(sDirectory, _fs);
-    return createDecks(_fs, _list, sDirectory, sReplacePrefix);
+    
+    const _list = getFileList(sDirectory);
+    return createDecks(_list, sDirectory, sReplacePrefix);
 };
+
+/**
+  * Load deck files in given directory
+  * 
+  * @param {Object} pDeckLoader 
+  * @param {String} sDir 
+  * @returns 
+  */
+exports.load = function(sDir) 
+{
+    let decks = [];
+
+    const folders = fs.readdirSync(sDir, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+    for (let folder of folders)
+    {
+        const dir = sDir + "/" + folder;
+        load0(decks, folder, getDecks(dir));
+    }
+
+    return decks;
+}
+ 
