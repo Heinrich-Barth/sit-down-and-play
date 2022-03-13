@@ -98,7 +98,7 @@ const CardDataProvider = {
                 return;
             }
             else
-            console.log("Could not load locally");
+               console.log("Could not load locally");
         }
         
         CardDataProvider.loadFromUrl(CardDataProvider.cardsUrl);
