@@ -238,7 +238,7 @@ const MeccgApi =
             reconnectionDelay: 1000,
             reconnectionDelayMax: 1000,
             reconnectionAttempts: 4,
-            timeout: 1000,
+            timeout: 5000,
             auth: {
                 authorization: g_sApiKey,
                 room: g_sRoom,
@@ -274,14 +274,24 @@ const MeccgApi =
         });
 
         /** If the auto-reconnect failed within reconnectionAttempts, reload the page and start afresh */
-        this._socket.on("reconnect_failed", () => 
-        {
-            if (!MeccgApi._ignoreDisconnection)
-                window.location.reload()
-        });
+        this._socket.on("reconnect_failed", MeccgApi.onSuggestReload);
 
         /** This is it. Only refresh will help */
-        this._socket.on("reconnect_error", () => window.location.reload());
+        this._socket.on("reconnect_error", MeccgApi.onSuggestReload);
+    },
+
+    onSuggestReload : function()
+    {
+        /** do not show question if game has ended anyway */
+        if (MeccgApi._ignoreDisconnection)
+            return;
+
+        new Question().onOk(function() {
+
+            window.location.reload();
+
+        }).show("Page reload recommended", "It seems the connection to the server could not be re-established.", "Reload everything");
+
     },
 
     onSocketError : function(error)
