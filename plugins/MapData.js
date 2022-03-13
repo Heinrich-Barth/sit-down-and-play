@@ -380,10 +380,15 @@ class MapData
         if (jPos === null || jPos === undefined)
             return jMapData;
 
+        let posRegions = 0;
+        let posAdded = 0;
         for (let key in jMapData)
         {
             if (typeof jPos[key] !== "undefined")
+            {
                 jMapData[key]["area"] = jPos[key]
+                posRegions++;
+            }
         
             let _item = jMapData[key];
             if (typeof _item["sites"] === "undefined")
@@ -393,9 +398,15 @@ class MapData
             for (let site in _item)
             {
                 if (typeof jPos[site] !== "undefined")
+                {
                     _item[site].area = jPos[site];
+                    posAdded++;
+                }
             }
         }
+
+        if (posAdded > 0)
+            console.log("\t- " + posAdded + " site(s) in " + posRegions + " region(s) added to the map.");
 
         return jMapData;
     }
