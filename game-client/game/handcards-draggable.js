@@ -89,8 +89,13 @@ class HandCardsDraggableBoard {
 
 }
 
-class TaskBarIconsObjects {
+class DropableAreas {
 
+    static getCompanyAreaPlayerAddNew()
+    {
+        return DropableAreas.get("create_new_company");
+    }
+    
     static get(sId)
     {
         return document.getElementById(sId); 
@@ -98,35 +103,32 @@ class TaskBarIconsObjects {
 
     static discardpile() 
     { 
-        return TaskBarIconsObjects.get("icon_bar_discardpile"); 
+        return DropableAreas.get("icon_bar_discardpile"); 
     }
     
     static sideboard() 
     { 
-        return TaskBarIconsObjects.get("icon_bar_sideboard"); 
+        return DropableAreas.get("icon_bar_sideboard"); 
     }
     
     static playdeck() 
     { 
-        return TaskBarIconsObjects.get("icon_bar_playdeck"); 
+        return DropableAreas.get("icon_bar_playdeck"); 
     }
     
     static hand() 
     { 
-        return TaskBarIconsObjects.get("icon_hand"); 
+        return DropableAreas.get("icon_hand"); 
     }
     
     static victory() 
     { 
-        return TaskBarIconsObjects.get("icon_bar_victory"); 
+        return DropableAreas.get("icon_bar_victory"); 
     }
-}
 
-class PlayerStagingAreaObjects {
-
-    static droparea() 
+    static stagagingArea() 
     { 
-        return document.getElementById("staging_area_drop"); 
+        return DropableAreas.get("staging_area_drop"); 
     }
 
 }
@@ -792,7 +794,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
 
     document.body.setAttribute("data-class", document.body.getAttribute("class"));
 
-    jQuery(TaskBarIconsObjects.discardpile()).droppable(
+    jQuery(DropableAreas.discardpile()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -800,7 +802,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         drop: DropFunctions.dropOnDiscard
     });
     
-    jQuery(TaskBarIconsObjects.victory()).droppable(
+    jQuery(DropableAreas.victory()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -808,7 +810,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         drop: DropFunctions.dropOnVicotry
     });
 
-    jQuery(TaskBarIconsObjects.sideboard()).droppable(
+    jQuery(DropableAreas.sideboard()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -816,7 +818,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         drop: DropFunctions.dropOnSideboard
     });
 
-    jQuery(TaskBarIconsObjects.playdeck()).droppable(
+    jQuery(DropableAreas.playdeck()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -824,7 +826,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         drop: DropFunctions.dropOnPlaydeck
     });
     
-    jQuery(TaskBarIconsObjects.hand()).droppable(
+    jQuery(DropableAreas.hand()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -832,7 +834,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         drop: DropFunctions.dropOnHand
     });
     
-    jQuery(PlayerStagingAreaObjects.droparea()).droppable(
+    jQuery(DropableAreas.stagagingArea()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
@@ -840,7 +842,7 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         accept: HandCardsDraggable.droppableAcceptStagingArea
     });
     
-    jQuery(HandCardsDraggableBoard.getCompanyAreaPlayerAddNew()).droppable(
+    jQuery(DropableAreas.getCompanyAreaPlayerAddNew()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
