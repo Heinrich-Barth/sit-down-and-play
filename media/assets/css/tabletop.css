@@ -168,11 +168,13 @@ a:hover { color: #ff0; }
     background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat; 
 }
 
+#playercard_hand_container a.discardpile:hover,
 .icons a.discardpile.act,
 .icons a.discardpile:hover 
 { 
     background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat; 
 }
+#playercard_hand_container a.discardpile,
 .icons a.discardpile
 { 
     background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat; 
@@ -438,6 +440,21 @@ img.card-icon {
     display: inline-block;
     background-color: rgba(0,0,0,0.6);
     border-radius: 5px;
+}
+#playercard_hand_container a.discardpile,
+#playercard_hand_container a.discardpile:hover {
+    background-size: 20px 20px !important;
+    background-position-x: 0px;
+    background-position-y: 0px;
+}
+#playercard_hand_container a.discardpile
+{
+    position: absolute;
+    bottom: 5px;
+    width: 20px;
+    margin: 0;
+    height: 20px;
+    left: 25%;
 }
 .container-title-bar {
     padding-bottom: 10px;

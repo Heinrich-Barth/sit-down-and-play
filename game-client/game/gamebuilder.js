@@ -8,32 +8,6 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
     const Stagingarea = _Stagingarea;
     const Scoring = _Scoring;
     
-    function addToHandContainer(pElement)
-    {
-        document.getElementById("playercard_hand_container").appendChild(pElement);    
-    }
-
-    /**
-     * Creates a Card DIV when drawn
-     * @param {String} _code
-     * @param {String} _img
-     * @param {String} _uuid
-     * @param {String} _type
-     * @return {Object} DOM Element
-     */
-    function createHtmlElement(_code, _img, _uuid, _type)
-    {
-        const div = document.createElement("div");
-        div.setAttribute("class", "card-hand");
-        div.setAttribute("id", "card_icon_nr_" + _uuid);
-        div.setAttribute("data-uuid", _uuid);
-        div.setAttribute("data-card-type", _type);
-        div.setAttribute("draggable", "true");
-        div.innerHTML = `<img decoding="async" src="${_img}" data-id="${_code}" class="card-icon">`;
-
-        return div;
-    }
-    
     const GameBuilder = {
         
         _minuteInMillis : 60 * 1000,
@@ -41,6 +15,60 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
         _timeStarted : 0,
         _hiddenStartPhase : false,
         _saved : { },
+
+        addToHandContainer : function(pElement)
+        {
+            document.getElementById("playercard_hand_container").appendChild(pElement);    
+        },
+
+        _onClickDiscardHandCard : function(e)
+        {
+            const sUuid = e.target.getAttribute("data-card-uuid");
+
+            if (sUuid !== null && sUuid !== undefined && sUuid !== "")
+            {
+                MeccgApi.send("/game/card/move", { uuid: sUuid, target: "discardpile", drawTop: false });
+                DomUtils.removeNode(document.getElementById("card_icon_nr_" + sUuid));
+            }
+
+            return false;
+        },
+
+        /**
+         * Creates a Card DIV when drawn
+         * @param {String} _code
+         * @param {String} _img
+         * @param {String} _uuid
+         * @param {String} _type
+         * @return {Object} DOM Element
+         */
+        createHtmlElement: function(_code, _img, _uuid, _type)
+        {
+            const div = document.createElement("div");
+            div.setAttribute("class", "card-hand pos-rel");
+            div.setAttribute("id", "card_icon_nr_" + _uuid);
+            div.setAttribute("data-uuid", _uuid);
+            div.setAttribute("data-card-type", _type);
+            div.setAttribute("draggable", "true");
+
+            const img = document.createElement("img");
+            img.setAttribute("decoding", "async");
+            img.setAttribute("src", _img);
+            img.setAttribute("data-id", _code);
+            img.setAttribute("class", "card-icon");
+
+            const linkA = document.createElement("a");
+            linkA.setAttribute("href", "#");
+            linkA.setAttribute("class", "discardpile");
+            linkA.setAttribute("data-card-uuid", _uuid);
+            linkA.setAttribute("title", "Move to top of discard pile");
+            linkA.onclick = GameBuilder._onClickDiscardHandCard;
+
+            div.appendChild(img);
+            div.appendChild(linkA);
+            
+            return div;
+        },
 
         getSavedGame : function()
         {
@@ -91,10 +119,10 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             if (GameBuilder.alreadyInHand(uuid))
                 return;
             
-            var _code = CardList.getSafeCode(cardCode);
-            var _img = CardList.getImage(cardCode);
+            const _code = CardList.getSafeCode(cardCode);
+            const _img = CardList.getImage(cardCode);
 
-            addToHandContainer(createHtmlElement(_code, _img, uuid, type));
+            GameBuilder.addToHandContainer(GameBuilder.createHtmlElement(_code, _img, uuid, type));
             
             CardPreview.addHover("card_icon_nr_" + uuid, false, true);
             
