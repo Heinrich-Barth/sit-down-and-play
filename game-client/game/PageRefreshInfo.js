@@ -22,7 +22,7 @@ class PageRefreshInfo
         if (this.isVisible())
             return;
 
-        this.question.show("Page reload recommended", 
+        this.question.show("Connectivity Problem", 
               "It seems the connection to the server was lost.<br><br>This page will be reloaded in 10 seconds", 
               "Reload now");
 
