@@ -107,6 +107,7 @@ const MeccgApi =
     room : "",
     _interval : null,
     usermap : null,
+    _disconnectInfo : new PageRefreshInfo(),
     
     isMe : function(sid)
     {
@@ -229,25 +230,6 @@ const MeccgApi =
         MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
     },
 
-    triggerPageRefresh()
-    {
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Refreshing the page in 5s" }));
-
-        setTimeout(() => {
-
-            if (typeof navigator.onLine === "undefined" || navigator.onLine === true)
-            {
-                window.location.reload();
-            }
-            else
-            {
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "You are offline." }));
-                MeccgApi.triggerPageRefresh();
-            }
-                
-        }, 5000);
-    },
-
     setupSocketConnection()
     {
         this._socket = io(window.location.host, 
@@ -276,7 +258,7 @@ const MeccgApi =
             else
             {
                 document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost." }));
-                MeccgApi.triggerPageRefresh();
+                MeccgApi._disconnectInfo.show();
             }
 
             MeccgApi.onDisconnected();
