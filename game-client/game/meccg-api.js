@@ -304,9 +304,7 @@ const MeccgApi =
     },
 
     onDocumentReady : function()
-    {
-        
-               
+    {  
         if (g_sUserId === "" || g_sApiKey === "")
         {
             MeccgUtils.logError("neither user nor token available");
@@ -320,8 +318,6 @@ const MeccgApi =
 
     emitRegisterToServer : function()
     {
-        const lJoined = MeccgApi.getTimeJoined();
-
         /** so do the login */
         this._socket.emit("/authenticate", { 
             token: g_sApiKey, 
@@ -335,7 +331,7 @@ const MeccgApi =
     
     queryEndGame : function()
     {
-        new Question().onOk(function() {
+        new Question("fa-sign-out").onOk(function() {
 
             MeccgApi.expectDisconnect();
             MeccgApi.send("/game/finalscore", {});
