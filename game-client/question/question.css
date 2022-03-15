@@ -39,12 +39,6 @@
     margin-bottom: 10px;
 }
 
-.question-question-icon {
-    background: url("question-icon-question.png") 0 0 no-repeat;
-}
-.question-voice-icon {
-    background: url("question-icon-voice.png") 0 0 no-repeat;
-}
 .question-question {
     padding-left: 140px;
     min-height: 110px;
