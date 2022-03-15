@@ -739,8 +739,12 @@ div#opponent_table .company { transform: rotate(180deg); }
 .hosts_nothing { display: none !important; }
 
 #lidles-eye { z-index: 601;position: fixed;left: 0;top: 0;bottom: 0;right: 0; background: rgba(0,0,0,0.85); }
-#lidles-eye img { position: fixed; transform: translate(-50%, -50%); top: 50%; left: 50%; }
-
+#lidles-eye img { position: fixed; transform: translate(-50%, -50%); top: 50%; left: 50%; animation: eyepulse 1s linear infinite;}
+@keyframes eyepulse {
+    0% { opacity:1; }
+    50% { opacity:0.5 }
+    100% { opacity:1; } 
+}
 #card_counter div.pos-rel { position: relative; }
 #card_counter div.pos-rel:hover .hidden { display: block; }
 
