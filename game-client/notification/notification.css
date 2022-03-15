@@ -26,6 +26,7 @@
 
 .notification-text { display: flex; }
 .notification-text span { padding-left: 10px; }
+.notification-line-countdown-10s,
 .notification-line-countdown 
 {   
     animation: notification-line 3s linear forwards;
@@ -36,6 +37,16 @@
     left: 0;
     bottom: 0;
 }
+
+.notification-line-countdown-10s
+{
+    animation: notification-line 10s linear forwards;
+}
+.notification-line-countdown 
+{
+    animation: notification-line 3s linear forwards;
+}
+
 
 .success { background: #6eb566; }
 .failure{ background: #e36666; }
