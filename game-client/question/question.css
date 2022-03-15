@@ -49,6 +49,12 @@
     padding-left: 140px;
     min-height: 110px;
 }
+.question-icon {
+    padding-left: 12px;
+    padding-top: 12px;
+    float: left;
+    font-size: 7em;
+}
 
 .question-game .question-answers {
     padding-left: 140px;

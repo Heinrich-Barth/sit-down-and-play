@@ -1,9 +1,11 @@
 
 class Question {
 
-    constructor()
+    constructor(icon)
     {
         this.callbackOk = null;
+        this.css = "";
+        this.icon = icon === undefined || icon === "" ? "fa-question-circle" : icon;
     }
 
     static removeNode(node)
@@ -16,6 +18,19 @@ class Question {
             node.parentNode.removeChild(node)
         }
     }
+    
+    addClass(sClass)
+    {
+        if (sClass !== "")
+        {
+            if (this.css === "")
+                this.css = sClass;
+            else
+                this.css += " " + sClass;
+        }
+
+        return this;
+    }
 
     insertTemplate(title, message, labelOk)
     {
@@ -23,13 +38,26 @@ class Question {
         div.setAttribute("class", "hidden");
         div.setAttribute("id", "question_box");
         div.setAttribute("data-game", "");
-        div.innerHTML = `<div class="blue-box question-game">
-            <div class="question-question question-question-icon"><h3>${title}</h3><p class="bold">${message}</p></div>
-            <div class="question-answers">
-                <input type="button" name="deck" id="q_ok" class="w100" value="${labelOk}" />
-                <input type="button" name="deck" id="q_cancel" class="w100 cancel" value="Cancel" />
-            </div>
-        </div>`;
+
+        const innerDiv = document.createElement("div");
+        innerDiv.setAttribute("class", "blue-box question-game");
+        innerDiv.innerHTML = `<div class="fa ${this.icon} question-icon"></div>
+                              <div class="question-question">
+                                <h3>${title}</h3><p class="bold">${message}</p>
+                              </div>
+                              <div class="question-answers">
+                                <input type="button" name="deck" id="q_ok" class="w100" value="${labelOk}" />
+                                <input type="button" name="deck" id="q_cancel" class="w100 cancel" value="Cancel" />
+                              </div>`;
+
+        if (this.css !== "")
+        {
+            const divCss = document.createElement("div");
+            divCss.setAttribute("class", this.css);
+            innerDiv.appendChild(divCss);
+        }
+
+        div.appendChild(innerDiv);
         
         document.body.appendChild(div);
     }
@@ -45,8 +73,16 @@ class Question {
         Question.removeNode(document.getElementById("question_box")); 
     }
 
+    isVisible()
+    {
+        return document.getElementById("question_box") !== null;
+    }
+
     show(sTitle, sInfo, sLabelOk)
     {
+        if (this.isVisible())
+            this.close();
+
         this.insertTemplate(sTitle, sInfo, sLabelOk);
     
         document.getElementById("question_box").onclick = this.close.bind(this);
