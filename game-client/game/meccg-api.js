@@ -234,7 +234,7 @@ const MeccgApi =
     {
         this._socket = io(window.location.host, 
         {
-            reconnection: true,
+            reconnection: false,
             reconnectionDelay: 5000,
             reconnectionDelayMax: 5000,
             reconnectionAttempts: 4,
