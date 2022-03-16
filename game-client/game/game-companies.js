@@ -145,8 +145,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
 
         let pImage = document.createElement("img");
         pImage.setAttribute("class", "card-icon");
-        pImage.setAttribute("src", "/media/assets/images/cards/backside.jpg");
-        pImage.setAttribute("data-image-backside", "/media/assets/images/cards/backside.jpg");
+        pImage.setAttribute("src", "/data/backside");
+        pImage.setAttribute("data-image-backside", "/data/backside");
         pImage.setAttribute("data-image-path", "");
         pImage.setAttribute("decoding", "async");
         pImage.setAttribute("data-uuid", card.uuid);
@@ -188,7 +188,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         div.setAttribute("class", "card padR5 fl");
         div.setAttribute("draggable", "false");
         div.setAttribute("data-card-code", code);
-        div.innerHTML  = `<img src="/media/assets/images/cards/backside-region.jpg" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/media/assets/images/cards/backside.jpg">`;
+        div.innerHTML  = `<img src="/media/assets/images/cards/backside-region.jpg" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
         return div;
     }
 

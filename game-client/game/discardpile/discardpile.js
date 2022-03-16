@@ -65,9 +65,9 @@ class DiscardPileAtTable
 
         let img = document.createElement("img");
         img.setAttribute("id", this.imgPrefix + playerId);
-        img.setAttribute("src", "/media/assets/images/cards/backside.jpg");
+        img.setAttribute("src", "/data/backside");
         img.setAttribute("class","card-icon discardpile-card-icon");
-        img.setAttribute("data-image-backside", "/media/assets/images/cards/backside.jpg");
+        img.setAttribute("data-image-backside", "/data/backside");
 
         cont.appendChild(img);
         document.getElementById(this.id).appendChild(cont);

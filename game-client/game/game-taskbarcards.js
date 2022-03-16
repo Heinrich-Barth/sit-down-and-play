@@ -52,12 +52,12 @@ class ViewCardListContainer {
 
         if (!bShowCardPreview) 
         {
-            _img = "/media/assets/images/cards/backside.jpg";
+            _img = "/data/backside";
             sCode = "";
         }
 
         return `<div class="card-hand pos-rel" id="offer_${uuid}" data-uuid="${uuid}" draggable="false" data-code="${sCode}" data-type="${type}">
-            <img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/media/assets/images/cards/backside.jpg">
+            <img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/data/backside">
             <div class="view-card-list-actions icons">
                 <a href="#" class="icon hand" data-move-to="hand" title="Move to hand">&nbsp;</a>
                 <a href="#" class="icon playdeck" data-move-to="playdeck" title="Move to top of playdeck">&nbsp;</a>

@@ -32,7 +32,7 @@ h1 { display: none; }
     width: 300px;
     min-height: 420px;
     max-height: 421px;
-    background: url("/media/assets/images/cards/backside.jpg") 0 0 no-repeat;
+    background: url("/data/backside") 0 0 no-repeat;
     background-size: contain;
 }
 body.addtodeck #result img.preview {

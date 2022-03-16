@@ -11,7 +11,7 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     this._useImagesDC = useImagesDC === undefined ? true : useImagesDC;
     this._useImagesIC = useImagesIC === undefined ? false : useImagesIC;
 
-    this._imageBacksideDefault = "/media/assets/images/cards/backside.jpg";
+    this._imageBacksideDefault = "/data/backside";
     this._imageNotFound = "/media/assets/images/cards/notfound-generic.jpg";
     this._imageNotFoundRegion = "/media/assets/images/cards/notfound-region.jpg";
     this._imageNotFoundSite = "/media/assets/images/cards/notfound-site.jpg";

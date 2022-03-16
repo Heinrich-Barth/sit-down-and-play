@@ -15,6 +15,12 @@ let SERVER = {
         maxage: 8640000 * 1000
     },
 
+    cacheResponseJpgHeader : {
+        etag: true,
+        maxage: 8640000 * 1000,
+        "Content-Type": "image/jpeg"
+    },
+
     dices : [],
 
     gamesStarted : 0,
@@ -361,6 +367,7 @@ SERVER.instance.get("/data/list/cards", (req, res) => SERVER.cacheResponse(res, 
 
 SERVER.instance.get("/data/list/filters", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
 
+SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.cacheResponseJpgHeader));
 
 /**
  * Get active games

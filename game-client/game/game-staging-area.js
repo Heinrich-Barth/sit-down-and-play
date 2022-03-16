@@ -47,7 +47,7 @@ class StagingArea
 
         let jImage = document.createElement("img");
         jImage.setAttribute("class", "card-icon");
-        jImage.setAttribute("src", "/media/assets/images/cards/backside.jpg");
+        jImage.setAttribute("src", "/data/backside");
 
         jImage.setAttribute("data-image-backside", this.CardList.getFlipSide(code));
         jImage.setAttribute("data-image-path", "");
