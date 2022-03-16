@@ -6,7 +6,9 @@
 .game-watch-only #playercard-hand-content,
 .game-watch-only .taskbar-score,
 .game-watch-only .area-player,
-.game-watch-only .chattext
+.game-watch-only .chattext,
+.game-watch-only .arda-hand-wrapper,
+.game-watch-only .arda-card-hands
 {
     display: none !important;
 }
