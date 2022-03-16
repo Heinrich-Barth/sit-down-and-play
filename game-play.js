@@ -15,7 +15,7 @@ module.exports = function(SERVER, isProduction, g_pAuthentication)
     new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html", g_pAuthentication).setupRoutes();
 
     const GamePlayRouteHandlerSingle = require("./game-play-single");
-    new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login-singleplayer.html", "home.html", g_pAuthentication).setupRoutes();
+    new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login.html", "home.html", g_pAuthentication).setupRoutes();
 
     SERVER.instance.get("/data/preferences/game", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/game", (req, res) =>  { 

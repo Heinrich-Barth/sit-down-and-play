@@ -33,7 +33,12 @@
                     <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Join Game</button>
 
                 </div>
-                <p class="arda-text hidden"><input type="checkbox" id="toggle_isarda" value="isArda" name="isArda"><label for="toggle_isarda">This game will be an <b>Arda</b> game</label></p>
+                <p class="arda-text hidden">
+                    Choose a game type:
+                    <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label>
+                    <input type="radio" id="toggle_issingleplayer" value="arda" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                    <input type="radio" checked="checked" id="toggle_isstandard" value="arda" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label>
+                </p>
                 <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
             </div>
             

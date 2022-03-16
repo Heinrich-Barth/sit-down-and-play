@@ -166,8 +166,7 @@ const onLoadDecks = function(data)
         let sKey = e.target.getAttribute("data-deck-id");
         let nArray = parseInt(e.target.getAttribute("data-deck-list"));
 
-        if (document.getElementById("toggle_isarda").checked)
-            document.getElementById("toggle_isarda").click();
+        document.getElementById("toggle_isstandard").click();
 
         populateDeck(g_jDecks[nArray].decks[sKey]);
     });
@@ -176,7 +175,7 @@ const onLoadDecks = function(data)
 const stripHashFromUrl = function()
 {
     let sUrl = window.location.href;
-    return sUrl.replace(/#/g, '').toLocaleLowerCase().trim();
+    return sUrl.replace(/#/g, '').toLocaleLowerCase().trim().replace("/arda/", "/play/").replace("/singleplayer/", "/play/");
 };
 
 const isAlphaNumeric = function(sInput)
@@ -225,12 +224,48 @@ const onPerformLogin = function()
         deck: jDeck
     });
 
-    let sUrlTarget = !document.getElementById("toggle_isarda").checked ? sUrl : sUrl.replace("/play/", "/arda/");
-    if (document.getElementById("toggle_issingleplayer") !== null)
-        sUrlTarget = sUrl.replace("/play/", "/singleplayer/");
+    const gameType = getGameType();
+    const sUrlTarget = getTargetUrl(sUrl, gameType);
         
     document.getElementById("form").setAttribute("action", sUrlTarget + "/check");   
     document.getElementById("form").submit();
+};
+
+const getTargetUrl = function(sUrl, gameType)
+{
+    let sReplace = "";
+    switch (gameType)
+    {
+        case "arda":
+        case "singleplayer":
+            sReplace = gameType;
+            break;
+        default:
+            break;
+    }
+    return sReplace === "" ? sUrl : sUrl.replace("/play/", "/" + sReplace + "/");
+};
+
+const getGameType = function()
+{
+    const gameTypes = document.getElementsByName("gameType");
+    if (gameTypes === null || gameTypes === undefined)
+        return "standard";
+
+    let radio_value = "";
+    for(let gameType of gameTypes)
+    {
+        if(gameType.checked)
+        {
+            radio_value = gameType.value;
+            break;
+        }
+    }
+
+    if (radio_value === "arda" || radio_value === "singleplayer")
+        return radio_value;
+    else
+        return "standard"
 };
 
 const onCheckCardCodes = function()

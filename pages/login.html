@@ -33,8 +33,12 @@
                     <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Join Game</button>
 
                 </div>
-                <p class="arda-text"><input type="checkbox" id="toggle_isarda" value="isArda" name="isArda"><label for="toggle_isarda">This game will be an <b>Arda</b> game</label></p>
-                <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
+                <p class="arda-text">
+                    Choose a game type:
+                    <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label>
+                    <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                    <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label>
+                </p>
             </div>
 
             <div class="fields hidden" id="invalid-cards-info">
@@ -67,6 +71,7 @@
                         <div class="field"><textarea id="pool" class="card-type" title="Paste Pool here" placeholder="Paste Pool here"></textarea></div>
                     </div>
                     <p class="cookie_notice">You can also <span class="text-yellow"><i class="fa fa-bullseye" aria-hidden="true"></i> <b>drop</b></span> your deck file here to load it.</p>
+                    <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
                 </div>          
                 <div class="deck-list">
                     <div class="deck-list-entries"></div>
