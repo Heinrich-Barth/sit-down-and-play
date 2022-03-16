@@ -294,7 +294,7 @@ SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
 
 /* All media can be used with static routes */
 SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.cacheResponseHeader));
-
+SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));
   
 /**
  * This is a blank (black) page. Necessary for in-game default page
