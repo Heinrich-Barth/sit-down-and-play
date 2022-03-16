@@ -183,6 +183,7 @@ class RoomManager {
                 room : room,
                 arda : pRoom.getGame().isArda(),
                 created : new Date(pRoom.getCreated()).toUTCString(),
+                time: pRoom.getCreated(),
                 players : []
             }
 

@@ -92,9 +92,13 @@ a:hover { color: #ffa500; }
 }
 
 #active_games table { width: 100%; border-spacing: 0; }
-#active_games th, td { text-align: left;}
+#active_games th, td { text-align: left; }
+#active_games tr { vertical-align: middle; }
 #active_games tr td:first-child { width: 30px; text-align:right; padding-right: 10px;}
-#active_games tr th:last-child { width: 100%; max-width: 45%;}
 #active_games tbody tr:hover { background-color: rgba(255, 255, 255, 0.2);}
 #active_games a { display: block; }
+#active_games a:before { padding-right: 5px; }
+#active_games tr th:last-child { width: 50px; }
+#active_games tr th:last-child,
+#active_games td.date { font-size: 0.6em; }
 .join-game { text-align: center;}

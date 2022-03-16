@@ -31,6 +31,11 @@ const loadSampleRooms = function(existing)
     }));
 }
 
+const toNumberString = function(nValue)
+{
+    return (nValue < 10 ? "0" : "") + nValue;
+};
+
 const addGameTypes = function(data, isArda, existing)
 {
     let title = isArda ? "Arda" : "Standard/Dreamcard"
@@ -38,6 +43,7 @@ const addGameTypes = function(data, isArda, existing)
     table.innerHTML = `<thead><tr>
                             <th colspan="3">${title} Game</th>
                             <th>Players</th>
+                            <th>Started</th>
                         </tr></thead>`;
 
     const container = document.createElement("tbody");
@@ -53,13 +59,21 @@ const addGameTypes = function(data, isArda, existing)
         let _room = value.room;
         let _players = value.players.sort().join(", ");
         let _context = value.arda ? "arda" : "play";
+        const pDate = new Date(value.time);
+
+        const sMins = toNumberString(pDate.getMinutes());
+        const sHrs = toNumberString(pDate.getHours());
+        const sDay = toNumberString(pDate.getDate());
+        const sMonth = toNumberString(pDate.getMonth()+1);
+        const sDate = sDay + "." + sMonth + " " + sHrs + ":" + sMins;
 
         count++;
         const _tr = document.createElement("tr");
         _tr.innerHTML = `<td>${count}</td>
-                        <td><a href="/${_context}/${_room}" title="Click to join this game">${_room}</td>
+                        <td><a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in">${_room}</td>
                         <td><a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"></a></td>
-                        <td class="players">${_players}</td>`;
+                        <td class="players">${_players}</td>
+                        <td class="date">${sDate}</td>`;
         container.appendChild(_tr);
         existing.push(_room)
     }
