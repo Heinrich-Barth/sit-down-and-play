@@ -149,6 +149,8 @@ const MeccgApi =
         MeccgApi.expectDisconnect();
         MeccgApi._socket.close();
         MeccgApi._socket = null;
+
+        document.body.dispatchEvent(new CustomEvent("meccg-clear-ping"));
     },
     
     disconnect : function()
@@ -296,6 +298,9 @@ const MeccgApi =
         this.setupSocketConnection();
    
         this.emitRegisterToServer();
+
+        if (g_sLobbyToken === "")
+            document.body.dispatchEvent(new CustomEvent("meccg-clear-ping"));
     },
 
     emitRegisterToServer : function()
