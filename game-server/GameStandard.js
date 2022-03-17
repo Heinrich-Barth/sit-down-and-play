@@ -667,7 +667,6 @@ class GameStandard extends GamePlayers
             return;
         }
 
-        console.log("onCharacterJoinCompany " + _source);
         if (_source === "hand")
         {
             this.updateHandCounterOnlyPlayer(userid);
@@ -731,10 +730,7 @@ class GameStandard extends GamePlayers
     onRedrawCompany(userid, companyId)
     {
         if (userid !== undefined && userid !== "" && companyId !== undefined && companyId !== "")
-        {
-            console.log("redraw company " + companyId);
             this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(companyId));
-        }
     }
 
     onGameCompanyHighlight(userid, socket, jData)

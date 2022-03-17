@@ -220,7 +220,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
          var targetCompany = this.companies[targetCompanyId];
          if (typeof targetCompany === "undefined")
          {
-             console.log("Target company does not exist: " + targetCompanyId);
+             console.warn("Target company does not exist: " + targetCompanyId);
              return false;
          }
  
@@ -326,27 +326,19 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         var card = this.popCompanyCharacter(uuid);
         if (!this.addCompanyCharacterToCompany(targetCompany, targetcharacter, card))
         {
-            let sNew = this.getCardCode(uuid, "Unknown character");
-            console.log("Character " + sNew + " cannot join company " + targetCompany);
+            const sNew = this.getCardCode(uuid, "Unknown character");
+            console.warn("Character " + sNew + " cannot join company " + targetCompany);
             return false;
         }
         else
-        {
-            let sNew = this.getCardCode(uuid, "Unknown character");
-            let sHost = this.getCardCode(targetcharacter, "unknown host");
-            console.log("Character " + sNew + " joined " + sHost + " under direct influence in company " + targetCompany);
             return true;
-        }
     }
   
 
     ReadyCompanyCards(companyUuid)
     {
         if (!this.companyExists(companyUuid))
-        {
-            console.log("Company does not exist.");
             return;
-        }
 
         for (let _companyCharacter of this.companies[companyUuid].characters)
         {
@@ -449,7 +441,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     {
         if (!this.companyExists(companyUuid))
         {
-            console.log("Cannot find company " + companyUuid);
+            console.warn("Cannot find company " + companyUuid);
             return false;
         }
 
@@ -678,7 +670,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const pCompany = this.getCompanyById(companyId);
         if (pCompany === null)
         {
-            console.log("Cannot find company by its id " + companyId + " (GetFirstCompanyCharacterCardByCompanyId)");
+            console.warn("Cannot find company by its id " + companyId + " (GetFirstCompanyCharacterCardByCompanyId)");
             return null;
         }
 
@@ -697,14 +689,14 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const _card = this.GetCardByUuid(jsonChar.uuid);
         if (_card === null)
         {
-            console.log("Cannot get card from " + jsonChar.uuid);
+            console.warn("Cannot get card from " + jsonChar.uuid);
             return;
         }
 
         const pChar = this.getCharacterByUuid(jsonChar.uuid);
         if (pChar === null)
         {
-            console.log("Cannot find character by it " + jsonChar.uuid);
+            console.warn("Cannot find character by it " + jsonChar.uuid);
             return;
         }
 
@@ -740,7 +732,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const pCompany = this.getCompanyById(companyId);
         if (pCompany === null)
         {
-            console.log("Cannot find company by its id " + companyId + " (GetFullCompanyByCompanyId)");
+            console.warn("Cannot find company by its id " + companyId + " (GetFullCompanyByCompanyId)");
             return null;
         }
 
