@@ -338,7 +338,7 @@ class TaskBarCards
             return;
 
         const backside = jImage.getAttribute("data-image-backside");
-        if (backside !== null && backside.indexOf("backside.jpg") === -1) 
+        if (backside !== null && backside.indexOf("/backside") === -1) 
         {
             let sSrc = jImage.getAttribute("src") || "";
             jImage.setAttribute("src", jImage.getAttribute("data-image-backside"));
@@ -368,7 +368,7 @@ class TaskBarCards
         {
             let jthis = res[i];
             const backside = jthis.getAttribute("data-image-backside") || "";
-            if (backside.indexOf("backside.jpg") !== -1) 
+            if (backside.indexOf("/backside") !== -1) 
             {
                 let sSrc = jthis.getAttribute("src");
                 jthis.setAttribute("src", jthis.getAttribute("data-image-backside"));
