@@ -156,11 +156,47 @@ class MapData
                 jMapData[card.title] = {
                     title: card.title,
                     code: card.code,
-                    region_type: "",
+                    region_type: this.requireRegionType(card),
                     area: [],
                     sites: {}
                 };
             }
+        }
+
+        console.log(Object.keys(MapData.RegionTypes).sort())
+    }
+
+    requireRegionType(card)
+    {
+        const val = card.RPath === undefined ? "" : card.RPath;
+        if (val === "")
+            return "";
+        
+        switch(val)
+        {
+            case "Boarder-land":
+            case "Border-land":
+                return "bl";
+            case "Double Coastal Sea":
+            case "Triple Coastal Seas":
+            case "Coastal Sea":
+                return "cs";
+            case "Dark-domain":
+                return "dd";
+            case "Double Desert":
+            case "Desert":
+                return "de";
+            case "Double Wilderness":
+            case "Wilderness":
+                return "wi";
+            case "Free-domain":
+                return "fd";
+            case "Jungle":
+                return "ju";
+            case "Shadow-land":
+                return "sl";
+            default: 
+                return "";
         }
     }
 
