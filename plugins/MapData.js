@@ -148,11 +148,13 @@ class MapData
     
     createMissingRegions(jMapData, jCards) 
     {
+        let count = 0;
         for (let i in jCards) 
         {
             let card = jCards[i];
             if (card.type === "Region" && typeof jMapData[card.title] === "undefined")
             {
+                count++;
                 jMapData[card.title] = {
                     title: card.title,
                     code: card.code,
@@ -163,7 +165,8 @@ class MapData
             }
         }
 
-        console.log(Object.keys(MapData.RegionTypes).sort())
+        if (count > 0)
+            console.log("\t- " + count + " regions available.");
     }
 
     requireRegionType(card)
