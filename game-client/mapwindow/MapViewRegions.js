@@ -25,7 +25,10 @@ class MapViewRegions extends MapView {
             lordhaven : null,
             wizardhaven : null,
             pos_start : null,
-            pos_end : null
+            pos_end : null,
+            regions: {
+
+            }
         };
 
         this.jMap = jMap.map === undefined ? {} : jMap.map;
@@ -99,7 +102,30 @@ class MapViewRegions extends MapView {
         this.MARKER.dark = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-dark.png"});
         this.MARKER.ruins = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-ruins.png"});
         this.MARKER.shadow = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-shadow.png"});
-    
+
+        LeafIcon = L.Icon.extend({
+                options: 
+                {
+                    iconUrl: "",
+                    className: 'map-region-icon',
+                    shadowUrl: '/media/assets/leaflet/leaflet-images/marker-shadow.png',
+                    iconSize:     [27, 42], // size of the icon
+                    shadowSize:   [41, 41], // size of the shadow
+                    iconAnchor:   [24, 41], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [24, 24],  // the same for the shadow
+                    popupAnchor:  [-3, -41] // point from which the popup should open relative to the iconAnchor
+                }
+        });
+
+        this.MARKER.regions.bl = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-border.png"});
+        this.MARKER.regions.cs = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-coast.png"});
+        this.MARKER.regions.dd = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-dark.png"});
+        this.MARKER.regions.de = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-sunland.png"});
+        this.MARKER.regions.wi = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-wilder.png"});
+        this.MARKER.regions.fd = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-free.png"});
+        this.MARKER.regions.ju = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-sunland.png"});
+        this.MARKER.regions.sl = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-shadow.png"});
+
         if (!super.createInstance())
             return false;
     
@@ -345,7 +371,13 @@ class MapViewRegions extends MapView {
         this.dispatchClickEvent(e.target.region, e.target.site, true);
     }
 
-
+    obtainRegionMarker(type)
+    {
+        if (type !== undefined && type !== "" && this.MARKER.regions[type] !== undefined)
+            return this.MARKER.regions[type];
+        else
+            return this.MARKER.region;
+    }
 
     createMarker(region, site, lat, lon, jSiteCard, isSiteCard)
     {              
@@ -364,7 +396,7 @@ class MapViewRegions extends MapView {
         let _marker = null;
         if (site === "")
         {
-            _marker = this.MARKER.region;
+            _marker = this.obtainRegionMarker(this.jMap[region].region_type);
             this.jMap[region].area = [lat,lon];
         }
         else
