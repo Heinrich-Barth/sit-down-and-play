@@ -131,6 +131,8 @@ exports.getSiteList = () => CardsMap.getSiteList();
 
 exports.getMapdata = () => CardsMap.getMapdata(ImageList.getImages());
 
+exports.getUnderdeepMapdata = () => CardsMap.getUnderdeepsData(ImageList.getImages());
+
 exports.getCardMind = (code) => CardRepository.getCardMind(code);
 
 exports.getCardByCode = (code) => CardRepository.getCardByCode(code);

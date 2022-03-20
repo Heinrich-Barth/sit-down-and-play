@@ -58,6 +58,7 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
      * Provide the map data with all regions and sites for the map windows
      */
     SERVER.instance.get("/data/list/map", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getMapdata()).status(200));
+    SERVER.instance.get("/data/list/underdeeps", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getUnderdeepMapdata()).status(200));
 
     SERVER.instance.get("/data/preferences/map", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/map", (req, res) =>  { 
