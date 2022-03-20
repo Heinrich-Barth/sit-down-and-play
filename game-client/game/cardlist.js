@@ -83,12 +83,10 @@ CardList.prototype.getImageByCode = function(code, sDefault)
     if (typeof this._list[code] === "undefined" || typeof this._list[code].image === "undefined")
         return sDefault;
     
-    let useDC =  this.useImagesDC();
-    let useIC =  this.useImagesIC();
-
-    if (useDC && this._list[code].errata_dc !== "")
+    const image = this._list[code];
+    if (this.useImagesDC() && image.errata_dc !== undefined && image.errata_dc !== "")
         return this._list[code].errata_dc;
-    else if (useIC && this._list[code].errata_ic !== "")
+    else if (this.useImagesIC() && image.errata_ic !== undefined && image.errata_ic !== "")
         return this._list[code].errata_ic;
     else
         return this._list[code].image
