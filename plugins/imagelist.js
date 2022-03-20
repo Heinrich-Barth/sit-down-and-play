@@ -37,7 +37,7 @@ class ImageList {
             errata_ic : isICErratum ? ImageList.createImageUrl("ice-" + card.ImageName, card.set_code.toUpperCase(), imageUrl) : "",
             set_code: card.set_code.toUpperCase()
         };
-    };
+    }
 
     createImageList(jsonCards, imageUrl) 
     {
