@@ -523,6 +523,9 @@ SERVER.instance.use(function(req, res, next)
 /* 500 - Any server error */
 SERVER.instance.use(function(err, req, res, next) 
 {
+    if (err)
+        console.error(err);
+        
     res.status(500);
     res.format({
       html: () => res.sendFile(__dirname + "/pages/error-500.html"),
