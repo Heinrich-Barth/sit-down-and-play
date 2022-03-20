@@ -19,7 +19,7 @@ describe('Configuration', () => {
         expect(instance.maxPlayersPerRoom()).toEqual(10);
         expect(instance.isProduction()).toBeFalsy();
         expect(instance.imageExpires()).toEqual(8640000);
-        expect(instance.imageUrl()).toEqual("");
+        expect(instance.imageUrl()).toEqual("/data/images");
         expect(instance.imageDomain()).toEqual("");
 
         expect(instance.cardUrl() !== "").toBeTruthy();
