@@ -10,6 +10,7 @@
     "start": "node index.js",
     "local": "PORT=8080 IMAGE_PATH=/data/card-images CARDURL=data/cards.json MAPPOS=data/map-positions-example.json node index.js",
     "play": "PORT=8080 IMAGE_PATH=/data/card-images CARDURL=data-local/cards.json MAPPOS=data-local/map-positions.json DECKLISTFOLDER=data-local/decks node index.js",
+    "test_clear": "jest --clearCache",
     "test": "jest --config ./jest.config.json"
   },
   "dependencies": {
