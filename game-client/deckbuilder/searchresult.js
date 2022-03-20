@@ -74,6 +74,7 @@ var SearchResult = {
 
             const _div = document.createElement("div");
             _div.setAttribute("class", "category hidden");
+            _div.setAttribute("id", "result-data");
             _div.setAttribute("data-id", key.toString());
             
             for (let _index = 0; _index < _size; _index++)
@@ -87,7 +88,7 @@ var SearchResult = {
 
                 {
                     const _image = document.createElement("img");
-                    _image.setAttribute("src", "/media/assets/images/cards/notfound-generic.jpg");
+                    _image.setAttribute("src", "/data/card-not-found-generic");
                     _image.setAttribute("data-src", getImageUrlByCode(CardData.get(pJson, "code", "")));
                     _image.setAttribute("title", CardData.get(pJson, "code", ""));
                     _image.setAttribute("class", "preview");
@@ -413,9 +414,7 @@ var SearchResult = {
         const div = document.createElement("div");
         div.setAttribute("id", "help_observer");
         div.innerHTML = "<p>&nbsp;</p>";
-
-        document.getElementById("result").parentNode.appendChild(div);
-
+        document.getElementById("result-data").appendChild(div);
     },
 
     insertScrollTop : function()
