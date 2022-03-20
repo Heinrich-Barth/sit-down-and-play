@@ -159,7 +159,6 @@ class MapViewUnderdeeps extends MapView {
         helpCont.appendChild(h2);
 
         let added = false;
-        let i = 0;
         for (let code of Object.keys(this.images))
         {
             if (!list.includes(code))
