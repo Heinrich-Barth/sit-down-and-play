@@ -221,35 +221,23 @@ a:hover { color: #ff0; }
 {
     position: absolute;
     right: 0;
-    width: 24px;
-    height: 24px;
     cursor: pointer;
     z-index: 100;
-    background-size: contain;
+    color: #000;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 4px;
     opacity: 0.6;
 }
 
-.location-icon-image:hover { opacity: 1; }
-
-.location-icon
-{
-    top: 0px;
-    background-image: url("/media/assets/images/icons/icon-location-area.png"); 
-}
-.location-icon:hover
-{
-    background-image: url("/media/assets/images/icons/icon-location-area-hover.png"); 
-}
-.location-reveal
-{
-    bottom: 10px;
-    background-image: url("/media/assets/images/icons/icon-eye.png"); 
-}
-.location-reveal:hover
-{
-    background-image: url("/media/assets/images/icons/icon-eye-hover.png"); 
+.location-icon-image:hover { opacity: 1; 
+    color: #fff; 
+    background-color: #ffa500;
 }
 
+.location-icon { top: 0px; }
+.location-reveal { bottom: 10px; }
+.location-underdeep { top: 0px; left: 0px; }
 
 .table { position: relative; width: 100%; }
 .table .area { width: 100%; }

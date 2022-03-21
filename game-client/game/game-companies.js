@@ -17,8 +17,8 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         div.setAttribute("id", id);
         div.setAttribute("data-company-id", companyId);
         div.innerHTML = `<div class="company-site-list pos-rel">
-                        <div class="location-icon-image location-icon location-select hiddenToOpponent" title="Organise movement">&nbsp;</div>
-                        <div class="location-icon-image location-reveal hide hiddenToOpponent" title="Reveal movement">&nbsp;</div>
+                        <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise movement"></div>
+                        <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement"></div>
                         <div class="sites">
                             <div class="site-container site-current fl"></div>
                             <div class="site-container site-regions fl"></div>
