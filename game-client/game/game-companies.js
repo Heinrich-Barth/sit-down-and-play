@@ -6,18 +6,19 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
     const CardPreview = _CardPreview;
     const HandCardsDraggable = _HandCardsDraggable;
 
-    const CARDID_PREFIX = "ingamecard_";
 
     const g_pPlayerSelector = new PlayerSelector();
 
-    function createCompanyHtml(companyId, id)
+    
+    const createCompanyHtml = function(companyId, id)
     {
         const div = document.createElement("div");
         div.setAttribute("class", "company tableCell hiddenVisibility nonEmptyContainer");
         div.setAttribute("id", id);
         div.setAttribute("data-company-id", companyId);
         div.innerHTML = `<div class="company-site-list pos-rel">
-                        <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise movement"></div>
+                        <div class="location-icon-image fa fa-code-fork location-underdeep location-select-ud hiddenToOpponent" title="Organise underdeep movement"></div>
+                        <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise region movement"></div>
                         <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement"></div>
                         <div class="sites">
                             <div class="site-container site-current fl"></div>
@@ -33,18 +34,18 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                     <div class="clear"></div>`;
         return div;
     }
- 
-    function createOpponentContainer(sHexPlayerCode)
+    
+    const createOpponentContainer = function(sHexPlayerCode)
     {
         let pContainer = document.getElementById("opponent_table");
         if (pContainer === null)
             return null;
-
+    
         /* check if the container already exists  */
         let jTarget = pContainer.querySelector("[data-player='" + sHexPlayerCode + "']");
         if (jTarget !== null)
             return jTarget;
-
+    
         /* create new container for opponent */
         const div = document.createElement("div");
         div.setAttribute("class", "col90 companies center-text");
@@ -53,76 +54,54 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
         div.innerHTML = `<div class="company tableCell emptyContainer create-new-company hiddenToOpponent" id="create_new_company_opponent_${sHexPlayerCode}">
                             <div class="clear"></div>
                         </div>`;
-
+    
         pContainer.appendChild(div);
         return div;
-    }
-
-    function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId)
-    {
-        const id = "company_" + companyId;
-        const pDiv = createCompanyHtml(companyId, id);
-        if (pDiv === null)
-            return null;
-
-        if (bIsPlayer)
-        {
-            const pNew = document.getElementById("create_new_company");
-            pNew.parentElement.insertBefore(pDiv, pNew);
-        }
-        else
-        {
-            const container = createOpponentContainer(sHexPlayerCode);
-            if (container !== null)
-                container.appendChild(pDiv);
-        }
-
-        return document.getElementById(id);
-    }
-
+    };
+    
     /**
      * creat cCharacter div
      * @param {JSON} jsonCard 
      * @param {String} id 
      * @returns DOM element or NULL
      */
-    function createCharacterHtml(jsonCard, id)
-    {
-        var uuid = jsonCard.uuid;
-        if (uuid === "" || id === "")
-            return null;
-
-        const div = document.createElement("div");
-        div.setAttribute("class", "company-character pos-rel fl character-is-company-host");
-        div.setAttribute("id", id);
-        div.setAttribute("data-character-uuid", uuid);
-
-        let pCharacterContainer = document.createElement("div");
-        pCharacterContainer.setAttribute("class", "company-character-container pad10 pos-rel");
-
-        {
-            let pCharDiv = document.createElement("div");
-            pCharDiv.setAttribute("class", "company-character-host");
-            pCharDiv.appendChild(createNewCard(jsonCard));
-            pCharacterContainer.appendChild(pCharDiv);
-        }
-
-        {
-            let pCharDiv = document.createElement("div");
-            pCharDiv.setAttribute("class", "company-character-reosurces company-character-reosurces-empty");
-            pCharacterContainer.appendChild(pCharDiv);
-        }
-        
-
-        const pTemp = document.createElement("div");
-        pTemp.setAttribute("class", "company-character-influenced");
-
-        div.appendChild(pCharacterContainer);
-        div.appendChild(pTemp);      
-        return div;
-    }
-
-    function getCardStateCss(nState)
+     const createCharacterHtml = function(jsonCard, id)
+     {
+         var uuid = jsonCard.uuid;
+         if (uuid === "" || id === "")
+             return null;
+     
+         const div = document.createElement("div");
+         div.setAttribute("class", "company-character pos-rel fl character-is-company-host");
+         div.setAttribute("id", id);
+         div.setAttribute("data-character-uuid", uuid);
+     
+         let pCharacterContainer = document.createElement("div");
+         pCharacterContainer.setAttribute("class", "company-character-container pad10 pos-rel");
+     
+         {
+             let pCharDiv = document.createElement("div");
+             pCharDiv.setAttribute("class", "company-character-host");
+             pCharDiv.appendChild(createNewCard(jsonCard));
+             pCharacterContainer.appendChild(pCharDiv);
+         }
+     
+         {
+             let pCharDiv = document.createElement("div");
+             pCharDiv.setAttribute("class", "company-character-reosurces company-character-reosurces-empty");
+             pCharacterContainer.appendChild(pCharDiv);
+         }
+         
+     
+         const pTemp = document.createElement("div");
+         pTemp.setAttribute("class", "company-character-influenced");
+     
+         div.appendChild(pCharacterContainer);
+         div.appendChild(pTemp);      
+         return div;
+     };
+    
+    const getCardStateCss = function(nState)
     {
         if (nState === 0)
             return "state_ready";
@@ -136,92 +115,114 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             return "state_rot270";
         else
             return "";
-    }
-
-    function createNewCard(card)
-    {
-        if (card.uuid === "")
-            return "";
-
-        let pImage = document.createElement("img");
-        pImage.setAttribute("class", "card-icon");
-        pImage.setAttribute("src", "/data/backside");
-        pImage.setAttribute("data-image-backside", "/data/backside");
-        pImage.setAttribute("data-image-path", "");
-        pImage.setAttribute("decoding", "async");
-        pImage.setAttribute("data-uuid", card.uuid);
-        pImage.setAttribute("data-img-image", CardList.getImage(card.code));
-
-        if (typeof card.owner === "undefined" || card.owner === "")
-            pImage.setAttribute("data-owner", "");
-        else
+    };
+    
+    function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId)
         {
-            let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : card.owner;
-            pImage.setAttribute("data-owner", bIsMyCard);
+            const id = "company_" + companyId;
+            const pDiv = createCompanyHtml(companyId, id);
+            if (pDiv === null)
+                return null;
+    
+            if (bIsPlayer)
+            {
+                const pNew = document.getElementById("create_new_company");
+                pNew.parentElement.insertBefore(pDiv, pNew);
+            }
+            else
+            {
+                const container = createOpponentContainer(sHexPlayerCode);
+                if (container !== null)
+                    container.appendChild(pDiv);
+            }
+    
+            return document.getElementById(id);
         }
-            
-        pImage.setAttribute("data-revealed", card.revealed === true ? "true" : "false");
-
-        let pDiv = document.createElement("div");
-        pDiv.setAttribute("class", "card " + getCardStateCss(card.state));
-        pDiv.setAttribute("id", CARDID_PREFIX + card.uuid);
-        pDiv.setAttribute("data-uuid", card.uuid);
-        pDiv.setAttribute("data-card-code", CardList.getSafeCode(card.code));
-        pDiv.setAttribute("data-card-type", card.type);
-        pDiv.setAttribute("draggable", "true");
-        pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
-
-        if (card.token !== undefined && card.token > 0)
+    
+        function createNewCard(card)
         {
-            pDiv.setAttribute("data-token", card.token);
-            pDiv.setAttribute("title", "Tokens: " + card.token);
-        }       
-
-        pDiv.appendChild(pImage);
-        return pDiv;
-    }
-
-    function createLocationCard(code, img, bIsPlayer)
-    {
-        let sOwner = bIsPlayer ? "" : "other";
-        const div = document.createElement("div");
-        div.setAttribute("class", "card padR5 fl");
-        div.setAttribute("draggable", "false");
-        div.setAttribute("data-card-code", code);
-        div.innerHTML  = `<img src="/media/assets/images/cards/backside-region.jpg" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
-        return div;
-    }
-
-    /**
-     * Insert a new character container
-     * @param {json} jsonCard character card
-     * @param {Object} pTargetContainer DOM container
-     * @param {boolean} bInsertBefore insert before given element (of append otherwise)
-     * @param {boolean} bIsHosting Is hosting character
-     * @param {boolean} isRevealed
-     * @returns {Object} DOM Container
-     */
-    function insertNewCharacter(jsonCard, pContainer, bInsertBefore, bIsHosting)
-    {
-        const id = "character_" + jsonCard.uuid;
-        let pHtml = createCharacterHtml(jsonCard, id);
-        if (pHtml == null)
-            return document.getElementById("test");
-
-        if (!bIsHosting)
-        {
-            pHtml.classList.remove("character-is-company-host");
-            pHtml.classList.add("character-is-company-follower");
+            if (card.uuid === "")
+                return "";
+    
+            let pImage = document.createElement("img");
+            pImage.setAttribute("class", "card-icon");
+            pImage.setAttribute("src", "/data/backside");
+            pImage.setAttribute("data-image-backside", "/data/backside");
+            pImage.setAttribute("data-image-path", "");
+            pImage.setAttribute("decoding", "async");
+            pImage.setAttribute("data-uuid", card.uuid);
+            pImage.setAttribute("data-img-image", CardList.getImage(card.code));
+    
+            if (typeof card.owner === "undefined" || card.owner === "")
+                pImage.setAttribute("data-owner", "");
+            else
+            {
+                let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : card.owner;
+                pImage.setAttribute("data-owner", bIsMyCard);
+            }
+                
+            pImage.setAttribute("data-revealed", card.revealed === true ? "true" : "false");
+    
+            let pDiv = document.createElement("div");
+            pDiv.setAttribute("class", "card " + getCardStateCss(card.state));
+            pDiv.setAttribute("id", CARDID_PREFIX + card.uuid);
+            pDiv.setAttribute("data-uuid", card.uuid);
+            pDiv.setAttribute("data-card-code", CardList.getSafeCode(card.code));
+            pDiv.setAttribute("data-card-type", card.type);
+            pDiv.setAttribute("draggable", "true");
+            pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
+    
+            if (card.token !== undefined && card.token > 0)
+            {
+                pDiv.setAttribute("data-token", card.token);
+                pDiv.setAttribute("title", "Tokens: " + card.token);
+            }       
+    
+            pDiv.appendChild(pImage);
+            return pDiv;
         }
-
-        if (bInsertBefore)
-            pContainer.parentElement(pHtml, pContainer);
-        else
-            pContainer.appendChild(pHtml);
-
-        return document.getElementById(id);
-    }
-
+    
+        function createLocationCard(code, img, bIsPlayer)
+        {
+            let sOwner = bIsPlayer ? "" : "other";
+            const div = document.createElement("div");
+            div.setAttribute("class", "card padR5 fl");
+            div.setAttribute("draggable", "false");
+            div.setAttribute("data-card-code", code);
+            div.innerHTML  = `<img src="/media/assets/images/cards/backside-region.jpg" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
+            return div;
+        }
+    
+        /**
+         * Insert a new character container
+         * @param {json} jsonCard character card
+         * @param {Object} pTargetContainer DOM container
+         * @param {boolean} bInsertBefore insert before given element (of append otherwise)
+         * @param {boolean} bIsHosting Is hosting character
+         * @param {boolean} isRevealed
+         * @returns {Object} DOM Container
+         */
+        function insertNewCharacter(jsonCard, pContainer, bInsertBefore, bIsHosting)
+        {
+            const id = "character_" + jsonCard.uuid;
+            let pHtml = createCharacterHtml(jsonCard, id);
+            if (pHtml == null)
+                return document.getElementById("test");
+    
+            if (!bIsHosting)
+            {
+                pHtml.classList.remove("character-is-company-host");
+                pHtml.classList.add("character-is-company-follower");
+            }
+    
+            if (bInsertBefore)
+                pContainer.parentElement(pHtml, pContainer);
+            else
+                pContainer.appendChild(pHtml);
+    
+            return document.getElementById(id);
+        }
+        const CARDID_PREFIX = "ingamecard_";
 
     var INSTANCE = {
 

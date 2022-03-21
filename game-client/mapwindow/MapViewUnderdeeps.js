@@ -12,6 +12,7 @@ class MapViewUnderdeeps extends MapView {
         this.images = data.images;
         this.codeStart = "";
         this.pCurrentObserver = null;
+        this.targetSite = "";
     }
 
     getStartupLat()
@@ -39,14 +40,30 @@ class MapViewUnderdeeps extends MapView {
         return code === "" || code === undefined || this.images[code] === undefined ? "" : this.images[code].image;
     }
 
-    onClickCard(e)
+    onClickAccept()
     {
-        const code = e.target.getAttribute("data-code");
+        if (this.targetSite === null || this.targetSite === "")
+        {
+            this.onCancel();
+            return;
+        }
 
+        let sStart, sTarget;
+        if (this.codeStart === "")
+        {
+            sStart = this.targetSite;
+            sTarget = "";
+        }
+        else
+        {
+            sStart = this.codeStart;
+            sTarget = this.targetSite;
+        }
+        
         const data = {
-            start : this.codeStart === "" ? code : this.codeStart,
+            start : sStart,
             regions: ["dummyRegion"],
-            target: this.codeStart !== "" ? code : ""
+            target: sTarget
         }
 
         document.body.dispatchEvent(new CustomEvent("meccg-map-selected-movement", { "detail":  data }));
@@ -77,7 +94,7 @@ class MapViewUnderdeeps extends MapView {
 
         img.setAttribute("data-code", code);
         img.setAttribute("title", code);
-        img.onclick = this.onClickCard.bind(this);
+        img.onclick = this.insertTargetSite.bind(this);
         return img;
     }
 
@@ -116,6 +133,18 @@ class MapViewUnderdeeps extends MapView {
         this.pCurrentObserver.observe(elem);
     }
 
+    insertTargetSite(e)
+    {
+        const code = e.target.getAttribute("data-code");
+        const elem = document.getElementById("site_movement_target_site");
+        if (elem !== null && code !== null)
+        {
+            DomUtils.removeAllChildNodes(elem);
+            elem.appendChild(this.createImage(code, false, false));
+            this.targetSite = code;
+        }
+    }
+
     onObserving(entries)
     {
         if (entries[0].intersectionRatio <= 0 || this.pCurrentObserverElement === null) 
@@ -148,12 +177,48 @@ class MapViewUnderdeeps extends MapView {
         elem.appendChild(h2);
     }
 
+    showStartSite(code)
+    {
+        const cont = document.getElementById("site_movement");
+        const elem = document.getElementById("site_movement_start_site");
+
+        if (cont === null || elem === null)
+            return;
+
+        if (code !== "")
+            elem.appendChild(this.createImage(code, false, false));
+        else
+            cont.classList.add("movement-site-container-hide");
+
+        cont.classList.remove("hide");
+    }
+
+    onCancel()
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-map-cancel", { "detail":  "" }));
+    }
+
+    addCancelClick()
+    {
+        let elem = document.getElementById("movement_cancel");
+        if (elem !== null)
+            elem.onclick = this.onCancel;
+
+        
+        elem = document.getElementById("movement_accept");
+        if (elem !== null)
+            elem.onclick = this.onClickAccept.bind(this);
+    }
+
     populateSites(startingCode)
     {
         this.codeStart = startingCode;
         const elem = document.getElementById("found_sites");
         if (elem === null)
             return;
+
+        this.showStartSite(startingCode);
+        this.addCancelClick();
 
         const list = this.getAdjacentSites(startingCode);
         if (list.length === 0)

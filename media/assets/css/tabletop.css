@@ -228,6 +228,8 @@ a:hover { color: #ff0; }
     border-radius: 50%;
     padding: 4px;
     opacity: 0.6;
+    width: 16px;
+    height: 16px;
 }
 
 .location-icon-image:hover { opacity: 1; 
@@ -235,9 +237,9 @@ a:hover { color: #ff0; }
     background-color: #ffa500;
 }
 
-.location-icon { top: 0px; }
+.location-icon { top: 6px; }
+.location-underdeep { top: 30px; right: 43px; }
 .location-reveal { bottom: 10px; }
-.location-underdeep { top: 0px; left: 0px; }
 
 .table { position: relative; width: 100%; }
 .table .area { width: 100%; }

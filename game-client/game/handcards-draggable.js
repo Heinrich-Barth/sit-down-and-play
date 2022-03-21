@@ -332,12 +332,13 @@ const HandCardsDraggable = {
         };
     },
 
-    onLocationSelectClick : function(sCode, companyUuid)
+    onLocationSelectClick : function(sCode, companyUuid, regionMap)
     {
         const data = {
             company : companyUuid,
             code : sCode,
-            id : CreateHandCardsDraggableUtils.requireMessageId()
+            id : CreateHandCardsDraggableUtils.requireMessageId(),
+            regionmap : regionMap
         };
 
         document.body.dispatchEvent(new CustomEvent("meccg-map-show", { "detail":  data }));
@@ -391,11 +392,26 @@ const HandCardsDraggable = {
 
                 const _companyUuid = e.target.getAttribute("data-company-uuid");
                 const sCode = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"))
-                HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid);
+                HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid, true);
                 return false;
             }
         });
         
+        ArrayList(jCompany).find(".location-select-ud").each(function (_elem) 
+        {
+            _elem.setAttribute("data-company-uuid", companyUuid);
+            _elem.onclick = (e) => 
+            {
+                e.stopPropagation();
+                e.preventDefault();
+
+                const _companyUuid = e.target.getAttribute("data-company-uuid");
+                const sCode = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"))
+                HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid, false);
+                return false;
+            }
+        });
+
         ArrayList(jCompany).find(".location-reveal").each( function(_elem) 
         {
             _elem.setAttribute("data-company-uuid", companyUuid);

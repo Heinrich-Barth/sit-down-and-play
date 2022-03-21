@@ -119,6 +119,7 @@ textarea {
 .map-action-image:hover { color: #ffa500; }
 
 div.panel-buttons { width: 70px; }
+.underdeeps-map div.panel-buttons { width: 50px; }
 
 .map-title { margin: 10px 0;}
 .mapchooser {
@@ -127,6 +128,9 @@ div.panel-buttons { width: 70px; }
     padding: 10px 25px 10px 10px;
     z-index: 500;
 }
+
+.movement-site-container-hide .movement-site-container,
+.movement-site-container-hide #movement_accept { display: none}
 
 #found_sites img { width: 80px; height: 112px; background: url(/data/backside) 0 0 no-repeat;background-size: contain; }
 

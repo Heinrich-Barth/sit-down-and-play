@@ -168,7 +168,7 @@ const MapWindow = {
         MapWindow.showIframe("/rules/" + sRule, "");
     },
 
-    showMap : function(company, code, messageId)
+    showMap : function(company, code, messageId, regionMap)
     {
         if (!MapWindow.assertValidMessage(messageId) || company === undefined || company === "" || typeof messageId === "undefined")
             return;
@@ -177,13 +177,16 @@ const MapWindow = {
             code = "";
 
         if (document.getElementById("map-window").classList.contains("hide"))
-            MapWindow.showIframe("/map/regions?code=" + code, company);
+        {
+            const url = regionMap ? "/map/regions" : "/map/underdeeps";
+            MapWindow.showIframe(url + "?code=" + code, company);
+        }
     },
 
     /** Custom event to show the map iframe.  */
     onShowMapMessageEvent : function(e)
     {
-        MapWindow.showMap(e.detail.company, e.detail.code, e.detail.id);
+        MapWindow.showMap(e.detail.company, e.detail.code, e.detail.id, e.detail.regionmap);
     },
 };
 
