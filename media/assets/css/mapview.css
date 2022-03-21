@@ -159,3 +159,5 @@ div.panel-buttons { width: 70px; }
 img.map-region-icon {
     filter: drop-shadow(2px 4px 6px black);
 }
+
+.colorOrange { color: #ffa500; font-size: 1.1em; }

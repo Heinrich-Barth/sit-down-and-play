@@ -31,7 +31,7 @@ class MapViewUnderdeeps extends MapView {
 
     getAdjacentSites(code)
     {
-        return code === "" || code === undefined || this.sites[code] === undefined ? Object.keys(this.images) : this.sites[code];
+        return code === "" || code === undefined || this.sites[code] === undefined ? [] : this.sites[code];
     }
 
     getImage(code)
@@ -45,9 +45,10 @@ class MapViewUnderdeeps extends MapView {
 
         const data = {
             start : this.codeStart === "" ? code : this.codeStart,
-            regions: [],
+            regions: ["dummyRegion"],
             target: this.codeStart !== "" ? code : ""
         }
+
         document.body.dispatchEvent(new CustomEvent("meccg-map-selected-movement", { "detail":  data }));
     }
 
@@ -139,6 +140,14 @@ class MapViewUnderdeeps extends MapView {
         }
     }
 
+    appendCaption(elem, text)
+    {
+        const h2 = document.createElement("h2");
+        h2.setAttribute("class", "colorOrange");
+        h2.innerText = text;
+        elem.appendChild(h2);
+    }
+
     populateSites(startingCode)
     {
         this.codeStart = startingCode;
@@ -147,19 +156,29 @@ class MapViewUnderdeeps extends MapView {
             return;
 
         const list = this.getAdjacentSites(startingCode);
-        for (let code of list)
-            elem.appendChild(this.createImage(code));
+        if (list.length === 0)
+        {
+            this.appendCaption(elem, "No adjacent sites available.");
+        }
+        else
+        {
+            if (startingCode !== "")
+                this.appendCaption(elem, list.length + " adjacent site(s) from " + startingCode);
+            else
+                this.appendCaption(elem, list.length + " adjacent site(s)");
 
+            for (let code of list)
+                elem.appendChild(this.createImage(code));
+        }
 
         const helpCont = document.createElement("div");
         helpCont.setAttribute("id", "allsites");
 
-        const h2 = document.createElement("h2")
-        h2.innerText = "All other sites";
-        helpCont.appendChild(h2);
+        let imageKeys = Object.keys(this.images);
+        this.appendCaption(helpCont, "All other sites (" + (imageKeys.length - list.length) + ")");
 
         let added = false;
-        for (let code of Object.keys(this.images))
+        for (let code of imageKeys)
         {
             if (!list.includes(code))
             {
