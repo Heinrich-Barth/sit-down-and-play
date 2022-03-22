@@ -41,7 +41,7 @@ class MapViewCards extends MapView {
 
     static getCardBacksideImageUrl()
     {
-        return "/media/assets/images/cards/backside-region.jpg";
+        return "/data/backside-region";
     }
 
     createImage(code, isSite, isTapped)

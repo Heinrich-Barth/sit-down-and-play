@@ -53,7 +53,7 @@
 
     static getCardBacksideImageUrl()
     {
-        return "/media/assets/images/cards/backside-region.jpg";
+        return "/data/backside-region";
     }
 
     createInstance()

@@ -69,7 +69,7 @@ class ScoringContainers {
 
         let div = document.createElement("div");
         div.setAttribute("class", "view-score-card fl");
-        div.innerHTML = `<img src="/data/backside" data-image-path="" data-image-backside="backside.jpg">`;
+        div.innerHTML = `<img src="/data/backside" data-image-path="" data-image-backside="/data/backside">`;
 
         let view_score_container = document.createElement("div");
         view_score_container.setAttribute("class", "view-score-container blue-box");

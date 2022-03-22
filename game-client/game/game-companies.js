@@ -189,7 +189,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             div.setAttribute("class", "card padR5 fl");
             div.setAttribute("draggable", "false");
             div.setAttribute("data-card-code", code);
-            div.innerHTML  = `<img src="/media/assets/images/cards/backside-region.jpg" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
+            div.innerHTML  = `<img src="/data/backside-region" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
             return div;
         }
     

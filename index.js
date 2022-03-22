@@ -368,7 +368,10 @@ SERVER.instance.get("/data/list/cards", (req, res) => SERVER.cacheResponse(res, 
 SERVER.instance.get("/data/list/filters", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
 
 SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.cacheResponseJpgHeader));
+SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.cacheResponseJpgHeader));
 SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-generic.jpg", SERVER.cacheResponseJpgHeader));
+SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-region.jpg", SERVER.cacheResponseJpgHeader));
+SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-site.jpg", SERVER.cacheResponseJpgHeader));
 
 /**
  * Get active games

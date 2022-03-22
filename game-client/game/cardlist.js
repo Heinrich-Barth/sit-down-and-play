@@ -13,8 +13,8 @@ function CardList(images, quests, useImagesDC, useImagesIC)
 
     this._imageBacksideDefault = "/data/backside";
     this._imageNotFound = "/data/card-not-found-generic";
-    this._imageNotFoundRegion = "/media/assets/images/cards/notfound-region.jpg";
-    this._imageNotFoundSite = "/media/assets/images/cards/notfound-site.jpg";
+    this._imageNotFoundRegion = "/data/card-not-found-region";
+    this._imageNotFoundSite = "/data/card-not-found-site";
     this._imageCDNUrl = "";
     this._isReady = false;
 
