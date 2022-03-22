@@ -24,8 +24,8 @@ class Configuration {
         this._deckDirectory = Configuration.assertString(process.env.DECKLISTFOLDER, "/data/decks");
 
         this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
-        this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "cards.json");
-        this._mapPositions = Configuration.assertUrlOrDataDirectory(process.env.MAPPOS, "map-positions.json");
+        this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
+        this._mapPositions = Configuration.assertUrlOrDataDirectory(process.env.MAPPOS, "/data/map-positions.json");
 
         if (sLocalConfig !== undefined && sLocalConfig !== "")
             this.loadConfig(sLocalConfig);
