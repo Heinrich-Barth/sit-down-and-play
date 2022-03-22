@@ -74,7 +74,6 @@ var SearchResult = {
 
             const _div = document.createElement("div");
             _div.setAttribute("class", "category hidden");
-            _div.setAttribute("id", "result-data");
             _div.setAttribute("data-id", key.toString());
             
             for (let _index = 0; _index < _size; _index++)
@@ -145,20 +144,6 @@ var SearchResult = {
                 }
                 
                 _div.appendChild(_entry);
-            }
-
-            {
-                const elemI = document.createElement("i");
-                elemI.setAttribute("class", "fa bgblue fa-share fa-6");
-                elemI.setAttribute("aria-hidden", "true");
-                elemI.setAttribute("title", "Scroll to top");
-                elemI.onclick = () =>  window.scrollTo({ top: 0, behavior: 'smooth' });      
-
-                const _elem = document.createElement("div");
-                _elem.setAttribute("class", "clear result-end-of-list");
-                _elem.appendChild(elemI);
-                
-                _div.appendChild(_elem);
             }
 
             document.getElementById("result").appendChild(_div);
@@ -330,7 +315,7 @@ var SearchResult = {
     {
         e.preventDefault();
 
-        var sId = e.target.getAttribute("data-id");
+        const sId = e.target.getAttribute("data-id");
         if (sId === "" || sId === null)
             return false;
 
@@ -368,28 +353,36 @@ var SearchResult = {
         }
 
         SearchResult.pCurrentObserverElement = null;
-        DomUtils.remove(document.getElementById("help_observer"));
+
+        const elem = document.getElementById("help_observer");
+        if (elem !== null)
+            DomUtils.remove(elem);
     },
 
     createObserver : function(pElement)
     {
-        SearchResult.insertIntersector();
-        SearchResult.pCurrentObserverElement = pElement;
+        this.insertIntersector(pElement);
+        this.pCurrentObserverElement = pElement;
+        this.pCurrentObserver = new IntersectionObserver(this.onObserving.bind(this));
+        this.pCurrentObserver.observe(document.getElementById("help_observer"));
+    },
 
-        SearchResult.pCurrentObserver = new IntersectionObserver(SearchResult.onObserving);
-
-        SearchResult.pCurrentObserver.observe(document.getElementById("help_observer"));
+    removeObserverIfNecessary()
+    {
+        const list = this.pCurrentObserverElement.querySelectorAll(".image.hidden");
+        if (list === null || list.length === 0)
+            this.removeObserver();
     },
 
     onObserving : function(entries)
     {
-        if (entries[0].intersectionRatio <= 0 || SearchResult.pCurrentObserverElement === null) 
+        if (entries[0].intersectionRatio <= 0 || this.pCurrentObserverElement === null) 
             return;
 
-        const list = SearchResult.pCurrentObserverElement.querySelectorAll(".image.hidden");
+        const list = this.pCurrentObserverElement.querySelectorAll(".image.hidden");
         if (list === null || list.length === 0)
         {
-            SearchResult.removeObserver();
+            this.removeObserver();
             return;
         }
 
@@ -404,17 +397,28 @@ var SearchResult = {
             _img.setAttribute("src", _img.getAttribute("data-src"));
             elem.classList.remove("hidden");
         }
+
+        this.removeObserverIfNecessary();
     },
 
-    insertIntersector : function()
+    insertIntersector : function(pElement)
     {
         if (document.getElementById("help_observer") !== null)
             return;
 
         const div = document.createElement("div");
+        div.setAttribute("class", "fl image");
         div.setAttribute("id", "help_observer");
-        div.innerHTML = "<p>&nbsp;</p>";
-        document.getElementById("result-data").appendChild(div);
+
+        const img = document.createElement("img");
+        img.setAttribute("class", "preview");
+        img.setAttribute("src", "/data/card-not-found-generic");
+        img.setAttribute("data-src", "/data/card-not-found-generic");
+        img.setAttribute("decoding", "async");
+
+        div.appendChild(img);
+        
+        pElement.appendChild(div);
     },
 
     insertScrollTop : function()
