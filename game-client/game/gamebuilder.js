@@ -187,7 +187,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 DomUtils.removeNode(document.getElementById("lidles-eye"));
                 document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
                 
-            }, 1500);
+            }, 500);
         },
         
         onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type, state, revealed, turn, token, secondary)
