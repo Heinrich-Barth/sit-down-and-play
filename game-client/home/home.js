@@ -141,6 +141,13 @@ const isAlphaNumeric = function(sInput)
 
 const fetchAndUpdateGames = function()
 {
+    let lSceconds = Math.floor((Date.now() - g_lStartFetch) / 1000);
+    if (lSceconds > 600)
+    {
+        clearInterval(g_pGamesFetchInterval);
+        return;
+    }
+
     fetch("/data/games").then((response) => response.json().then(onResult))
     .catch((err) => 
     {
@@ -148,6 +155,9 @@ const fetchAndUpdateGames = function()
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
     });
 };
+
+
+const g_lStartFetch = Date.now();
 
 (function()
 {
@@ -197,4 +207,4 @@ const fetchAndUpdateGames = function()
     fetchAndUpdateGames();
 })();
 
-setInterval(fetchAndUpdateGames, 10 * 1000);
+let g_pGamesFetchInterval = setInterval(fetchAndUpdateGames, 10 * 1000);
