@@ -107,6 +107,7 @@ const MeccgApi =
     room : "",
     _interval : null,
     usermap : null,
+    isConnected : false,
     _disconnectInfo : new PageRefreshInfo(),
     
     isMe : function(sid)
@@ -228,12 +229,14 @@ const MeccgApi =
         const sUserUUID = g_sUserId;
         const sRoom = g_sRoom;
 
+        MeccgApi.isConnected = true;
         MeccgApi.initSocketPaths();
         MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
     },
 
     setupSocketConnection()
     {
+        this.isConnected = false;
         this._socket = io(window.location.host, 
         {
             reconnection: false,
@@ -247,6 +250,8 @@ const MeccgApi =
                 userId : g_sUserId
             }
         });
+
+        this._socket.on("connect", () => MeccgApi.isConnected = true);
 
         this._socket.on("error", MeccgApi.onSocketError.bind(MeccgApi));
         this._socket.on("connect_error", MeccgApi.onSocketError.bind(MeccgApi));
@@ -294,6 +299,8 @@ const MeccgApi =
             MeccgUtils.logError("neither user nor token available");
             return;
         }
+
+        setTimeout(MeccgApi.checkIfConnected.bind(MeccgApi), 5000);
       
         this.setupSocketConnection();
    
@@ -301,6 +308,18 @@ const MeccgApi =
 
         if (g_sLobbyToken === "")
             document.body.dispatchEvent(new CustomEvent("meccg-clear-ping"));
+    },
+
+    /**
+     * Check if the connection was established and everything was successfully
+     * setup.
+     * 
+     * If not, show "not connected" screen and offer refresh
+     */
+    checkIfConnected : function()
+    {
+        if(!this.isConnected || this._socket.connected !== true)
+            this._disconnectInfo.show();
     },
 
     emitRegisterToServer : function()
