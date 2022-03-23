@@ -376,22 +376,22 @@ SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "
 /**
  * Get active games
  */
-SERVER.instance.get("/data/games", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.getActiveGames()).status(200));
+SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.getActiveGames()).status(200));
 
 /**
  * Get the status of a given player (access denied, waiting, addmitted)
  */
-SERVER.instance.get("/data/dump", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.dump()).status(200));
+SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.dump()).status(200));
 
 /**
  * Load a list of available challenge decks to start right away
  */
-SERVER.instance.get("/data/decks", (req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
+SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
 
 /**
   * Check if the deck is valid.
   */
-SERVER.instance.post("/data/decks/check", function (req, res) 
+SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, function (req, res) 
 {
     let bChecked = false;
     let vsUnknown = [];
