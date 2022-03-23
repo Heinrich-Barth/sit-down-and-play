@@ -10,14 +10,14 @@
     border-radius: 5px;
 }
 
-.preview-left { left: 10px; }
+.preview-left { left: 45px; }
 .preview-bottom { bottom: 10px; }
 .preview-top { top: 10px; }
 .preview-right { right: 10px; }
 
 .mapwindow .preview-container img {
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
     height: auto !important;
 }
 
