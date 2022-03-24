@@ -157,7 +157,6 @@ SERVER.onListenSetupSocketIo = function ()
                 socket.auth = true;
                 socket.room = room;
                 socket.userid = userid;
-                console.log("auth is ok");
                 next();
             }
             else
