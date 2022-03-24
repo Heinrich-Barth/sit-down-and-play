@@ -23,7 +23,6 @@ const requireAuthenticationModule = function()
 
 const pInstance = requireAuthenticationModule();
 
-
 module.exports = {
 
     showLoginPage : function(req, res, next) 
@@ -42,7 +41,7 @@ module.exports = {
         if (pInstance.isSignedInPlay(req))
             next();
         else 
-            res.redirect('/login');
+            res.status(403).send(pInstance.getLoginPageData());
     },
 
     isSignedInCards : function(req, res, next) 
@@ -50,7 +49,7 @@ module.exports = {
         if (pInstance.isSignedInCards(req))
             next();
         else 
-            res.redirect('/login');
+            res.status(403).send(pInstance.getLoginPageData());
     }, 
 
     isSignedInDeckbuilder : function(req, res, next) 
@@ -58,7 +57,7 @@ module.exports = {
         if (pInstance.isSignedInDeckbuilder(req))
             next();
         else 
-            res.redirect('/login');
+            res.status(403).send(pInstance.getLoginPageData());
     },
 
     isSignedInMap : function(req, res, next) 
@@ -66,6 +65,6 @@ module.exports = {
         if (pInstance.isSignedInMap(req))
             next();
         else 
-            res.redirect('/login');
+            res.status(403).send(pInstance.getLoginPageData());
     }
 };
