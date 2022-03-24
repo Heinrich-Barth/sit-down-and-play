@@ -139,25 +139,16 @@ const isAlphaNumeric = function(sInput)
     return sInput !== undefined && sInput.trim() !== "" && /^[0-9a-zA-Z]{1,}$/.test(sInput);
 };
 
-const fetchAndUpdateGames = function()
+const showFetchError = function(err)
 {
-    let lSceconds = Math.floor((Date.now() - g_lStartFetch) / 1000);
-    if (lSceconds > 600)
-    {
-        clearInterval(g_pGamesFetchInterval);
-        return;
-    }
-
-    fetch("/data/games").then((response) => response.json().then(onResult))
-    .catch((err) => 
-    {
-        console.log(err);
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
-    });
+    console.log(err);
+    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
 };
 
-
-const g_lStartFetch = Date.now();
+const fetchAndUpdateGames = function()
+{
+    fetch("/data/games").then((response) => response.json().then(onResult)).catch(showFetchError);
+};
 
 (function()
 {
@@ -207,4 +198,4 @@ const g_lStartFetch = Date.now();
     fetchAndUpdateGames();
 })();
 
-let g_pGamesFetchInterval = setInterval(fetchAndUpdateGames, 10 * 1000);
+setInterval(fetchAndUpdateGames, 10 * 1000);
