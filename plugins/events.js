@@ -4,6 +4,36 @@ const navigationEntry = function(url, label)
     return { url: url, label: label };
 };
 
+let g_jsonList = [];
+(function()
+{
+    const fs = require('fs')
+    fs.readFile(__dirname + '/namelist.json', 'utf8', function (err,data) 
+    {
+        if (err) 
+        {
+            console.log("No sample user names available.");
+            return;
+        }
+
+        try
+        {
+            const json = JSON.parse(data);
+            for (let elem of json)
+            {
+                if (elem !== "" && typeof elem === "string")
+                    g_jsonList.push(elem.trim());
+            }
+
+            console.log(g_jsonList.length + " sample player names avaiable");
+        }
+        catch (ex)
+        {
+            console.warn(ex.message);
+        }
+    });
+})();
+
 const Arda = require("./game-arda");
 
 function _register(pEventManager)
@@ -29,28 +59,8 @@ function _register(pEventManager)
 
     pEventManager.addEvent("add-sample-names", function(targetList)
     {
-        const fs = require('fs')
-        fs.readFile(__dirname + '/namelist.json', 'utf8', function (err,data) 
-        {
-            if (err) 
-            {
-                console.log("No sample user names available.");
-                return;
-            }
-
-            try{
-                const json = JSON.parse(data);
-                for (let elem of json)
-                {
-                    if (elem !== "" && typeof elem === "string")
-                        targetList.push(elem.trim());
-                }
-            }
-            catch (ex)
-            {
-                console.warn(ex.message);
-            }
-        });
+        for (let elem of g_jsonList)
+            targetList.push(elem);
     });
 
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
