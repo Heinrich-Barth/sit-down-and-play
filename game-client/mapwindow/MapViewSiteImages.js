@@ -66,10 +66,13 @@
 
     onSearch(e)
     {
-        const region = e.detail.region === undefined ? "" : e.detail.region;
-        const text = e.detail.text === undefined ? "" : e.detail.text;
-        
-        this.showImages(region, text);
+        const region = e.detail.region === undefined ? "" : e.detail.region.trim();
+        const text = e.detail.text === undefined ? "" : e.detail.text.trim();
+
+        if (region !== "")
+            this.showImages(region, text);
+        else if (text !== "")
+            this.showImagesSearchAll(text.toLowerCase());
     }
 
     showImages(region, site)
@@ -90,6 +93,26 @@
                 this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
         }
         
+        this.fillSiteList();
+        this.lazyloadImages();
+
+        document.body.dispatchEvent(new CustomEvent("meccg-map-show-images-done", { "detail":  "found_sites" }));
+    }
+
+    showImagesSearchAll(text)
+    {
+        const showAlignment = this.createSearchLimitations();
+
+        for (let region in this.jMap)
+        {
+            const jRegion = this.jMap[region];
+            for (let key in jRegion.sites)
+            {
+                if (key.toLowerCase().indexOf(text) !== -1)
+                    this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
+            }
+        }
+
         this.fillSiteList();
         this.lazyloadImages();
 
