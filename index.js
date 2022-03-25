@@ -129,7 +129,7 @@ SERVER.instance = g_pExpress();
 })();
 
 const PLUGINS = {
-    decklist : require("./game-server/decklist.js").load(SERVER.environment.deckListFolder())
+    decklist : require("./game-server/Decklist.js").load(SERVER.environment.deckListFolder())
 };
 
 /**
