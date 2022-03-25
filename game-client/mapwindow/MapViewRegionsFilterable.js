@@ -110,7 +110,7 @@ class MapViewRegionsFilterable {
         
         const textBox = document.getElementById("card_text");
         textBox.onchange = this.onSearchByTitle.bind(this);
-        textBox.onkeypress = this.onKeyPress.bind(this);
+        textBox.onkeyup = this.onKeyPress.bind(this);
     }
 
     onKeyPress(e)
