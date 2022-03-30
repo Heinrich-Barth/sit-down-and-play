@@ -3,13 +3,18 @@ class PageRefreshInfo
     constructor()
     {
         this.visible = false;
-        this.question = new Question("fa-exclamation-circle").addClass("notification-line-countdown-10s").onOk(this.onRefresh.bind(this));
+        this.question = new Question("fa-exclamation-circle").addClass("notification-line-countdown-10s").onOk(this.onForceRefresh.bind(this));
+    }
+
+    onForceRefresh()
+    {
+        window.location.reload();
     }
 
     onRefresh()
     {
         if (this.isVisible())
-            window.location.reload();
+            this.onForceRefresh();
     }
 
     isVisible()
