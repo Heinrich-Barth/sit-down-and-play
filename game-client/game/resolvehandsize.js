@@ -40,13 +40,15 @@ class ResolveHandSizeFirst
     {
         try
         {
-            return parseInt(document.getElementById(this.idSize).innerHTML)
+            const elem = document.getElementById(this.idSize);
+            if (elem !== null)
+                return parseInt(elem.innerText)
         }
         catch (err)
         {
         }
 
-        return 100;
+        return -1;
     }
 
     createMessage(nAllowed, nSize)
@@ -74,9 +76,12 @@ class ResolveHandSizeFirst
                 return;
 
             const nAllowed = this.getAllowed();
-            const nSize = this.countHandCards();
-            if (nAllowed > 0 && nSize !== nAllowed) 
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": this.createMessage(nAllowed, nSize) }));
+            if (nAllowed > -1)
+            {
+                const nSize = this.countHandCards();
+                if (nSize !== nAllowed) 
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": this.createMessage(nAllowed, nSize) }));    
+            }
         }
         catch (err)
         {

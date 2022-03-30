@@ -78,6 +78,9 @@ let Arda = {
             DomUtils.remove(document.getElementById("arda-action-container-randomchars"));
             DomUtils.remove(document.getElementById("arda-action-container-minor"));
             DomUtils.remove(document.getElementById("arda-action-container-charackters"));
+
+            DomUtils.remove(document.getElementById("arda_minors_hand"));
+            DomUtils.remove(document.getElementById("arda_characters_hand"));
         }
     },
 
