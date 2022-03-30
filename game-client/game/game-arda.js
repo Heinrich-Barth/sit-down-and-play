@@ -75,9 +75,9 @@ let Arda = {
         let isSingle = "true" === document.body.getAttribute("data-is-singleplayer");
         if (isSingle)
         {
-            document.getElementById("arda-action-container-randomchars").classList.add("hidden");
-            document.getElementById("arda-action-container-minor").classList.add("hidden");
-            document.getElementById("arda-action-container-charackters").classList.add("hidden");
+            DomUtils.remove(document.getElementById("arda-action-container-randomchars"));
+            DomUtils.remove(document.getElementById("arda-action-container-minor"));
+            DomUtils.remove(document.getElementById("arda-action-container-charackters"));
         }
     },
 
@@ -276,6 +276,7 @@ let Arda = {
             _a.setAttribute("data-type", dataType);
             _a.setAttribute("data-handsize", nHandSize)
             _a.setAttribute("title", "Draw a new card");
+            _a.setAttribute("data-container-id", id);
             _a.onclick = Arda.onDrawNewCard;
             _div.appendChild(_a);
         }
@@ -301,6 +302,15 @@ let Arda = {
         e.preventDefault();
     },
 
+    showIfExitent : function(id)
+    {
+        const elem = id === "" ? null : document.getElementById(id);
+        if (elem !== null)
+            elem.classList.remove("hidden");
+
+        return elem;
+    },
+
     onCheckDraft : function(bHideDraftCharacters, bHideDraftMinors)
     {
         let elem;
@@ -309,25 +319,23 @@ let Arda = {
         if (bHideDraftCharacters)
         {
             DomUtils.remove(elem);
-            document.getElementById("arda-card-draw-charackters").classList.remove("hidden");
+            Arda.showIfExitent("arda-card-draw-charackters");
 
-            elem = document.getElementById("arda_characters_hand");
-            elem.classList.remove("hidden");
+            Arda.showIfExitent("arda_characters_hand");
 
-            document.getElementById("arda-view-playdeck-charackters").classList.remove("hidden");
-            document.getElementById("arda-view-discard-charackters").classList.remove("hidden");
+            Arda.showIfExitent("arda-view-playdeck-charackters");
+            Arda.showIfExitent("arda-view-discard-charackters");
         }
 
         elem = document.getElementById("arda-card-recycle-minor");
         if (bHideDraftMinors)
         {
             DomUtils.remove(elem);
-            document.getElementById("arda-card-draw-minor").classList.remove("hidden");
-            elem = document.getElementById("arda_minors_hand");
-            elem.classList.remove("hidden");
+            Arda.showIfExitent("arda-card-draw-minor");
+            Arda.showIfExitent("arda_minors_hand");
 
-            document.getElementById("arda-view-playdeck-minor").classList.remove("hidden");
-            document.getElementById("arda-view-discard-minor").classList.remove("hidden");
+            Arda.showIfExitent("arda-view-playdeck-minor");
+            Arda.showIfExitent("arda-view-discard-minor");
         }
     },
 
@@ -347,22 +355,43 @@ let Arda = {
             const next = e.target.getAttribute("data-next");
 
             DomUtils.remove(e.target);
-            document.getElementById("arda-card-draw-" + target).classList.remove("hidden");
-            document.getElementById("arda-view-playdeck-" + target).classList.remove("hidden");
-            document.getElementById("arda-view-discard-" + target).classList.remove("hidden");
 
-            if (next !== "")
-                document.getElementById(next).classList.remove("hidden");
+            Arda.showIfExitent("arda-card-draw-" + target);
+            Arda.showIfExitent("arda-view-playdeck-" + target);
+            Arda.showIfExitent("arda-view-discard-" + target);
+            Arda.showIfExitent(next);
 
             MeccgApi.send("/game/arda/recycle", { type: target });
         }).show("Do you want to reshuffle all cards into the playdeck?", "All cards will be reshuffled into the playdeck and a new hand will be drawn.", "Reshuffle everything");
     },
     
+    getAllowedHandSize : function(elem)
+    {
+        const id = elem === null ? null : elem.getAttribute("data-container-id");
+        const container = id === null || id === "" ? null : document.getElementById(id);
+
+        let nDefault = -1;
+        try
+        {
+            nDefault = elem.getAttribute("data-handsize");
+            
+            const list = container === null ? null : container.getElementsByClassName("card-hands-sizer-size");
+            if(list !== null && list.length === 1)
+                return parseInt(list[0].innerText);
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
+
+        return nDefault;
+    },
     
     onDrawNewCard : function(e)
     {
         const elem = e.target;
-        const nLen = parseInt(elem.getAttribute("data-handsize"));
+
+        const nLen = Arda.getAllowedHandSize(elem);
         const type = elem.getAttribute("data-type");
         
         const list = document.getElementById("arda_hand_container_" + type);
