@@ -573,8 +573,8 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
         onError : (error) => console.error('There has been a problem with your fetch operation:', error)
     };
 
-    document.body.addEventListener("meccg-connected", GameBuilder.onConnected);
-    document.body.addEventListener("meccg-disconnected", GameBuilder.onConnected);
+    document.body.addEventListener("meccg-connected", GameBuilder.onConnected.bind(GameBuilder));
+    document.body.addEventListener("meccg-disconnected", GameBuilder.onDisconnected.bind(GameBuilder));
 
     GameBuilder.initRestEndpoints();
 
