@@ -27,7 +27,8 @@
 }
 
 .context-cursor {
-    cursor: help !important;
+    cursor: help !important; /* fallback if grab cursor is unsupported */
+    cursor: context-menu !important; 
 }
 
 .move-cursor {
