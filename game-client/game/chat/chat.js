@@ -84,6 +84,7 @@ class ChatBox {
     }
 }
 
+new ChatBox().create();
+
 document.body.addEventListener("meccg-chat-view", ChatBox.ToggleView, false);
 document.body.addEventListener("meccg-chat-message", ChatBox.OnChatMessageReceived, false);
-document.body.addEventListener("meccg-init-ready", () => new ChatBox().create(), false);
