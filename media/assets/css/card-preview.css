@@ -2,7 +2,8 @@
 {
     position: fixed;
     z-index: 1001;
-    height: 60%;
+    max-height: 50%;
+    height: 100%;
 }
 
 .preview-container img {
