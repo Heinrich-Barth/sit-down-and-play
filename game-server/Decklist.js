@@ -124,11 +124,18 @@ exports.load = function(sDir)
 {
     let decks = [];
 
-    const folders = fs.readdirSync(sDir, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
-    for (let folder of folders)
+    try
     {
-        const dir = sDir + "/" + folder;
-        load0(decks, folder, getDecks(dir));
+        const folders = fs.readdirSync(sDir, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+        for (let folder of folders)
+        {
+            const dir = sDir + "/" + folder;
+            load0(decks, folder, getDecks(dir));
+        }    
+    }
+    catch (err)
+    {
+        console.warn(err.message);
     }
 
     return decks;
