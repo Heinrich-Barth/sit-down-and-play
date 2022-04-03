@@ -279,6 +279,7 @@ const CARDS = {
         this.createTypes();
         this.prepareArda();
 
+        console.log("\t- " + CARDS._raw.length + " cards available");
         return CARDS._raw;
     },
 
