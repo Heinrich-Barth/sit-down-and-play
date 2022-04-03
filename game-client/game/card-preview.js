@@ -28,7 +28,7 @@ CardPreview.addHover = function(id, bRight, bTop)
  */
 CardPreview.show = function(img, bLeft, bTop)
 {
-    if (img === undefined || img === "" || img.indexOf(".") === -1)
+    if (img === undefined || img === "" )//|| img.indexOf(".") === -1)
         return;
     
     if (typeof bTop === "undefined")
@@ -40,7 +40,7 @@ CardPreview.show = function(img, bLeft, bTop)
         DomUtils.removeAllChildNodes(elem);
 
         const pImage = document.createElement("img");
-        pImage.setAttribute("src", img);
+        pImage.setAttribute("src", img.replace(/[^\w\s]/gi, ''));
         elem.appendChild(pImage);
         elem.classList.remove("hidden");
     }
