@@ -37,7 +37,11 @@ CardPreview.show = function(img, bLeft, bTop)
     const elem = CardPreview.getTargetContainer(bLeft, bTop);
     if (elem !== null)
     {
-        elem.innerHTML = `<img src="${img}">`;
+        DomUtils.removeAllChildNodes(elem);
+
+        const pImage = document.createElement("img");
+        pImage.setAttribute("src", img);
+        elem.appendChild(pImage);
         elem.classList.remove("hidden");
     }
 };
