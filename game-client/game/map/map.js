@@ -94,6 +94,7 @@ const MapWindow = {
 
             /* Getting the message from the iframe */
             window.onmessage = MapWindow.onMessage;
+            document.body.addEventListener("meccg-map-show", MapWindow.onShowMapMessageEvent, false);
         }
     },
 
@@ -190,5 +191,4 @@ const MapWindow = {
     },
 };
 
-document.body.addEventListener("meccg-map-show", MapWindow.onShowMapMessageEvent, false);
-document.body.addEventListener("meccg-init-ready", MapWindow.init.bind(MapWindow), false);
+MapWindow.init();
