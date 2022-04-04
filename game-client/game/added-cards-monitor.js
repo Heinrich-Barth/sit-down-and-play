@@ -90,9 +90,35 @@ class CheckForCardsPlayed {
      */
     markCards(vsIds)
     {
+        const _prefix = this.cardIdPrefix;
         const nSize = vsIds.length;
-        for (var i = 0; i < nSize; i++)
-            CheckForCardsPlayed.markCard(this.cardIdPrefix + vsIds[i]);
+        if (nSize === 0)
+            return;
+
+        for (let i = 0; i < nSize; i++)
+            CheckForCardsPlayed.markCard(_prefix + vsIds[i]);
+
+        
+        setTimeout(function()
+        {
+            const _ids = vsIds;
+            for (let _id of _ids)
+                CheckForCardsPlayed.unmarkCard(_prefix + _id);
+
+        }, 2500);
+    }
+
+    static unmarkCard(sId)
+    {
+        let elem = document.getElementById(sId);
+        if (elem !== null && elem.nodeName !== undefined)
+        {
+            if ("DIV" === elem.nodeName || "DIV" === elem.nodeName.toUpperCase())
+                elem = elem.querySelector("img");
+
+            if (elem !== null)
+                elem.classList.remove("card-highlight");
+        }
     }
 
     /**
@@ -102,8 +128,15 @@ class CheckForCardsPlayed {
     static markCard(sId)
     {
         let elem = document.getElementById(sId);
-        if (elem !== null)
-            elem.classList.add("card-highlight");
+        if (elem !== null && elem.nodeName !== undefined)
+        {
+            
+            if ("DIV" === elem.nodeName || "DIV" === elem.nodeName.toUpperCase())
+                elem = elem.querySelector("img");
+
+            if (elem !== null)
+                elem.classList.add("card-highlight");
+        }
     }
 }
 
