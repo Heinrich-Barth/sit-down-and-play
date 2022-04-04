@@ -40,7 +40,7 @@ CardPreview.show = function(img, bLeft, bTop)
         DomUtils.removeAllChildNodes(elem);
 
         const pImage = document.createElement("img");
-        pImage.setAttribute("src", img.replace(/[^\w\s]/gi, ''));
+        pImage.setAttribute("src", img);
         elem.appendChild(pImage);
         elem.classList.remove("hidden");
     }
