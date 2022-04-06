@@ -201,7 +201,7 @@ var DeckList =
         else if (sTargetDeck === "resource" || sTargetDeck === "hazard")
             this.addCardToDeck(pCard, sCode);
         else if (sTargetDeck === "pool")
-            this.addCardGeneric(pCard, sCode, "pool");
+            this.addCardGeneric(pCard, "pool");
         
         return true;
     },
@@ -273,7 +273,7 @@ var DeckList =
         else
             _containerId = "sb_resources";
 
-        return this.addCardGeneric(pCard, index, _containerId);
+        return this.addCardGeneric(pCard, _containerId);
     },
     
     addCardToDeck : function(pCard, index)
@@ -321,7 +321,7 @@ var DeckList =
         return true;
     },
     
-    addCardGeneric : function(pCard, index_, pref)
+    addCardGeneric : function(pCard, pref)
     {
         const index = pCard.index;
         const pEntry = document.getElementById(pref + "_" + index);
