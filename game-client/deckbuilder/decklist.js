@@ -23,10 +23,16 @@ var DeckList =
         </div>
 
         <div class="pos-rel">
-            <div class="pos-rel fl w48 deck_part">
+            <div class="pos-rel fl w48 deck_part" id="deck_part_pool">
                 <label for="checkbox_pool">Pool (<span class="count_type" id="count_pool">0</span>)</label>
                 <input type="checkbox" id="checkbox_pool">
-                <div id="pool" class="d_container pt5">-</div>
+                <div id="pool" class="pt5">
+                    <h4>Characters</h4>
+                    <div class="pos-rel fl w48 deck_part_col" id="pool_chars"></div>
+
+                    <h4>Resources</h4>
+                    <div class="pos-rel fl w48 deck_part_col" id="pool_resources"></div>
+                </div>
             </div>
             <div class="pos-rel fl w48 deck_part_col" id="deck_chars">
                 <label for="checkbox_ch" class="mr-20">Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</label>
@@ -48,10 +54,10 @@ var DeckList =
             <div class="clearfix"> </div>
         </div>
 
-        <div class="pos-rel deck_part">
+        <div class="pos-rel deck_part" id="deck_part_sideboard">
             <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
             <input type="checkbox" id="checkbox_sb">
-            <div id="sideboard" class="d_container no-pad-top">
+            <div id="sideboard" class="no-pad-top">
                 <h4>Characters</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
 
@@ -104,11 +110,6 @@ var DeckList =
             
     },
 
-    toggleDeckPart : function(e)
-    {
-        console.log(e.target);
-    },
-
     removeExisting : function()
     {
         ArrayList(document.getElementById("deck_container")).find("div.card_of_deck_construct").each(DomUtils.removeNode);
@@ -130,22 +131,22 @@ var DeckList =
             if (_val === "Avatar")
             {
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "avatar_" + index, "type" : _val, "resource":true});
-                htmlCharsAvatar += '<div id="avatar_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
+                htmlCharsAvatar += '<div id="avatar_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
             }
             else if (_val === "Character")
             {
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "character_" + index, "type" : _val, "resource":true});
-                htmlCharsAvatar += '<div id="character_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
+                htmlCharsAvatar += '<div id="character_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
             }
             else if (_val === "Agent")
             {
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "agent_" + index, "type" : _val, "resource":true});
-                htmlCharsAvatar += '<div id="agent_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
+                htmlCharsAvatar += '<div id="agent_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';                
             }
             else
             {
                 ViewCards.config.vsDeckContainerIds.push({ "id" : "resource_" + index, "type" : _val, "resource":true});
-                html += '<div id="resource_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
+                html += '<div id="resource_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
             }
         }
         
@@ -179,6 +180,7 @@ var DeckList =
     onAddToDeckList : function(e)
     {
         DeckList.addToDeckCard(ViewCards.config.jsonData[e.detail.index], e.detail.target);
+        DeckList.calculateAndUpdateDeckCounters();
     },
     
     addToDeck : function(sCode, sTargetDeck)
@@ -192,16 +194,30 @@ var DeckList =
             return false;
         
         const sCode = pCard.index;
-        if (sTargetDeck === "sideboard")
-            this.addCardSideboard(pCard, sCode);
-        else if (sTargetDeck === "avatar")
-            this.addCardToChars(pCard, sCode, true);
-        else if (sTargetDeck === "chars" || sTargetDeck === "character")
-            this.addCardToChars(pCard, sCode, false);
-        else if (sTargetDeck === "resource" || sTargetDeck === "hazard")
-            this.addCardToDeck(pCard, sCode);
-        else if (sTargetDeck === "pool")
-            this.addCardGeneric(pCard, "pool");
+        switch(sTargetDeck)
+        {
+            case "sb_hazards":
+            case "sb_chars":
+            case "sideboard":
+                this.addCardSideboard(pCard, sCode);
+                break;
+            case "avatar":
+                this.addCardToChars(pCard, sCode, true);
+                break;
+            case "chars":
+            case "character":
+                this.addCardToChars(pCard, sCode, false);
+                break;
+            case "resource":
+            case "hazard":
+                this.addCardToDeck(pCard, sCode);
+                break;
+            case "pool":
+            case "pool_chars":
+            case "pool_resources":
+                this.addCardPool(pCard, "pool");
+                break;
+        }
         
         return true;
     },
@@ -227,14 +243,14 @@ var DeckList =
         const sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
         if (sTypeContainerId === "")
         {
-            console.log("Cannot find sTypeContainerId for char " + isHzard);
+            console.warn("Cannot find sTypeContainerId for char " + isHzard);
             return false;
         }
         
         const categoryContainer = document.getElementById(sTypeContainerId);
         if (categoryContainer === null)
         {
-            console.log("Cannot find categoryContainer for " + "#" + sTypeContainerId);
+            console.warn("Cannot find categoryContainer for " + "#" + sTypeContainerId);
             return false;
         }
         
@@ -263,7 +279,7 @@ var DeckList =
         return true;
     },
 
-    addCardSideboard : function(pCard, index)
+    addCardSideboard : function(pCard)
     {
         let _containerId;
         if (pCard.type === "Hazard")
@@ -273,6 +289,12 @@ var DeckList =
         else
             _containerId = "sb_resources";
 
+        return this.addCardGeneric(pCard, _containerId);
+    },
+
+    addCardPool : function(pCard)
+    {
+        const _containerId = pCard.type === "Character" ? "pool_chars" : "pool_resources";
         return this.addCardGeneric(pCard, _containerId);
     },
     
@@ -285,14 +307,14 @@ var DeckList =
         var sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
         if (sTypeContainerId === "")
         {
-            console.log("Cannot find sTypeContainerId for " + isHzard);
+            console.warn("Cannot find sTypeContainerId for " + isHzard);
             return false;
         }
         
         var categoryContainer = document.getElementById(sTypeContainerId);
         if (categoryContainer === null)
         {
-            console.log("Cannot find categoryContainer for " + "#" + sTypeContainerId);
+            console.warn("Cannot find categoryContainer for " + "#" + sTypeContainerId);
             return false;
         }
         
@@ -385,13 +407,16 @@ var DeckList =
         div.setAttribute("class", "dflex card_of_deck_construct");
         div.setAttribute("data-index", index);
         div.setAttribute("data-code", pCard.code);
-        div.innerHTML = `<span class="action"  data-is-deck="${pref}">
+        div.innerHTML = `<span class="action" data-is-deck="${pref}">
             <a href="#" class="deck_add icon_add" title="increase">
                 <i class="fa fa-plus-circle" aria-hidden="true" title="Add to deck"></i>
             </a>
             <a href="#" class="deck_rem icon_remove" title="decrease">
                 <i class="fa fa-minus-circle" aria-hidden="true" title="Remove from deck"></i>
             </a>
+            <a href="#" class="deck_move_pool decklist-action-move" data-target="pool" title="Movec to pool"></a>
+            <a href="#" class="deck_move_play decklist-action-move" data-target="play" title="Move to playdeck"></a>
+            <a href="#" class="deck_move_sideboard decklist-action-move" data-target="sideboard" title="Move to sideboard"></a>
         </span>
         <span class="title card_deck_title">${pCard.code}</span>&nbsp;(<span class="count count_deck_entry">1</span>)`;
         return div;
@@ -406,6 +431,71 @@ var DeckList =
         const elem = document.getElementById(id);
         if (elem !== null)
             elem.innerText = "" + (parseInt(elem.innerText) + 1);
+    },
+    getDataTarget : function(pJson)
+    {
+        if (pJson.type === "Hazard")
+            return "hazard";
+        else if (pJson.Secondary === "Avatar")
+            return "avatar";
+        else if (pJson.Secondary === "Character")
+            return "character";
+        else
+            return "resource";
+    },
+    getTargetDeck : function(type)
+    {
+        switch(type)
+        {
+            case "sb_hazards":
+            case "sb_chars":
+            case "sideboard":
+                return "sideboard";
+            case "avatar":
+                return "avatar";
+            case "chars":
+            case "character":
+                return "character";
+            case "resource":
+                return "resource";
+            case "hazard":
+                return "hazard";
+            case "pool":
+            case "pool_chars":
+            case "pool_resources":
+                return "pool";
+            default: 
+                return "";
+        }
+    },
+    onMoveCard : function(evt)
+    {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        const data = {
+            index: 0,
+            target: ""
+        };
+              
+        const pSpan = DomUtils.closestByType(evt.target, "span")
+        const pDiv = pSpan === null ? null : DomUtils.closestByType(pSpan, "div");
+        if (pDiv !== null)
+        {
+            data.index = parseInt(pDiv.getAttribute("data-index"))
+            data.target = DeckList.getTargetDeck(pSpan.getAttribute("data-is-deck"));
+                
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-remove-from-deck", { "detail": data }));
+            DeckList.reduceCurrentDeckCount(pDiv);
+
+            data.target = DeckList.getTargetDeck(evt.target.getAttribute("data-target"));
+            if (data.target === "" || evt.target.getAttribute("data-target") === "play")
+                data.target = DeckList.getDataTarget(ViewCards.config.jsonData[data.index]);
+
+            document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": data }));
+        }
+        
+        return false;
     },
 
     updateDeckLink : function(id)
@@ -423,7 +513,7 @@ var DeckList =
             const pDiv = pSpan === null ? null : DomUtils.closestByType(pSpan, "div");
             if (pDiv !== null)
             {
-                const sTargetDeck = pSpan.getAttribute("data-is-deck");
+                const sTargetDeck = DeckList.getTargetDeck(pSpan.getAttribute("data-is-deck"));
                 const index = parseInt(pDiv.getAttribute("data-index"));
                 document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": { index : index, target: sTargetDeck } }));
             }
@@ -440,7 +530,7 @@ var DeckList =
             const pDiv = pSpan === null ? null : DomUtils.closestByType(pSpan, "div");
             if (pDiv !== null)
             {
-                const sTargetDeck = pSpan.getAttribute("data-is-deck");
+                const sTargetDeck = DeckList.getTargetDeck(pSpan.getAttribute("data-is-deck"));
                 const index = parseInt(pDiv.getAttribute("data-index"));
                 document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-remove-from-deck", { "detail": { index : index, target: sTargetDeck } }));
                 DeckList.reduceCurrentDeckCount(pDiv);
@@ -448,6 +538,9 @@ var DeckList =
 
             return false;
         };
+
+        for (let _elem of elem.getElementsByClassName("decklist-action-move"))
+            _elem.onclick = DeckList.onMoveCard.bind(DeckList);
 
         elem.onmouseover = function()
         {
@@ -477,33 +570,13 @@ var DeckList =
         const pCount = pDiv.querySelector(".count");
         if (pCount !== null)
             pCount.innerText = (parseInt(pCount.innerText) + 1);
+
+        DeckList.calculateAndUpdateDeckCounters();
     },
     
     calculateAndUpdateDeckCounters : function()
     {
-        const pContainer = document.getElementById("deck_container");
-        let _size = 0;
-        
-        ArrayList(pContainer).find("div.deck_part").each(function(pThis)
-        {
-            const _count = DeckList.calculateEntries(pThis, "count_deck_entry");
-            pThis.querySelector("span.count_type").innerText = _count;
-            _size += _count;
-        });
-
-        // no pool
-        // no sideboard
-        _size -= DeckList.calculateEntryId("count_pool");
-        _size -= DeckList.calculateEntryId("count_sideboard");
-        document.getElementById("deck_count").innerText = _size;
-        
-        ArrayList(pContainer).find("div.deck_part_col").each((pThis)  => {
-
-            const elem = pThis.querySelector("span.count_type_col");
-            if (elem !== null)
-                elem.innerText = DeckList.calculateEntries(pThis, "count_type");
-        });
-
+        DeckList.recountAll();
         document.getElementById("summary_resources").innerText = DeckList.getInnerHtml(document.getElementById("count_deck_r"));
         document.getElementById("summary_hazards").innerText =  DeckList.getInnerHtml(document.getElementById("count_deck_h"));
         document.getElementById("summary_sideboard").innerText = DeckList.getInnerHtml(document.getElementById("count_sideboard"));
@@ -561,6 +634,76 @@ var DeckList =
             DomUtils.empty(elem);
             this.removeEntry(pDiv);
         }
+
+        DeckList.calculateAndUpdateDeckCounters();
+    },
+
+    recountGroups : function(elem)
+    {
+        if (elem === null)
+            return;
+
+        let count = 0;
+        let list = elem.getElementsByClassName("count_type");
+        for (let _card of list)
+        {
+            let val = _card.innerText;
+            if (!isNaN(val))
+                count += parseInt(val);
+        }
+
+        let target = elem.querySelector(".count_type_col");
+        if (target !== null)
+            target.innerText = count;
+
+        //
+    },
+
+    recountAll : function()
+    {
+        let list = document.getElementsByClassName("deck-group");
+        for (let elem of list)
+        {
+            let _cards = elem.getElementsByClassName("count_deck_entry");
+            let count = 0;
+            for (let _card of _cards)
+            {
+                let val = _card.innerText;
+                if (!isNaN(val))
+                    count += parseInt(val);
+            }
+
+            let _e = elem.querySelector(".count_type");
+            if (_e !== null)
+                _e.innerText = count;
+        }
+
+        this.recountGroups(document.getElementById("deck_resources"));
+        this.recountGroups(document.getElementById("deck_hazards"));
+        this.recountGroups(document.getElementById("deck_chars"));
+
+        DeckList.recountAllChildren(document.getElementById("deck_part_pool"));
+        DeckList.recountAllChildren(document.getElementById("deck_chars"));
+        DeckList.recountAllChildren(document.getElementById("deck_part_sideboard"));
+    },
+
+    recountAllChildren : function(elem)
+    {
+        if (elem === null)
+            return;
+
+        let _cards = elem.getElementsByClassName("count_deck_entry");
+        let count = 0;
+        for (let _card of _cards)
+        {
+            let val = _card.innerText;
+            if (!isNaN(val))
+                count += parseInt(val);
+        }
+
+        let _e = elem.querySelector(".count_type");
+        if (_e !== null)
+            _e.innerText = count;
     }
 
 };

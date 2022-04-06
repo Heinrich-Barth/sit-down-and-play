@@ -69,8 +69,11 @@ const DeckbuilderApi =
     remove : function(sTarget, jsonCard)
     {
         const code = jsonCard.code
-        if (this._deck[sTarget] === undefined || this._deck[sTarget][code] === undefined)
+        if (sTarget === "" || this._deck[sTarget] === undefined || this._deck[sTarget][code] === undefined)
+        {
+            console.warn("not in target deck: " + sTarget);
             return false;
+        }
 
         if (this._deck[sTarget][code].count === 1)
             delete this._deck[sTarget][code];

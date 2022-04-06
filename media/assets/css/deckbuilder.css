@@ -66,38 +66,60 @@ body.addtodeck #result .image {
     background-color: rgba(0,0,0,0.5);
     border-radius: 5px;
 }
+
+.decklist-action-move
+{
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    background-size: 16px 16px;
+    background-position: 0 1px !important;
+    background-size: 16px 16px !important;
+}
 .category .image .actions a:hover
 {
     background-color: rgba(152,197,147,0.7);
 
 }
 
+.deck_move_pool,
 .actions  .icon_add_pool 
 { 
     background: url("/media/assets/images/icons/icon-hand.png") 5px 15px no-repeat
 }
+.deck_move_pool:hover,
 .actions a.icon_add_pool:hover 
 { 
     background-image: url("/media/assets/images/icons/icon-hand-hover.png"); 
 }
-
+.deck_move_play:hover,
 .actions a.icon_add_deck:hover 
 { 
     background-image: url("/media/assets/images/icons/icon-playdeck-hover.png");
 }
+.deck_move_play,
 .actions a.icon_add_deck 
 { 
     background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat; 
 }
-
+.deck_move_sideboard:hover,
 .actions a.icon_add_sideboard:hover 
 { 
     background-image: url("/media/assets/images/icons/icon-sideboard-hover.png");
 }
+.deck_move_sideboard,
 .actions a.icon_add_sideboard 
 { 
     background: url("/media/assets/images/icons/icon-sideboard.png") 5px 15px no-repeat
 }
+
+#pool .deck_move_pool,
+#deck_resources .deck_move_play,
+#deck_chars .deck_move_play,
+#deck_hazards .deck_move_play,
+#sideboard .deck_move_sideboard
+{ display: none; }
+
 .category .image div.actions[data-count="0"] 
 {
     background: rgba(0,0,0,0.4);
