@@ -109,6 +109,7 @@ SERVER.instance = g_pExpress();
     SERVER.instance.use(function (req, res, next) 
     {
         res.header('X-Robots-Tag','noindex, nofollow');
+        res.header("X-Frame-Options",'sameorigin');
 
         if (cspAllowRemoteImages(req.path))
         {
