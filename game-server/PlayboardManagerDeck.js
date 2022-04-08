@@ -315,11 +315,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
       * Move a single card from anywhere to ...
       * 
       * @param {String} uuid
-      * @param {String} playerId
+      * @param {String} pDeck
       * @param {String} target "sideboard, discardpile, playdeck, hand"&&
       * @returns {Boolean}
       */
-     moveCardToDeckPile(uuid, jCard, pDeck, target)
+     moveCardToDeckPile(uuid, pDeck, target)
      {
         switch(target)
         {

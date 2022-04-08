@@ -120,7 +120,7 @@ class PlayboardManager extends PlayboardManagerCompanies
         else
         {
             jCard.owner = playerId;
-            return  super.moveCardToDeckPile(uuid, jCard, pDeck, target, playerId);
+            return  super.moveCardToDeckPile(uuid, pDeck, target);
         }
     }
 }
