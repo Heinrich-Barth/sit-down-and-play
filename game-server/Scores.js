@@ -77,7 +77,7 @@ class ScorintSheet {
     getSheet()
     {
         let _res = { };
-        for (var key in this._sheet)
+        for (let key in this._sheet)
             _res[key] = this._sheet[key];
 
         return _res;
@@ -182,7 +182,7 @@ class Scores {
     {
         let sheets = { };
         
-        for (var key in this._sheets)
+        for (let key in this._sheets)
             sheets[key] = this._sheets[key].getSheet();
         
         return sheets;

@@ -42,14 +42,14 @@ Quantities.prototype.hasTypeLimitation = function(type)
 
 CreateCardsMeta.prototype.createCardCodeList = function (cards) 
 {
-    for (var card of cards)
+    for (let card of cards)
         this._titleBasedIndices[card.code] = card.index;
 };
 
 CreateCardsMeta.prototype.updateSets = function (cards) 
 {
     let _data = { };
-    for (var card of cards)
+    for (let card of cards)
     {
         if (card.set_code !== "")
             _data[card.set_code] = true;

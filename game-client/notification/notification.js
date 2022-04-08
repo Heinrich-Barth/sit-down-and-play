@@ -8,7 +8,7 @@ class Notification {
 
     insertCss()
     {
-        var styleSheet = document.createElement("link")
+        const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("href", "/media/client/notification/notification.css");
         document.head.appendChild(styleSheet)
@@ -69,7 +69,7 @@ class Notification {
 
     addMessage(content, sClass, sIcon)
     {
-        var id = "notify_" + this._requestId();  
+        const id = "notify_" + this._requestId();  
         const div = document.createElement("div");
         div.classList.add(sClass);
         div.classList.add("notify");

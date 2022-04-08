@@ -26,7 +26,7 @@ class GameBase {
 
     _getList(userid, obj)
     {
-        var list = [];
+        let list = [];
         if (obj === "sideboard")
             list = this.getPlayboardManager().GetCardsInSideboard(userid);
         else if (obj === "discardpile" || obj === "discard")
@@ -67,13 +67,13 @@ class GameBase {
 
     getCardCode(uuid, sDefault)
     {
-        var card = this.getPlayboardManager().GetCardByUuid(uuid);
+        const card = this.getPlayboardManager().GetCardByUuid(uuid);
         return card !== null ? card.code : sDefault;
     }
 
     getCharacterCode(uuid, sDefault)
     {
-        var card = this.getPlayboardManager().GetCharacterCardByUuid(uuid);
+        const card = this.getPlayboardManager().GetCharacterCardByUuid(uuid);
         return card !== null ? card.code : sDefault;
     }
 
@@ -84,7 +84,7 @@ class GameBase {
 
     getFirstCompanyCharacterCode(uuid, sDefault)
     {
-        var card = this.getPlayboardManager().GetFirstCompanyCharacterCardByCompanyId(uuid);
+        const card = this.getPlayboardManager().GetFirstCompanyCharacterCardByCompanyId(uuid);
         return card !== null ? card.code : sDefault;
     }
 

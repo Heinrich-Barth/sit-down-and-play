@@ -413,8 +413,8 @@ let Arda = {
         if (container === null || uuid === "")
             return;
     
-        var _code = g_Game.CardList.getSafeCode(cardCode);
-        var _img = g_Game.CardList.getImage(cardCode);
+        const _code = g_Game.CardList.getSafeCode(cardCode);
+        const _img = g_Game.CardList.getImage(cardCode);
 
         if (container.querySelector("#arda-hand-card-" + uuid) !== null)
             return;

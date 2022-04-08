@@ -65,14 +65,9 @@ class PlayboardManager extends PlayboardManagerCompanies
 
     getParent(uuid)
     {
-        var pCard = this.GetCardByUuid(uuid);
-        if (pCard === null)
-            return "";
-        else
-            return pCard.code;
-    }
-    
-    
+        const pCard = this.GetCardByUuid(uuid);
+        return pCard === null ? "" : pCard.code;
+    }  
 
     GetFullCompanyCharacter(companyId, uuid)
     {
@@ -82,7 +77,7 @@ class PlayboardManager extends PlayboardManagerCompanies
             return null;
         }
 
-        var pCharacter = this.getCharacterByUuid(uuid);
+        const pCharacter = this.getCharacterByUuid(uuid);
         if (pCharacter === null)
         {
             console.log("Character " + uuid + " does not exist.");
@@ -109,11 +104,11 @@ class PlayboardManager extends PlayboardManagerCompanies
       */
     MoveCardTo(uuid, playerId, target)
     {
-        var jCard = this.GetCardByUuid(uuid);
+        const jCard = this.GetCardByUuid(uuid);
         if (jCard === null)
             return false;
 
-        var pDeck = super.getPlayerDeck(playerId);
+        const pDeck = super.getPlayerDeck(playerId);
         if (pDeck === null)
             return false;
 

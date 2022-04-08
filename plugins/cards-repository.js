@@ -50,7 +50,7 @@ const CARDS = {
     addIndices: function () 
     {
         let index = 0;
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             card.index = ++index;
     },
 
@@ -83,14 +83,14 @@ const CARDS = {
 
     identifyQuests : function()
     {
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
     },
 
     identifyInLieuItems : function()
     {
         const sPattern = "in lieu of";
-        for (var card of this._raw) 
+        for (let card of this._raw) 
         {
             card.isStartable = card.text.indexOf(sPattern) !== -1;
             if (!card.isStartable && card.code === "Heirlooms of Eärendil (ML)")
@@ -104,7 +104,7 @@ const CARDS = {
         const vsUnused = getRemovableKeysArray();
 
         let rem = 0;
-        for (var card of this._raw) 
+        for (let card of this._raw) 
         {
             vsUnused.forEach(key => 
             {
@@ -287,7 +287,7 @@ const CARDS = {
 
     createTypes : function()
     {
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             this._types[card.code] = card["type"];
     },
     

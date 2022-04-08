@@ -59,7 +59,7 @@ const SearchBar = {
             pSelectType.add(option);
         }
 
-        for (var _val of sortedList)
+        for (let _val of sortedList)
         {
             if (_val === "")
                 continue;

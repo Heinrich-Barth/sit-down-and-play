@@ -1,11 +1,11 @@
 
 exports.identifyQuests = function(jsonCards)
 {
-    var missingSide = [];
-    var images_to_code = { };
-    var code_to_images = { };
+    let missingSide = [];
+    let images_to_code = { };
+    let code_to_images = { };
 
-    var list = {};
+    let list = {};
     let card;
 
     for (card of jsonCards) 

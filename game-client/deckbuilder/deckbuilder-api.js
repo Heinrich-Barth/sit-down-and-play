@@ -88,7 +88,7 @@ const DeckbuilderApi =
     
     onInitAddCard : function(card, count, target)
     {
-        for (var i = 0; i < count; i++)
+        for (let i = 0; i < count; i++)
         {
             this._count++;
             if (DeckList.addToDeck(card.code, target))

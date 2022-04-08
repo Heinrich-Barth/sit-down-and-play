@@ -18,7 +18,7 @@ const unifySecondaries = function(sSecondary)
 CreateCardsMeta.prototype.updateSecondaries = function (cards) 
 {
     let result = [];
-    for (var card of cards) 
+    for (let card of cards) 
     {
         card.Secondary = unifySecondaries(card.Secondary);
         if (card.Secondary !== "" && !result.includes(card.Secondary))
@@ -32,7 +32,7 @@ CreateCardsMeta.prototype.updateSecondaries = function (cards)
 CreateCardsMeta.prototype.updateAlign = function (cards) 
 {
     let result = [];
-    for (var card of cards) 
+    for (let card of cards) 
     {
         if (card.alignment !== "" && !result.includes(card.alignment))
             result.push(card.alignment);
@@ -44,7 +44,7 @@ CreateCardsMeta.prototype.updateAlign = function (cards)
 CreateCardsMeta.prototype.updateTypes = function(cards) 
 {
     let result = [];
-    for (var card of cards) 
+    for (let card of cards) 
     {
         if (card.type !== "" && !result.includes(card.type))
             result.push(card.type);
@@ -57,7 +57,7 @@ CreateCardsMeta.prototype.updateTypes = function(cards)
 CreateCardsMeta.prototype.updateHazards = function (cards) 
 {
     let result = [];
-    for (var card of cards) 
+    for (let card of cards) 
     {
         let _category = card.type;
 
@@ -72,7 +72,7 @@ CreateCardsMeta.prototype.updateHazards = function (cards)
 CreateCardsMeta.prototype.updateResources = function (cards) 
 {
     let result = [];
-    for (var card of cards) 
+    for (let card of cards) 
     {
         let _category = card.type;
 

@@ -74,7 +74,7 @@ class CheckForCardsPlayed {
 
         let vsNew = [];
         let nSize = this.vsAfter.length;
-        for (var i = 0; i < nSize; i++)
+        for (let i = 0; i < nSize; i++)
         {
             if (!this.vsBefore.includes(this.vsAfter[i]))
                 vsNew.push(this.vsAfter[i]);

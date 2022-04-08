@@ -34,7 +34,7 @@ const ViewCards =
         if (this._quantities === null)
             return;
 
-        for (var card of json) 
+        for (let card of json) 
         {
             /** assume non-unique or sealed deck with reduced card counts */
             _limit = this.getLimit(card.code);
@@ -73,13 +73,13 @@ const ViewCards =
     
     _updateMap : function()
     {
-        for (var _card of ViewCards.config.jsonData) 
+        for (let _card of ViewCards.config.jsonData) 
             ViewCards.config.cardIndices[_card.code] = _card;
     },
     
     getCardFromByCode : function(code)
     {
-        for (var _card of ViewCards.config.jsonData) 
+        for (let _card of ViewCards.config.jsonData) 
         {
             if (_card["code"] === code)
             {
@@ -105,7 +105,7 @@ const ViewCards =
             return null;
         }
 
-        var index = ViewCards.config.vsCodeIndices[code];
+        const index = ViewCards.config.vsCodeIndices[code];
         if (typeof ViewCards.config.jsonData[index] === "undefined")
         {
             console.log("no card at index " + index + " for " + code);
@@ -170,7 +170,7 @@ const ViewCards =
         
         let nAdded = 0;
         let _index = -1, _type;
-        for (var card of ViewCards.config.jsonData) 
+        for (let card of ViewCards.config.jsonData) 
         {
             _index++;
             if (card.count === card.limit || card.count === -1)
@@ -291,7 +291,7 @@ const ViewCards =
         ViewCards.config.jLimis = {};
         let _code;
         const _len = jData.length;
-        for (var i = 0; i < _len; i++)
+        for (let i = 0; i < _len; i++)
         {
             _code = jData[i];
             if (_code === "")

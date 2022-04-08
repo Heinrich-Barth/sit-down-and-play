@@ -356,7 +356,7 @@ class TaskBarCards
 
     hideOffer() 
     {
-        var jViewContainer = ViewCardListContainer.GetViewContainer();
+        const jViewContainer = ViewCardListContainer.GetViewContainer();
         if (!jViewContainer.classList.contains("hidden"))
             TaskBarCards.HideListContainer(jViewContainer, jViewContainer.querySelector(".view-card-list-container"));
     }
@@ -380,11 +380,11 @@ class TaskBarCards
 
     static HideList() 
     {
-        var jViewContainer = ViewCardListContainer.GetViewContainer();
+        const jViewContainer = ViewCardListContainer.GetViewContainer();
         if (jViewContainer === null || jViewContainer.classList.contains("hidden"))
             return;
 
-        var jContainer = jViewContainer.querySelector(".view-card-list-container");
+        const jContainer = jViewContainer.querySelector(".view-card-list-container");
 
         let isOfferred = jContainer.classList.contains("offered");
         let isOffer = jContainer.classList.contains("offer");
@@ -405,8 +405,8 @@ class TaskBarCards
         if (typeof bICanSeeIt === "undefined")
             bICanSeeIt = false;
 
-        var type = jData.type;
-        var vsList = jData.list;
+        const type = jData.type;
+        const vsList = jData.list;
 
         if (vsList === null || typeof vsList === "undefined" || vsList.length === 0) 
         {

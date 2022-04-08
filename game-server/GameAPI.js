@@ -57,10 +57,10 @@ class GameAPI
      */
     getRandomDiceRoll()
     {
-        var nTimes = this.getRandomDiceNumber();
+        const nTimes = this.getRandomDiceNumber();
         
-        var _res = nTimes;
-        for (var i = 0; i < nTimes; i++)
+        let _res = nTimes;
+        for (let i = 0; i < nTimes; i++)
             _res = this.getRandomDiceNumber();
 
         return _res;

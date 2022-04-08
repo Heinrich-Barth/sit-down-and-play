@@ -316,7 +316,7 @@ const HandCardsDraggable = {
          */
         const companySourceId = DomUtils.closestByClass(pCardContainer, "company").getAttribute("data-company-id");
         
-        var parentCharacterUuid = "";
+        let parentCharacterUuid = "";
         if (!isHostCharacter && pCompanyCharacter !== null)
         {
             pCompanyCharacter = DomUtils.closestByClass(pCompanyCharacter.parentNode, "company-character");
@@ -661,7 +661,7 @@ const HandCardsDraggable = {
      */
     initDragEventsForHandCard: function (idPrefix, uuid)
     {
-        var pCardContainer = document.getElementById(idPrefix + uuid);
+        const pCardContainer = document.getElementById(idPrefix + uuid);
         pCardContainer.setAttribute("data-location", "hand");
         HandCardsDraggable.initDraggableCard(pCardContainer);
     },

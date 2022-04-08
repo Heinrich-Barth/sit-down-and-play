@@ -104,7 +104,7 @@ CardList.prototype.removeSetInformation = function(_code)
 CardList.prototype.getMostRecentCardCode = function(_code)
 {
     _code = this.removeSetInformation(_code);
-    for (var key in this._list)
+    for (let key in this._list)
     {
         if (key.indexOf(_code) === 0)
             return key;

@@ -44,11 +44,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
      */
     GetTopCards(playerId, nCount)
     {
-        var res = [];
+        let res = [];
 
-        var _card;
-        var list = this.getDecks().getCards().hand(playerId);
-        for (var i = 0; i < list.length && i < nCount; i++)
+        let _card;
+        let list = this.getDecks().getCards().hand(playerId);
+        for (let i = 0; i < list.length && i < nCount; i++)
         {
             _card = this.getDecks().getFullPlayerCard(list[i]);
             
@@ -73,7 +73,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         }
         else
         {
-            var pDeck = this.getPlayerDeck(playerId);
+            const pDeck = this.getPlayerDeck(playerId);
             if (pDeck !== null)
             {
                 if (pDeck.isEmptyPlaydeck())
@@ -180,21 +180,21 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         return this.getDecks().size(playerId);
     }
 
-    DumpDeck(playerId)
+    DumpDeck()
     {
         /** deprecated */
     }
 
     ShufflePlaydeck(playerId)
     {
-        var deck = this.getPlayerDeck(playerId);
+        const deck = this.getPlayerDeck(playerId);
         if (deck !== null)
             deck.shuffle();
     }
 
     ShuffleDiscardpile(playerId)
     {
-        var deck = this.getPlayerDeck(playerId);
+        const deck = this.getPlayerDeck(playerId);
         if (deck !== null)
             deck.shuffleDiscardpile();
     }
@@ -277,13 +277,13 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
 
     getCardCode(uuid, sDefault)
     {
-        var card = this.GetCardByUuid(uuid);
+        const card = this.GetCardByUuid(uuid);
         return card !== null ? card.code : sDefault;
     }
 
     AddToPile(uuid, owner, type)
     {
-        var pDeck = this.getPlayerDeck(owner);
+        const pDeck = this.getPlayerDeck(owner);
         if (pDeck === null)
             return false;
 
@@ -303,7 +303,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         let res = [];
         for (let uuid of listUuids)
         {
-            var _card = this.GetCardByUuid(uuid);
+            const _card = this.GetCardByUuid(uuid);
             if (_card !== null)
                 res.push(_card);
         }
@@ -362,7 +362,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         if (jCard === null)
             return false;
 
-        var pDeck = this.getPlayerDeck(jCard.owner);
+        const pDeck = this.getPlayerDeck(jCard.owner);
         if (pDeck === null)
             return false;
         
@@ -404,7 +404,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
      */
     removeCardFromDeckOrCompany(playerId, uuid)
     {
-        var pDeck = this.getPlayerDeck(playerId);
+        const pDeck = this.getPlayerDeck(playerId);
         return pDeck !== null && pDeck.pop().fromAnywhere(uuid); // remove chard from deck 
     }
  

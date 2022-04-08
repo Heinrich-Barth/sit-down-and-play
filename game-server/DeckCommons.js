@@ -54,7 +54,7 @@ class DeckCommons {
     isAgent(code, listAgents)
     {
         const nSize = code === "" ? -1 : listAgents.length;
-        for(var i = 0; i < nSize; i++)
+        for(let i = 0; i < nSize; i++)
         {
             if (listAgents[i] === code)
                 return true;
@@ -136,8 +136,8 @@ class DeckCommons {
      */
     shuffleAny(inputList)
     {
-        var _newList = [ ];
-        var _index;
+        let _newList = [ ];
+        let _index;
 
         while (inputList.length > 0)
         {

@@ -221,7 +221,7 @@ class GameStandard extends GamePlayers
     {
         super.sendPlayerList();
 
-        var userid = this.getCurrentPlayerId();
+        const userid = this.getCurrentPlayerId();
         const data = {
             phase: this.getPhase(),
             currentplayer: userid,
@@ -577,7 +577,7 @@ class GameStandard extends GamePlayers
 
     onGameDrawCompany(userid, _socket, data)
     {
-        var pCompany = this.getPlayboardManager().GetFullCompanyByCompanyId(data);
+        const pCompany = this.getPlayboardManager().GetFullCompanyByCompanyId(data);
         if (pCompany !== null)
         {
             this.publishToPlayers("/game/player/draw/company", userid, pCompany);
@@ -593,10 +593,10 @@ class GameStandard extends GamePlayers
 
     onCharacterHostCard(userid, _socket, obj)
     {
-        var uuid = obj.uuid;
-        var company = obj.companyId;
-        var character = obj.characterUuid;
-        var bFromHand = obj.fromHand;
+        const uuid = obj.uuid;
+        const company = obj.companyId;
+        const character = obj.characterUuid;
+        const bFromHand = obj.fromHand;
 
         if (!this.getPlayboardManager().CharacterHostCard(company, character, uuid, bFromHand, userid))
         {
@@ -604,14 +604,14 @@ class GameStandard extends GamePlayers
             return false;
         }
 
-        var card = this.getPlayboardManager().GetCardByUuid(uuid);
+        const card = this.getPlayboardManager().GetCardByUuid(uuid);
 
         this.publishToPlayers("/game/remove-card-from-hand", "", uuid);
         this.publishToPlayers("/game/remove-card-from-board", "", uuid);
         this.updateHandCountersPlayer(userid);
 
         {
-            let cardChar = this.getPlayboardManager().GetCardByUuid(character);
+            const cardChar = this.getPlayboardManager().GetCardByUuid(character);
             if (cardChar === null || cardChar.revealed === false)
                 this.publishChat(userid, " character hosts " + card.code);
             else
@@ -628,10 +628,10 @@ class GameStandard extends GamePlayers
 
     onCharacterJoinCharacter(userid, _socket, data)
     {
-        var cardUuid = data.uuid;
-        var targetcharacter = data.targetcharacter;
-        var targetCompany = data.companyId;
-        var isFromHand = data.fromHand;
+        const cardUuid = data.uuid;
+        const targetcharacter = data.targetcharacter;
+        const targetCompany = data.companyId;
+        const isFromHand = data.fromHand;
 
         if (isFromHand)
         {
@@ -661,9 +661,9 @@ class GameStandard extends GamePlayers
 
     onCharacterJoinCompany(userid, _socket, data)
     {
-        var _uuid = data.uuid;
-        var _source = data.source;
-        var _companyId = data.companyId;
+        const _uuid = data.uuid;
+        const _source = data.source;
+        const _companyId = data.companyId;
 
         if (_uuid === "" || _source === "" || _companyId === "")
             return;
@@ -687,7 +687,7 @@ class GameStandard extends GamePlayers
 
         {
             let sWho = this.getCardCode(_uuid, "Character") + " joined";
-            let sCompanyCharacter = this.getFirstCompanyCharacterCode(_companyId, "");
+            const sCompanyCharacter = this.getFirstCompanyCharacterCode(_companyId, "");
             if (sCompanyCharacter === "")
                 sWho += " a company";
             else
@@ -699,13 +699,13 @@ class GameStandard extends GamePlayers
 
     onGameCompanyCreate(userid, _socket, data)
     {
-        var _uuid = data.uuid;
-        var _source = data.source;
+        const _uuid = data.uuid;
+        const _source = data.source;
 
         if (_uuid === "" || _source === "")
             return false;
 
-        var _id = this.getPlayboardManager().CreateNewCompany(_uuid, _source, userid);
+        const _id = this.getPlayboardManager().CreateNewCompany(_uuid, _source, userid);
         if (_id === "")
             return false;
 
@@ -792,11 +792,11 @@ class GameStandard extends GamePlayers
 
     onGameCompanyLocationAttach(userid, _socket, data)
     {
-        var _uuid = data.uuid;
+        const _uuid = data.uuid;
         const targetCompanyUuid = data.companyUuid;
         const revealOnDrop = data.reveal;
 
-        var card = this.getPlayboardManager().PopCardFromHand(_uuid);
+        let card = this.getPlayboardManager().PopCardFromHand(_uuid);
         if (card === null)
         {
             this.publishChat(userid, "Cannot add foreign card to location threats");
@@ -844,7 +844,7 @@ class GameStandard extends GamePlayers
 
     onDiscardOpenly(userid, _socket, data)
     {
-        var card = this.getPlayboardManager().GetCardByUuid(data.uuid);
+        const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
         if (card !== null)
         {
             this.publishChat(userid, " discards " + card.code);

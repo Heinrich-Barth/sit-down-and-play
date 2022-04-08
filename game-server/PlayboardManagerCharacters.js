@@ -233,11 +233,11 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     PopCharacterAndItsCards(characterUuid)
     {
         /* get the list of affected company characters */
-        var character = this.popCompanyCharacter(characterUuid); // { uuid: uuid, sourceCompany : "", influenced : [] }
+        let character = this.popCompanyCharacter(characterUuid); // { uuid: uuid, sourceCompany : "", influenced : [] }
         if (character === null)
             return [];
 
-        var cardList = this.popCharacterCards(characterUuid);
+        let cardList = this.popCharacterCards(characterUuid);
         if (cardList.length === 0)
             return [];
 
@@ -334,22 +334,22 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     /**
      * Transfer a RESOURCE/HAZARD between characters
      * 
-     * @param {String} sourceCharacter
+     * @param {String} _sourceCharacter
      * @param {String} targetCharacter
      * @param {String} cardUuid
      * @param {String} playerId
      * @returns {Boolean}
      */
-     CharacterTransferCard(sourceCharacter, targetCharacter, cardUuid, playerId)
+     CharacterTransferCard(_sourceCharacter, targetCharacter, cardUuid, playerId)
      {
-         var pTargetChar = this.characters[targetCharacter];
+         const pTargetChar = this.characters[targetCharacter];
          if (typeof pTargetChar === "undefined")
          {
              console.log("Undefinied target character "+ targetCharacter);
              return false;
          }
  
-         var pCard = this.GetCardByUuid(cardUuid);
+         const pCard = this.GetCardByUuid(cardUuid);
          if (pCard === null)
          {
              console.log("Cannot find card " + cardUuid);

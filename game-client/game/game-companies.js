@@ -388,7 +388,7 @@ const GameCompanies = {
         pCheckForCardsPlayed.loadBefore(jOnGuardContainer);
 
         const len = GameCompanies.CardList.length;
-        for (var i = 0; i < len; i++)
+        for (let i = 0; i < len; i++)
             this.onAttachCardToCompanySitesElement(jOnGuardContainer, cardList[i], bAllowContextMenu, isPlayersCompany);
 
         pCheckForCardsPlayed.loadAfter(jOnGuardContainer);
@@ -577,11 +577,11 @@ const GameCompanies = {
 
     revealLocations: function (company)
     {
-        var companyElem = document.getElementById("company_" + company);
+        const companyElem = document.getElementById("company_" + company);
         if (companyElem === null)
             return;
 
-        var jSiteContaienr = companyElem.querySelector(".sites");
+        const jSiteContaienr = companyElem.querySelector(".sites");
         ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(GameCompanies.revealLocation);
         ArrayList(jSiteContaienr).find(".site-target .card-icon").each(GameCompanies.revealLocation);
         ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
@@ -801,7 +801,7 @@ const GameCompanies = {
 
     onArriveAtTarget: function (pSites)
     {
-        var pTarget = pSites.querySelector(".site-target div");
+        const pTarget = pSites.querySelector(".site-target div");
         if (pTarget === null)
             return;
 
@@ -922,7 +922,7 @@ const GameCompanies = {
         if (pImage === null)
             return;
 
-        var src;
+        let src;
         if (reveal)
             src = pImage.getAttribute("data-image-path") + pImage.getAttribute("data-img-image");
         else

@@ -12,7 +12,7 @@ const CardData =
 };
 
 
-var SearchResult = {
+const SearchResult = {
 
     inserted : false,
 
@@ -274,7 +274,7 @@ var SearchResult = {
 
     extractTableHead : function(sTplHtml)
     {
-        var nPos = sTplHtml.indexOf("<tbody>");
+        const nPos = sTplHtml.indexOf("<tbody>");
         if (nPos === -1)
             return sTplHtml;
         else

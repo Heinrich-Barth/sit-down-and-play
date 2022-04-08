@@ -1,5 +1,5 @@
 
-var DeckList =
+const DeckList =
 {
 
     init : function()
@@ -300,25 +300,25 @@ var DeckList =
     
     addCardToDeck : function(pCard, index)
     {
-        var isHzard = pCard.type === "Hazard";
-        var targetType = isHzard ? "hazard" : "resource";
-        var _containerId = isHzard ? "deck_hazards" : "deck_resources";
+        const isHzard = pCard.type === "Hazard";
+        const targetType = isHzard ? "hazard" : "resource";
+        const _containerId = isHzard ? "deck_hazards" : "deck_resources";
 
-        var sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
+        const sTypeContainerId = this.getTargetContainerIdDeck(pCard, !isHzard);
         if (sTypeContainerId === "")
         {
             console.warn("Cannot find sTypeContainerId for " + isHzard);
             return false;
         }
         
-        var categoryContainer = document.getElementById(sTypeContainerId);
+        const categoryContainer = document.getElementById(sTypeContainerId);
         if (categoryContainer === null)
         {
             console.warn("Cannot find categoryContainer for " + "#" + sTypeContainerId);
             return false;
         }
         
-        var pEntry = document.getElementById(targetType + "_" + index);
+        const pEntry = document.getElementById(targetType + "_" + index);
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");

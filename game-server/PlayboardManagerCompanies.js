@@ -217,7 +217,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
      */
      addCompanyCharacterToCompany(targetCompanyId, hostingCharacterUuid, companyCharacter)
      {
-         var targetCompany = this.companies[targetCompanyId];
+         let targetCompany = this.companies[targetCompanyId];
          if (typeof targetCompany === "undefined")
          {
              console.warn("Target company does not exist: " + targetCompanyId);
@@ -316,14 +316,13 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
        * @param {String} uuid Character to join
        * @param {String} targetcharacter target host character
        * @param {String} targetCompany target company
-       * @param {String} playerId player id
        * @returns {String} Company Id
        */
-    JoinCharacter(uuid, targetcharacter, targetCompany, playerId)
+    JoinCharacter(uuid, targetcharacter, targetCompany)
     {
         this.getOrCreateCharacter(uuid, targetCompany);
 
-        var card = this.popCompanyCharacter(uuid);
+        const card = this.popCompanyCharacter(uuid);
         if (!this.addCompanyCharacterToCompany(targetCompany, targetcharacter, card))
         {
             const sNew = this.getCardCode(uuid, "Unknown character");
@@ -420,7 +419,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
           if (!this.companyExists(companyUuid))
               return;
           
-          var jCompanySites = this.companies[companyUuid].sites;
+          let jCompanySites = this.companies[companyUuid].sites;
           if (jCompanySites.target !== "")
           {
               jCompanySites.current = jCompanySites.target;

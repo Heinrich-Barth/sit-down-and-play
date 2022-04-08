@@ -464,7 +464,7 @@ const SCORING = {
     
     addPlayers : function(sMyId, jMap)
     {
-        for (var _playerId in jMap)
+        for (let _playerId in jMap)
         {
             if (sMyId !== _playerId)
                 SCORING.addPlayer(_playerId, jMap[_playerId]);

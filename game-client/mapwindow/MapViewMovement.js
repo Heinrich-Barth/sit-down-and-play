@@ -259,7 +259,7 @@ class MapViewMovement extends MapViewMovementSelection {
             return;
         }
         
-        var jElem = MapViewMovement._MovementContainerOtherRegions().querySelector("[data-code='" + sRegionCode + "']"); 
+        let jElem = MapViewMovement._MovementContainerOtherRegions().querySelector("[data-code='" + sRegionCode + "']"); 
         if (jElem !== null)
         {
             console.log("Allready there " + sRegionCode);
