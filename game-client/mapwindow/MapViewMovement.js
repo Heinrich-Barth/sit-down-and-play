@@ -224,7 +224,7 @@ class MapViewMovement extends MapViewMovementSelection {
         this.lazyloadImages();
     }
 
-    onProcessEvent(region, image, isSite, code)
+    onProcessEvent(_region, _image, isSite, code)
     {
         if (!isSite)
             this.addRegionLocation(code);

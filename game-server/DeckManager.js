@@ -66,7 +66,7 @@ class DeckManager {
             return this._deck[playerid].size();
     }
 
-    resoteCardMapCloneCard(input)
+    resoteCardMapCloneCard(_input)
     {
         /** overwrite */
         return null;
@@ -173,7 +173,7 @@ class DeckManager {
         return Object.keys(this._deck);
     }
     
-    newDeckInstance(playerId)
+    newDeckInstance(_playerId)
     {
         throw new Error("Overwrite newDeckInstance");
     }
@@ -398,7 +398,7 @@ class DeckManager {
             return -1;
     }
 
-    dumpCards(playerId)
+    dumpCards(_playerId)
     {
         /** deprecated */
     }

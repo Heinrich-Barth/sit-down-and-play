@@ -212,7 +212,7 @@ const DeckbuilderApi =
 
 let g_bKeyIsCtrl = false;
 
-document.addEventListener('keyup', (e) => g_bKeyIsCtrl = false);
+document.addEventListener('keyup', () => g_bKeyIsCtrl = false);
 document.addEventListener('keydown', function(e)
 {
     if (e.keyCode == 17) 

@@ -507,12 +507,12 @@ if ("true" === document.body.getAttribute("data-game-arda"))
 {
     document.body.addEventListener("meccg-api-connected", () => Arda.init(), false);
     MeccgApi.addListener("/game/arda/hand/show", () => Arda.onShowHands());
-    MeccgApi.addListener("/game/arda/hand/minor", (bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
-    MeccgApi.addListener("/game/arda/hand/characters", (bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
+    MeccgApi.addListener("/game/arda/hand/minor", (_bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
+    MeccgApi.addListener("/game/arda/hand/characters", (_bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(bIsMe, jData.list));
-    MeccgApi.addListener("/game/arda/hand/card/remove", (bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
+    MeccgApi.addListener("/game/arda/hand/card/remove", (_bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
-    MeccgApi.addListener("/game/arda/checkdraft", (bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
+    MeccgApi.addListener("/game/arda/checkdraft", (_bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
     MeccgApi.addListener("/game/arda/view", (bIsMe, jData) => g_Game.TaskBarCards.onShow(bIsMe, jData));    
 }
 else
