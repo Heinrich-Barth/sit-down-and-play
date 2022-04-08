@@ -465,6 +465,7 @@ class GameStandard extends GamePlayers
     onCardMove(userid, socket, obj)
     {
         const drawTop = obj.drawTop;
+        const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
         const card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
         if (card === null)
             return;
@@ -505,9 +506,15 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/event/cardmoved", userid, {list: listCodes, target: obj.target, source: obj.source});
         }
 
+        if (bShufflePlaydeck)
+            this.getPlayboardManager().ShufflePlaydeck(userid);
+
         // now we have to remove the cards from the board again
         this.publishToPlayers("/game/card/remove", userid, list);
-        this.publishChat(userid, "Moved " + list.length + " card(s) to " + obj.target);
+        if (bShufflePlaydeck)
+            this.publishChat(userid, "Shuffled " + list.length + " card(s) into playdeck");
+        else
+            this.publishChat(userid, "Moved " + list.length + " card(s) to top of " + obj.target);
         this.onRedrawCompany(userid, affectedCompanyUuid);
     }
 

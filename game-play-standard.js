@@ -250,7 +250,7 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
-            this.m_pServerInstance.expireResponse('text/plain').redirect(this.contextPlay + req.params.room);
+            this.m_pServerInstance.expireResponse(res, 'text/plain').redirect(this.contextPlay + req.params.room);
         }
         catch (e) 
         {

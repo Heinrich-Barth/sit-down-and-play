@@ -53,6 +53,7 @@ const CardDataProvider = {
     {
         try 
         {
+            console.log("Loading local card data from " + file);
             CardDataProvider.onCardsReceived(fs.readFileSync(file, 'utf8'));
             return true;
         } 
@@ -71,6 +72,7 @@ const CardDataProvider = {
 
     loadFromUrl : function(cardsUrl)
     {
+        console.log("Loading data from url " + cardsUrl);
         const https = require('https');
         https.get(cardsUrl,(res) => 
         {

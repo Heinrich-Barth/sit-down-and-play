@@ -98,12 +98,15 @@ div#arda_mps_hand { bottom: 10px; }
 #view_card_list_container .view-charackters .hideOnOffer,
 #view_card_list_container .view-charackters .view-card-list-actions .hand,
 #view_card_list_container .view-charackters .view-card-list-actions .sideboard,
+#view_card_list_container .view-charackters .view-card-list-actions .playdeck-shuffle,
 #view_card_list_container .view-mps .hideOnOffer,
 #view_card_list_container .view-mps .view-card-list-actions .hand,
 #view_card_list_container .view-mps .view-card-list-actions .sideboard,
+#view_card_list_container .view-mps .view-card-list-actions .playdeck-shuffle,
 #view_card_list_container .view-minor .hideOnOffer,
 #view_card_list_container .view-minor .view-card-list-actions .hand,
-#view_card_list_container .view-minor .view-card-list-actions .sideboard
+#view_card_list_container .view-minor .view-card-list-actions .sideboard,
+#view_card_list_container .view-minor .view-card-list-actions .playdeck-shuffle
 {
     display: none;
 }

@@ -217,6 +217,17 @@ a:hover { color: #ff0; }
     background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat; 
 }
 
+.icons a.playdeck-shuffle.act,
+.icons a.playdeck-shuffle:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 12px no-repeat; 
+}
+
+.icons a.playdeck-shuffle
+{
+    background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 12px no-repeat; 
+}
+
 .location-icon-image
 {
     position: absolute;
@@ -417,7 +428,8 @@ img.card-icon {
 {
     display: none;
 }
-#view_card_list_container .view-playdeck .card-hand a.playdeck
+#view_card_list_container .view-playdeck .card-hand a.playdeck,
+#view_card_list_container .view-playdeck .card-hand a.playdeck-shuffle
 {
     display: none;
 }

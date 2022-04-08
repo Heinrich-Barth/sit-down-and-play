@@ -59,11 +59,12 @@ class ViewCardListContainer {
         return `<div class="card-hand pos-rel" id="offer_${uuid}" data-uuid="${uuid}" draggable="false" data-code="${sCode}" data-type="${type}">
             <img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/data/backside">
             <div class="view-card-list-actions icons">
-                <a href="#" class="icon hand" data-move-to="hand" title="Move to hand">&nbsp;</a>
-                <a href="#" class="icon playdeck" data-move-to="playdeck" title="Move to top of playdeck">&nbsp;</a>
-                <a href="#" class="icon discardpile" data-move-to="discardpile" title="Move to top of discard pile">&nbsp;</a>
-                <a href="#" class="icon sideboard" data-move-to="sideboard" title="Move to sideboard">&nbsp;</a>
-                <a href="#" class="icon onoffer" data-move-to="offer" title="Reveal to opponent">&nbsp;</a>
+                <a href="#" class="icon hand" data-move-to="hand" data-shuffle="false" title="Move to hand">&nbsp;</a>
+                <a href="#" class="icon playdeck playdeck-shuffle" data-move-to="playdeck" data-shuffle="true" title="Shuffle into playdeck">&nbsp;</a>
+                <a href="#" class="icon discardpile" data-move-to="discardpile" data-shuffle="false" title="Move to top of discard pile">&nbsp;</a>
+                <a href="#" class="icon sideboard" data-move-to="sideboard" data-shuffle="false" title="Move to sideboard">&nbsp;</a>
+                <a href="#" class="icon onoffer" data-move-to="offer" data-shuffle="false" title="Reveal to opponent">&nbsp;</a>
+                <a href="#" class="icon playdeck" data-move-to="playdeck" data-shuffle="false" title="Move to top of playdeck">&nbsp;</a>
             </div>
         </div>`;
     }
@@ -450,6 +451,7 @@ class TaskBarCards
     static _OnClickCardIcon(isOffer, jLink) 
     {
         const target = jLink.getAttribute("data-move-to");
+        const bShuffle = jLink.getAttribute("data-shuffle") === "true";
         const cardDiv = jLink.parentElement.parentElement;
         const sUuid = cardDiv.getAttribute("data-uuid");
 
@@ -463,7 +465,7 @@ class TaskBarCards
 
         cardDiv.classList.add("hiddenVisibility");
 
-        MeccgApi.send("/game/card/move", { uuid: sUuid, target: target, drawTop: target === "hand" });
+        MeccgApi.send("/game/card/move", { uuid: sUuid, target: target, drawTop: target === "hand", shuffle: bShuffle });
         if (isOffer) 
         {
             MeccgApi.send("/game/view-cards/offer-remove", { uuid: sUuid });
