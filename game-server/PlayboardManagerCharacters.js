@@ -325,7 +325,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         return list;
     }
 
-    PopOnGuardCard(cardUuid)
+    PopOnGuardCard(_cardUuid)
     {
         return false;
     }

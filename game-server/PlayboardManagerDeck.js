@@ -13,7 +13,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         this.agents = _listAgents === undefined ? [] : _listAgents;
     }
 
-    requireDeckManager(isSinglePlayer)
+    requireDeckManager(_isSinglePlayer)
     {
         return new DeckManagerDefault();
     }
