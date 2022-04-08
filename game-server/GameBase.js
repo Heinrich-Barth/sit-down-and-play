@@ -14,7 +14,7 @@ class GameBase {
         this.bSingle = false;
     }
 
-    restorePlayerPhase(phase, turn, current)
+    restorePlayerPhase(phase, _turn, _current)
     {
         this.player_phase = phase;
     }

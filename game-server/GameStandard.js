@@ -256,7 +256,7 @@ class GameStandard extends GamePlayers
         this.sendCurrentPhase();
     }
 
-    onStagingAreaAddCard(userid, socket, data)
+    onStagingAreaAddCard(userid, _socket, data)
     {
         let _uuid = data.uuid;
 
@@ -285,7 +285,7 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, "added " + card.code + " to staging area");
     }
 
-    onGameCardStateReveal(userid, socket, data)
+    onGameCardStateReveal(userid, _socket, data)
     {
         const uuid = data.uuid;
         const rev = this.getPlayboardManager().FlipCard(uuid);
@@ -298,7 +298,7 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " hides a card");
     }
 
-    onGameCardStateSet(userid, socket, data)
+    onGameCardStateSet(userid, _socket, data)
     {
         if (data.uuid === "_site")
         {
@@ -328,13 +328,13 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, message + data.code);
     }
 
-    onGameStateGlow(userid, socket, data)
+    onGameStateGlow(userid, _socket, data)
     {
         this.publishToPlayers("/game/card/state/glow", userid, data);
         this.publishChat(userid, "marks/unmarks " + data.code);
     }
 
-    onCardDraw(userid, socket, obj)
+    onCardDraw(userid, _socket, _obj)
     {
         let _list = this.getPlayboardManager().GetCardsInHand(userid);
         for (let card of _list)
@@ -364,7 +364,7 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, "drew " + nCards + " card(s)");
     }
 
-    onCardDrawSingle(userid, socket, obj)
+    onCardDrawSingle(userid, _socket, _obj)
     {
         let _card = this.getPlayboardManager().DrawCard(userid, false);
         if (_card === null)
@@ -375,7 +375,7 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, "drew 1 card");
     }
 
-    onGetTopCardFromHand(userid, socket, nCount)
+    onGetTopCardFromHand(userid, _socket, nCount)
     {
         if (nCount < 1)
             return;
@@ -390,7 +390,7 @@ class GameStandard extends GamePlayers
         this.updateHandCountersPlayer(userid);
     }
 
-    onCardStore(userid, socket, obj)
+    onCardStore(userid, _socket, obj)
     {
         let card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
         if (card === null)
@@ -518,7 +518,7 @@ class GameStandard extends GamePlayers
         this.onRedrawCompany(userid, affectedCompanyUuid);
     }
 
-    onCardToken(userid, socket, data)
+    onCardToken(userid, _socket, data)
     {
         const nCount = data.uuid !== undefined ? this.getPlayboardManager().getDecks().updateToken(data.uuid, data.add !== false) : 0;
         if (nCount != -1)
@@ -538,7 +538,7 @@ class GameStandard extends GamePlayers
         this.replyToPlayer("/game/card/hand", socket, { cards: res });
     }
 
-    onCardDiscard(userid, socket, data)
+    onCardDiscard(userid, _socket, data)
     {
         const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
         if (card === null)
@@ -554,28 +554,28 @@ class GameStandard extends GamePlayers
         return true;
     }
 
-    scoreShow(userid, socket, data)
+    scoreShow(userid, socket, _data)
     {
         this.replyToPlayer("/game/score/show", socket, this.getScoring().getScoreSheets());
         this.replyToPlayer("/game/score/show-pile", socket, this._getList(userid, "victory"));
         this.publishChat(userid, " looks at score sheet");
     }
 
-    scoreUpdate(userid, socket, data)
+    scoreUpdate(userid, _socket, data)
     {
         const total = this.getScoring().updateScore(userid, data);
         if (total !== -1)
             this.publishChat(userid, " updates score to a total of " + total + " point(s)");
     }
 
-    scoreAdd(userid, socket, data)
+    scoreAdd(userid, _socket, data)
     {
         const total = this.getScoring().update(userid, data.type, data.points);
         if (total !== -1)
             this.publishChat(userid, " updated " + data.type + " score by " + data.points + " point(s) to a total of " + total + " MPs.");
     }
 
-    onGameDrawCompany(userid, socket, data)
+    onGameDrawCompany(userid, _socket, data)
     {
         var pCompany = this.getPlayboardManager().GetFullCompanyByCompanyId(data);
         if (pCompany !== null)
@@ -585,13 +585,13 @@ class GameStandard extends GamePlayers
         }
     }
 
-    onGameDrawCompanies(userid, socket, data)
+    onGameDrawCompanies(userid, _socket, _data)
     {
         for (let _company of this.getPlayboardManager().GetCompanyIds(userid))
             this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(_company));
     }
 
-    onCharacterHostCard(userid, socket, obj)
+    onCharacterHostCard(userid, _socket, obj)
     {
         var uuid = obj.uuid;
         var company = obj.companyId;
@@ -621,12 +621,12 @@ class GameStandard extends GamePlayers
         return true;
     }
 
-    onCharacterReceiveCard(userid, socket, obj)
+    onCharacterReceiveCard(_userid, _socket, _obj)
     {
         return false;
     }
 
-    onCharacterJoinCharacter(userid, socket, data)
+    onCharacterJoinCharacter(userid, _socket, data)
     {
         var cardUuid = data.uuid;
         var targetcharacter = data.targetcharacter;
@@ -659,7 +659,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    onCharacterJoinCompany(userid, socket, data)
+    onCharacterJoinCompany(userid, _socket, data)
     {
         var _uuid = data.uuid;
         var _source = data.source;
@@ -697,7 +697,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    onGameCompanyCreate(userid, socket, data)
+    onGameCompanyCreate(userid, _socket, data)
     {
         var _uuid = data.uuid;
         var _source = data.source;
@@ -740,7 +740,7 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(companyId));
     }
 
-    onGameCompanyHighlight(userid, socket, jData)
+    onGameCompanyHighlight(userid, _socket, jData)
     {
         if (typeof jData.company === "undefined")
             return;
@@ -756,7 +756,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    onGameCompanyArrives(userid, socket, jData)
+    onGameCompanyArrives(userid, _socket, jData)
     {
         if (typeof jData.company === "undefined" || jData.company === "")
             return;
@@ -771,7 +771,7 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "The company arrives");
     }
 
-    onGameCompanyLocationSetLocation(userid, socket, obj)
+    onGameCompanyLocationSetLocation(userid, _socket, obj)
     {
         this.getPlayboardManager().SetCompanyStartSite(obj.companyUuid, obj.start, obj.regions, obj.destination);
         let res = this.getPlayboardManager().GetCompanyAttachedLocationCards(obj.companyUuid);
@@ -790,7 +790,7 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, " organises locations.");
     }
 
-    onGameCompanyLocationAttach(userid, socket, data)
+    onGameCompanyLocationAttach(userid, _socket, data)
     {
         var _uuid = data.uuid;
         const targetCompanyUuid = data.companyUuid;
@@ -830,19 +830,19 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " played an on guard card");
     }
 
-    onGameCompanyLocationReveal(userid, socket, data)
+    onGameCompanyLocationReveal(userid, _socket, data)
     {
         this.getPlayboardManager().RevealCompanyDestinationSite(data.companyUuid);
         this.publishToPlayers("/game/company/location/reveal", userid, {company: data.companyUuid});
         this.publishChat(userid, " revealed locations.");
     }
 
-    globalSaveGame(userid, socket)
+    globalSaveGame(_userid, socket)
     {
         this.replyToPlayer("/game/save", socket, this.save() );
     }
 
-    onDiscardOpenly(userid, socket, data)
+    onDiscardOpenly(userid, _socket, data)
     {
         var card = this.getPlayboardManager().GetCardByUuid(data.uuid);
         if (card !== null)
@@ -856,7 +856,7 @@ class GameStandard extends GamePlayers
         }
     }
     
-    rollDices(userid, socket, obj)
+    rollDices(userid, _socket, obj)
     {
         const n1 = obj.r1;
         const n2 = obj.r2;
@@ -869,13 +869,13 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")");
     }
 
-    setDices(userid, socket, obj)
+    setDices(userid, _socket, obj)
     {
         this.updateDices(userid, obj.type);
     }
 
     
-    phase(userid, socket, sPhase) 
+    phase(userid, _socket, sPhase) 
     {
         switch (sPhase)
         {
@@ -930,13 +930,13 @@ class GameStandard extends GamePlayers
             this.publishChat(this.getCurrentPlayerId(), " is now in " + sPhase + " phase");
     }
 
-    onCardImport(userid, socket, data)
+    onCardImport(userid, _socket, data)
     {
         if (this.importCardDuringGame(userid, data.code, data.type === "character"))
             this.onGetTopCardFromHand(userid, null, 1);
     }
 
-    onGameAddCardsToGame(userid, socket, data)
+    onGameAddCardsToGame(userid, _socket, data)
     {
         let count = this.addCardsToGameDuringGame(userid, data.cards);
         if (count < 1)
@@ -954,20 +954,20 @@ class GameStandard extends GamePlayers
 
     }
 
-    viewReveal(userid, socket, obj)
+    viewReveal(userid, _socket, obj)
     {
         this.publishToPlayers("/game/view-cards/reveal/list", userid, {type: obj, list: this._getList(userid, obj) });
         this.publishChat(userid, " offers to show cards in " + obj);
     }
 
-    viewList(userid, socket, obj)
+    viewList(userid, _socket, obj)
     {
         const list = this._getList(userid, obj);
         this.publishToPlayers("/game/view-cards/list", userid, {type: obj, list: list});
         this.publishChat(userid, " views cards in " + obj);
     }
 
-    viewCloseList(userid, socket, obj)
+    viewCloseList(userid, _socket, obj)
     {
         if (typeof obj.offered === "undefined")
             return;
@@ -981,7 +981,7 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " closes card offer");
     }
 
-    viewShuffle(userid, socket, obj)
+    viewShuffle(userid, _socket, obj)
     {
         if (obj.target === "playdeck")
         {
@@ -995,7 +995,7 @@ class GameStandard extends GamePlayers
         }
     }
     
-    viewOfferReveal(userid, socket, obj)
+    viewOfferReveal(userid, _socket, obj)
     {
         let sUuid = obj.uuid;
         if (sUuid !== "")
@@ -1011,7 +1011,7 @@ class GameStandard extends GamePlayers
         this.onCardDrawSingle(userid);
     }
 
-    viewOfferRemove(userid, socket, obj)
+    viewOfferRemove(userid, _socket, obj)
     {
         let sUuid = obj.uuid;
         if (sUuid !== "")
@@ -1042,7 +1042,7 @@ class GameStandard extends GamePlayers
     }
 
 
-    globalRestoreGame(userid, socket, data)
+    globalRestoreGame(userid, _socket, data)
     {
         const pEval = new SaveGameEvaluation(data.assignments);
         data.game = pEval.evaluate(data.game, this.isArda());
