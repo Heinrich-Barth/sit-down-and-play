@@ -33,10 +33,10 @@ const MeccgPlayers = {
     /**
      * Set the user map
      * 
-     * @param {Boolean} bIsMe 
+     * @param {Boolean} _bIsMe 
      * @param {Map} jMap 
      */
-    setPlayerNames : function(bIsMe, jMap)
+    setPlayerNames : function(_bIsMe, jMap)
     {
         if (this.usermap === null)
         {
@@ -66,7 +66,7 @@ const MeccgPlayers = {
      * @param {JSON} jData 
      * @returns 
      */
-    addPlayer : function(bIsMe, jData)
+    addPlayer : function(_bIsMe, jData)
     {
         if (this.usermap !== null && this.usermap[jData.userid] === undefined)
         {            
@@ -83,7 +83,7 @@ const MeccgPlayers = {
         }}));
     },
 
-    onChatMessage : function(bIsMe, jData)
+    onChatMessage : function(_bIsMe, jData)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
             name : this.getPlayerDisplayName(jData.userid),
@@ -120,7 +120,7 @@ const MeccgApi =
         return g_lTimeJoined;
     },
 
-    send: function (path, message, bAwait)
+    send: function (path, message)
     {
         if (typeof message === "undefined")
             message = "";
@@ -190,8 +190,7 @@ const MeccgApi =
             }
             catch(e)
             {
-                console.log(path);
-                console.log(typeof MeccgApi._paths[path]);
+                console.error(path);
                 MeccgUtils.logError(e);
             }
         });
