@@ -372,22 +372,28 @@ const GameCompanies = {
      */
     onAttachCardToCompanySites : function(companyId, cardList, bAllowContextMenu)
     {
-        if (GameCompanies.CardList.length === 0)
+        if (cardList.length === 0)
             return;
 
-        let companyElement = document.getElementById("company_" + companyId);
+        const companyElement = document.getElementById("company_" + companyId);
         if (companyElement === null)
+        {
+            console.warn("Cannot find company " + companyId);
             return;
+        }
 
         let jOnGuardContainer = companyElement.querySelector(".site-onguard");
         if (jOnGuardContainer === null)
+        {
+            console.warn("Cannot find on-guard site of company " + companyId);
             return;
+        }
 
-        let isPlayersCompany = this.isPlayersCompany(companyElement);
-        let pCheckForCardsPlayed = new CheckForCardsPlayed("ingamecard_");
+        const isPlayersCompany = this.isPlayersCompany(companyElement);
+        const pCheckForCardsPlayed = new CheckForCardsPlayed("ingamecard_");
         pCheckForCardsPlayed.loadBefore(jOnGuardContainer);
 
-        const len = GameCompanies.CardList.length;
+        const len = cardList.length;
         for (let i = 0; i < len; i++)
             this.onAttachCardToCompanySitesElement(jOnGuardContainer, cardList[i], bAllowContextMenu, isPlayersCompany);
 
@@ -401,7 +407,10 @@ const GameCompanies = {
         
         let pCard = document.getElementById(GameCompanies.CARDID_PREFIX + card.uuid);
         if (pCard === null)
+        {
+            console.warn("Cannot find card #" + GameCompanies.CARDID_PREFIX + card.uuid);
             return;
+        }
 
         if (isPlayersCompany)
             GameCompanies.CardPreview.init(pCard, true, true);
