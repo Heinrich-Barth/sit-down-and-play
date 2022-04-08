@@ -554,7 +554,7 @@ class TaskBarCardsInterface
         this._TaskBarCards = new TaskBarCards(_CardList, _CardPreview);
     }
 
-    onShow(bIsMe, jData) 
+    onShow(_bIsMe, jData) 
     {
         this._TaskBarCards.onShow(jData);
     }

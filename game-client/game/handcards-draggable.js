@@ -154,7 +154,7 @@ const DropFunctions = {
     /**
      * Drop card on discard pile
      */
-    dropOnDiscard : function( event, ui ) 
+    dropOnDiscard : function( _event, ui ) 
     {
         const uuid = ui.draggable.attr("data-uuid");
         const src = ui.draggable.attr("data-location");
@@ -174,7 +174,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnVicotry : function( event, ui ) 
+    dropOnVicotry : function( _event, ui ) 
     {
         /** it is OK to use jQuery object ui->raggable here */
         const elem = ui.draggable;
@@ -192,7 +192,7 @@ const DropFunctions = {
         return false;
     },
 
-    dropOnSideboard : function( event, ui ) 
+    dropOnSideboard : function( _event, ui ) 
     {
         const uuid = ui.draggable.attr("data-uuid");
         const src = ui.draggable.attr("data-location");
@@ -202,7 +202,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnPlaydeck : function( event, ui ) 
+    dropOnPlaydeck : function( _event, ui ) 
     {
         const uuid = ui.draggable.attr("data-uuid");
         const src = ui.draggable.attr("data-location");
@@ -216,7 +216,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnHand : function( event, ui ) 
+    dropOnHand : function( _event, ui ) 
     {
         if (ui.draggable.attr("data-location") !== "hand")
         {
@@ -234,7 +234,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnStageArea : function( event, ui ) 
+    dropOnStageArea : function( _event, ui ) 
     {
         if (ui.draggable.attr("data-location") === "hand")
         {
@@ -246,7 +246,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnAddNew : function( event, ui ) 
+    dropOnAddNew : function( _event, ui ) 
     {
         if (ui.draggable.attr("data-card-type") === "character")
         {
@@ -262,7 +262,7 @@ const DropFunctions = {
         return false;
     },
     
-    dropOnAddCompanyCharacter :  function( event, ui, companyUuid ) 
+    dropOnAddCompanyCharacter :  function( _event, ui, companyUuid ) 
     {
         const pCard = ui.draggable[0];
         if (pCard.getAttribute("data-card-type") === "character")
@@ -456,7 +456,7 @@ const HandCardsDraggable = {
                 classes: HandCardsDraggable.droppableParams,
                 accept: HandCardsDraggable.droppableAccept,
                 
-                drop: function(event, ui ) 
+                drop: function(_event, ui ) 
                 {
                     const elemDraggable = ui.draggable[0];
                     const source = elemDraggable.getAttribute("data-location");
@@ -533,7 +533,7 @@ const HandCardsDraggable = {
                 tolerance: "pointer",
                 classes: HandCardsDraggable.droppableParams,
                 accept: HandCardsDraggable.droppableAcceptResrouceAndHazards,
-                drop: function(event, ui ) 
+                drop: function(_event, ui ) 
                 {
                     const elemDraggable = ui.draggable[0];
                     const source = elemDraggable.getAttribute("data-location");
@@ -637,7 +637,7 @@ const HandCardsDraggable = {
      * @param {String} type
      * @returns {void}
      */
-    initCardInStagingArea: function (cardId, target, type)
+    initCardInStagingArea: function (cardId, _target, type)
     {
         if (cardId === "" || (type !== "resource" && type !== "hazard"))
             return;
@@ -657,10 +657,9 @@ const HandCardsDraggable = {
      * visualize drag area for a new company
      * @param {String} idPrefix
      * @param {String} uuid
-     * @param {String} type
      * @returns {void}
      */
-    initDragEventsForHandCard: function (idPrefix, uuid, type)
+    initDragEventsForHandCard: function (idPrefix, uuid)
     {
         var pCardContainer = document.getElementById(idPrefix + uuid);
         pCardContainer.setAttribute("data-location", "hand");
@@ -778,7 +777,7 @@ const HandCardsDraggable = {
         addClasses: false
     },
     
-    droppableAccept : function(elem)
+    droppableAccept : function()
     {
         return true;
     },

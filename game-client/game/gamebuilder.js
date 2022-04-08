@@ -146,7 +146,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             }
         },
         
-        onAttachCardToCompanySite : function(companyId, code, cardUuid, state, reveal, owner)
+        onAttachCardToCompanySite : function(companyId, code, cardUuid, _state, reveal, owner)
         {                   
             let card = [{
                 code : code,
@@ -243,9 +243,9 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
             
 
-            MeccgApi.addListener("/game/discardopenly", (bIsMe, jData) => { /** fallback */ });
+            MeccgApi.addListener("/game/discardopenly", () => { /** fallback */ });
 
-            MeccgApi.addListener("/game/add-onguard", function(bIsMe, jData)
+            MeccgApi.addListener("/game/add-onguard", function(_bIsMe, jData)
             {
                 GameBuilder.onAttachCardToCompanySite(jData.company, jData.code, jData.uuid, jData.state, jData.revealed, jData.owner);
             });
@@ -313,7 +313,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 } }));
             });
             
-            MeccgApi.addListener("/game/card/state/set-site", function(bIsMe, jData)
+            MeccgApi.addListener("/game/card/state/set-site", function(_bIsMe, jData)
             {
                 var ownerId = jData.ownerId;
                 var code = jData.code;
@@ -325,7 +325,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
             
             
-            MeccgApi.addListener("/game/card/token", function(bIsMe, jData)
+            MeccgApi.addListener("/game/card/token", function(_bIsMe, jData)
             {
                 const uuid = jData.uuid === undefined ? "" : jData.uuid;
                 const count = jData.count === undefined ? 0 : jData.count;
@@ -339,7 +339,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 }
             });
             
-            MeccgApi.addListener("/game/card/state/set", function(bIsMe, jData)
+            MeccgApi.addListener("/game/card/state/set", function(_bIsMe, jData)
             {
                 var uuid = jData.uuid;
                 var code = jData.code;
@@ -367,9 +367,9 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                 g_Game.CompanyManager.onRemoveEmptyCompanies();
             });
 
-            MeccgApi.addListener("/game/card/reveal", (bIsMe, jData) => g_Game.CompanyManager.onMenuActionRevealCard(jData.uuid, jData.reveal));          
-            MeccgApi.addListener("/game/card/state/glow", (bIsMe, jData) =>g_Game.CompanyManager.onMenuActionGlow(jData.uuid));
-            MeccgApi.addListener("/game/card/state/highlight", (bIsMe, jData) => g_Game.CompanyManager.onMenuActionHighlight(jData.uuid));
+            MeccgApi.addListener("/game/card/reveal", (_bIsMe, jData) => g_Game.CompanyManager.onMenuActionRevealCard(jData.uuid, jData.reveal));          
+            MeccgApi.addListener("/game/card/state/glow", (_bIsMe, jData) =>g_Game.CompanyManager.onMenuActionGlow(jData.uuid));
+            MeccgApi.addListener("/game/card/state/highlight", (_bIsMe, jData) => g_Game.CompanyManager.onMenuActionHighlight(jData.uuid));
 
             MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary));
 
@@ -403,9 +403,9 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     DomUtils.removeAllChildNodes(document.getElementById("card_icon_nr_" + _uuid));
             });
 
-            MeccgApi.addListener("/game/time", (bIsMe, jData) => GameBuilder.onGameTime(jData));
+            MeccgApi.addListener("/game/time", (_bIsMe, jData) => GameBuilder.onGameTime(jData));
 
-            MeccgApi.addListener("/game/remove-card-from-board", function(bIsMe, jData)
+            MeccgApi.addListener("/game/remove-card-from-board", function(_bIsMe, jData)
             {
                 var _uuid = jData;
                 if (_uuid === "")
@@ -417,12 +417,12 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
 
             MeccgApi.addListener("/game/player/draw/company", (bIsMe, jData) => CompanyManager.drawCompany(bIsMe, jData));
-            MeccgApi.addListener("/game/player/indicator", (bIsMe, jData) => CompanyManager.updateLastSeen(jData.userid, jData.connected));
-            MeccgApi.addListener("/game/player/remove", (bIsMe, jData) => CompanyManager.removePlayerIndicator(jData.userid));
+            MeccgApi.addListener("/game/player/indicator", (_bIsMe, jData) => CompanyManager.updateLastSeen(jData.userid, jData.connected));
+            MeccgApi.addListener("/game/player/remove", (_bIsMe, jData) => CompanyManager.removePlayerIndicator(jData.userid));
             
-            MeccgApi.addListener("/game/remove-empty-companies", (bIsMe, jData) => CompanyManager.removeEmptyCompanies(jData));
+            MeccgApi.addListener("/game/remove-empty-companies", (_bIsMe, jData) => CompanyManager.removeEmptyCompanies(jData));
             
-            MeccgApi.addListener("/game/player/draw/locations", function(bIsMe, jData)
+            MeccgApi.addListener("/game/player/draw/locations", function(_bIsMe, jData)
             {
                 let company = jData.company;
                 let start = jData.start;
@@ -445,7 +445,7 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
             });
 
             
-            MeccgApi.addListener("/game/set-turn", (bIsMe, jData) => document.getElementById("game_turns").innerHTML = jData.turn);
+            MeccgApi.addListener("/game/set-turn", (_bIsMe, jData) => document.getElementById("game_turns").innerHTML = jData.turn);
 
             MeccgApi.addListener("/game/set-phase", function(bIsMe, jData)
             {
@@ -520,14 +520,14 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
 
             });
 
-            MeccgApi.addListener("/game/company/arrive", function(bIsMe, jData)
+            MeccgApi.addListener("/game/company/arrive", function(_bIsMe, jData)
             {
                 CompanyManager.onCompanyArrivesAtDestination(jData.company, true);
                 GameBuilder.resolveHandNotification();
             });
 
-            MeccgApi.addListener("/game/company/highlight", (bIsMe, jData) => CompanyManager.onCompanyArrivesAtDestination(jData.company, false));
-            MeccgApi.addListener("/game/company/location/reveal", (bIsMe, jData) => CompanyManager.revealLocations(jData.company));
+            MeccgApi.addListener("/game/company/highlight", (_bIsMe, jData) => CompanyManager.onCompanyArrivesAtDestination(jData.company, false));
+            MeccgApi.addListener("/game/company/location/reveal", (_bIsMe, jData) => CompanyManager.revealLocations(jData.company));
             
             MeccgApi.addListener("/game/score/show", function(bIsMe, jData)
             {
@@ -541,15 +541,15 @@ function createGameBuilder(_CardList, _CardPreview, _HandCardsDraggable, _Compan
                     Scoring.showScoreSheetCards(jData);
             });
 
-            MeccgApi.addListener("/game/score/final", function(bIsMe, jData)
+            MeccgApi.addListener("/game/score/final", function(_bIsMe, jData)
             {
                 MeccgApi.disconnect();                    
                 Scoring.showFinalScore(jData.score, jData.stats);
             });
             
-            MeccgApi.addListener("/game/rejoin/immediately", (bIsMe, jData) => GameBuilder.restoreBoard(jData));
+            MeccgApi.addListener("/game/rejoin/immediately", (_bIsMe, jData) => GameBuilder.restoreBoard(jData));
 
-            MeccgApi.addListener("/game/notification", (bIsMe, jData) => 
+            MeccgApi.addListener("/game/notification", (_bIsMe, jData) => 
             {
                 if (jData.type === "warning")
                     document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": jData.message }));

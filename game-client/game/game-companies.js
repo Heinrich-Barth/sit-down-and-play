@@ -719,7 +719,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 {
                     return elem.attr("data-location") === "hand";
                 },
-                drop: function (event, ui)
+                drop: function (_event, ui)
                 {
                     INSTANCE.onDropOnGuard(sCompanyUuid, ui.draggable[0], bRevealOnDrop);
                     return false;
@@ -746,7 +746,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 {
                     return elem.attr("data-location") === "hand" && elem.attr("data-card-type") === "hazard";
                 },
-                drop: function (event, ui)
+                drop: function (_event, ui)
                 {
                     INSTANCE.onDropOnGuard(sCompanyUuid, ui.draggable[0], bRevealOnDrop);
                     return false;
@@ -754,7 +754,7 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             });
         },
 
-        onEnterStartPhase: function (bIsMe)
+        onEnterStartPhase: function ()
         {
             document.querySelector(".taskbar .startphase").classList.add("act");
         },
@@ -780,12 +780,12 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
                 INSTANCE.readyCardsInContainer(document.getElementById("opponent_table").querySelector(".companies[data-player='" + this.player2Hex(sCurrent) + "']"));
         },
 
-        prefillEmptyMovementToCurrentSite(pCompanies)
+        prefillEmptyMovementToCurrentSite : function()
         {
             /** todo */
         },
 
-        onEnterMovementHazardPhase: function (bIsMe)
+        onEnterMovementHazardPhase: function ()
         {
             /** not needed here */
         },
@@ -849,24 +849,24 @@ function createCompanyManager(_CardList, _CardPreview, _HandCardsDraggable)
             INSTANCE.tapSite(ownerId, code, true);
         },
         
-        onMenuActionReady: function (uuid, code)
+        onMenuActionReady: function (uuid)
         {
             this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]'));
         },
 
-        onMenuActionTap: function (uuid, code, bForced)
+        onMenuActionTap: function (uuid, _code, bForced)
         {
             const elem = this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]'));
             if (elem !== null)
                 elem.classList.add(bForced ? "state_tapped_fixed" : "state_tapped");
         },
 
-        onMenuActionWound: function (uuid, code)
+        onMenuActionWound: function (uuid)
         {
             this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]')).classList.add("state_wounded");
         },
 
-        onMenuActionRot270: function (uuid, code)
+        onMenuActionRot270: function (uuid)
         {
             this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]')).classList.add("state_rot270");
         },
