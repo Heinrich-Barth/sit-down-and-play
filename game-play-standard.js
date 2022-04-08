@@ -45,7 +45,7 @@ class GamePlayRouteHandler
     onHome(req, res)
     {
         this.m_pServerInstance.clearCookies(res);
-        this.m_pServerInstance.cacheResponse(res, "text/html").sendFile(this.pageHome);
+        this.m_pServerInstance.expireResponse(res, "text/html").sendFile(this.pageHome);
     }
 
     setupRoutes()
@@ -147,8 +147,7 @@ class GamePlayRouteHandler
             const sUser = req.cookies.username === undefined ? "" : req.cookies.username;
             let sHtml = fs.readFileSync(this.pageLogin, 'utf8');
 
-            res.setHeader('Content-Type', 'text/html');
-            this.m_pServerInstance.expireResponse(res).send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
+            this.m_pServerInstance.expireResponse(res, "text/html").send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
         }
     }
 
@@ -192,8 +191,7 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
-            res.setHeader('Content-Type', 'text/plain');
-            this.m_pServerInstance.expireResponse(res).redirect("/play/" + req.params.room + "/lobby");
+            this.m_pServerInstance.expireResponse(res, 'text/plain').redirect("/play/" + req.params.room + "/lobby");
         }
         catch (e) 
         {
@@ -252,8 +250,7 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
-            res.setHeader('Content-Type', 'text/plain');
-            this.m_pServerInstance.expireResponse(res).redirect(this.contextPlay + req.params.room);
+            this.m_pServerInstance.expireResponse('text/plain').redirect(this.contextPlay + req.params.room);
         }
         catch (e) 
         {
@@ -271,8 +268,7 @@ class GamePlayRouteHandler
         else
         {
             const sHtml = fs.readFileSync(this.pageWatch, 'utf8');
-            res.setHeader('Content-Type', 'text/html');
-            this.m_pServerInstance.expireResponse(res).send(sHtml).status(200);
+            this.m_pServerInstance.expireResponse(res, 'text/html').send(sHtml).status(200);
         }
     }
 
@@ -354,8 +350,7 @@ class GamePlayRouteHandler
         if (status !== null)
             _obj.status = status ? "ok" : "wait";
 
-        res.setHeader('Content-Type', 'application/json');
-        this.m_pServerInstance.expireResponse(res).send(_obj).status(200);
+        this.m_pServerInstance.expireResponse(res, 'application/json').send(_obj).status(200);
     }
 
     onPlayAtTable(req, res)

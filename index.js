@@ -448,7 +448,10 @@ SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (req, res) => S
 /**
   * Home Page redirects to "/play"
   */
-SERVER.instance.get("/", (req, res) => res.redirect("/play"));
+SERVER.instance.get("/", (req, res) => {
+    res.header("Cache-Control", "no-store");
+    res.redirect("/play")
+});
 
 SERVER.instance.get("/login", (req, res) => g_pAuthentication.showLoginPage(req, res, __dirname + "/pages/authentication-login.html"));
 SERVER.instance.post("/login", (req, res) => {
