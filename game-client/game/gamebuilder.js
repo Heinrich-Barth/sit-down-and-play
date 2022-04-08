@@ -160,7 +160,7 @@ const GameBuilder = {
     
     onAttachCardToCompanySite : function(companyId, code, cardUuid, _state, reveal, owner)
     {                   
-        let card = [{
+        const card = [{
             code : code,
             type: "hazard",
             state: 0,

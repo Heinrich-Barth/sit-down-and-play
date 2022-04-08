@@ -796,7 +796,7 @@ class GameStandard extends GamePlayers
         const targetCompanyUuid = data.companyUuid;
         const revealOnDrop = data.reveal;
 
-        let card = this.getPlayboardManager().PopCardFromHand(_uuid);
+        const card = this.getPlayboardManager().PopCardFromHand(_uuid);
         if (card === null)
         {
             this.publishChat(userid, "Cannot add foreign card to location threats");
