@@ -305,12 +305,12 @@ const ContextMenu = {
     callbacks : {
         empty : function() { /** fallback */ },
 
-        tokenRemove : function(e)
+        tokenRemove : function()
         {
             ContextMenu.onToken(false);
         },
 
-        tokenAdd : function(e)
+        tokenAdd : function()
         {
             ContextMenu.onToken(true);
         },
@@ -372,6 +372,11 @@ const ContextMenu = {
         {
             let uuid = ContextMenu.getAttribute(pMenu, "data-card-uuid");
             let code = ContextMenu.getAttribute(pMenu, "data-card-code");
+            ContextMenu.callbacks._doFlip(uuid, code);  
+        },
+
+        _doFlip : function(uuid, code)
+        {
             MeccgApi.send("/game/card/state/reveal", {uuid : uuid, code: code });   
         },
 
