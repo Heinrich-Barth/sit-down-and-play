@@ -27,13 +27,30 @@ setTimeout(() => {
  */
 (function()
 {
+    function getConnectionCount()
+    {
+        try
+        {
+            const val = document.body.getAttribute("data-connected-count");
+            if (val !== null && val !== "")
+                return parseInt(val);
+        }
+        catch (err)
+        {
+            console.error(err);            
+        }
+
+        return 0;
+    }
+    
     function addCss()
     {
         /** add CSS  */
         const link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
         link.setAttribute("type", "text/css");
-        link.setAttribute("href","/media/assets/css/introtip.css");
+        link.setAttribute("href", "/media/client/game/introtip/introtip.css");
+        
         document.head.appendChild(link);
     }
 
@@ -72,6 +89,9 @@ setTimeout(() => {
         document.getElementById("tip-opverlay").onclick = () => document.getElementById("close_tip").click();
     }
 
-    addCss();
-    addContent();
+    if (getConnectionCount() === 0)
+    {
+        addCss();
+        addContent();
+    }
 })();

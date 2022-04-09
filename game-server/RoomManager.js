@@ -651,6 +651,7 @@ class RoomManager {
         const isArda = pRoom.getGame().isArda() ? "true" : "false";
         const isSinglePlayer = pRoom.getGame().isSinglePlayer() ? "true" : "false";
         const tplDice = dice === undefined || dice.indexOf(".") !== -1 ? "" : dice;
+        const conCount = pRoom.getConnectionCount(userId);
 
         return this.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
@@ -662,7 +663,8 @@ class RoomManager {
             .replace("{TPL_IS_ARDA}", isArda)
             .replace("{TPL_IS_VISITOR}", isVisitor)
             .replace("{TPL_IS_SINGLEPLAYER}", isSinglePlayer)
-            .replace("{TPL_JOINED_TIMESTAMP}", sToken);
+            .replace("{TPL_JOINED_TIMESTAMP}", sToken)
+            .replace("{TPL_CON_COUNT}", conCount);
     }
 
     /**

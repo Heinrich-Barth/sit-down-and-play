@@ -23,6 +23,21 @@ class GameRoom
         this.visitors = {};
         this.name = room;
         this.fnEndGame = fnEndGame;
+        this.reconnectionCounts = {};
+    }
+
+    getConnectionCount(userid)
+    {
+        if (userid === undefined || userid === "")
+            return 0;
+        
+        if (this.reconnectionCounts[userid] === undefined)
+        {
+            this.reconnectionCounts[userid] = 0;
+            return 0;
+        }
+        else
+            return  ++this.reconnectionCounts[userid];
     }
 
     getCreated()
