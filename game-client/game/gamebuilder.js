@@ -246,6 +246,8 @@ const GameBuilder = {
         {
             if (bIsMe)
                 GameBuilder.onDrawCard(jData.code, jData.uuid, jData.type);
+
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "drawcard" }));
         });
 
         MeccgApi.addListener("/game/card/hand", function(bIsMe, jData)
@@ -253,7 +255,9 @@ const GameBuilder = {
             if (bIsMe)
                 GameBuilder.onRestoreHand(jData.cards);
         });
+
         
+        MeccgApi.addListener("/game/sfx", (_bIsMe, jData) => document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": jData.type })));
 
         MeccgApi.addListener("/game/discardopenly", () => { /** fallback */ });
 
@@ -323,6 +327,8 @@ const GameBuilder = {
                 total : jData.total,
                 dice : jData.dice
             } }));
+
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "dice" }));
         });
         
         MeccgApi.addListener("/game/card/state/set-site", function(_bIsMe, jData)

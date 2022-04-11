@@ -360,16 +360,15 @@ const SCORING = {
         else
             return cell;
     },
-    
-    _showScoreSheet : function(jData, bAllowUpdate)
+
+    scoreSheetUpdateTyble(jData, jTable)
     {
-        if (typeof jData === "undefined")
+        if (jTable === null)
             return;
-            
-        let jTable = document.getElementById("scoring-sheet").querySelector("tbody");
+
         let _elem;
         let player;
-        let points, total;
+        let total;
 
         for (let key in jData)
         {
@@ -377,34 +376,43 @@ const SCORING = {
             player = MeccgPlayers.isChallenger(key) ? "self" : key;
             for (let type in jData[key])
             {
-                points = jData[key][type];
                 _elem = this._getTargetCell(jTable, type, player);
-                if (_elem === null)
-                    continue;
-
-                if (player === "self")
+                if (_elem !== null && player === "self")
                     _elem = _elem.querySelector("span");
                 
                 if (_elem !== null)
-                    _elem.innerText = points;
-
-                if (type !== "stage")
-                    total += points;
+                {
+                    _elem.innerText = jData[key][type];
+                    total += jData[key][type];
+                }
             }
+
             document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerHTML = total;
         }
+    },
+    
+    _showScoreSheet : function(jData, bAllowUpdate)
+    {
+        if (typeof jData === "undefined")
+            return;
+            
+        const jTable = document.getElementById("scoring-sheet").querySelector("tbody");
+        this.scoreSheetUpdateTyble(jData, jTable);
 
         if (!bAllowUpdate)
-        {
-            document.getElementById("scoring-sheet").classList.add("final-score");
-            DomUtils.remove(document.getElementById("view-score-sheet-card-list"));
-
-            const overlay = document.getElementById("scoring-sheet").querySelector(".menu-overlay");
-            overlay.classList.remove("hidden");
-            overlay.onclick = () => { return false; };
-        }
+            this.removeUpdateFunctionality();
         
         document.getElementById("scoring-sheet").classList.remove("hidden");
+    },
+
+    removeUpdateFunctionality()
+    {
+        document.getElementById("scoring-sheet").classList.add("final-score");
+        DomUtils.remove(document.getElementById("view-score-sheet-card-list"));
+
+        const overlay = document.getElementById("scoring-sheet").querySelector(".menu-overlay");
+        overlay.classList.remove("hidden");
+        overlay.onclick = () => { return false; };
     },
     
     showScoreSheetCards : function(listCards)

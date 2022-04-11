@@ -106,6 +106,7 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
         this.createEntry0("game_dices");
+        this.createEntry0("game_sfx");
 
         this.createSection("Game");
         this.createEntry0("game_save");
@@ -126,6 +127,7 @@ class GamePreferences extends Preferences {
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
+        this.addConfigToggle("game_sfx", "Play sound effects", false);
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
@@ -138,6 +140,12 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
     }
+
+    allowSfx()
+    {
+        return Preferences._getConfigValue("game_sfx")
+    }
+
 }
 
 const g_pGamesPreferences = new GamePreferences();

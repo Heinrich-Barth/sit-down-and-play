@@ -507,7 +507,10 @@ class GameStandard extends GamePlayers
         }
 
         if (bShufflePlaydeck)
+        {
             this.getPlayboardManager().ShufflePlaydeck(userid);
+            this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
+        }
 
         // now we have to remove the cards from the board again
         this.publishToPlayers("/game/card/remove", userid, list);
@@ -572,7 +575,10 @@ class GameStandard extends GamePlayers
     {
         const total = this.getScoring().update(userid, data.type, data.points);
         if (total !== -1)
+        {
             this.publishChat(userid, " updated " + data.type + " score by " + data.points + " point(s) to a total of " + total + " MPs.");
+            this.publishToPlayers("/game/sfx", userid, { "type": "score" });
+        }
     }
 
     onGameDrawCompany(userid, _socket, data)
@@ -987,11 +993,13 @@ class GameStandard extends GamePlayers
         {
             this.getPlayboardManager().ShufflePlaydeck(userid);
             this.publishChat(userid, " shuffles playdeck");
+            this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
         else if (obj.target === "discardpile")
         {
             this.getPlayboardManager().ShuffleDiscardpile(userid);
             this.publishChat(userid, " shuffles discardpile");
+            this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
     }
     
