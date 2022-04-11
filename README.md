@@ -343,7 +343,7 @@ The following third-party libraries. Be aware of their respective licenses.
 * jQuery 3.5.1 (MIT License)
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)
 * jQuery UI Touch Punch (MIT License)
-* leafletjs 1.6.0 (BSD 2-Clause "Simplified" License)
+* leafletjs 1.7.1 (BSD 2-Clause "Simplified" License)
 
 ### HTML / CSS 
 
