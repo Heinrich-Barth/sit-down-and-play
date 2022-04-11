@@ -242,6 +242,7 @@ class Configuration {
                 "font-src": "'self'",
                 "script-src": "'self'",
                 "connect-src": "'self'",
+                "media-src": "'self'",
                 "style-src": "'self'",
                 "img-src": "'self'",
                 "report-uri": "/csp-violation"
