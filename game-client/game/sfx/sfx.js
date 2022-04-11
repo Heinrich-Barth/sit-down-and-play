@@ -26,7 +26,6 @@ class SoundEffects {
         audio.volume = 0.02;
         audio.loop = false;
         audio.play();
-        console.log("playing " + src)
     }
 
     onSfx(e)
