@@ -6,7 +6,7 @@
  */
 function CardList(images, quests, useImagesDC, useImagesIC) 
 { 
-    this._list = images === undefined ? null : images;
+    this._list = images === undefined ? {} : images;
     this._fliped = quests === undefined ? [] : quests;
     this._useImagesDC = useImagesDC === undefined ? true : useImagesDC;
     this._useImagesIC = useImagesIC === undefined ? false : useImagesIC;
