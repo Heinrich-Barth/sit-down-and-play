@@ -220,6 +220,7 @@ class Configuration {
                 "style-src": "'self'",
                 "connect-src": "'self'",
                 "font-src": "'self'",
+                "media-src": "'self'",
                 "script-src": "'self' 'nonce-START'",
                 "frame-src": "'self'",
                 "img-src": "'self' " + this.imageDomain(),
