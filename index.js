@@ -332,6 +332,7 @@ SERVER.instance.get("/data/dices", (req, res) => SERVER.expireResponse(res, "app
 SERVER.instance.get("/data/backgrounds", (req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getBackgrounds()).status(200));
 SERVER.instance.use("/media/personalisation/dice", g_pExpress.static(__dirname + "/media/personalisation/dice"));
 SERVER.instance.use("/media/personalisation/backgrounds", g_pExpress.static(__dirname + "/media/personalisation/backgrounds"));
+SERVER.instance.use("/media/personalisation/sounds", g_pExpress.static(__dirname + "/media/personalisation/sounds"));
 SERVER.instance.get("/media/personalisation/personalisation.css", (req, res) => {
     res.setHeader('content-type', 'text/css');
     Personalisation.writePersonalisationCss(res);

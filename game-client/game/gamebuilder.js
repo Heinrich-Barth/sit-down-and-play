@@ -198,6 +198,7 @@ const GameBuilder = {
 
             DomUtils.removeNode(document.getElementById("lidles-eye"));
             document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx-ready", { "detail": true }));
             
         }, 500);
     },
@@ -563,6 +564,7 @@ const GameBuilder = {
         {
             MeccgApi.disconnect();                    
             GameBuilder.Scoring.showFinalScore(jData.score, jData.stats);
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
         
         MeccgApi.addListener("/game/rejoin/immediately", (_bIsMe, jData) => GameBuilder.restoreBoard(jData));
