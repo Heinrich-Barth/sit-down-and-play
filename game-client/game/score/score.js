@@ -496,10 +496,7 @@ const SCORING = {
         let jTable = document.getElementById("scoring-sheet").querySelector("table");
 
         if (SCORING.isAvailable(sPlayerId, jTable))
-        {
-            console.log("already there");
             return;
-        }
         
         let th = document.createElement("th");
         th.setAttribute("data-player", sPlayerId);
