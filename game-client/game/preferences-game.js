@@ -127,7 +127,7 @@ class GamePreferences extends Preferences {
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
-        this.addConfigToggle("game_sfx", "Play sound effects", false);
+        this.addConfigToggle("game_sfx", "Play sound effects", true);
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
