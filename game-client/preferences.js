@@ -2,7 +2,13 @@
 class Preferences {
 
     static _id = 0;
-    static config = { };    
+    static config = { };   
+    
+    static Type = {
+        TOGGLE : 1,
+        CHECKBOX : 2,
+        SLIDER: 3
+    }
 
     constructor()
     {
@@ -30,23 +36,53 @@ class Preferences {
             callback : pCallback,
             type_on: "",
             type_off: type,
-            checkbox: false
+            type: Preferences.Type.TOGGLE
         }
     }
 
-    addConfigToggle(id, title, initialValue, pCAllback)
+    addConfigToggle(id, title, initialValue, pCallback)
     {
-        if (typeof pCAllback === "undefined")
-            pCAllback = Preferences._emptyCallback;
+        if (typeof pCallback === "undefined")
+            pCallback = Preferences._emptyCallback;
 
         Preferences.config[id] = {
             title: title,
             value : initialValue,
-            callback : pCAllback,
+            callback : pCallback,
             type_on: "fa-toggle-on",
             type_off: "fa-toggle-off",
-            checkbox: true
+            type: Preferences.Type.CHECKBOX
         }
+    }
+
+    addConfigSlider(id, title, initialValue, icon, pCallback)
+    {
+        if (typeof pCallback === "undefined")
+            pCallback = Preferences._emptyCallback;
+
+        Preferences.config[id] = {
+            title: title,
+            value : Preferences.toInt(initialValue),
+            callback : pCallback,
+            type_on: icon,
+            type_off: icon,
+            type: Preferences.Type.SLIDER
+        }
+    }
+
+    static toInt(value)
+    {
+        try
+        {
+            if (!isNaN(value))
+                return parseInt(value);
+        }
+        catch (_err)
+        {
+            /** ignore */
+        }
+
+        return 0;
     }
 
     createEntry0(id)
@@ -59,11 +95,21 @@ class Preferences {
         let sCheck = Preferences.config[id].value ? "checked" : "";
         let sCss = Preferences.config[id].value ? Preferences.config[id].type_on : Preferences.config[id].type_off;
         let _id = "preference_id_" + (++Preferences._id);
-        if (Preferences.config[id].checkbox)
+        if (Preferences.config[id].type === Preferences.Type.CHECKBOX)
         {
             this._html += `<div class="preference">
                 <input type="checkbox" id="${_id}" name="${sInputName}" ${sCheck}>
                 <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
+            </div>`;      
+        }
+        else if (Preferences.config[id].type === Preferences.Type.SLIDER)
+        {
+            if (Preferences.config[id].max <= Preferences.config[id].min)
+                return
+
+            this._html += `<div class="preference">
+                <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
+                <input type="range" name="${sInputName}" min="0" max="100" value="${Preferences.config[id].value}" id="${_id}">
             </div>`;      
         }
         else
@@ -94,13 +140,12 @@ class Preferences {
         e.stopPropagation();
     }
 
-    static onEventChange(e)
+    static onEventChangeCheckbox(pThis)
     {
-        let id = this.name;
-        let value = this.checked;
-        let bIs = this.checked;
+        const value = pThis.checked;
+        const bIs = pThis.checked;
+        const sibling = pThis.nextElementSibling;
 
-        const sibling = this.nextElementSibling;
         let pLabel = sibling.querySelector("i");
         let sOn = pLabel.getAttribute("data-on");
         let sOff = pLabel.getAttribute("data-off");
@@ -119,11 +164,21 @@ class Preferences {
             }
         }
 
+        return value;
+    }
 
+    static onEventChange(e)
+    {
+        const id = this.name;
         if (typeof Preferences.config[id] !== "undefined")
         {
-            Preferences.config[id].value = value;
-            Preferences.config[id].callback(value);
+            
+            if (Preferences.config[id].type === Preferences.Type.CHECKBOX)
+                Preferences.config[id].value = Preferences.onEventChangeCheckbox(this);
+            else if (Preferences.config[id].type === Preferences.Type.SLIDER)
+                Preferences.config[id].value = this.value;
+
+            Preferences.config[id].callback(Preferences.config[id].value);
         }
 
         e.stopPropagation();

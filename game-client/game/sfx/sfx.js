@@ -17,6 +17,7 @@ class SoundEffects {
             "endgame": ""
 
         };
+        this.volume = 30;
         this.isReady = false;
         this.additionals = { };
 
@@ -54,7 +55,7 @@ class SoundEffects {
         if (src !== undefined && src !== "")
         {
             const audio = new Audio(src);
-            audio.volume = 0.02;
+            audio.volume = this.volume / 100;
             audio.loop = false;
             audio.play();
         }
@@ -66,6 +67,12 @@ class SoundEffects {
             this.playAudio(this.types["" + e.detail]);
     }
 
+    onSfxTest(e)
+    {
+        this.volume = e.detail;
+        this.playAudio(this.types["drawcard"]);
+    }
+
     allowSfx()
     {
         return typeof g_pGamesPreferences !== "undefined" && g_pGamesPreferences.allowSfx();
@@ -75,10 +82,12 @@ class SoundEffects {
     {
         this.isReady = true;
         document.body.addEventListener("meccg-sfx", this.onSfx.bind(this), false);
+        document.body.addEventListener("meccg-sfx-test", this.onSfxTest.bind(this), false);
         this.playAudio(this.types["launch"]);
     }
 }
 
 
 document.body.addEventListener("meccg-sfx-ready", SoundEffects.INSTANCE.onReady.bind(SoundEffects.INSTANCE), false);
+
 

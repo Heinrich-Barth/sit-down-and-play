@@ -45,6 +45,11 @@ class GamePreferences extends Preferences {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
     }
 
+    _volumeChange(val)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-sfx-test", { "detail": parseInt(val) }));
+    }
+
     _endGame()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-query-end-game", { }));
@@ -127,7 +132,7 @@ class GamePreferences extends Preferences {
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
-        this.addConfigToggle("game_sfx", "Play sound effects", true);
+        this.addConfigSlider("game_sfx", "Sound effects volume", 20, "fa-volume-up", this._volumeChange.bind(this));
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 

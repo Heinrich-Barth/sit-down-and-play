@@ -109,6 +109,10 @@ height: 17px;
 .config-panel input { 
 display: none;
 }
+.config-panel input[type="range"] {
+    display: inline-block;
+    width: 55%;
+}
 
 #restore-game {
     position: fixed;
