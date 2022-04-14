@@ -48,6 +48,11 @@ class GamePreferences extends Preferences {
     _volumeChange(val)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-sfx-test", { "detail": parseInt(val) }));
+
+        document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+            name : "System",
+            message : "Set volume to " + val
+        }}));
     }
 
     _endGame()
@@ -148,7 +153,7 @@ class GamePreferences extends Preferences {
 
     allowSfx()
     {
-        return Preferences._getConfigValue("game_sfx")
+        return Preferences._getConfigValue("game_sfx") > 5;
     }
 
 }
