@@ -101,10 +101,6 @@ class PlayerDices {
      */
     setDice(userid, dice)
     {
-        console.log("setDice");
-        console.log("userid " + userid);
-        console.log("dice " + dice);
-        
         if (userid === undefined || userid === "" || dice === undefined || dice === "")
             return false;
 
