@@ -14,7 +14,8 @@ class SoundEffects {
             "score": "/media/client/game/sfx/score.mp3",
             "discard": "",
             "launch": "",
-            "endgame": ""
+            "endgame": "",
+            "yourturn": ""
 
         };
         this.volume = 30;

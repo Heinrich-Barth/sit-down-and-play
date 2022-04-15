@@ -296,6 +296,7 @@ const GameBuilder = {
         {
             if (bIsMe)
             {
+                document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "yourturn" }));
                 document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "It is your turn now." }));
                 return;
             }
