@@ -82,7 +82,7 @@ class PlayerSelector
      */
     setCurrentPlayer(sPlayerId, bIsMe)
     {
-        let list = document.getElementById("player_selector").getElementsByClassName(".act");
+        let list = document.getElementById("player_selector").getElementsByClassName("act");
         if (list === null)
             list = [];
 
@@ -123,7 +123,7 @@ class PlayerSelector
                 elemA.setAttribute("href", "#");
                 elemA.setAttribute("id", "player_selector_" + sHexId);
                 elemA.setAttribute("data-hex", sHexId);
-                elemA.innerHTML = `<span class="indicator-green">&nbsp;</span>${sName} <i class="player-handcard-count" title="cards in hand">0</i><i class="player-playdeck-count" title="cards in playdeck">0</i>`;
+                elemA.innerHTML = `<span class="indicator-green">&nbsp;</span>${sName} <i class="player-view fa fa-eye" title="Currently visible opponent"></i><i class="player-handcard-count" title="cards in hand">0</i><i class="player-playdeck-count" title="cards in playdeck">0</i>`;
                 document.getElementById("player_selector").appendChild(elemA);
                 document.getElementById("player_selector_" + sHexId).onclick = this.onLoadOpponentView;
             }        
@@ -137,8 +137,8 @@ class PlayerSelector
         const jViewContainer = sHex === "" ? null : document.querySelector(".companies[data-player='" + sHex + "']");
         if (jViewContainer !== null)
         {
-            ArrayList(document.getElementById("player_selector")).findByClassName("cur").each((_el) => _el.classList.remove("cur"));
-            pThis.classList.add("cur");
+            ArrayList(document.getElementById("player_selector")).findByClassName("cur").each(PlayerSelector.removeActivePlayer);
+            PlayerSelector.setActivePlayer(pThis);
         
             ArrayList(document.getElementById("opponent_table")).findByClassName("companies").each((_el) => _el.classList.add("hidden"));
             jViewContainer.classList.remove("hidden");
@@ -147,6 +147,19 @@ class PlayerSelector
         e.preventDefault();
         e.stopPropagation();
         return false;
+    }
+
+    static setActivePlayer(_el)
+    {
+        _el.classList.add("cur");
+        _el.setAttribute("title", "Active player");
+    }
+    
+    static removeActivePlayer(_el)
+    {
+        _el.classList.remove("cur");
+        if (_el.hasAttribute("title"))
+            _el.removeAttribute("title");
     }
 }
 
