@@ -199,7 +199,7 @@ a:hover { color: #ff0; }
     background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
 }
 
-#player_selector i { margin-right: 5px; padding-left: 17px; font-style: normal; }
+.player_selector i { margin-right: 5px; padding-left: 17px; font-style: normal; }
 
 .player-handcard-count { background: url("/media/assets/images/icons/icon-hand-small.png") 0 0px no-repeat; }
 .player-playdeck-count { background: url("/media/assets/images/icons/icon-playdeck-small.png") 0 0px no-repeat;  }
