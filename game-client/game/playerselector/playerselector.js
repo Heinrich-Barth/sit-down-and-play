@@ -87,16 +87,15 @@ class PlayerSelector
             list = [];
 
         for (let _elem of list)
-            _elem.classList.remove("act");
+            this.removeActivePlayer(_elem);
 
         const jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
-        if (jTarget === null)
-            return;
-            
-        jTarget.classList.add("act");
-
-        if (!bIsMe) /* show opponents board */
-            jTarget.dispatchEvent(new Event('click'));
+        if (jTarget !== null)
+        {
+            this.setActivePlayer(jTarget);
+            if (!bIsMe) /* show opponents board */
+                jTarget.dispatchEvent(new Event('click'));                
+        }            
     }
 
 
@@ -137,8 +136,8 @@ class PlayerSelector
         const jViewContainer = sHex === "" ? null : document.querySelector(".companies[data-player='" + sHex + "']");
         if (jViewContainer !== null)
         {
-            ArrayList(document.getElementById("player_selector")).findByClassName("cur").each(PlayerSelector.removeActivePlayer);
-            PlayerSelector.setActivePlayer(pThis);
+            ArrayList(document.getElementById("player_selector")).findByClassName("cur").each((_el) => _el.classList.remove("cur"));
+            pThis.classList.add("cur");
         
             ArrayList(document.getElementById("opponent_table")).findByClassName("companies").each((_el) => _el.classList.add("hidden"));
             jViewContainer.classList.remove("hidden");
@@ -149,15 +148,15 @@ class PlayerSelector
         return false;
     }
 
-    static setActivePlayer(_el)
+    setActivePlayer(_el)
     {
-        _el.classList.add("cur");
+        _el.classList.add("act");
         _el.setAttribute("title", "Active player");
     }
     
-    static removeActivePlayer(_el)
+    removeActivePlayer(_el)
     {
-        _el.classList.remove("cur");
+        _el.classList.remove("act");
         if (_el.hasAttribute("title"))
             _el.removeAttribute("title");
     }
