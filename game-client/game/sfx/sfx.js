@@ -58,7 +58,18 @@ class SoundEffects {
             const audio = new Audio(src);
             audio.volume = this.volume / 100;
             audio.loop = false;
-            audio.play();
+            let promise = audio.play();
+
+            if (promise !== undefined) 
+            {
+                promise.then(_ => {/* Autoplay started */ }).catch(_error => 
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+                        name : "System",
+                        message : "Could not play sound. Browser blocked it."
+                    }}));
+                });
+              }
         }
     }
 
