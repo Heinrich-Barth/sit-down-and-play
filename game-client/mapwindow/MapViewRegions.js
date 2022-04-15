@@ -70,7 +70,7 @@ class MapViewRegions extends MapView {
         {
             options: 
             {
-                shadowUrl: "/media/assets/leaflet/leaflet-images/leaf-shadow.png",
+                shadowUrl: "/media/maps/marker/leaf-shadow.png",
                 iconSize:     [38, 95],
                 shadowSize:   [50, 64],
                 iconAnchor:   [22, 94],
@@ -79,15 +79,15 @@ class MapViewRegions extends MapView {
             }
         });
         
-        this.MARKER.pos_start = new LeafIconPosition({iconUrl: '/media/assets/leaflet/leaflet-images/leaf-green.png'});
-        this.MARKER.pos_end = new LeafIconPosition({iconUrl: '/media/assets/leaflet/leaflet-images/leaf-red.png'});
+        this.MARKER.pos_start = new LeafIconPosition({iconUrl: '/media/maps/marker/leaf-green.png'});
+        this.MARKER.pos_end = new LeafIconPosition({iconUrl: '/media/maps/marker/leaf-red.png'});
 
         let LeafIcon = L.Icon.extend(
         {
             options: 
             {
                 iconUrl: "",
-                shadowUrl: '/media/assets/leaflet/leaflet-images/marker-shadow.png',
+                shadowUrl: '/media/maps/marker/marker-shadow.png',
                 iconSize:     [25, 41], // size of the icon
                 shadowSize:   [41, 41], // size of the shadow
                 iconAnchor:   [24, 41], // point of the icon which will correspond to marker's location
@@ -96,19 +96,19 @@ class MapViewRegions extends MapView {
             }
         });
         
-        this.MARKER.region = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-red.png"});
-        this.MARKER.free = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-free.png"});
-        this.MARKER.border = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-border.png"});
-        this.MARKER.dark = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-dark.png"});
-        this.MARKER.ruins = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-ruins.png"});
-        this.MARKER.shadow = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/marker-icon-shadow.png"});
+        this.MARKER.region = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-red.png"});
+        this.MARKER.free = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-free.png"});
+        this.MARKER.border = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-border.png"});
+        this.MARKER.dark = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-dark.png"});
+        this.MARKER.ruins = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-ruins.png"});
+        this.MARKER.shadow = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-shadow.png"});
 
         LeafIcon = L.Icon.extend({
                 options: 
                 {
                     iconUrl: "",
                     className: 'map-region-icon',
-                    shadowUrl: '/media/assets/leaflet/leaflet-images/marker-shadow.png',
+                    shadowUrl: '/media/maps/marker/marker-shadow.png',
                     iconSize:     [27, 42], // size of the icon
                     shadowSize:   [41, 41], // size of the shadow
                     iconAnchor:   [24, 41], // point of the icon which will correspond to marker's location
@@ -117,14 +117,14 @@ class MapViewRegions extends MapView {
                 }
         });
 
-        this.MARKER.regions.bl = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-border.png"});
-        this.MARKER.regions.cs = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-coast.png"});
-        this.MARKER.regions.dd = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-dark.png"});
-        this.MARKER.regions.de = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-sunland.png"});
-        this.MARKER.regions.wi = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-wilder.png"});
-        this.MARKER.regions.fd = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-free.png"});
-        this.MARKER.regions.ju = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-sunland.png"});
-        this.MARKER.regions.sl = new LeafIcon({iconUrl: "/media/assets/leaflet/leaflet-images/region-shadow.png"});
+        this.MARKER.regions.bl = new LeafIcon({iconUrl: "/media/maps/marker/region-border.png"});
+        this.MARKER.regions.cs = new LeafIcon({iconUrl: "/media/maps/marker/region-coast.png"});
+        this.MARKER.regions.dd = new LeafIcon({iconUrl: "/media/maps/marker/region-dark.png"});
+        this.MARKER.regions.de = new LeafIcon({iconUrl: "/media/maps/marker/region-sunland.png"});
+        this.MARKER.regions.wi = new LeafIcon({iconUrl: "/media/maps/marker/region-wilder.png"});
+        this.MARKER.regions.fd = new LeafIcon({iconUrl: "/media/maps/marker/region-free.png"});
+        this.MARKER.regions.ju = new LeafIcon({iconUrl: "/media/maps/marker/region-sunland.png"});
+        this.MARKER.regions.sl = new LeafIcon({iconUrl: "/media/maps/marker/region-shadow.png"});
 
         if (!super.createInstance())
             return false;
