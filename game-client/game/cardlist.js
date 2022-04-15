@@ -19,8 +19,7 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     this._isReady = false;
 
     const pThat = this;
-    
-    if (this._list === null)
+    if (Object.keys(this._list).length === 0)
     {
         fetch("/data/list/images").then((response) => 
         {
