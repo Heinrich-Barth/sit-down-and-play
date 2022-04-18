@@ -145,31 +145,61 @@ const onLoadDecks = function(data)
 {
     g_jDecks = data;
 
-    let sHtml = `<div class="title">Choose your deck</div>`;
+    let i = 0;
 
-    for (let i = 0; i < g_jDecks.length; i++)
+    const divGroup = document.createDocumentFragment();
+    const divHtml = document.createElement("div");
+    divHtml.setAttribute("class", "title");
+    divHtml.innerText = "Choose your deck";
+    divGroup.appendChild(divHtml);
+
+    for (let deck of g_jDecks)
     {
-        sHtml += `<div class="deck-group">
-                    <input type="checkbox" id="toggle_${i}" value="" name="toggle_${i}" ${i===0 ? 'checked' : ''}>
-                    <label for="toggle_${i}" class="fa fa-chevron-down"> ${g_jDecks[i].name}</label>`;
+        let divDeckType = document.createElement("div");
+        divDeckType.setAttribute("class", "deck-group");
 
-        for (let key in g_jDecks[i].decks)
-            sHtml += `<div class="challenge-deck" data-deck-list="${i}" data-deck-id="${key}">${key}</div>`;
-           
-        sHtml += "</div>"
+        let input = document.createElement("input");
+        divDeckType.appendChild(input);
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("id", "toggle_"+i);
+        input.setAttribute("name", "toggle_"+i);
+        input.setAttribute("value", "");
+        if (i === 0)
+            input.checked = true;
+
+        let label = document.createElement("label");
+        divDeckType.appendChild(label);
+        label.setAttribute("class", "fa fa-chevron-down");
+        label.setAttribute("for", "toggle_"+i);
+        label.setAttribute("name", "toggle_"+i);
+        label.innerText = " " + deck.name + " (" + Object.keys(deck.decks).length + ")";
+
+        for (let key in deck.decks)
+        {
+            const divDeck = document.createElement("div");
+            divDeck.setAttribute("class", "challenge-deck");
+            divDeck.setAttribute("data-deck-list", i);
+            divDeck.setAttribute("data-deck-id", key);
+            divDeck.onclick = onChallengeDeckChosen;
+            divDeck.innerText = key;
+            divDeckType.appendChild(divDeck);
+        }
+
+        divGroup.appendChild(divDeckType);
+        i++;
     }
 
-    document.querySelector(".deck-list-entries").innerHTML = sHtml;
+    document.querySelector(".deck-list-entries").appendChild(divGroup);
+}
 
-    ArrayList(document).findByClassName("challenge-deck").each((elem) => elem.onclick = (e) => {
+const onChallengeDeckChosen = function(e)
+{
+    let sKey = e.target.getAttribute("data-deck-id");
+    let nArray = parseInt(e.target.getAttribute("data-deck-list"));
 
-        let sKey = e.target.getAttribute("data-deck-id");
-        let nArray = parseInt(e.target.getAttribute("data-deck-list"));
+    document.getElementById("toggle_isstandard").click();
 
-        document.getElementById("toggle_isstandard").click();
-
-        populateDeck(g_jDecks[nArray].decks[sKey]);
-    });
+    populateDeck(g_jDecks[nArray].decks[sKey]);
 }
 
 const stripHashFromUrl = function()
