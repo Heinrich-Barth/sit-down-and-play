@@ -4,23 +4,6 @@ const createCardEntry = function(jTarget, sName)
     jTarget[sName] = 1;
 };
 
-const addAvatarsToPoolAndSideboard = function(jDeck)
-{
-    jDeck.pool = { };
-
-    createCardEntry(jDeck.pool, "Alatar [H] (TW)");
-    createCardEntry(jDeck.pool, "Gandalf [H] (TW)");
-    createCardEntry(jDeck.pool, "Pallando [H] (TW)");
-    createCardEntry(jDeck.pool, "Radagast [H] (TW)");
-    createCardEntry(jDeck.pool, "Saruman [H] (TW)");
-
-    createCardEntry(jDeck.sideboard, "Alatar [F] (WH)");
-    createCardEntry(jDeck.sideboard, "Gandalf [F] (WH)");
-    createCardEntry(jDeck.sideboard, "Pallando [F] (WH)");
-    createCardEntry(jDeck.sideboard, "Radagast [F] (WH)");
-    createCardEntry(jDeck.sideboard, "Saruman [F] (WH)");
-};
-
 const addRingwraithsToPoolAndSideboard = function(jDeck)
 {
     jDeck.pool = { };
@@ -47,11 +30,11 @@ const isHeroDeck = function(pGameCardProvider, jDeck)
 
     for(let k in jDeck)
     {
-        count = jDeck[k];
+        let count = jDeck[k];
         if (count === 0)
             continue;
 
-        _code = k.replace(/"/g, '');
+        let _code = k.replace(/"/g, '');
         let card = _code === "" ? null : pGameCardProvider.getCardByCode(_code);
         if (card === null || card.alignment === undefined)
             continue;
@@ -78,9 +61,7 @@ exports.prepareDeck = function(pGameCardProvider, jDeck, keepOthers)
         return;
 
     /** make sure the avatars are available to all players */
-    if (isHeroDeck(pGameCardProvider, jDeck.playdeck))
-        addAvatarsToPoolAndSideboard(jDeck);
-    else
+    if (!isHeroDeck(pGameCardProvider, jDeck.playdeck))
     {
         addRingwraithsToPoolAndSideboard(jDeck);
         jDeck.sideboard = { };
