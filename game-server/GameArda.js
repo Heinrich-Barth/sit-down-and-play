@@ -74,7 +74,7 @@ class GameArda extends GameStandard
         }
     }
 
-    onShuffle(userid, socket, obj)
+    onShuffle(userid, _socket, obj)
     {
         const deck = this.getDeckManager().getAdminDeck();
         if (deck === null)
@@ -92,7 +92,7 @@ class GameArda extends GameStandard
         }
     }
 
-    onRecycle(userid, socket, obj)
+    onRecycle(userid, _socket, obj)
     {
         const deck = this.getDeckManager().getAdminDeck();
         if (deck === null)
@@ -215,7 +215,7 @@ class GameArda extends GameStandard
         }
     }
   
-    onDrawCard(userid, socket, obj)
+    onDrawCard(userid, _socket, obj)
     {
         const deck = this.getDeckManager().getPlayerDeck(userid);
         if (deck === null)
@@ -258,7 +258,7 @@ class GameArda extends GameStandard
         this.publishChat(userid, "drew 1 " + obj.type + " item card");
     }
 
-    onCheckDraft(userid, socket)
+    onCheckDraft(_userid, socket)
     {
         let data = {
             characters: this.reycled.characters,
