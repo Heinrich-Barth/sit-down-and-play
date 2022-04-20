@@ -6,6 +6,11 @@
     height: 100%;
 }
 
+.large-preview .preview-container div
+{
+    max-height: 60%;
+}
+
 .preview-container img {
     height: 100%;
     border-radius: 5px;
