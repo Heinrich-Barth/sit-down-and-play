@@ -50,7 +50,7 @@ const CARDS = {
     addIndices: function () 
     {
         let index = 0;
-        for (let card of this._raw) 
+        for (var card of this._raw) 
             card.index = ++index;
     },
 
@@ -83,20 +83,25 @@ const CARDS = {
 
     identifyQuests : function()
     {
-        for (let card of this._raw) 
+        for (var card of this._raw) 
             card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
     },
 
     identifyInLieuItems : function()
     {
-        const sPattern = "in lieu of";
+        let text = "";
         for (let card of this._raw) 
         {
-            card.isStartable = card.text.indexOf(sPattern) !== -1;
-            if (!card.isStartable && card.code === "Heirlooms of Eärendil (ML)")
+            if (card.code === "Towers Destroyed (FB)")
+                card.isStartable = false;
+            else if (card.code === "Heirlooms of Eärendil (ML)")
                 card.isStartable = true;
-        }
-            
+            else
+            {
+                text = card.text.toLowerCase();
+                card.isStartable = text.indexOf("in lieu of") !== -1 && text.indexOf(" minor ") !== -1 ;
+            }
+        }            
     },
 
     removeUnusedFields : function()
@@ -104,7 +109,7 @@ const CARDS = {
         const vsUnused = getRemovableKeysArray();
 
         let rem = 0;
-        for (let card of this._raw) 
+        for (var card of this._raw) 
         {
             vsUnused.forEach(key => 
             {
@@ -279,7 +284,6 @@ const CARDS = {
         this.createTypes();
         this.prepareArda();
 
-        console.log("\t- " + CARDS._raw.length + " cards available");
         return CARDS._raw;
     },
 
@@ -287,7 +291,7 @@ const CARDS = {
 
     createTypes : function()
     {
-        for (let card of this._raw) 
+        for (var card of this._raw) 
             this._types[card.code] = card["type"];
     },
     
