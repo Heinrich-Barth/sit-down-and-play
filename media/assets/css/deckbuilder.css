@@ -29,14 +29,26 @@ h1 { display: none; }
 }
 
 #result img.preview {
-    width: 300px;
-    min-height: 420px;
-    max-height: 421px;
+    width: 100%;
+    max-height: 100%;
     background: url("/data/backside") 0 0 no-repeat;
     background-size: contain;
 }
 body.addtodeck #result img.preview {
     width: 200px;
+}
+
+@media only screen and (min-width: 1500px) {
+
+    #result .image {
+        margin-right: 5px;
+        width: 450px;
+        height: auto;
+    }
+    #deck_card_view img {
+        width: 450px;
+    }
+        
 }
 
 body.addtodeck .list_left { margin-left: 230px }
