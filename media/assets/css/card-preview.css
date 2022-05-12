@@ -21,13 +21,20 @@
 .preview-top { top: 10px; }
 .preview-right { right: 10px; }
 
-.mapwindow .preview-container img {
-    width: 100%;
-    max-width: 450px;
-    height: auto !important;
+.mapwindow .preview-container img 
+{
+    width: auto !important;
+    max-height: 90%;
 }
 
 .mapwindow .preview-top { top: 120px; }
 .mapwindow .preview-right { right: 225px; }
+
+.mapwindow .preview-right.preview-top
+{
+    max-height: 90%;
+    height: 90%;
+    bottom: 20px;
+}
 
 .on-drag-event-generic .preview-container { display: none; }
