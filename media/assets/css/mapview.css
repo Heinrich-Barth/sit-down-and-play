@@ -28,6 +28,7 @@ body
     top: 0px !important; 
     left: 0px !important; 
     display: block;
+    background-color: #000;
 }
 
 .mapview { text-align: center;
