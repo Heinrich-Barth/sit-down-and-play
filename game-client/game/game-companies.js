@@ -505,7 +505,7 @@ const GameCompanies = {
         }
         const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
 
-        const existsAlready = document.getElementById("company_" + jsonCompany.id);
+        const pPlayerCompany = document.getElementById("company_" + jsonCompany.id);
         const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId, pCheckForCardsPlayed);
         
         if (elemContainer === null)
@@ -520,7 +520,11 @@ const GameCompanies = {
 
         this.drawLocations(jsonCompany.id, jsonCompany.sites.current, jsonCompany.sites.regions, jsonCompany.sites.target, jsonCompany.sites.revealed, jsonCompany.sites.attached, jsonCompany.sites.current_tapped, jsonCompany.sites.target_tapped);
 
-        if (!bIsMe)
+        /** 
+         * important: cards not my own must to be dragged around,
+         * unless they are in my company.
+         */
+        if (!bIsMe && !this.isPlayersCompany(pPlayerCompany))
         {
             ArrayList(elemContainer).find(".card").each(function(jThis)
             {
@@ -540,7 +544,7 @@ const GameCompanies = {
             GameCompanies.initSingleCardEvent(div, false);
         });
 
-        if (!existsAlready && bIsMe)
+        if (pPlayerCompany !== null && bIsMe)
             GameCompanies.HandCardsDraggable.initOnCompany(elemContainer);
 
         ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id") }} )));
