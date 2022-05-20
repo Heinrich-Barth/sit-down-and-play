@@ -505,8 +505,8 @@ const GameCompanies = {
         }
         const pCheckForCardsPlayed = new CheckForCardsPlayedCompany("ingamecard_");
 
-        const pPlayerCompany = document.getElementById("company_" + jsonCompany.id);
         const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId, pCheckForCardsPlayed);
+        const pPlayerCompany = document.getElementById("company_" + jsonCompany.id);
         
         if (elemContainer === null)
             return false;
