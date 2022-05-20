@@ -419,11 +419,21 @@ const HandCardsDraggable = {
             {
                 const _companyUuid = e.target.getAttribute("data-company-uuid");
                 HandCardsDraggable.onLocationRevealClick(e.target, _companyUuid);
+                HandCardsDraggable.triggerMovementHazardClick();
+
                 e.stopPropagation();
                 return false;
             };
 
         });
+    },
+
+    triggerMovementHazardClick : function()
+    {
+        const pContainer = document.getElementById("playercard_hand");
+        const pLink = pContainer === null ? null : pContainer.querySelector('a[data-phase="movement"]');
+        if (pLink !== null && !pLink.classList.contains("act"))
+            pLink.click();
     },
     
     getStartingLocation : function(pCompany)
