@@ -38,7 +38,7 @@ class GameBase {
         else if (obj === "hand")
             list = this.getPlayboardManager().GetCardsInHand(userid);
         else if (obj === "sharedvicotory")
-            list = this.getPlayboardManager().GetCardsInVictoryShared();
+            list = this.getPlayboardManager().GetCardsInVictoryShared(userid);
         else if (obj === "outofplay")
             list = this.getPlayboardManager().GetCardsInOutOfPlay();
         else

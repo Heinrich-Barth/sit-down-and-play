@@ -223,9 +223,9 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         return this.getCardList(this.getDecks().getCards().hand(playerId));
     }
 
-    GetCardsInVictoryShared()
+    GetCardsInVictoryShared(playerId)
     {
-        return this.getCardList(this.getDecks().getCards().sharedVicory());
+        return this.getCardList(this.getDecks().getCards().sharedVicory(playerId));
     }
 
     GetCardsInOutOfPlay()
