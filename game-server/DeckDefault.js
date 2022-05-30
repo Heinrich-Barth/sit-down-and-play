@@ -14,6 +14,7 @@ class DeckDefault extends DeckCommons {
         this.sideboard = [];
         this.victory = [];
         this.playdeck = [];
+        this.outofplay = [];
     }
 
     /**
@@ -27,6 +28,7 @@ class DeckDefault extends DeckCommons {
         this.restoreList(this.sideboard, deck.sideboard);
         this.restoreList(this.victory, deck.victory);
         this.restoreList(this.playdeck, deck.playdeck);
+        this.restoreList(this.outofplay, deck.outofplay);
     }
 
     /**
@@ -40,7 +42,7 @@ class DeckDefault extends DeckCommons {
             discard : this.discardPile.length,
             sideboard : this.sideboard.length,
             victory : this.victory.length,
-            playdeck : this.playdeck.length
+            playdeck : this.playdeck.length,
         }
     }
 
@@ -77,6 +79,7 @@ class DeckDefault extends DeckCommons {
         data.sideboard = this.sideboard;
         data.victory = this.victory;
         data.playdeck = this.playdeck;
+        data.outofplay = this.outofplay;
 
         return data;
     }
@@ -322,6 +325,17 @@ class DeckDefault extends DeckCommons {
             toHand : function(uuid)
             {
                 return this.to(uuid, deck.handCards);
+            },
+
+            /**
+             * Add a card to out of play pile
+             * 
+             * @param {type} uuid
+             * @returns {Boolean} success
+             */
+            toOutOfPlay : function(uuid)
+            {
+                return this.to(uuid, deck.outofplay);
             }
         }
     }

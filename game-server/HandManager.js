@@ -59,6 +59,26 @@ class HandManager
     {
         return this.getCardPils(playerId, "victory");
     }
+
+    getShared(type)
+    {
+        let list = [];
+        for (let id of Object.keys(this.DECKS._deck))
+            list = list.concat(this.getCardPils(id, type));
+
+        return list;
+
+    }
+
+    sharedVicory()
+    {
+        return this.getShared("victory");
+    }
+
+    outofplay()
+    {
+        return this.getShared("outofplay");
+    }
 }
 
 

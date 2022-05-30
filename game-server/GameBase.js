@@ -37,6 +37,10 @@ class GameBase {
             list = this.getPlayboardManager().GetCardsInVictory(userid);
         else if (obj === "hand")
             list = this.getPlayboardManager().GetCardsInHand(userid);
+        else if (obj === "sharedvicotory")
+            list = this.getPlayboardManager().GetCardsInVictoryShared();
+        else if (obj === "outofplay")
+            list = this.getPlayboardManager().GetCardsInOutOfPlay();
         else
             console.log("unknown target " + obj);
         

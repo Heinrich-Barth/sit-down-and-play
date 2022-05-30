@@ -174,6 +174,20 @@ class TaskBarCards
             return false;
         };
 
+        document.getElementById("shared_outofplay").onclick = (e) => 
+        {
+            TaskBarCards.Show("outofplay");
+            e.stopPropagation();
+            return false;
+        };
+
+        document.getElementById("shared_victories").onclick = (e) => 
+        {
+            TaskBarCards.Show("sharedvicotory");
+            e.stopPropagation();
+            return false;
+        };
+        
         document.querySelector(".card-dice").onclick = (e) => 
         {
             const val1 = DiceRoller.rollDice();

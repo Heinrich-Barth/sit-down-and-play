@@ -223,6 +223,15 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         return this.getCardList(this.getDecks().getCards().hand(playerId));
     }
 
+    GetCardsInVictoryShared()
+    {
+        return this.getCardList(this.getDecks().getCards().sharedVicory());
+    }
+
+    GetCardsInOutOfPlay()
+    {
+        return this.getCardList(this.getDecks().getCards().outofplay());
+    }
     /**
      * Get full card detais of a card by its uuid
      * 
@@ -335,6 +344,9 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
 
             case "playdeck":
                 return pDeck.push().toPlaydeck(uuid);
+
+            case "outofplay":
+                return pDeck.push().toOutOfPlay(uuid);
 
             case "hand":
                 {

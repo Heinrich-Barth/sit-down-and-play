@@ -50,6 +50,19 @@ a:hover { color: #ff0; }
 .icons a,
 .icons a:hover { display: inline-block; cursor: pointer; margin-top: 5px; background-size: 32px 32px !important;     }
 
+.card-bar.card-bar-shared{
+    top: 40%;
+    height: 100px;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.card-bar.card-bar-shared .icon {
+    font-size: 25px;
+    padding: 5px 0;
+    height: auto;
+}
+
 .card-bar .icon
 {
     height: 50px;
@@ -442,6 +455,12 @@ img.card-icon {
     display: inline-block;
     background-color: rgba(0,0,0,0.6);
     border-radius: 5px;
+}
+
+#view_card_list_container .container-title-bar-divider,
+#view_card_list_container .container-title-bar-reveal,
+#view_card_list_container .view-card-list-actions {
+    display: none !important;
 }
 #playercard_hand_container a.discardpile,
 #playercard_hand_container a.discardpile:hover {

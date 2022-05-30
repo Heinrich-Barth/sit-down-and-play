@@ -131,6 +131,11 @@ class DropableAreas {
         return DropableAreas.get("staging_area_drop"); 
     }
 
+    static outOfPlay()
+    {
+        return DropableAreas.get("shared_outofplay");
+    }
+
 }
 
 
@@ -243,6 +248,16 @@ const DropFunctions = {
             HandCardsDraggable.onAddGenericCardToStagingArea(uuid, true);
         }
         
+        return false;
+    },
+
+    dropOnOutOfPlay : function( _event, ui ) 
+    {
+        const uuid = ui.draggable.attr("data-uuid");
+        const src = ui.draggable.attr("data-location");
+
+        DropFunctions.removeDraggable(ui);
+        DropFunctions.getApi().send("/game/card/move", {uuid: uuid, target: "outofplay", source: src, drawTop : false});
         return false;
     },
     
@@ -873,6 +888,16 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         classes: HandCardsDraggable.droppableParams,
         drop: DropFunctions.dropOnAddNew,
         accept: HandCardsDraggable.droppableAcceptCharacter
+    });
+
+    jQuery(DropableAreas.outOfPlay()).droppable(
+    {
+        tolerance: "pointer",
+        classes: HandCardsDraggable.droppableParams,
+        drop: DropFunctions.dropOnOutOfPlay,
+        accept: function() {
+            return true;
+        }
     });
 
     return HandCardsDraggable;
