@@ -191,6 +191,7 @@ const MeccgApi =
             catch(e)
             {
                 console.error(path);
+                console.error(e);
                 MeccgUtils.logError(e);
             }
         });

@@ -15,7 +15,7 @@ class ViewCardListContainer {
         div.setAttribute("id", "view_card_list_container");
         div.setAttribute("class", "hidden");
         div.innerHTML = `
-                <div class="view-card-list-container blue-box">
+                <div data-class="view-card-list-container blue-box" class="view-card-list-container blue-box">
                     <div class="container-title-bar smallCaps">
                         <div class="container-title-bar-title fl"></div>
                         <div class="container-title-bar-divider hideOnOffer fl">&nbsp;&dash;&nbsp;</div>
@@ -63,8 +63,8 @@ class ViewCardListContainer {
                 <a href="#" class="icon playdeck playdeck-shuffle" data-move-to="playdeck" data-shuffle="true" title="Shuffle into playdeck">&nbsp;</a>
                 <a href="#" class="icon discardpile" data-move-to="discardpile" data-shuffle="false" title="Move to top of discard pile">&nbsp;</a>
                 <a href="#" class="icon sideboard" data-move-to="sideboard" data-shuffle="false" title="Move to sideboard">&nbsp;</a>
-                <a href="#" class="icon onoffer" data-move-to="offer" data-shuffle="false" title="Reveal to opponent">&nbsp;</a>
                 <a href="#" class="icon playdeck" data-move-to="playdeck" data-shuffle="false" title="Move to top of playdeck">&nbsp;</a>
+                <a href="#" class="icon onoffer" data-move-to="offer" data-shuffle="false" title="Reveal to opponent">&nbsp;</a>
             </div>
         </div>`;
     }
@@ -73,6 +73,9 @@ class ViewCardListContainer {
     {
         const container = pContainer.querySelector(".view-card-list-container");
         
+        if (container.hasAttribute("data-class"))
+            container.setAttribute("class", container.getAttribute("data-class"));
+
         if (type !== "")
             container.classList.add("view-" + type);
 
@@ -492,12 +495,7 @@ class TaskBarCards
         if (!jViewContainer.classList.contains("hidden"))
             jViewContainer.classList.add("hidden");
 
-        jContainer.classList.remove("view-sideboard");
-        jContainer.classList.remove("view-discard");
-        jContainer.classList.remove("view-playdeck");
-        jContainer.classList.remove("view-victory");
-        jContainer.classList.remove("view-mps");
-        jContainer.classList.remove("view-minor");
+        jContainer.setAttribute("class", jContainer.getAttribute("data-class"));
 
         DomUtils.removeAllChildNodes(jContainer.querySelector(".container-data"));
 

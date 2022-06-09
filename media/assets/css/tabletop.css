@@ -457,9 +457,9 @@ img.card-icon {
     border-radius: 5px;
 }
 
-#view_card_list_container .container-title-bar-divider,
-#view_card_list_container .container-title-bar-reveal,
-#view_card_list_container .view-card-list-actions {
+#view_card_list_container .view-outofplay .container-title-bar-divider,
+#view_card_list_container .view-outofplay .container-title-bar-reveal,
+#view_card_list_container .view-outofplay .view-card-list-actions {
     display: none !important;
 }
 #playercard_hand_container a.discardpile,
