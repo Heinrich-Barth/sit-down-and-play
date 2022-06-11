@@ -311,12 +311,12 @@ class MapViewRegions extends MapView {
             elem = L.marker([lat,lon]);
         
         elem.bindPopup(markerText);
-        elem.on('mouseover', function (e) 
+        elem.on('mouseover', function () 
         {
             this.openPopup();
         });
         
-        elem.on('mouseout', function (e) 
+        elem.on('mouseout', function () 
         {
             this.closePopup();
         });
