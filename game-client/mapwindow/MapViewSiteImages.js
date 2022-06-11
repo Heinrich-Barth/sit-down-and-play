@@ -83,14 +83,16 @@
         const jRegion = this.jMap[region];
         if (jRegion === undefined)
             return;
-
-        this.pushRegion(jRegion, region);
-
+            
         const showAlignment = this.createSearchLimitations();
-        for (let key in jRegion.sites)
+        if (showAlignment.dreamcards || !region.dreamcard)
         {
-            if (site === "" || site === key)
-                this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
+            this.pushRegion(jRegion, region);
+            for (let key in jRegion.sites)
+            {
+                if (site === "" || site === key)
+                    this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
+            }
         }
         
         this.fillSiteList();
@@ -176,7 +178,8 @@
         {
             "hero": g_pRegionMapPreferences.showSite("hero"),
             "minion": g_pRegionMapPreferences.showSite("minion"),
-            "balrog":  g_pRegionMapPreferences.showSite("balrog")
+            "balrog":  g_pRegionMapPreferences.showSite("balrog"),
+            "dreamcards": g_pRegionMapPreferences.showDreamcards()
         }
 
         for(let key of keys)
@@ -208,26 +211,31 @@
             this.createEntry(j, false, region);
     }
 
+    /**
+     * Add a site image
+     * @param {JSON} j Site entry
+     * @param {JSON} showAlignment Show alignments
+     * @param {String} region Region
+     * @param {String} site Site
+     */
     getSiteImages(j, showAlignment, region, site)
     {
         this.verifyTempArray();
+        const showDC = showAlignment.dreamcards;
 
-        if (showAlignment === undefined)
-            showAlignment = this.createSearchLimitations();
-        
-        if (typeof j.hero !== "undefined" && showAlignment.hero)
+        if (typeof j.hero !== "undefined" && showAlignment.hero && (showDC || !j.hero.dreamcard))
             this.createEntry(j.hero, true, region, site);
 
-        if (typeof j.minion !== "undefined" && showAlignment.minion)
+        if (typeof j.minion !== "undefined" && showAlignment.minion && (showDC || !j.minion.dreamcard))
             this.createEntry(j.minion, true, region, site);
 
-        if (typeof j.balrog !== "undefined" && showAlignment.balrog)
+        if (typeof j.balrog !== "undefined" && showAlignment.balrog && (showDC || !j.balrog.dreamcard))
             this.createEntry(j.balrog, true, region, site);
         
         const keys = MapViewSiteImages.getAdditionalAlignKeys();
         for(let key of keys)
         {
-            if (typeof j[key] !== "undefined" && showAlignment[key])
+            if (typeof j[key] !== "undefined" && showAlignment[key] && (showDC || j[key].dreamcard === showDC))
                 this.createEntry(j[key], true, region, site);
         }
     }
