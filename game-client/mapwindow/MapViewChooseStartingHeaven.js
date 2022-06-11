@@ -13,7 +13,7 @@ class MapViewChooseStartingHeaven extends MapViewMovementSelection
         document.getElementById("found_sites").innerHTML = '<span class="caption">Click on any region marker and<br>choose a starting site</span>';
     }
 
-    onProcessEvent(region, image, isSite, code)
+    onProcessEvent(_region, _image, isSite, code)
     {
         if (isSite)
             super.sendMovement(code);
