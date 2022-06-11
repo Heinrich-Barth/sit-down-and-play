@@ -13,6 +13,7 @@ class RegionMapPreferences extends Preferences {
         this.hero = "true";
         this.lord = "true";
         this.minion = "true";
+        this.dreamcards = "true";
     }
     
     init(data)
@@ -26,6 +27,7 @@ class RegionMapPreferences extends Preferences {
         this.hero = "" + data.hero;
         this.lord = "" + data.lord;
         this.minion = "" + data.minion;
+        this.dreamcards = data.dreamcards ? "true" : "";
 
         super.init();
     }
@@ -41,6 +43,7 @@ class RegionMapPreferences extends Preferences {
         this.createEntry0("show_hero");
         this.createEntry0("show_minion");
         this.createEntry0("show_balrog");
+        this.createEntry0("show_dreamcards");
 
         this.createSection("Fallen Wizard / Lord Specific Sites");
         this.createEntry0("show_fallenwizard");
@@ -83,6 +86,11 @@ class RegionMapPreferences extends Preferences {
         this.balrog = isActive;
         this.updateCookie("balrog", isActive);
     }
+    toggleDreamcards(isActive)
+    {
+        this.dreamcards = isActive;
+        this.updateCookie("dreamcards", isActive);
+    }
     toggleElf(isActive)
     {
         this.elf = isActive;
@@ -120,13 +128,20 @@ class RegionMapPreferences extends Preferences {
         this.addConfigToggle("show_minion", "Minion", this.isTrue(this.minion), this.toggleMinion.bind(this));
         this.addConfigToggle("show_fallenwizard", "Fallen Wizard (Heavens)", this.isTrue(this.fallenwizard), this.toggleFallenWizard.bind(this));
         this.addConfigToggle("show_balrog", "Balrog", this.isTrue(this.balrog), this.toggleBalrog.bind(this));
+        this.addConfigToggle("show_dreamcards", "Show Dreamcards", this.isTrue(this.dreamcards), this.toggleDreamcards.bind(this));
         this.addConfigToggle("show_lord", "Shared Lord Sites (Elves, Dwarfs, ...)", this.isTrue(this.lord), this.toggleLord.bind(this));
         this.addConfigToggle("show_fallenlord", "Shared Fallen Wizard and Lord Sites", this.isTrue(this.fallenlord), this.toggleFallenlord.bind(this));
-
+        
+        
         this.addConfigToggle("show_elf", "Elf Lords (Heavens)", this.isTrue(this.elf), this.toggleElf.bind(this));
         this.addConfigToggle("show_dwarf", "Dwarf Lords (Heavens)", this.isTrue(this.dwarf), this.toggleDwarf.bind(this));
 
         this.addConfigToggle("show_dragon", "Dragon Lords", this.isTrue(this.dragon), this.toggleDragon.bind(this));
+    }
+
+    showDreamcards()
+    {
+        return this.isTrue(this.dreamcards);
     }
 
     showSite(sAlignment)
