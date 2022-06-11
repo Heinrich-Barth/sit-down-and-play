@@ -159,6 +159,7 @@ class MapData
                     title: card.title,
                     code: card.code,
                     region_type: this.requireRegionType(card),
+                    dreamcard : card.dreamcard === true,
                     area: [],
                     sites: {}
                 };
@@ -337,27 +338,33 @@ class MapData
         SiteAlignments.add(sAlignment, siteTitle);
     }
 
-    updateUnderdeep(jRegion, region, siteTitle, bUnderdeep) 
+    updateUnderdeep(jRegion, region, siteTitle, bUnderdeep, isDreamcard) 
     {
         if (jRegion[region] !== undefined && jRegion[region].sites[siteTitle] === undefined)
+        {
             jRegion[region].sites[siteTitle].underdeep = bUnderdeep;
+            jRegion[region].sites[siteTitle].dreamcard = isDreamcard;
+        }
     }
 
-    updateSite(jRegion, region, siteTitle, hold, _isHero, _isMinion, _isBalrog) 
+    updateSite(jRegion, region, siteTitle, hold, _isHero, _isMinion, _isBalrog, isDreamcard) 
     {
         if (typeof jRegion[region] === "undefined" || typeof jRegion[region].sites[siteTitle] === "undefined")
             return;
 
         if (_isHero) {
             jRegion[region].sites[siteTitle].hero.hold = hold;
+            jRegion[region].sites[siteTitle].hero.dreamcard = isDreamcard;
         }
 
         if (_isMinion) {
             jRegion[region].sites[siteTitle].minion.hold = hold;
+            jRegion[region].sites[siteTitle].minion.dreamcard = isDreamcard;
         }
 
         if (_isBalrog) {
             jRegion[region].sites[siteTitle].balrog.hold = hold;
+            jRegion[region].sites[siteTitle].balrog.dreamcard = isDreamcard;
         }
     }
 
@@ -404,10 +411,11 @@ class MapData
             {
                 let region = _card.Region;
                 let title = _card.title;
+                let isDreamcard = _card.dreamcard === true;
 
                 this.createifNecessary(_card, jRegion, region, title);
-                this.updateSite(jRegion, region, title, _card.Site, isHero(_card), isMinion(_card), isBalrog(_card));
-                this.updateUnderdeep(jRegion, region, title, isUnderdeep(_card));
+                this.updateSite(jRegion, region, title, _card.Site, isHero(_card), isMinion(_card), isBalrog(_card), isDreamcard);
+                this.updateUnderdeep(jRegion, region, title, isUnderdeep(_card), isDreamcard);
             }
         }
 
