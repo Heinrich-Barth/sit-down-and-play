@@ -101,30 +101,6 @@ class MapViewCards extends MapView {
             this._temp.push({ set_code : j["set_code"], image : j["image"], code: j["code"], site: false});            
     }
 
-    getSiteImages(j, showAlignment)
-    {
-        this.verifyTempArray();
-
-        if (showAlignment === undefined)
-            showAlignment = this.createSearchLimitations();
-        
-        if (showAlignment.hero &&typeof j.hero !== "undefined")
-            this._temp.push(MapViewCards.createEntry(j.hero));
-
-        if (typeof j.minion !== "undefined" && showAlignment.minion)
-            this._temp.push(MapViewCards.createEntry(j.minion));
-
-        if (typeof j.balrog !== "undefined" && showAlignment.balrog)
-            this._temp.push(MapViewCards.createEntry(j.balrog));
-        
-        const keys = MapViewCards.getAdditionalAlignKeys();
-        for(let key of keys)
-        {
-            if (typeof j[key] !== "undefined" && showAlignment[key])
-                this._temp.push(MapViewCards.createEntry(j[key]));
-        }
-    }
-
     static lazyloadImageClasses(sSelector)
     {
         const list = document.querySelectorAll(sSelector);
