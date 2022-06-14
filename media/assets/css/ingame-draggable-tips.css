@@ -43,9 +43,11 @@ body.on-drag-event-resource .area-player .company-character-host:before
     left: 0px;
 }
 
+body.on-drag-event-generic #shared_outofplay,
 body.on-drag-event-generic #card_counter a {
     position: relative;
 }
+body.on-drag-event-generic #shared_outofplay:after,
 body.on-drag-event-generic #card_counter a:before {
     position: absolute;
     color: #ff0;
@@ -63,6 +65,11 @@ body.on-drag-event-generic #card_counter a.playdeck:before { content: "To Playde
 body.on-drag-event-generic #card_counter a.discardpile:before { content: "Discard"; }
 body.on-drag-event-generic #card_counter a.sideboard:before { content: "To Sideboard"; }
 
+body.on-drag-event-generic #shared_outofplay:after { 
+    content: "Remove card (cannt be undone)"; 
+    font-size: 12px;
+    width: 100px;
+}
 
 body.on-drag-event-generic.on-drag-event-hazard div#staging-area-player:before,
 body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before
