@@ -147,7 +147,7 @@ class GamePreferences extends Preferences {
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
         this.addConfigSlider("game_sfx", "Sound effects volume", 20, "fa-volume-up", this._volumeChange.bind(this));
-        this.addConfigToggle("large_preview", "Large card preview", false, this._toggleCardPreview.bind(this));
+        this.addConfigToggle("large_preview", "Large card preview", true, this._toggleCardPreview.bind(this));
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
@@ -159,6 +159,8 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
+
+        this._toggleCardPreview(true);
     }
 
     allowSfx()
