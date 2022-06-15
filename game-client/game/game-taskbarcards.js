@@ -274,7 +274,7 @@ class TaskBarCards
 
     static OnShowOnHover() 
     {
-        TaskBarCards._cardPreview.show(this.querySelector("img.card-icon").getAttribute("src"), false, true);
+        TaskBarCards._cardPreview.showImage(this.querySelector("img.card-icon"));
     }
 
     static onShowVictorySheet(e) 
@@ -300,7 +300,7 @@ class TaskBarCards
 
     static OnMouseOut()
     {
-        TaskBarCards._cardPreview.hide(false, true);
+        TaskBarCards._cardPreview.hideAll();
     }
 
     onShow(jData) 

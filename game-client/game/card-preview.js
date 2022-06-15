@@ -19,6 +19,16 @@ CardPreview.addHover = function(id, bRight, bTop)
     CardPreview.init(document.getElementById(id), !bRight, bTop);
 };
 
+CardPreview.getElementPositionIsLeft = function(elem)
+{
+    if (elem === null)
+        return null;
+
+    const elemLeft = elem.getBoundingClientRect().x - window.pageXOffset;
+    const windowHalf = window.innerWidth / 2;
+    return elemLeft < windowHalf;
+}
+
 /**
  * Show a magnified card on hover
  * @param {String} img
@@ -149,13 +159,28 @@ CardPreview._isMyCard = function(elem)
 CardPreview._doHoverOnGuard = function()
 {
     /* THIS points to the element being hovered */
-    let elem = this;
+    CardPreview.showImage(this);
+};
+
+CardPreview.showImage = function(elem)
+{
+    if (elem === null)
+        return;
+
     if (elem.nodeName !== "IMG" && elem.nodeName !== "img")
         elem = this.querySelector("img");
 
     if (elem !== null)
-        CardPreview.show(CardPreview._getImage(elem), CardPreview.isLeft(elem), CardPreview.isTop(elem));
+    {
+        let isLeft = CardPreview.getElementPositionIsLeft(elem);
+        if (isLeft === null)
+            isLeft = CardPreview.isLeft(elem);
+
+        CardPreview.show(CardPreview._getImage(elem), !isLeft, true); //CardPreview.isLeft(elem), CardPreview.isTop(elem));
+    }
 };
+
+
 
 CardPreview._initView = function(sId)
 {
