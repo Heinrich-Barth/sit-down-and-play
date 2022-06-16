@@ -27,7 +27,7 @@ class RegionMapPreferences extends Preferences {
         this.hero = "" + data.hero;
         this.lord = "" + data.lord;
         this.minion = "" + data.minion;
-        this.dreamcards = data.dreamcards ? "true" : "";
+        this.dreamcards = "" + data.dreamcards;
 
         super.init();
     }
@@ -131,8 +131,7 @@ class RegionMapPreferences extends Preferences {
         this.addConfigToggle("show_dreamcards", "Show Dreamcards", this.isTrue(this.dreamcards), this.toggleDreamcards.bind(this));
         this.addConfigToggle("show_lord", "Shared Lord Sites (Elves, Dwarfs, ...)", this.isTrue(this.lord), this.toggleLord.bind(this));
         this.addConfigToggle("show_fallenlord", "Shared Fallen Wizard and Lord Sites", this.isTrue(this.fallenlord), this.toggleFallenlord.bind(this));
-        
-        
+
         this.addConfigToggle("show_elf", "Elf Lords (Heavens)", this.isTrue(this.elf), this.toggleElf.bind(this));
         this.addConfigToggle("show_dwarf", "Dwarf Lords (Heavens)", this.isTrue(this.dwarf), this.toggleDwarf.bind(this));
 

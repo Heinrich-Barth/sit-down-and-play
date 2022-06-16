@@ -24,7 +24,7 @@ const createCompanyHtml = function(companyId, id)
     return div;
 }
 
-const createOpponentContainer = function(sHexPlayerCode)
+const createOpponentContainer = function(sHexPlayerCode, playerId)
 {
     let pContainer = document.getElementById("opponent_table");
     if (pContainer === null)
@@ -45,8 +45,26 @@ const createOpponentContainer = function(sHexPlayerCode)
                     </div>`;
 
     pContainer.appendChild(div);
+
+    createOpponentContainerVisitorHand(pContainer, playerId);
+
     return div;
 };
+
+const createOpponentContainerVisitorHand = function(pContainer, playerId)
+{
+    if (document.body.getAttribute("data-is-watcher") !== "true" || document.getElementById("playercard_hand_container_" + playerId) !== null)
+        return;
+
+    const div = document.createElement("div");
+    div.setAttribute("id", "playercard_hand_container_" + playerId);
+    div.setAttribute("class", "visitor-hand-view");
+    pContainer.appendChild(div);
+
+    const eHand = document.getElementById("watch_togglehand");
+    if (eHand !== null)
+        eHand.click();
+}
 
 const getCardStateCss = function(nState)
 {
@@ -106,7 +124,7 @@ const createCharacterHtml = function(jsonCard, id)
     return div;
 };
  
-function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId)
+function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
 {
     const id = "company_" + companyId;
     const pDiv = createCompanyHtml(companyId, id);
@@ -120,7 +138,7 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId)
     }
     else
     {
-        const container = createOpponentContainer(sHexPlayerCode);
+        const container = createOpponentContainer(sHexPlayerCode, playerId);
         if (container !== null)
             container.appendChild(pDiv);
     }
@@ -475,7 +493,7 @@ const GameCompanies = {
             if (sHexPlayerCode === "")
                 return null;
 
-            const elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, compnanyId);
+            const elemContainer = insertNewcontainer(bIsMe, sHexPlayerCode, compnanyId, playerId);
             if (document.body.getAttribute("data-is-watcher") === "true")
             {
                 document.body.dispatchEvent(new CustomEvent("meccg-visitor-addname", { "detail": {

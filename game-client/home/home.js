@@ -93,7 +93,7 @@ const hideContainer = function(id)
         elem.classList.add("hidden");
 };
 
-const showContainer = function(id)
+const showContainer = function(_id)
 {
     const elem = document.getElementById("no_games");
     if (elem !== null && elem.classList.contains("hidden"))

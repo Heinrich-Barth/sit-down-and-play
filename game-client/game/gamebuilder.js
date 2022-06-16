@@ -5,6 +5,7 @@ const GameBuilder = {
     _timeStarted : 0,
     _hiddenStartPhase : false,
     _saved : { },
+    _isVisitor : false,
 
     CardList : null,
     CardPreview : null,
@@ -21,11 +22,17 @@ const GameBuilder = {
         GameBuilder.CompanyManager = _CompanyManager_;
         GameBuilder.Stagingarea = _Stagingarea_;
         GameBuilder.Scoring = _Scoring_;
+        GameBuilder._isVisitor = document.body.getAttribute("data-is-watcher") === "true";
 
         document.body.addEventListener("meccg-connected", GameBuilder.onConnected.bind(GameBuilder));
         document.body.addEventListener("meccg-disconnected", GameBuilder.onDisconnected.bind(GameBuilder));
         
         GameBuilder.initRestEndpoints();
+    },
+
+    isVisitor : function()
+    {
+        return GameBuilder._isVisitor;
     },
 
     addToHandContainer : function(pElement)
@@ -118,29 +125,46 @@ const GameBuilder = {
 
     alreadyInHand: function(uuid)
     {
-        const cont = document.getElementById("playercard_hand_container")
-        const id = "card_icon_nr_" + uuid;
-        return cont !== null && cont.querySelector("#" + id) !== null;
+        return document.getElementById("card_icon_nr_" + uuid) !== null;
+    },
+
+    onClearHandVisitor : function()
+    {
+        const list = document.getElementsByClassName("visitor-hand-view");
+        if (list === null || list.length === 0)
+            return;
+
+        for (let elem of list)
+            DomUtils.removeAllChildNodes(elem);
+    },
+
+    onDrawCardVisitor : function(playerid, cardCode, uuid, type)
+    {
+        if (uuid === "" || type === "" || GameBuilder.alreadyInHand(uuid))
+            return;
+        
+        const _code = GameBuilder.CardList.getSafeCode(cardCode);
+        const _img = GameBuilder.CardList.getImage(cardCode);
+
+        const container = document.getElementById("playercard_hand_container_" + playerid);
+        if (container !== null)
+        {
+            container.appendChild(GameBuilder.createHtmlElement(_code, _img, uuid, type));
+            GameBuilder.CardPreview.addHover("card_icon_nr_" + uuid, false, true);
+        }
     },
 
     onDrawCard : function(cardCode, uuid, type)
     {
-        if (uuid === "" || type === "")
-            return false;
-        
-        if (GameBuilder.alreadyInHand(uuid))
+        if (uuid === "" || type === "" || GameBuilder.alreadyInHand(uuid))
             return;
         
         const _code = GameBuilder.CardList.getSafeCode(cardCode);
         const _img = GameBuilder.CardList.getImage(cardCode);
 
         GameBuilder.addToHandContainer(GameBuilder.createHtmlElement(_code, _img, uuid, type));
-        
         GameBuilder.CardPreview.addHover("card_icon_nr_" + uuid, false, true);
-        
         GameBuilder.HandCardsDraggable.initDragEventsForHandCard("card_icon_nr_", uuid, type);
-        
-        return true;
     },
 
     onRestoreHand: function(cards)
@@ -183,7 +207,6 @@ const GameBuilder = {
         
         for (let _data of jData.player.stage_resources)
             GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
-            
 
         for (let _data of jData.opponent.companies)
             GameBuilder.CompanyManager.drawCompany(false, _data);
@@ -247,8 +270,21 @@ const GameBuilder = {
         {
             if (bIsMe)
                 GameBuilder.onDrawCard(jData.code, jData.uuid, jData.type);
+            else if (GameBuilder.isVisitor())
+                GameBuilder.onDrawCardVisitor(jData.playerid, jData.code, jData.uuid, jData.type);
 
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "drawcard" }));
+        });
+
+        MeccgApi.addListener("/game/watch/hand", function(_bIsMe, jData)
+        {
+            if (!GameBuilder.isVisitor())
+                return;
+
+            GameBuilder.onClearHandVisitor();
+            console.log(jData.cards);
+            for (let card of jData.cards)
+                GameBuilder.onDrawCardVisitor(card.owner, card.code, card.uuid, card.type);
         });
 
         MeccgApi.addListener("/game/card/hand", function(bIsMe, jData)
@@ -419,7 +455,7 @@ const GameBuilder = {
         MeccgApi.addListener("/game/remove-card-from-hand", function(bIsMe, jData)
         {
             const _uuid = jData;
-            if (_uuid !== "" && bIsMe)
+            if (_uuid !== "" && (bIsMe || GameBuilder.isVisitor()))
                 DomUtils.removeAllChildNodes(document.getElementById("card_icon_nr_" + _uuid));
         });
 
@@ -553,6 +589,11 @@ const GameBuilder = {
         {
             if (bIsMe)
                 GameBuilder.Scoring.showScoreSheet(jData);
+        });
+
+        MeccgApi.addListener("/game/score/watch", function(_bIsMe, jData)
+        {
+            GameBuilder.Scoring.showScoreSheetWatch(jData);
         });
 
         MeccgApi.addListener("/game/score/show-pile", function(bIsMe, jData)

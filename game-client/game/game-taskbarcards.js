@@ -207,7 +207,7 @@ class TaskBarCards
             return false;
         };
 
-        document.querySelector(".card-bar .victory").onclick = (e) => 
+        document.querySelector(".card-bar-play .victory").onclick = (e) => 
         {
             TaskBarCards.Show("victory");
             e.stopPropagation();

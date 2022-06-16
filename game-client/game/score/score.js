@@ -431,7 +431,18 @@ const SCORING = {
         this._showScoreSheet(jData, false);        
         document.body.dispatchEvent(new CustomEvent("meccg-dice-stats", { "detail": stats }));
     },
-    
+
+    showScoreSheetWatch : function(jData)
+    {
+        this._showScoreSheet(jData, false); 
+        document.getElementById("scoring-sheet").querySelector(".menu-overlay").onclick = function()
+        {
+            const sheet = document.getElementById("scoring-sheet");
+            sheet.classList.add("hidden");
+            ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
+        }
+    },
+
     _updateStats : function(type, points)
     {
         if (typeof points !== "undefined" && SCORING.stats[type] !== undefined)
@@ -565,6 +576,11 @@ function createScoringApp(_CardList)
         showScoreSheet : function(jData)
         {
             SCORING.showScoreSheet(jData);
+        },
+
+        showScoreSheetWatch : function(jData)
+        {
+            SCORING.showScoreSheetWatch(jData);
         },
 
         showScoreSheetCards : function(jData)

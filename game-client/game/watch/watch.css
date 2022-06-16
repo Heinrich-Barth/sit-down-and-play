@@ -1,6 +1,6 @@
 
 
-.game-watch-only .card-bar,
+.game-watch-only .card-bar-play,
 .game-watch-only .config-wrapper,
 .game-watch-only .help-wrapper,
 .game-watch-only #playercard-hand-content,
@@ -30,10 +30,12 @@
 }
 
 .game-watch-only .staging-area,
-.game-watch-only .companies
+.game-watch-only .companies,
+.game-watch-only .visitor-hand-view
 {
-    flex: 1 90%;
+    flex: 1 100%;
 }
+
 .game-watch-only div#opponent_table .company,
 .game-watch-only .staging-area-opponent.rot180
 {
@@ -62,3 +64,25 @@
 }
 
 .game-watch-only .chatbox { height: 20px; }
+
+.game-watch-only .icons a.victory,
+.game-watch-only .icons a.hand 
+{
+    height: 20px;
+    background-position-y: 0;
+}
+
+.game-watch-only .card-bar.card-bar-shared
+{
+    height: 190px;
+}
+
+.game-watch-only .scoring-sheet.final-score.final-score-watch  .button
+{
+    display: block !important;
+}
+.game-watch-only .staging-area .fr { float: left; }
+.game-watch-only .visitor-hand-view .card-hand
+{
+    display: inline;
+}

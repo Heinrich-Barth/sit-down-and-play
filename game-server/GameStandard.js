@@ -75,6 +75,10 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/character/join/company", this.onCharacterJoinCompany.bind(this));
 
         this.getMeccgApi().addListener("/game/discardopenly", this.onDiscardOpenly.bind(this));
+
+        this.getMeccgApi().addListener("/game/watch/hand", this.onWatchUpdateHand.bind(this));
+        this.getMeccgApi().addListener("/game/watch/victory", this.onWatchUpdateVictory.bind(this));
+        
     }
 
     /**
@@ -87,7 +91,7 @@ class GameStandard extends GamePlayers
      */
     drawCard(playerid, uuid, code, type, count)
     {
-        this.getMeccgApi().publish("/game/card/draw", playerid, {code: code, uuid: uuid, count: count, type: type, owner: ""});
+        this.getMeccgApi().publish("/game/card/draw", playerid, {code: code, uuid: uuid, count: count, type: type, owner: "", playerid: playerid});
     }
 
     updateHandCountersPlayerAll()
@@ -529,6 +533,24 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/card/token", userid, {uuid: data.uuid, count: nCount });
             this.publishChat(userid, "updates token of " + data.code + " to " + nCount);
         }
+    }
+
+    onWatchUpdateHand(_userid, socket)
+    {
+        let res = [];
+        for (let id of this.getPlayerIds())
+        {
+            const _list = this.getPlayboardManager().GetCardsInHand(id);
+            for (let card of _list)
+                res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: id} );
+        }
+
+        this.replyToPlayer("/game/watch/hand", socket, { cards: res });
+    }
+
+    onWatchUpdateVictory(_userid, socket)
+    {
+        this.replyToPlayer("/game/score/watch", socket, this.getScoring().getScoreSheets());
     }
 
     onCardInHand(userid, socket)
