@@ -59,9 +59,10 @@ class DiscardPileAtTable
             return;
 
         let cont = document.createElement("div");
-        cont.setAttribute("class", "challenger-discardpile");
+        cont.setAttribute("class", "challenger-discardpile pos-rel");
         cont.setAttribute("id", contId);
         cont.setAttribute("title", name + "'s discard pile");
+        cont.setAttribute("data-player", playerId);
 
         let img = document.createElement("img");
         img.setAttribute("id", this.imgPrefix + playerId);

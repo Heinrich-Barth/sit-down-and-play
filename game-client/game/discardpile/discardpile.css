@@ -1,1 +1,21 @@
 .challenger-discardpile { display: inline-block; padding-right: 2px; }
+
+.challenger-discardpile::after
+{
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 5px;
+    position: absolute;
+    text-align: center;
+    color: #ff0;
+    text-transform: uppercase;
+    font-size: 0.7em;
+    padding: 5px 2px;
+    content: "Discard";
+    z-index: 901;
+    left:0;
+}
+
+#discardpiles_opponent {
+    padding-bottom: 30px;
+}
+
