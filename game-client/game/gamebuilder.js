@@ -282,7 +282,6 @@ const GameBuilder = {
                 return;
 
             GameBuilder.onClearHandVisitor();
-            console.log(jData.cards);
             for (let card of jData.cards)
                 GameBuilder.onDrawCardVisitor(card.owner, card.code, card.uuid, card.type);
         });
