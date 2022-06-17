@@ -177,11 +177,15 @@ class GameEvents
             this.triggerEvent(_data.code, bIsMe, GameEvents.Type_Leave, _d);
         }
 
+        console.log(this.pallandoInPlay);
+        console.log(this.isWatcher);
+        console.log(data.target);
+
         if ((this.pallandoInPlay || this.isWatcher) &&
             (data.target === "discard" || data.target === "discardpile"))
         {
             const card = data.list[data.list.length-1];
-            if (card.owner !== this.pallandoOwner)
+            if (card.owner !== this.pallandoOwner || this.isWatcher)
             {
                 document.body.dispatchEvent(new CustomEvent("meccg-discardpile-add", { "detail": {
                     code: card.code,
