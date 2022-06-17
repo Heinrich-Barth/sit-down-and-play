@@ -85,4 +85,5 @@
 .game-watch-only .visitor-hand-view .card-hand
 {
     display: inline;
+    margin-right: 1px;
 }
