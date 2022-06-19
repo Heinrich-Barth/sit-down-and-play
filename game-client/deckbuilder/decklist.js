@@ -449,6 +449,7 @@ const DeckList =
         {
             case "sb_hazards":
             case "sb_chars":
+            case "sb_resources":
             case "sideboard":
                 return "sideboard";
             case "avatar":
