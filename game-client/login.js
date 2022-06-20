@@ -19,6 +19,32 @@ const populateField = function(jDeck, sId, bClear)
     document.getElementById(sId).value = sVal.trim();
 };
 
+const getCategoryCount = function(jDeck)
+{
+    if (jDeck === undefined)
+        return 0;
+
+    let nCount = 0;
+    for(let k in jDeck) 
+    {
+        if (typeof jDeck[k] === "number")
+            nCount += jDeck[k];
+        else if (jDeck[k].count !== undefined)
+        {
+            try
+            {
+                nCount += parseInt(jDeck[k].count)
+            }
+            catch (e)
+            {
+                /** ignore error */
+            }
+        }
+    }
+
+    return nCount;    
+};
+
 const populateDeck = function(jData)
 {
     if (jData === undefined)
@@ -44,6 +70,13 @@ const populateDeck = function(jData)
         behavior: 'smooth'
     }); 
 
+    if (getCategoryCount(jData.hazards) + getCategoryCount(jData.hazard) >= 150)
+    {
+        const pArda = document.getElementById("toggle_isarda");
+        if (pArda !== null)
+            pArda.click();
+    }
+    
     focusUsername();
 };
 
