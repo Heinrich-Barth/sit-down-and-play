@@ -56,8 +56,14 @@ class ViewCardListContainer {
             sCode = "";
         }
 
-        return `<div class="card-hand pos-rel" id="offer_${uuid}" data-uuid="${uuid}" draggable="false" data-code="${sCode}" data-type="${type}">
-            <img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/data/backside">
+        const elem = document.createElement("div");
+        elem.setAttribute("class", "card-hand pos-rel");
+        elem.setAttribute("id", "offer_" + uuid);
+        elem.setAttribute("data-uuid", uuid);
+        elem.setAttribute("draggable", "false");
+        elem.setAttribute("data-code", sCode);
+        elem.setAttribute("data-type", type);
+        elem.innerHTML = `<img src="${_img}" data-id="${uuid}" class="card-icon" data-image-backside="/data/backside">
             <div class="view-card-list-actions icons">
                 <a href="#" class="icon hand" data-move-to="hand" data-shuffle="false" title="Move to hand">&nbsp;</a>
                 <a href="#" class="icon playdeck playdeck-shuffle" data-move-to="playdeck" data-shuffle="true" title="Shuffle into playdeck">&nbsp;</a>
@@ -65,11 +71,28 @@ class ViewCardListContainer {
                 <a href="#" class="icon sideboard" data-move-to="sideboard" data-shuffle="false" title="Move to sideboard">&nbsp;</a>
                 <a href="#" class="icon playdeck" data-move-to="playdeck" data-shuffle="false" title="Move to top of playdeck">&nbsp;</a>
                 <a href="#" class="icon onoffer" data-move-to="offer" data-shuffle="false" title="Reveal to opponent">&nbsp;</a>
-            </div>
-        </div>`;
+            </div>`;
+        return elem;
     }
 
-    static insertHtmlIntoContainer(pContainer, sHtml, type, sTitle)
+    static requestTitle(sTitle)
+    {
+        switch(sTitle.toUpperCase())
+        {
+            case "MINOR":
+                return "Minor Items";
+            case "MPS":
+                return "Marshalling points";
+            case "CHARACKTERS":
+                return "Rowing Characters";
+            case "DISCARD":
+                return "Discard pile";
+            default:
+                return sTitle;
+        }
+    }
+
+    static insertHtmlIntoContainer(pContainer, pHtml, type, sTitle)
     {
         const container = pContainer.querySelector(".view-card-list-container");
         
@@ -78,12 +101,12 @@ class ViewCardListContainer {
 
         if (type !== "")
             container.classList.add("view-" + type);
-
+        
         if (sTitle !== undefined && sTitle !== "")
         {
             const pTitle = pContainer.querySelector(".container-title-bar-title");
             if (pTitle !== null)
-                pTitle.innerHTML = sTitle;            
+                pTitle.innerText = sTitle + " (" +  pHtml.childElementCount + ")";
         }
 
         const link = pContainer.querySelector(".container-title-bar-reveal a");
@@ -94,14 +117,14 @@ class ViewCardListContainer {
         if (elem !== null)
         {
             DomUtils.removeAllChildNodes(elem);
-            elem.innerHTML = sHtml;
+            elem.appendChild(pHtml);
         }
         return elem;
     }
 
-    static insertHtml(sHtml, type, sTitle) 
+    static insertHtml(pHtml, type, sTitle) 
     {
-        return ViewCardListContainer.insertHtmlIntoContainer(ViewCardListContainer.GetViewContainer(), sHtml, type, sTitle);
+        return ViewCardListContainer.insertHtmlIntoContainer(ViewCardListContainer.GetViewContainer(), pHtml, type, sTitle);
     }
 
     static createListHtml(vsList, bRevealPreview) 
@@ -109,11 +132,11 @@ class ViewCardListContainer {
         if (typeof bRevealPreview === "undefined")
             bRevealPreview = true;
 
-        let sHtml = "";
+        const elem = document.createDocumentFragment();
         for (let card of vsList)
-            sHtml += ViewCardListContainer.createCardContainer(card.code, card.uuid, card.type, bRevealPreview);
+            elem.appendChild(ViewCardListContainer.createCardContainer(card.code, card.uuid, card.type, bRevealPreview));
 
-        return sHtml;
+        return elem;
     }
 
     static scrollToTop(elem)
@@ -284,11 +307,9 @@ class TaskBarCards
             return;
 
         const type = "victory";
-        const sHtml = ViewCardListContainer.createListHtml(vsList, true);
-        if (sHtml === "")
-            return;
+        const pHtml = ViewCardListContainer.createListHtml(vsList, true);
 
-        const elem = ViewCardListContainer.insertHtmlIntoContainer(document.getElementById("view-score-sheet-card-list"), sHtml, type, "");
+        const elem = ViewCardListContainer.insertHtmlIntoContainer(document.getElementById("view-score-sheet-card-list"), pHtml, type, "");
         const hov = elem.querySelectorAll(".card-hand");
         const len = hov.length;
         for (let i = 0; i < len; i++)
@@ -431,11 +452,8 @@ class TaskBarCards
             return null;
         }
 
-        const sHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
-        if (sHtml === "")
-            return null;
-            
-        const elem = ViewCardListContainer.insertHtml(sHtml, type, sTitle + type.toUpperCase());
+        const pHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
+        const elem = ViewCardListContainer.insertHtml(pHtml, type, sTitle + ViewCardListContainer.requestTitle(type).toUpperCase());
         
         /** I myself should not see my own offering cards so only the opponent knows it */
         if (bICanSeeIt) 
