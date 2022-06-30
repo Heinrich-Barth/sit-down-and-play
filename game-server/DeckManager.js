@@ -233,7 +233,7 @@ class DeckManager {
     {
         if (typeof this._deck[playerId] === "undefined")
         {
-            console.log("Cannot find deck of player " + playerId);
+            console.warn("Cannot find deck of player " + playerId);
             return null;
         }
         else

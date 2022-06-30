@@ -42,7 +42,7 @@ class GameBase {
         else if (obj === "outofplay")
             list = this.getPlayboardManager().GetCardsInOutOfPlay();
         else
-            console.log("unknown target " + obj);
+            console.log("unknown target card list " + obj);
         
         return list;
     }
