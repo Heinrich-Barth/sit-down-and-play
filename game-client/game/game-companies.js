@@ -157,7 +157,14 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
     if (sTitle !== undefined && sTitle !== "")
         div.setAttribute("title", sTitle);
 
-    div.innerHTML  = `<img src="/data/backside-region" data-owner="${sOwner}" class="card-icon" data-img-image="${img}"  data-image-path="" data-image-backside="/data/backside">`;
+    const pImage = document.createElement("img");
+    pImage.setAttribute("src", "/data/backside-region");
+    pImage.setAttribute("data-owner", sOwner);
+    pImage.setAttribute("class", "card-icon");
+    pImage.setAttribute("data-img-image", img);
+    pImage.setAttribute("data-image-path", "");
+    pImage.setAttribute("data-image-backside", "/data/backside");
+    div.appendChild(pImage);
     return div;
 }
 
