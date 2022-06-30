@@ -310,8 +310,8 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
             return [];
 
         let list = this.PopCharacterAndItsCards(characterUuid);
-        for (let carduuid of list)
-            super.moveCard(carduuid, target);
+        this.MoveCardCharacterTo0(characterUuid, list, target);
+            
         
         if (this.PopOnGuardCard(characterUuid))
         {
@@ -323,6 +323,21 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         }
             
         return list;
+    }
+
+    MoveCardCharacterTo0(characterUuid, listUuids, target)
+    {
+        const isOutOfPlay = target === "outofplay";
+
+        /** if a character is put out of play, its hosted cards are only discarded. */
+        const targetOther = isOutOfPlay ? "discardpile" : target;
+        for (let carduuid of listUuids)
+        {
+            if (carduuid === characterUuid)
+                super.moveCard(carduuid, target);
+            else
+                super.moveCard(carduuid, targetOther);
+        }
     }
 
     PopOnGuardCard(_cardUuid)
