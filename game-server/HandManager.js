@@ -60,24 +60,26 @@ class HandManager
         return this.getCardPils(playerId, "victory");
     }
 
-    getShared(type)
+    getShared(type, ignorePlayId)
     {
         let list = [];
         for (let id of Object.keys(this.DECKS._deck))
-            list = list.concat(this.getCardPils(id, type));
+        {
+            if (id !== ignorePlayId)
+                list = list.concat(this.getCardPils(id, type));
+        }            
 
         return list;
-
     }
 
-    sharedVicory()
+    sharedVicory(playerId)
     {
-        return this.getShared("victory");
+        return this.getShared("victory", playerId);
     }
 
     outofplay()
     {
-        return this.getShared("outofplay");
+        return this.getShared("outofplay", "");
     }
 }
 
