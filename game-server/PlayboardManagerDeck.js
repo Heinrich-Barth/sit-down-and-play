@@ -269,7 +269,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
     {
         const pDeck = this.getDecks().getPlayerDeck(playerId);
         if (pDeck === null)
-            console.log("Cannot get player deck " + playerId);
+            console.warn("Cannot get player deck " + playerId);
 
         return pDeck;
     }
@@ -361,7 +361,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
                 return pDeck.push().toHand(uuid);
 
             default:
-                console.log("Unknown target " + target);
+                console.warn("Unknown target pile " + target);
                 break;
         }
 
@@ -399,8 +399,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
             case "hand":
                 return pDeck.push().toHand(cardUuid);
 
+            case "outofplay":
+                return pDeck.push().toOutOfPlay(cardUuid);
+
             default:
-                console.log("Unknown target " + target);
+                console.log("Unknown target hand list " + target);
                 break;
         }
 
@@ -455,6 +458,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
             case "discard":
             case "playdeck":
             case "hand":
+            case "outofplay":
                 return true;
 
             default:
