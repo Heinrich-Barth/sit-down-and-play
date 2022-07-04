@@ -243,7 +243,7 @@ let Arda = {
             _a.setAttribute("id", "arda-card-recycle-" + dataType);
             _a.setAttribute("data-next", sShowNextElement);
             _a.setAttribute("title", "Complete draft and reshuffle everything");
-            _a.innerHTML = " Complete draft and reshuffle everything";
+            _a.innerText = " Complete draft and reshuffle everything";
             _a.onclick = Arda.onRecycleDeck;
             _div.appendChild(_a);
         }
