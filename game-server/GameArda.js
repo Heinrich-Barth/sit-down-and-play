@@ -10,6 +10,7 @@ class GameArda extends GameStandard
         this.reycled = {
             minors : false,
             characters: false,
+            ready : false,
         };
     }
 
@@ -92,7 +93,7 @@ class GameArda extends GameStandard
         }
     }
 
-    onRecycle(userid, _socket, obj)
+    onRecycle(userid, socket, obj)
     {
         const deck = this.getDeckManager().getAdminDeck();
         if (deck === null)
@@ -135,6 +136,7 @@ class GameArda extends GameStandard
 
         this.drawOpeningHand();
         this.publishToPlayers("/game/arda/hand/show", userid, {});
+        this.onCheckDraft(userid, socket);
     }
 
     drawOpeningHand()
@@ -174,10 +176,13 @@ class GameArda extends GameStandard
         this.publishToPlayers("/game/hand/clear", this.getHost(), {});
     }
 
-    onAssignCharacters()
+    onAssignCharacters(userid, socket)
     {
         this.assignOpeningChars7();
         this.assignOpeningChars(8);
+
+        this.reycled.ready = true;
+        this.onCheckDraft(userid, socket);
     }
 
     onViewCards(userid, socket, obj)
@@ -263,6 +268,7 @@ class GameArda extends GameStandard
         let data = {
             characters: this.reycled.characters,
             minoritems: this.reycled.minors,
+            ready: this.reycled.ready
         };
 
         this.replyToPlayer("/game/arda/checkdraft", socket, data);

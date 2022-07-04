@@ -88,11 +88,15 @@ let Arda = {
     {
         if (this._ready)
             return;
+    
+        const bAllowRecyling = this.isAdraAdmin();
 
         this.addCss();
         this.insertArdaContainer();
 
-        const bAllowRecyling = this.isAdraAdmin();
+        if (bAllowRecyling)
+            this.insertArdaSetupContainer();
+
         let idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
         document.getElementById(idMps).classList.remove("hidden");
 
@@ -101,6 +105,7 @@ let Arda = {
 
         this.getOpeningHands();
         this.updateSinglePlayer();
+        
         this._ready = true;
         MeccgApi.send("/game/arda/checkdraft", {});
     },
@@ -108,6 +113,26 @@ let Arda = {
     getOpeningHands()
     {
         MeccgApi.send("/game/arda/hands", { });    
+    },
+
+    insertArdaSetupContainer : function()
+    {
+        if (document.getElementById("arda-setup-container") !== null)
+            return;
+
+        const container = document.createElement("div");
+        container.setAttribute("id", "arda-setup-container");
+        container.setAttribute("class", "blue-box arda-setup-container hidden");
+
+        const title = document.createElement("h2");
+        title.innerText = "Arda Setup Guide";
+        container.appendChild(title);
+
+        const divWrapp = document.createElement("div");
+        divWrapp.setAttribute("id", "arda-setup-container-content");
+        container.append(divWrapp);
+
+        document.body.appendChild(container);
     },
 
     insertArdaContainer : function()
@@ -119,9 +144,6 @@ let Arda = {
         this.insertMp(div, "fa-users", "Roving Characters", "charackters", "arda_characters", "");
         this.insertMp(div, "fa-shield", "Minor Item Offerings", "minor", "arda_minors", "");
         this.insertMp(div, "fa-trophy", "Marshalling Points", "mps", "arda_mps", "");
-
-        if (this.isAdraAdmin())
-            this.insertOnceAction(div, "fa-users", "Assign random characters", "randomchars", "arda_ranom", "Assign random characters");
 
         document.body.appendChild(div);
     },
@@ -234,20 +256,6 @@ let Arda = {
         _div = document.createElement("div");
         _div.setAttribute("class", "arda-inline arda-hand-card-actions");
 
-        if (bRecycleOnce)
-        {
-            let _a = document.createElement("a");
-            _a.setAttribute("src", "#");
-            _a.setAttribute("class", "arda-card-recycle fa fa-recycle");
-            _a.setAttribute("data-type", dataType);
-            _a.setAttribute("id", "arda-card-recycle-" + dataType);
-            _a.setAttribute("data-next", sShowNextElement);
-            _a.setAttribute("title", "Complete draft and reshuffle everything");
-            _a.innerText = " Complete draft and reshuffle everything";
-            _a.onclick = Arda.onRecycleDeck;
-            _div.appendChild(_a);
-        }
-
         {
             let _a = document.createElement("a");
             _a.setAttribute("src", "#");
@@ -314,7 +322,69 @@ let Arda = {
         return elem;
     },
 
-    onCheckDraft : function(bHideDraftCharacters, bHideDraftMinors)
+    updateArdaSetupContainer : function(bIsReady, bHideDraftCharacters, bHideDraftMinors)
+    {
+        if (bHideDraftCharacters && bHideDraftMinors)
+        {
+            DomUtils.remove(document.getElementById("arda-setup-container"));
+            return;
+        }
+
+        const containerWrapper = document.getElementById("arda-setup-container");
+        const container = document.getElementById("arda-setup-container-content");
+        if (container === null || containerWrapper === null)
+            return;
+
+        DomUtils.empty(container);
+
+        containerWrapper.classList.remove("hidden");
+        if (!bIsReady)
+        {
+            const elem = document.createElement("p");
+            elem.innerText = "Once everybody is at the table, you can start the random character assignment.";
+            container.appendChild(elem);
+            this.insertOnceAction(container, "fa-users", "Assign random characters to every player.", "randomchars", "arda_ranom", "Assign random characters");
+        }
+        else if (!bHideDraftCharacters && !bHideDraftMinors)
+        {
+            let elem = document.createElement("p");
+            elem.innerText = "Everybody may draft characters with a total of 25 GI. Yet, only 20 GI may be used.";
+            container.appendChild(elem);
+
+            let _a = document.createElement("a");
+            _a.setAttribute("src", "#");
+            _a.setAttribute("class", "arda-card-recycle fa fa-recycle");
+            _a.setAttribute("data-type", "charackters");
+            _a.setAttribute("id", "arda-card-recycle-charackters");
+            _a.setAttribute("title", "Complete character draft and choose minor items.");
+            _a.innerText = " Complete character draft and choose minor items.";
+            _a.onclick = Arda.onRecycleDeck;
+            container.appendChild(_a);
+
+            elem = document.createElement("p");
+            elem.innerText = "Recycling will automatically disacrd your current hand and reshuffle everything into the playdeck.";
+            container.appendChild(elem);
+
+        }
+        else 
+        {
+            const elem = document.createElement("p");
+            elem.innerText = "Everybody may choose up to 3 minor items. Once that is done, the game can start.";
+            container.appendChild(elem);
+
+            let _a = document.createElement("a");
+            _a.setAttribute("src", "#");
+            _a.setAttribute("class", "arda-card-recycle fa fa-recycle");
+            _a.setAttribute("data-type", "minor");
+            _a.setAttribute("id", "arda-card-recycle-minor");
+            _a.setAttribute("title", "Complete minor item draft and start the game.");
+            _a.innerText = " Complete minor item draft and start the game.";
+            _a.onclick = Arda.onRecycleDeck;
+            container.appendChild(_a);
+        }
+    },
+
+    onCheckDraft : function(bIsReady, bHideDraftCharacters, bHideDraftMinors)
     {
         let elem;
         
@@ -340,6 +410,8 @@ let Arda = {
             Arda.showIfExitent("arda-view-playdeck-minor");
             Arda.showIfExitent("arda-view-discard-minor");
         }
+
+        Arda.updateArdaSetupContainer(bIsReady, bHideDraftCharacters, bHideDraftMinors);
     },
 
     onViewPile : function(e)
@@ -512,7 +584,7 @@ if ("true" === document.body.getAttribute("data-game-arda"))
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(bIsMe, jData.list));
     MeccgApi.addListener("/game/arda/hand/card/remove", (_bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
-    MeccgApi.addListener("/game/arda/checkdraft", (_bIsMe, jData) => Arda.onCheckDraft(jData.characters, jData.minoritems));
+    MeccgApi.addListener("/game/arda/checkdraft", (_bIsMe, jData) => Arda.onCheckDraft(jData.ready, jData.characters, jData.minoritems));
     MeccgApi.addListener("/game/arda/view", (bIsMe, jData) => g_Game.TaskBarCards.onShow(bIsMe, jData));    
 }
 else
