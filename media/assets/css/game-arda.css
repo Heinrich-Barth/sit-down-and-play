@@ -111,7 +111,28 @@ div#arda_mps_hand { bottom: 10px; }
     display: none;
 }
 
-a#arda-card-recycle-charackters {
+.arda-setup-container {
     position: absolute;
-    left: -175px;
+    left: 10%;
+    top: 10%;
+    display: block !important;
+    width: 300px;
+}
+
+.arda-setup-container h2 {
+    text-align: center;
+    font-size: 1.1em;
+    color: #fff;
+    color: #ffa500;
+}
+.arda-setup-container p {
+    color: #fff;
+    padding: 10px;
+}
+
+.arda-setup-container .arda-hand-container,
+.arda-setup-container .arda-hand-container i,
+.arda-setup-container a {
+    text-align: center;
+    color:  #ff0;
 }
