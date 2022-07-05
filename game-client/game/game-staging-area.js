@@ -134,7 +134,7 @@ class StagingArea
             this.revealCard(id);
 
         this.markCard(id);
-        document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: id }} ));
+        document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: id, type: "generic" }} ));
         return id;
     }
 

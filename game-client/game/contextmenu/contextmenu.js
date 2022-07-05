@@ -123,6 +123,7 @@ const ContextMenu = {
 
     initContextMenuGeneric : function(e)
     {
+        const isOnguard = e.detail.type === "onguard";
         const elemDiv = document.getElementById(e.detail.id);
         if (elemDiv === null)
             return;
@@ -131,7 +132,10 @@ const ContextMenu = {
         if (elem !== null)
         {
             elem.oncontextmenu = ContextMenu.contextActions.onContextGeneric;
-            elem.ondblclick = ContextMenu.contextActions.onDoubleClick;
+            if (isOnguard)
+                elem.ondblclick = ContextMenu.contextActions.onFlipClick;
+            else
+                elem.ondblclick = ContextMenu.contextActions.onDoubleClick;
             elem.classList.add("context-cursor");
         }
     },
@@ -168,6 +172,30 @@ const ContextMenu = {
             }
         },
 
+        onFlipClick : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+                
+            let code = ContextMenu._getCardCode(e.target);
+            if (code === "")
+                code = ContextMenu.getAttribute(e.target, "data-card-code");
+
+            let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
+            if (uuid === "")
+                uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+
+            const src = e.target.getAttribute("src");
+            if (src !== null && src.indexOf("/backside") !== -1)
+            {
+                ContextMenu.callbacks._doFlip(uuid, code);
+                ContextMenu.hightlightCard(uuid, code);
+            }
+        },
+
         onDoubleClick : function(e)
         {
             e.preventDefault();
@@ -189,7 +217,6 @@ const ContextMenu = {
             else
                 ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target));
         },
-
         
         onContextGeneric : function(e)
         {

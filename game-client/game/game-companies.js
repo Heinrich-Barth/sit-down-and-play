@@ -445,7 +445,7 @@ const GameCompanies = {
         GameCompanies.initSingleCardEvent(pCard, true);
         
         if (bAllowContextMenu)
-            document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: GameCompanies.CARDID_PREFIX + card.uuid }} ));
+            document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: GameCompanies.CARDID_PREFIX + card.uuid, type: "onguard" }} ));
         
         if (card.revealed || typeof card.revealed === "undefined")
             GameCompanies.revealCard(pCard.querySelector("img"));
@@ -572,7 +572,7 @@ const GameCompanies = {
         if (pPlayerCompany !== null && bIsMe)
             GameCompanies.HandCardsDraggable.initOnCompany(elemContainer);
 
-        ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id") }} )));
+        ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id"), type: "generic" }} )));
         elemContainer.classList.remove("hiddenVisibility");
 
         
