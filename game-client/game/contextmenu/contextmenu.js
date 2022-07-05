@@ -136,6 +136,11 @@ const ContextMenu = {
         }
     },
 
+    cardGetTapClass : function(elem)
+    {
+        return elem.parentElement !== null && elem.parentElement.classList.contains("state_tapped") ? "ready" : "tap"
+    },
+
     contextActions : {
 
         onDoubleClickSite : function(e)
@@ -147,7 +152,7 @@ const ContextMenu = {
                 return false;
 
             const code = ContextMenu._getCardCode(e.target);
-            ContextMenu.callbacks.doRotate("_site", code, e.altKey ? "ready" : "tap");
+            ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target));
         },
 
         onDoubleClickSiteArrive : function(e)
@@ -182,9 +187,10 @@ const ContextMenu = {
             if (e.ctrlKey)
                 ContextMenu.hightlightCard(uuid, code);
             else
-                ContextMenu.callbacks.doRotate(uuid, code, e.altKey ? "ready" : "tap");
+                ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target));
         },
 
+        
         onContextGeneric : function(e)
         {
             e.preventDefault();
