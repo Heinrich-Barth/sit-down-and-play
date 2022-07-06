@@ -527,7 +527,7 @@ img.card-icon {
 {
     margin-right: 20px;
     border-radius: 20px;
-    
+    position: relative;
 }
 
 
@@ -558,24 +558,27 @@ img.card-icon {
 
 .company-characters-add
 {
-    float: right;
-    width: 50px;
+    margin-left: 0;
     display: none;
-    max-height: 100%;
-    display: inline-block;
-    margin-left: 10px;
-    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 96px;
 }
+
+.area-opponent .company-characters-add
+{
+    display: none;
+}
+
 
 body.on-drag-event-character .area-player .company-characters-add 
 {
-    display: inline-block;
+    display: block;
     background-image: url(/media/assets/images/icon-company-join.png);
     background-repeat: no-repeat;
     background-position: center;
-    width: 60px;
-    height: 80px;
-    margin: 10px;
 }
 
 body.on-drag-event-hazard .staging-area-drop,
@@ -628,12 +631,6 @@ body.on-drag-event-character .area-player .create-new-company
     background-repeat: no-repeat;
     background-position: center;
     visibility: visible;
-}
-
-
-body.on-drag-event-generic .card-bar .on-drag-over,
-body.on-drag-event-generic .area .on-drag-over {
-    background-color: rgba(101, 152, 81, 0.6) !important
 }
 
 .icons a { border: 3px solid transparent; }
