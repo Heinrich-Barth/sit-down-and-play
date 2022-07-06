@@ -504,7 +504,7 @@ class GameStandard extends GamePlayers
             {
                 const _card = this.getPlayboardManager().GetCardByUuid(_uid);
                 if (_card !== null)
-                    listCodes.push({code: _card.code, owner: _card.owner});
+                    listCodes.push({code: _card.code, owner: _card.owner, uuid: _uid});
             }
 
             this.publishToPlayers("/game/event/cardmoved", userid, {list: listCodes, target: obj.target, source: obj.source});
