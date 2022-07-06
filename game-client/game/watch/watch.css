@@ -20,6 +20,11 @@
     left: auto;
 }
 
+.game-watch-only .company-characters-add
+{
+    display: none;
+}
+
 .game-watch-only .taskbar.turn-opponent .task_overlay
 {
     left: 0;
