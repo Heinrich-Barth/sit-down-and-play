@@ -52,6 +52,18 @@ const WatchOnly = {
         document.body.classList.add("game-watch-only");
 
         WatchOnly.injectIcons();
+
+        GameEvents.INSTANCE.registerGenericEvent("discard", WatchOnly.onDiscardEvent);
+    },
+
+    onDiscardEvent : function(data)
+    {
+        if (data === undefined || data.uuid === undefined)
+            return;
+
+        const elem = document.getElementById("card_icon_nr_" + data.uuid);
+        if (elem !== null)
+            DomUtils.remove(elem);
     }
 };
 

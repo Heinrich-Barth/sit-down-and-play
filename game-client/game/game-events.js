@@ -12,8 +12,14 @@ class GameEvents
         this.pallandoIsMine = false;
         this.pallandoOwner = "";
         this.eventCodes = { };
+        this.genericEvents = { };
         this.myId = g_sUserId;
         this.isWatcher = document.body.getAttribute("data-is-watcher") === "true";
+    }
+
+    registerGenericEvent(eventId, fnCallback)
+    {
+        this.genericEvents[eventId] = fnCallback;
     }
 
     /**
@@ -171,15 +177,16 @@ class GameEvents
             const _d = {
                 code : _data.code,
                 user : _data.owner,
+                uuid : _data.uuid,
                 target: data.target, 
                 source: data.source
             };
             this.triggerEvent(_data.code, bIsMe, GameEvents.Type_Leave, _d);
+
+            if (this.isWatcher)
+                this.triggerGenericEvent("discard", _d);
         }
 
-        console.log(this.pallandoInPlay);
-        console.log(this.isWatcher);
-        console.log(data.target);
 
         if ((this.pallandoInPlay || this.isWatcher) &&
             (data.target === "discard" || data.target === "discardpile"))
@@ -206,6 +213,18 @@ class GameEvents
         {
             if (code !== undefined && code !== "" && this.eventCodes[code] !== undefined)
                 this.eventCodes[code](isMe, type, data);
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
+    }
+    triggerGenericEvent(eventId, data)
+    {
+        try
+        {
+            if (eventId !== undefined && eventId !== "" && this.genericEvents[eventId] !== undefined)
+                this.genericEvents[eventId](data);
         }
         catch (err)
         {
