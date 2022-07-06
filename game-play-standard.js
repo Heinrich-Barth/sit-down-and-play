@@ -42,9 +42,8 @@ class GamePlayRouteHandler
         return this.m_pServerInstance;
     }
 
-    onHome(req, res)
+    onHome(_req, res)
     {
-        this.m_pServerInstance.clearCookies(res);
         this.m_pServerInstance.expireResponse(res, "text/html").sendFile(this.pageHome);
     }
 
@@ -136,14 +135,33 @@ class GamePlayRouteHandler
 
     onLogin(req, res)
     {
-        this.m_pServerInstance.clearCookies(res);
+
+        /**
+         * 
+         *         ;
+        if (status !== null)
+
+         * 
+         */
 
         if (!UTILS.isAlphaNumeric(req.params.room))
         {
             res.redirect("/error");
+            return;
+        }
+
+        /** no cookies available */
+        if (req.cookies.userId !== undefined && req.cookies.userId !== null && req.cookies.userId.length === UTILS.uuidLength())
+        {
+            /* already in the game. redirect to game room */
+            const status = this.m_pServerInstance.roomManager.isAccepted(req.params.room, req.cookies.userId)
+            if (status !== null && status)
+                res.redirect(this.contextPlay + req.params.room);
         }
         else
         {
+            this.m_pServerInstance.clearCookies(res);
+
             const sUser = req.cookies.username === undefined ? "" : req.cookies.username;
             let sHtml = fs.readFileSync(this.pageLogin, 'utf8');
 
