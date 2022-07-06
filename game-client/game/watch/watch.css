@@ -48,6 +48,11 @@
     transform:rotate(0deg);
 }
 
+.game-watch-only div#opponent_table .company
+{
+    vertical-align: top;
+}
+
 .game-watch-only .companies.hidden {
     display: block !important;
     background: rgba(0,0,0,0.1);
