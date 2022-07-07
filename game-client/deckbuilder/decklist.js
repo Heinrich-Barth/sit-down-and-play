@@ -26,7 +26,7 @@ const DeckList =
             <div class="pos-rel fl w48 deck_part" id="deck_part_pool">
                 <label for="checkbox_pool">Pool (<span class="count_type" id="count_pool">0</span>)</label>
                 <input type="checkbox" id="checkbox_pool">
-                <div id="pool" class="pt5">
+                <div id="pool" class="pt5 list_toggle">
                     <h4>Characters</h4>
                     <div class="pos-rel fl w48 deck_part_col" id="pool_chars"></div>
 
@@ -57,7 +57,7 @@ const DeckList =
         <div class="pos-rel deck_part" id="deck_part_sideboard">
             <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
             <input type="checkbox" id="checkbox_sb">
-            <div id="sideboard" class="no-pad-top">
+            <div id="sideboard" class="no-pad-top list_toggle">
                 <h4>Characters</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
 
@@ -67,6 +67,15 @@ const DeckList =
                 <h4>Hazards</h4>
                 <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
                 <div class="clearfix"> </div>
+            </div>
+        </div>
+
+        <div class="pos-rel">
+            <label for="checkbox_notes">Deck Notes</label>
+            <input type="checkbox" id="checkbox_notes">
+            <div class="no-pad-top list_toggle">
+                <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
+                <textarea id="notes" placeholder="Deck notes (optional)"></textarea>
             </div>
         </div>
 
@@ -175,6 +184,15 @@ const DeckList =
             const pRes = document.getElementById("deck_hazards");
             pRes.innerHTML = pRes.innerHTML + html;
         }
+    },
+
+    onPopulateDescription : function(e)
+    {
+        const jDeck = e.detail;
+        if (jDeck !== undefined && jDeck.notes !== undefined)
+            document.getElementById("notes").value = jDeck.notes;
+        else
+            document.getElementById("notes").value = "";
     },
 
     onAddToDeckList : function(e)
@@ -717,3 +735,4 @@ const DeckList =
 document.body.addEventListener("meccg-deckbuilder-preparedecklist", DeckList.prepareDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-add-to-decklist", DeckList.onAddToDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-update-summary", DeckList.calculateAndUpdateDeckCounters, false);
+document.body.addEventListener("meccg-file-dropped", DeckList.onPopulateDescription, false);

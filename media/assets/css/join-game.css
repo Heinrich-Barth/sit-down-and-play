@@ -261,3 +261,9 @@ input:not(:checked) ~ .challenge-deck { display: none };
     font-size: 1.17em;
     text-align: left;
 }
+
+.join-game .deck-notes p
+{
+    text-align: left;
+    color: #fff;
+}

@@ -45,6 +45,31 @@ const getCategoryCount = function(jDeck)
     return nCount;    
 };
 
+const addDeckNotes = function(text)
+{
+    if (text === undefined)
+        text = "";
+
+    const pNotes = document.getElementById("notes");
+    if (pNotes === null)
+        return;
+    
+    while (pNotes.firstChild) 
+        pNotes.removeChild(pNotes.firstChild);
+
+    if (text !== "")
+    {
+        const h2 = document.createElement("h2");
+        h2.innerText = "Deck notes";
+    
+        const p = document.createElement("p");
+        p.innerText = text;
+    
+        pNotes.appendChild(h2);
+        pNotes.appendChild(p);
+    }
+};
+
 const populateDeck = function(jData)
 {
     if (jData === undefined)
@@ -63,6 +88,8 @@ const populateDeck = function(jData)
 
     populateField(jData.sideboard, "sideboard", true);
     populateField(jData.pool, "pool", true);
+
+    addDeckNotes(jData.notes);
 
     window.scrollTo({
         top: 0,

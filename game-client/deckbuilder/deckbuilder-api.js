@@ -237,8 +237,10 @@ document.getElementById("save_deck").onclick = function()
     else
         sName = sName.trim();
 
+    const _deck = DeckbuilderApi._deck;
+    _deck.notes = document.getElementById("notes").value;
     const data = {
-        data: DeckbuilderApi._deck,
+        data: _deck,
         name : sName
     };
 

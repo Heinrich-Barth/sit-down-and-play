@@ -64,7 +64,7 @@ const createDeck = function()
             let sCode = getCode(_entry);
 
             if (sCode !== "" && sCount !== "")
-            deck[sCode] = parseInt(sCount);
+                deck[sCode] = parseInt(sCount);
         }
 
         return deck;
@@ -75,7 +75,8 @@ const createDeck = function()
         sideboard: toJson("sideboard"),
         chars : toJson("characters"),
         resources : toJson("resources"),
-        hazards : toJson("hazards")
+        hazards : toJson("hazards"),
+        notes: document.getElementById("notes").value.trim()
     };
 
     if (isEmpty(jDeck.pool) || isEmpty(jDeck.chars) || (isEmpty(jDeck.hazards) && isEmpty(jDeck.resources)))

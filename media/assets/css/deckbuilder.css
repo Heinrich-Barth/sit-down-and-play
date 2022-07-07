@@ -261,9 +261,14 @@ span.builder-white { color: #fff !important; font-weight: bold;}
 }
 .decklist input[type="checkbox"] { display: none; }
 .decklist input[type="checkbox"]:checked ~ .deck_part,
+.decklist input[type="checkbox"]:checked ~ .list_toggle,
 .decklist input[type="checkbox"]:checked ~ .d_container { display: none; }
 .decklist .fa:before {
     padding-right: 5px;
+}
+
+#notes {
+    width: 93%
 }
 
 #deckname {
