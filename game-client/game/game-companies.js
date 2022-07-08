@@ -608,11 +608,6 @@ const GameCompanies = {
         pImage.setAttribute("src", src);
     },
 
-    revealLocation: function (pImage)
-    {
-        GameCompanies.revealCard(pImage);
-    },
-
     revealLocations: function (company)
     {
         const companyElem = document.getElementById("company_" + company);
@@ -620,8 +615,9 @@ const GameCompanies = {
             return;
 
         const jSiteContaienr = companyElem.querySelector(".sites");
-        ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(GameCompanies.revealLocation);
-        ArrayList(jSiteContaienr).find(".site-target .card-icon").each(GameCompanies.revealLocation);
+        ArrayList(jSiteContaienr).find(".site-current .card-icon").each(GameCompanies.revealCard);
+        ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(GameCompanies.revealCard);
+        ArrayList(jSiteContaienr).find(".site-target .card-icon").each(GameCompanies.revealCard);
         ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
     },
 
@@ -631,9 +627,11 @@ const GameCompanies = {
         return parent !== null && parent.getAttribute("id") === "player_companies";
     },
 
-    drawLocations: function (company, start, regions, target, isRevealed, attached, current_tapped, target_tapped)
+    drawLocations: function (company, start, regions, target, isRevealed, attached, current_tapped, target_tapped, revealStartSite)
     {
         let code, img;
+        if (revealStartSite === undefined)
+            revealStartSite = true;
 
         const companyElem = document.getElementById("company_" + company);
         if (companyElem === null)
@@ -661,7 +659,8 @@ const GameCompanies = {
             img = GameCompanies.CardList.getImageSite(start);
             companyElem.querySelector(".site-current").appendChild(createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_ORIGIN));
 
-            ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-image-path") + _img.getAttribute("data-img-image")));
+            if (revealStartSite)
+                ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-image-path") + _img.getAttribute("data-img-image")));
             
             if (current_tapped)
                 ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));

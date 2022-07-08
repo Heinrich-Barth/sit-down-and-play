@@ -496,7 +496,7 @@ const GameBuilder = {
             if (company === undefined)
                 company = "";
                 
-            GameBuilder.CompanyManager.drawLocations(company, start, regions, target, jData.revealed, jData.attached, jData.current_tapped, jData.target_tapped);
+            GameBuilder.CompanyManager.drawLocations(company, start, regions, target, jData.revealed, jData.attached, jData.current_tapped, jData.target_tapped, jData.revealStart);
         });
 
         

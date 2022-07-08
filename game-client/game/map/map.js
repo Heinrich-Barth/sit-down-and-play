@@ -20,7 +20,10 @@ const MapWindow = {
      */
     onMessage : function(e)
     {
-        let sCompany = MapWindow.close();
+        const pMeta = MapWindow.close();
+        const sCompany = pMeta.company;
+        const isRevealed = pMeta.revealStart;
+
         let jData = e.data;
 
         if (jData.type === "set" && typeof sCompany !== "undefined" && sCompany !== "")
@@ -29,7 +32,8 @@ const MapWindow = {
                 companyUuid: sCompany,
                 start: jData.start, 
                 regions: jData.regions, 
-                destination: jData.target
+                destination: jData.target,
+                revealStart : isRevealed
             });
         }
     },
@@ -47,9 +51,14 @@ const MapWindow = {
         if (!pMap.classList.contains("hide"))
             pMap.classList.add("hide");
 
-        const sCompany = document.getElementById("map-iframe").getAttribute("data-company") || "";
+        const pFrame = document.getElementById("map-iframe");
+        const sCompany = pFrame.getAttribute("data-company") || "";
+        const isRevealed = "true" === pFrame.getAttribute("data-revealved")
         DomUtils.removeAllChildNodes(pMap);
-        return sCompany;
+        return {
+            company: sCompany,
+            revealStart : isRevealed
+        };
     },
 
     /**
@@ -106,7 +115,7 @@ const MapWindow = {
      * @param {String} company 
      * @returns 
      */
-    showIframe : function(sUrl, company)
+    showIframe : function(sUrl, company, isRevealed)
     {
         if (document.body.classList.contains("on-show-map-window") || document.getElementById("map-iframe") !== null)
             return;
@@ -131,10 +140,14 @@ const MapWindow = {
 
         /** create iframe and add it to the container. */
         let jFrame = document.createElement("iframe");
+        jFrame.setAttribute("src", sUrl);
         jFrame.setAttribute("class", "map-view");
         jFrame.setAttribute("id", "map-iframe");
         jFrame.setAttribute("data-company", company);
-        jFrame.setAttribute("src", sUrl);
+        if (isRevealed === undefined || isRevealed)
+            jFrame.setAttribute("data-revealved", "true");
+        else
+            jFrame.setAttribute("data-revealved", "false");
 
         jWrapper.appendChild(jFrame);
 
@@ -169,7 +182,7 @@ const MapWindow = {
         MapWindow.showIframe("/rules/" + sRule, "");
     },
 
-    showMap : function(company, code, messageId, regionMap)
+    showMap : function(company, code, messageId, regionMap, revealed)
     {
         if (!MapWindow.assertValidMessage(messageId) || company === undefined || company === "" || typeof messageId === "undefined")
             return;
@@ -180,14 +193,14 @@ const MapWindow = {
         if (document.getElementById("map-window").classList.contains("hide"))
         {
             const url = regionMap ? "/map/regions" : "/map/underdeeps";
-            MapWindow.showIframe(url + "?code=" + code, company);
+            MapWindow.showIframe(url + "?code=" + code, company, revealed);
         }
     },
 
     /** Custom event to show the map iframe.  */
     onShowMapMessageEvent : function(e)
     {
-        MapWindow.showMap(e.detail.company, e.detail.code, e.detail.id, e.detail.regionmap);
+        MapWindow.showMap(e.detail.company, e.detail.code, e.detail.id, e.detail.regionmap, e.detail.revealed);
     },
 };
 

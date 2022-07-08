@@ -808,6 +808,7 @@ class GameStandard extends GamePlayers
             start: res.current, 
             regions: res.regions, 
             target: res.target, 
+            revealStart : obj.revealStart,
             revealed: false, 
             attached: res.attached,
             current_tapped : res.current_tapped,

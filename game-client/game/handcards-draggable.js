@@ -347,11 +347,12 @@ const HandCardsDraggable = {
         };
     },
 
-    onLocationSelectClick : function(sCode, companyUuid, regionMap)
+    onLocationSelectClick : function(sCode, isSiteRevealed, companyUuid, regionMap)
     {
         const data = {
             company : companyUuid,
             code : sCode,
+            revealed : isSiteRevealed,
             id : CreateHandCardsDraggableUtils.requireMessageId(),
             regionmap : regionMap
         };
@@ -406,8 +407,17 @@ const HandCardsDraggable = {
                 e.preventDefault();
 
                 const _companyUuid = e.target.getAttribute("data-company-uuid");
-                const sCode = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"))
-                HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid, true);
+                const siteData = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"));
+                
+                let sCode = "";
+                let isSiteRevealed = true;
+
+                if (siteData !== null)
+                {
+                    isSiteRevealed = siteData.revealed;
+                    sCode = siteData.code;
+                }
+                HandCardsDraggable.onLocationSelectClick(sCode, isSiteRevealed, _companyUuid, true);
                 return false;
             }
         });
@@ -421,8 +431,17 @@ const HandCardsDraggable = {
                 e.preventDefault();
 
                 const _companyUuid = e.target.getAttribute("data-company-uuid");
-                const sCode = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"))
-                HandCardsDraggable.onLocationSelectClick(sCode, _companyUuid, false);
+                const siteData = HandCardsDraggable.getStartingLocation(DomUtils.closestByClass(e.target, "company-site-list"))
+                let sCode = "";
+                let isSiteRevealed = true;
+
+                if (siteData !== null)
+                {
+                    isSiteRevealed = siteData.revealed;
+                    sCode = siteData.code;
+                }
+
+                HandCardsDraggable.onLocationSelectClick(sCode, isSiteRevealed, _companyUuid, false);
                 return false;
             }
         });
@@ -454,17 +473,29 @@ const HandCardsDraggable = {
     getStartingLocation : function(pCompany)
     {
         if (pCompany === null)
-            return "";
+            return null;
 
         const pSite = pCompany.querySelector(".site-current .card");
         if (pSite === null)
-            return "";
-        else
-        {
-            const val = pSite.getAttribute("data-card-code");
-            return val === null ? "" : val;
-        }
+            return null;
+
+        const val = pSite.getAttribute("data-card-code");
+        if (val === null)
+            return null;
             
+        return {
+            code : val,
+            revealed : HandCardsDraggable.isSiteRevealed(pSite)
+        }
+    },
+
+    isSiteRevealed : function(pDiv)
+    {
+        if (pDiv === null)
+            return false;
+
+        const img = pDiv.querySelector("img");
+        return img !== null && "/data/backside-region" !== img.getAttribute("src");
     },
     
     initOnCardCharacter : function(cardDiv)
@@ -565,8 +596,8 @@ const HandCardsDraggable = {
                     const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
                     receivingCharacter.character_uuid = this.getAttribute("data-uuid");
                     
-                    var drawReceivingCompanyId = receivingCharacter.company_uuid;
-                    var drawDonatingCompanyId = "";
+                    let drawReceivingCompanyId = receivingCharacter.company_uuid;
+                    let drawDonatingCompanyId = "";
                     
                     if (elemDraggable.getAttribute("data-card-type") === "character")
                         return;
@@ -579,7 +610,7 @@ const HandCardsDraggable = {
                     }
                     else
                     {
-                        var donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
+                        const donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
                         if (receivingCharacter.character_uuid === donatingCharacter.character_uuid) /*oneself cannot be the target*/
                             return;
                         else if (receivingCharacter.company_uuid !== donatingCharacter.character_uuid)
