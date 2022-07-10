@@ -5,15 +5,27 @@
 const fs = require('fs');
 
 const UTILS = require("./meccg-utils");
+const ServerCaching = require("./server/ServerCaching");
 
 let SERVER = {
 
     environment: null,
 
-    cacheResponseHeader : {
-        etag: true,
-        maxage: 8640000 * 1000
+    caching : {
+        headerData : {
+            generic : {
+                etag: true,
+                maxage: 8640000 * 1000
+            },
+
+            jpeg : {
+                etag: true,
+                maxage: 8640000 * 1000,
+                "Content-Type": "image/jpeg"
+            }
+        }
     },
+
 
     cacheResponseJpgHeader : {
         etag: true,
@@ -293,8 +305,8 @@ SERVER.clearCookies = function (res)
 SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
 
 /* All media can be used with static routes */
-SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.cacheResponseHeader));
-SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));
+SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.caching.headerData.generic));
+SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.caching.headerData.generic));
   
 /**
  * Show list of available images. 
@@ -321,7 +333,7 @@ SERVER.instance.get("/media/personalisation/personalisation.css", (_req, res) =>
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
  */
-SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", SERVER.cacheResponseHeader));
+SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", SERVER.caching.headerData.generic));
 
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
@@ -343,11 +355,11 @@ SERVER.instance.get("/data/list/cards", (_req, res) => SERVER.cacheResponse(res,
 
 SERVER.instance.get("/data/list/filters", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
 
-SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.cacheResponseJpgHeader));
-SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.cacheResponseJpgHeader));
-SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-generic.jpg", SERVER.cacheResponseJpgHeader));
-SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-region.jpg", SERVER.cacheResponseJpgHeader));
-SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-site.jpg", SERVER.cacheResponseJpgHeader));
+SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-generic.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-region.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-site.jpg", SERVER.caching.headerData.jpeg));
 
 /**
  * Get active games
@@ -399,19 +411,15 @@ SERVER.instance.get("/data/samplerooms", (_req, res) => SERVER.expireResponse(re
 if (SERVER.environment.hasLocalImages())
 {
     console.log("Card images are accessed locally from " + SERVER.environment.imageFolder());
-    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.environment.imageFolder(), SERVER.cacheResponseHeader));
+    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.environment.imageFolder(), SERVER.caching.headerData.generic));
 }
 
-/**
- * Start the deckbuilder
- */
+
+SERVER.instance.get("/about", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
-
 SERVER.instance.get("/converter", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
-
 SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
-
-SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
+SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.caching.headerData.generic));
  
 /**
   * Home Page redirects to "/play"
@@ -434,11 +442,6 @@ SERVER.instance.post("/csp-violation", (_req, res) => {
     /** this is not needed here */
     res.status(204).end();
 });
-
-/**
-  * About Page
-  */
-SERVER.instance.get("/about", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
 require("./server/RoutingPlay")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.environment.isProduction(), g_pExpress);
@@ -502,18 +505,18 @@ SERVER.instance.use(function(err, _req, res, _next)
     });
 });
 
-/**
- * allow CTRL+C
- */
-process.on('SIGTERM', SERVER.shutdown);
-process.on('SIGINT', SERVER.shutdown);
-
-console.log("Server started at port " + SERVER.environment.port());
 SERVER.instanceListener = SERVER._http.listen(SERVER.environment.port(), SERVER.onListenSetupSocketIo);
-
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {
     console.error(err);
     socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
+console.log("Server started at port " + SERVER.environment.port());
+
+/**
+ * allow CTRL+C
+ */
+process.on('SIGTERM', SERVER.shutdown);
+process.on('SIGINT', SERVER.shutdown);
+ 
