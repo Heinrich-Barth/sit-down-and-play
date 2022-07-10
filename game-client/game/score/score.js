@@ -198,6 +198,8 @@ class ScoringContainers {
         div.appendChild(this.createScoreSheetContainer());       
         div.appendChild(this.createVictoryContainer());
 
+        div.addEventListener("meccg-scoretable-close", SCORING.hideScoringSheet, false);
+
         document.body.appendChild(div);
     }
 }

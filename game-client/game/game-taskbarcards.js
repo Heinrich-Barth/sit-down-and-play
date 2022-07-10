@@ -239,7 +239,12 @@ class TaskBarCards
 
         document.querySelector(".card-hands .taskbar-score").onclick = (e) => 
         {
-            MeccgApi.send("/game/score/show", "");
+            const elem = document.getElementById("scoring-sheet");
+            if (elem !== null && !elem.classList.contains("hidden"))
+                elem.dispatchEvent(new CustomEvent("meccg-scoretable-close"));
+            else
+                MeccgApi.send("/game/score/show", "");
+
             e.stopPropagation();
             return false;
         };
