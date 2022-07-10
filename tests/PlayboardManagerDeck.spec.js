@@ -166,7 +166,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 return !this.readyCard(uuid);
             }
-        };
+        }
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
 
@@ -188,7 +188,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 return uuid ? true : false;
             }
-        };
+        }
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
@@ -213,7 +213,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 tapped++;
             }
-        };
+        }
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
@@ -236,7 +236,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 return code;
             }
-        };
+        }
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
