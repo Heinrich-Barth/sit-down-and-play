@@ -72,7 +72,7 @@ class PlayboardManagerDeckTestImplThisDeck extends PlayboardManagerDeck
 {
     constructor(_dat)
     {
-        super({}, [], { trigger : function(sId, obj) {} }, gameCardProvider);
+        super({}, [], { trigger : function() { /* not needed */} }, gameCardProvider);
 
         this._dat = _dat;
     }
@@ -87,13 +87,13 @@ class PlayboardManagerDeckTestImpl extends PlayboardManagerDeck
 {
     constructor(_deck)
     {
-        super(_deck, [], { trigger : function(sId, obj) {} }, gameCardProvider);
+        super(_deck, [], { trigger : function() {/* not needed */} }, gameCardProvider);
     }
 }
 
 const gameCardProvider =  {
 
-    getCardType: function(code)
+    getCardType: function(_code)
     {
         return "character";
     }
@@ -157,7 +157,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readyCard(uuid)
+            readyCard(_uuid)
             {
                 isReady = true;
             }
@@ -204,7 +204,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readySite(uuid)
+            readySite(_uuid)
             {
                 ready++;
             }
@@ -232,7 +232,7 @@ describe('PlayboardManagerDeck', () => {
         
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            siteIsTapped(playerId, code)
+            siteIsTapped(_playerId, code)
             {
                 return code;
             }
@@ -252,7 +252,7 @@ describe('PlayboardManagerDeck', () => {
         let count = 0;
 
         let pDeck = new DeckManagerTestStaticDeck({
-            shuffle(playerId, code)
+            shuffle(_playerId, _code)
             {
                 count++;
             }
@@ -289,7 +289,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readyCard(uuid)
+            readyCard(_uuid)
             {
                 s0++;
             }
