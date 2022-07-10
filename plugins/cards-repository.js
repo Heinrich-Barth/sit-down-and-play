@@ -83,7 +83,7 @@ const CARDS = {
 
     identifyQuests : function()
     {
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
     },
 
@@ -291,7 +291,7 @@ const CARDS = {
 
     createTypes : function()
     {
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             this._types[card.code] = card["type"];
     },
     

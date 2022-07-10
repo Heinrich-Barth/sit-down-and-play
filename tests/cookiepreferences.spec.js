@@ -1,4 +1,4 @@
-const CookiePreferences = require("../cookiepreferences");
+const CookiePreferences = require("../server/CookiePreferences");
 
 const pCookiePreferences = new CookiePreferences("game");
 pCookiePreferences.addPreference("background", "bg-game2");

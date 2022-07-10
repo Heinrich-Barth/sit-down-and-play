@@ -15,7 +15,7 @@ const getTappedSites = function(SERVER, cookies)
 };
 
 
-const CookiePreferences = require("./cookiepreferences");
+const CookiePreferences = require("./CookiePreferences");
 class MapCookiePreferences extends CookiePreferences
 {
     constructor(sPrefix)
@@ -46,14 +46,14 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     pCookiePreferences.setProduction(isProduction);
 
     /* Map images should be cached */
-    SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));
+    SERVER.instance.use("/media/maps", g_pExpress.static(__dirname + "/../media/maps", SERVER.cacheResponseHeader));
 
     /**
      * Show Map Pages
      */
-    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/pages/map-underdeeps.html", SERVER.cacheResponseHeader));
-    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/pages/map-regions.html", SERVER.cacheResponseHeader));
-    SERVER.instance.use("/map/regions/edit", g_pExpress.static(__dirname + "/pages/map-regions-marking.html"));
+    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/../pages/map-underdeeps.html", SERVER.cacheResponseHeader));
+    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/../pages/map-regions.html", SERVER.cacheResponseHeader));
+    SERVER.instance.use("/map/regions/edit", g_pExpress.static(__dirname + "/../pages/map-regions-marking.html"));
     
     /**
      * Provide the map data with all regions and sites for the map windows

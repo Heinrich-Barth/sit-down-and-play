@@ -1,5 +1,5 @@
 
-const CookiePreferences = require("./cookiepreferences");
+const CookiePreferences = require("./CookiePreferences");
 
 const pCookiePreferences = new CookiePreferences("game");
 pCookiePreferences.addPreference("background", "bg-game");
@@ -8,13 +8,13 @@ module.exports = function(SERVER, isProduction, g_pAuthentication)
 {
     pCookiePreferences.setProduction(isProduction);
 
-    const GamePlayRouteHandlerDefault = require("./game-play-standard");
+    const GamePlayRouteHandlerDefault = require("./GamePlayRouteHandler");
     new GamePlayRouteHandlerDefault(SERVER, "/play", "home.html", "login.html", "lobby.html", g_pAuthentication).setupRoutes();
 
-    const GamePlayRouteHandlerArda = require("./game-play-arda");
+    const GamePlayRouteHandlerArda = require("./GamePlayRouteHandlerArda");
     new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html", g_pAuthentication).setupRoutes();
 
-    const GamePlayRouteHandlerSingle = require("./game-play-single");
+    const GamePlayRouteHandlerSingle = require("./GamePlayRouteHandlerSingle");
     new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login.html", "home.html", g_pAuthentication).setupRoutes();
 
     SERVER.instance.get("/data/preferences/game", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));

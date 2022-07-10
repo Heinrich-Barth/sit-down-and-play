@@ -297,26 +297,6 @@ SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.ca
 SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cacheResponseHeader));
   
 /**
- * This is a blank (black) page. Necessary for in-game default page
- */
-SERVER.instance.use("/blank", g_pExpress.static(__dirname + "/pages/blank.html", SERVER.cacheResponseHeader));
-
-if (!SERVER.environment.isProduction())
-{
-    SERVER.instance.use("/api", g_pExpress.static(__dirname + "/api/http"));
-    SERVER.instance.use("/api/swagger.css", g_pExpress.static(__dirname + "/api/swagger.css"));
-    SERVER.instance.use("/api/swagger.js", g_pExpress.static(__dirname + "/api/swagger.js"));
-    SERVER.instance.use("/api/client", g_pExpress.static(__dirname + "/api/game-client"));
-    SERVER.instance.use("/api/server", g_pExpress.static(__dirname + "/api/game-client"));    
-}
-
-
-/**
- * Simple PING
- */
-SERVER.instance.get("/ping", (_req, res) => SERVER.expireResponse(res, "text/plain").send("" + Date.now()).status(200));
-
-/**
  * Show list of available images. 
  */
 SERVER.instance.get("/data/list/images", (_req, res) => SERVER.cacheResponse(res, 'application/json').send(SERVER.cards.getImageList()).status(200));
@@ -352,11 +332,6 @@ SERVER.instance.get("/data/marshallingpoints", (req, res) => {
 });
 
 /**
- * This allows dynamic scoring categories. Can be cached, because it will not change.
- */
- SERVER.instance.use("/robots.txt", g_pExpress.static(__dirname + "/robots.txt"));
- 
- /**
  * Get the navigation
  */
 SERVER.instance.get("/data/navigation", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER._navigation).status(200));
@@ -420,7 +395,6 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, func
 
 SERVER.instance.get("/data/samplerooms", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
 
-SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 
 if (SERVER.environment.hasLocalImages())
 {
@@ -429,15 +403,6 @@ if (SERVER.environment.hasLocalImages())
 }
 
 /**
- * Error endpoint.
- * This also deletes all available cookies
- */
-SERVER.instance.get("/error", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error.html"));
-SERVER.instance.get("/error/https-required", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-https-required.html"));
-SERVER.instance.get("/error/denied", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-access-denied.html"));
-SERVER.instance.get("/error/login", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-login.html"));
-  
-/**
  * Start the deckbuilder
  */
 SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
@@ -445,6 +410,8 @@ SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (_r
 SERVER.instance.get("/converter", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
 
 SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
+
+SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
  
 /**
   * Home Page redirects to "/play"
@@ -473,18 +440,12 @@ SERVER.instance.post("/csp-violation", (_req, res) => {
   */
 SERVER.instance.get("/about", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
-require("./game-play")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
-
-require("./game-map").setup(SERVER, SERVER.environment.isProduction(), g_pExpress);
-
-require("./game-rules").setup(SERVER, g_pExpress);
-
-
-/**
- * Health Endpoint
- */
-require("./health").setup(SERVER);
-
+require("./server/RoutingPlay")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
+require("./server/RoutingMap").setup(SERVER, SERVER.environment.isProduction(), g_pExpress);
+require("./server/RoutingRules").setup(SERVER, g_pExpress);
+require("./server/RoutingHealth").setup(SERVER);
+require("./server/RoutingGenerals")(SERVER, g_pExpress);
+require("./server/RoutingErrorPages")(SERVER);
 
 SERVER.onIoConnection = function (socket) 
 {

@@ -176,7 +176,7 @@ class GameRoom
     static disconnectPlayer(socket)
     {
         if (socket == undefined || socket.room === undefined || socket.room === "")
-            return null;
+            return;
     
         try
         {
@@ -187,8 +187,6 @@ class GameRoom
         {
             console.log(err);
         }
-    
-        return null;
     }
 
     forceDisconnect(_list)
@@ -200,7 +198,10 @@ class GameRoom
         {
             let _player = _list[_id];
             if (_player.socket !== null)
-                _player.socket = GameRoom.disconnectPlayer(_player.socket)
+            {
+                GameRoom.disconnectPlayer(_player.socket);
+                _player.socket = null;
+            }
         }
     }
 

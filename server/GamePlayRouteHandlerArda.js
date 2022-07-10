@@ -1,5 +1,5 @@
 
-const GamePlayRouteHandler = require("./game-play-standard");
+const GamePlayRouteHandler = require("./GamePlayRouteHandler");
 
 class GamePlayRouteHandlerArda extends GamePlayRouteHandler
 {
@@ -10,12 +10,7 @@ class GamePlayRouteHandlerArda extends GamePlayRouteHandler
 
     validateDeck(jDeck)
     {
-        return this.m_pServerInstance.cards.validateDeckSingleplayer(jDeck);
-    }
-
-    isSinglePlayer()
-    {
-        return true;
+        return this.m_pServerInstance.cards.validateDeckArda(jDeck);
     }
 
     isArda()

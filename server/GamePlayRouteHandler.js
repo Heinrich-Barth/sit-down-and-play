@@ -1,5 +1,5 @@
 const fs = require('fs');
-const UTILS = require("./meccg-utils");
+const UTILS = require("../meccg-utils");
 
 class GamePlayRouteHandler 
 {
@@ -8,11 +8,13 @@ class GamePlayRouteHandler
         this.m_pServerInstance = pServer;
         this.contextPlay = sContext + "/";
         this.contextRoot = sContext;
-        this.pageHome = __dirname + "/pages/"  + sPagePlayRoot;
-        this.pageLogin = __dirname + "/pages/" + sPageLogin;
-        this.pageLobby = __dirname + "/pages/" + sLobbyPage;
-        this.pageWatch = __dirname + "/pages/login-watch.html";
         this.pAuthentication = g_pAuthentication;
+
+        const path = require('path');
+        this.pageHome = path.join(__dirname, "/../pages/"  + sPagePlayRoot);
+        this.pageLogin = path.join(__dirname, "/../pages/" + sPageLogin);
+        this.pageLobby = path.join(__dirname, "/../pages/" + sLobbyPage);
+        this.pageWatch = path.join(__dirname, "/../pages/login-watch.html");
     }
 
     static maxRooms = 5;
@@ -44,6 +46,7 @@ class GamePlayRouteHandler
 
     onHome(_req, res)
     {
+        console.warn(this.pageHome);
         this.m_pServerInstance.expireResponse(res, "text/html").sendFile(this.pageHome);
     }
 
