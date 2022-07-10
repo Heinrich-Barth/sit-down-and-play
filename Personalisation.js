@@ -85,4 +85,4 @@ exports.writePersonalisationCss = function(res)
         res.write(`.${key} { background: url("/media/personalisation/backgrounds/${Personalisation.backgorunds[key]}") no-repeat center center fixed; background-size: cover; }\n`);
 
     res.write(" ");
-};;
+};
