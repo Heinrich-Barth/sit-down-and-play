@@ -314,26 +314,26 @@ if (!SERVER.environment.isProduction())
 /**
  * Simple PING
  */
-SERVER.instance.get("/ping", (req, res) => SERVER.expireResponse(res, "text/plain").send("" + Date.now()).status(200));
+SERVER.instance.get("/ping", (_req, res) => SERVER.expireResponse(res, "text/plain").send("" + Date.now()).status(200));
 
 /**
  * Show list of available images. 
  */
-SERVER.instance.get("/data/list/images", (req, res) => SERVER.cacheResponse(res, 'application/json').send(SERVER.cards.getImageList()).status(200));
+SERVER.instance.get("/data/list/images", (_req, res) => SERVER.cacheResponse(res, 'application/json').send(SERVER.cards.getImageList()).status(200));
 
 /**
  * Show list of available sites
  */
-SERVER.instance.get("/data/list/sites", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getSiteList()).status(200));
+SERVER.instance.get("/data/list/sites", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getSiteList()).status(200));
 
 const Personalisation = require("./Personalisation");
 
-SERVER.instance.get("/data/dices", (req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getDices()).status(200));
-SERVER.instance.get("/data/backgrounds", (req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getBackgrounds()).status(200));
+SERVER.instance.get("/data/dices", (_req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getDices()).status(200));
+SERVER.instance.get("/data/backgrounds", (_req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getBackgrounds()).status(200));
 SERVER.instance.use("/media/personalisation/dice", g_pExpress.static(__dirname + "/media/personalisation/dice"));
 SERVER.instance.use("/media/personalisation/backgrounds", g_pExpress.static(__dirname + "/media/personalisation/backgrounds"));
 SERVER.instance.use("/media/personalisation/sounds", g_pExpress.static(__dirname + "/media/personalisation/sounds"));
-SERVER.instance.get("/media/personalisation/personalisation.css", (req, res) => {
+SERVER.instance.get("/media/personalisation/personalisation.css", (_req, res) => {
     res.setHeader('content-type', 'text/css');
     Personalisation.writePersonalisationCss(res);
     res.end();
@@ -359,14 +359,14 @@ SERVER.instance.get("/data/marshallingpoints", (req, res) => {
  /**
  * Get the navigation
  */
-SERVER.instance.get("/data/navigation", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER._navigation).status(200));
+SERVER.instance.get("/data/navigation", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER._navigation).status(200));
      
 /**
  * Provide the cards
  */
-SERVER.instance.get("/data/list/cards", (req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getCards()).status(200));
+SERVER.instance.get("/data/list/cards", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getCards()).status(200));
 
-SERVER.instance.get("/data/list/filters", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
+SERVER.instance.get("/data/list/filters", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
 
 SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.cacheResponseJpgHeader));
 SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.cacheResponseJpgHeader));
@@ -377,17 +377,17 @@ SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "
 /**
  * Get active games
  */
-SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.getActiveGames()).status(200));
+SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.getActiveGames()).status(200));
 
 /**
  * Get the status of a given player (access denied, waiting, addmitted)
  */
-SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.dump()).status(200));
+SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.dump()).status(200));
 
 /**
  * Load a list of available challenge decks to start right away
  */
-SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, (req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
+SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
 
 /**
   * Check if the deck is valid.
@@ -418,8 +418,7 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, func
     }).status(200);
 });
 
-SERVER.instance.get("/data/samplerooms", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
-SERVER.instance.get("/data/samplenames", (req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleNames).status(200));
+SERVER.instance.get("/data/samplerooms", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
 
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.cacheResponseHeader));
 
@@ -433,24 +432,24 @@ if (SERVER.environment.hasLocalImages())
  * Error endpoint.
  * This also deletes all available cookies
  */
-SERVER.instance.get("/error", (req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error.html"));
-SERVER.instance.get("/error/https-required", (req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-https-required.html"));
-SERVER.instance.get("/error/denied", (req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-access-denied.html"));
-SERVER.instance.get("/error/login", (req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-login.html"));
+SERVER.instance.get("/error", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error.html"));
+SERVER.instance.get("/error/https-required", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-https-required.html"));
+SERVER.instance.get("/error/denied", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-access-denied.html"));
+SERVER.instance.get("/error/login", (_req, res) => SERVER.clearCookies(res).sendFile(__dirname + "/pages/error-login.html"));
   
 /**
  * Start the deckbuilder
  */
-SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
+SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
 
-SERVER.instance.get("/converter", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
+SERVER.instance.get("/converter", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
 
-SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
+SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
  
 /**
   * Home Page redirects to "/play"
   */
-SERVER.instance.get("/", (req, res) => {
+SERVER.instance.get("/", (_req, res) => {
     res.header("Cache-Control", "no-store");
     res.redirect("/play")
 });
@@ -464,7 +463,7 @@ SERVER.instance.post("/login", (req, res) => {
         res.redirect("/login");
 });
 
-SERVER.instance.post("/csp-violation", (req, res) => {
+SERVER.instance.post("/csp-violation", (_req, res) => {
     /** this is not needed here */
     res.status(204).end();
 });
@@ -472,7 +471,7 @@ SERVER.instance.post("/csp-violation", (req, res) => {
 /**
   * About Page
   */
-SERVER.instance.get("/about", (req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
+SERVER.instance.get("/about", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
 
 require("./game-play")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
 
@@ -518,7 +517,7 @@ SERVER.onIoConnection = function (socket)
 };
 
 /** 404 - not found */
-SERVER.instance.use(function(req, res, next) 
+SERVER.instance.use(function(_req, res, _next) 
 {
     res.status(404);
     res.format({
@@ -529,7 +528,7 @@ SERVER.instance.use(function(req, res, next)
 });
   
 /* 500 - Any server error */
-SERVER.instance.use(function(err, req, res, next) 
+SERVER.instance.use(function(err, _req, res, _next) 
 {
     if (err)
         console.error(err);
