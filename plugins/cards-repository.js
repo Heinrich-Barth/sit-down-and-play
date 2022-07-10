@@ -50,7 +50,7 @@ const CARDS = {
     addIndices: function () 
     {
         let index = 0;
-        for (var card of this._raw) 
+        for (let card of this._raw) 
             card.index = ++index;
     },
 
@@ -109,7 +109,7 @@ const CARDS = {
         const vsUnused = getRemovableKeysArray();
 
         let rem = 0;
-        for (var card of this._raw) 
+        for (let card of this._raw) 
         {
             vsUnused.forEach(key => 
             {
