@@ -46,13 +46,19 @@ const SearchResult = {
 
         document.getElementById("result").appendChild(div);
     },
+
+    clearResultDisplay()
+    {
+        DomUtils.empty(document.getElementById("result"));
+        DomUtils.empty(document.getElementById("linklist"));
+    },
         
     displayResult : function(vnIndicesCharacters)
     {
         const hasCardActions = document.getElementById("deck_container") !== null;
 
-        DomUtils.empty(document.getElementById("result"));
-        DomUtils.empty(document.getElementById("linklist"));
+        this.clearResultDisplay();
+
 
         const nSize = this.getResultSize(vnIndicesCharacters);
         document.getElementById("size").innerHTML = nSize;
@@ -200,12 +206,12 @@ const SearchResult = {
                     break;
 
                 default:
-                    
-                    if (key.toString().toLowerCase().endsWith("item"))
+                    const keyLC = key.toString().toLowerCase();
+                    if (keyLC.endsWith("item"))
                         sHtmlItem.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
-                    else if (key.toString().toLowerCase().startsWith("creature"))
+                    else if (keyLC.startsWith("creature"))
                         sHtmlCreature.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
-                    else if (key.toString().toLowerCase().indexOf(" event") !== -1)
+                    else if (keyLC.indexOf(" event") !== -1)
                         sHtmlEvent.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
                     else
                         sHtmlChars.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
@@ -313,18 +319,18 @@ const SearchResult = {
 
     onClickLinkListLink : function(e)
     {
-        e.preventDefault();
-
         const sId = e.target.getAttribute("data-id");
-        if (sId === "" || sId === null)
-            return false;
+        if (sId !== "" && sId !== null)
+        {
+            ArrayList(document.getElementById("result")).find("div.category").each( (_e) => _e.classList.add("hidden") );
+            ArrayList(document).find("li.current").each((_elem) => _elem.classList.remove("current"));
+    
+            setTimeout(() => SearchResult.makeImagesVisible(sId), 10);
+    
+            this.parentNode.classList.add("current");
+        }
 
-        ArrayList(document.getElementById("result")).find("div.category").each( (_e) => _e.classList.add("hidden") );
-        ArrayList(document).find("li.current").each((_elem) => _elem.classList.remove("current"));
-
-        setTimeout(() => SearchResult.makeImagesVisible(sId), 10);
-
-        this.parentNode.classList.add("current");
+        e.preventDefault();
         return false;
     },
 

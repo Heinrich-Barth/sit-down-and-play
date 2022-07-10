@@ -1,6 +1,7 @@
 
 function EventManager() 
 {
+    /** allow adding */
 }
 
 EventManager.prototype.events = {};
