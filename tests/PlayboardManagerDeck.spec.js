@@ -1,8 +1,8 @@
-const PlayboardManagerDeck = require("../game-server/PlayboardManagerDeck");
+const PlayboardManagerDeck = require("../game-management/PlayboardManagerDeck");
 
-const DeckManagerDefault = require("../game-server/DeckManagerDefault");
+const DeckManagerDefault = require("../game-management/DeckManagerDefault");
 
-const DeckBase = require("../game-server/DeckDefault");
+const DeckBase = require("../game-management/DeckDefault");
 
 const createEntries = function(pref, n)
 {

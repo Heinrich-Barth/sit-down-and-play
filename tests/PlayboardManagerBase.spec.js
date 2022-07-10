@@ -1,4 +1,4 @@
-const PlayboardManagerBase = require("../game-server/PlayboardManagerBase");
+const PlayboardManagerBase = require("../game-management/PlayboardManagerBase");
 
 
 

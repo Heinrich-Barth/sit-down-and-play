@@ -1,4 +1,4 @@
-const PlayboardManagerCompanies = require("../game-server/PlayboardManagerCompanies");
+const PlayboardManagerCompanies = require("../game-management/PlayboardManagerCompanies");
 
 describe('PlayboardManagerCompanies', () => {
     

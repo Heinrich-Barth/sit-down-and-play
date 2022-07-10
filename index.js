@@ -57,7 +57,7 @@ const getHtmlCspPage = function(page)
 (function(){
 
     const g_pEventManager = require("./eventmanager.js");
-    const RoomManager = require("./game-server/RoomManager");
+    const RoomManager = require("./game-management/RoomManager");
 
     SERVER.cards = require("./plugins/cards.js");
     SERVER.cards.setConfiguration(SERVER.environment.mapPositionsFile(), SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
@@ -72,7 +72,7 @@ const getHtmlCspPage = function(page)
         SERVER.environment.maxRooms(),
         SERVER.environment.maxPlayersPerRoom());
     
-    SERVER.authenticationManagement = require("./game-server/authentication.js");
+    SERVER.authenticationManagement = require("./game-management/authentication.js");
     SERVER.authenticationManagement.setUserManager(SERVER.roomManager);
 
     g_pEventManager.trigger("add-sample-rooms", SERVER._sampleRooms);
@@ -130,7 +130,7 @@ SERVER.instance = g_pExpress();
 })();
 
 const PLUGINS = {
-    decklist : require("./game-server/Decklist.js").load(SERVER.environment.deckListFolder())
+    decklist : require("./game-management/Decklist.js").load(SERVER.environment.deckListFolder())
 };
 
 /**

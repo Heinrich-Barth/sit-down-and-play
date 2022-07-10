@@ -1,5 +1,5 @@
 
-const PlayboardManagerCharacters = require("../game-server/PlayboardManagerCharacters");
+const PlayboardManagerCharacters = require("../game-management/PlayboardManagerCharacters");
 
 
 describe('Test Default Value', () => {

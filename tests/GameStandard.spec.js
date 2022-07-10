@@ -1,5 +1,5 @@
-const GameStandard = require("../game-server/GameStandard");
-const PlayboardManager = require("../game-server/PlayboardManager");
+const GameStandard = require("../game-management/GameStandard");
+const PlayboardManager = require("../game-management/PlayboardManager");
 
 describe('globalRestoreGame(userid, socket, data)', () => {
 

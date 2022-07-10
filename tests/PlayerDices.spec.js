@@ -1,4 +1,4 @@
-const PlayerDices = require("../game-server/PlayerDices");
+const PlayerDices = require("../game-management/PlayerDices");
 
 describe('Test', () => {
     

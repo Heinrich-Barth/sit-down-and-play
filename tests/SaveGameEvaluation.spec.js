@@ -1,6 +1,6 @@
 
 
-const SaveGameEvaluation = require("../game-server/SaveGameEvaluation");
+const SaveGameEvaluation = require("../game-management/SaveGameEvaluation");
 
 describe('SaveGameEvaluation', () => {
 
