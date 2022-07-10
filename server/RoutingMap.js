@@ -46,22 +46,22 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     pCookiePreferences.setProduction(isProduction);
 
     /* Map images should be cached */
-    SERVER.instance.use("/media/maps", g_pExpress.static(__dirname + "/../media/maps", SERVER.cacheResponseHeader));
+    SERVER.instance.use("/media/maps", g_pExpress.static(__dirname + "/../media/maps", SERVER.caching.headerData.generic));
 
     /**
      * Show Map Pages
      */
-    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/../pages/map-underdeeps.html", SERVER.cacheResponseHeader));
-    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/../pages/map-regions.html", SERVER.cacheResponseHeader));
+    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/../pages/map-underdeeps.html", SERVER.caching.headerData.generic));
+    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/../pages/map-regions.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/map/regions/edit", g_pExpress.static(__dirname + "/../pages/map-regions-marking.html"));
     
     /**
      * Provide the map data with all regions and sites for the map windows
      */
-    SERVER.instance.get("/data/list/map", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getMapdata()).status(200));
-    SERVER.instance.get("/data/list/underdeeps", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getUnderdeepMapdata()).status(200));
+    SERVER.instance.get("/data/list/map", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
+    SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
 
-    SERVER.instance.get("/data/preferences/map", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));
+    SERVER.instance.get("/data/preferences/map", SERVER.caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/map", (req, res) =>  { 
         pCookiePreferences.update(req, res); 
         res.setHeader('Content-Type', 'text/plain');
@@ -72,6 +72,6 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
      * Get a list of tapped sites. This endpoint requiers cookie information. If these are not available,
      * the endpoint returns an empty map object.
      */
-    SERVER.instance.get("/data/list/sites-tapped", (req, res) => SERVER.expireResponse(res, "application/json").send(getTappedSites(SERVER, req.cookies)).status(200));
+    SERVER.instance.get("/data/list/sites-tapped", SERVER.caching.expires.jsonCallback, (req, res) => res.send(getTappedSites(SERVER, req.cookies)).status(200));
    
 };

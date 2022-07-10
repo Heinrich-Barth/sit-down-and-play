@@ -17,7 +17,7 @@ module.exports = function(SERVER, isProduction, g_pAuthentication)
     const GamePlayRouteHandlerSingle = require("./GamePlayRouteHandlerSingle");
     new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login.html", "home.html", g_pAuthentication).setupRoutes();
 
-    SERVER.instance.get("/data/preferences/game", (req, res) => SERVER.expireResponse(res, "application/json").send(pCookiePreferences.get(req.cookies)).status(200));
+    SERVER.instance.get("/data/preferences/game", SERVER.caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/game", (req, res) =>  { 
         pCookiePreferences.update(req, res);
         res.setHeader('Content-Type', 'text/plain');

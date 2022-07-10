@@ -4,14 +4,6 @@ class Configuration {
 
     constructor(sLocalConfig)
     {
-        const lNow = Date.now();
-        const lImageExpires = 8640000;
-
-        this._startupTime = lNow;
-        this._expiresDate = new Date(lNow).toUTCString();
-        this._expiresTime = lNow;
-        this._imageExpires = lImageExpires; 
-        this._cacheDate = new Date(lNow + (lImageExpires * 1000)).toUTCString();
         this._csp_header = "";
         this._csp_self = "";
 
@@ -116,11 +108,6 @@ class Configuration {
         return this._isProd;
     }
 
-    imageExpires()
-    {
-        return this._imageExpires;
-    }
-
     hasLocalImages()
     {
         return this._imageUrl !== "" && this._imageUrl.indexOf("//") === -1;
@@ -174,26 +161,6 @@ class Configuration {
     cardUrl()
     {
         return this._cardsUrl;
-    }
-
-    startupTime()
-    {
-        return this._startupTime;
-    }
-
-    expiresDate()
-    {
-        return this._expiresDate;
-    }
-
-    expiresTime()
-    {
-        return this._expiresTime;
-    }
-
-    cacheDate()
-    {
-        return this._cacheDate;
     }
 
     joinMap(jEntries)

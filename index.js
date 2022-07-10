@@ -3,16 +3,16 @@
  * Load Cards, prepare image lists etc.
  */
 const fs = require('fs');
-
-const UTILS = require("./meccg-utils");
-const ServerCaching = require("./server/ServerCaching");
+const Configiration = require("./Configuration");
 
 let SERVER = {
 
-    environment: null,
+    configuration: new Configiration(__dirname + "/data/config.json"),
 
     caching : {
+
         headerData : {
+
             generic : {
                 etag: true,
                 maxage: 8640000 * 1000
@@ -23,14 +23,56 @@ let SERVER = {
                 maxage: 8640000 * 1000,
                 "Content-Type": "image/jpeg"
             }
+        },
+
+        cache : {
+
+            cacheDate : new Date(Date.now() + (8640000 * 1000)).toUTCString(),
+
+            jsonCallback : function(_req, res, next)
+            {
+                res.header("Cache-Control", "public, max-age=8640000");
+                res.header("Expires", SERVER.caching.cache.cacheDate);
+                res.header('Content-Type', "application/json");
+                
+                next();
+            },
+
+            htmlCallback : function(_req, res, next)
+            {
+                res.header("Cache-Control", "public, max-age=8640000");
+                res.header("Expires", SERVER.caching.cache.cacheDate);
+                res.header('Content-Type', "text/html");
+                
+                next();
+            },
+        },
+
+        expires : {
+
+            dateStringNow : new Date().toUTCString(),
+
+            jsonCallback : function(_req, res, next)
+            {
+                SERVER.caching.expires.withResultType(res, "application/json");
+                next();
+            },
+
+            generic : function(_req, res, next)
+            {
+                res.header("Cache-Control", "no-store");
+                res.header("Expires", SERVER.caching.expires.dateStringNow);
+
+                next();
+            },
+
+            withResultType(res, sType)
+            {
+                res.header("Cache-Control", "no-store");
+                res.header("Expires", SERVER.caching.expires.dateStringNow);
+                res.header('Content-Type', sType);
+            }
         }
-    },
-
-
-    cacheResponseJpgHeader : {
-        etag: true,
-        maxage: 8640000 * 1000,
-        "Content-Type": "image/jpeg"
     },
 
     dices : [],
@@ -42,47 +84,33 @@ let SERVER = {
     _io : null,
     _sampleRooms : [],
     _navigation : [],
-    _sampleNames : []
+    _sampleNames : [],
+
+    startupTime : Date.now(),
+
+    getSocketIo : function()
+    {
+        return SERVER._io;
+    }
 };
 
-SERVER.getSocketIo = function()
-{
-    return SERVER._io;
-};
-
-const getHtmlCspPage = function(page)
-{
-    return fs.readFileSync(__dirname + "/pages/" + page, 'utf8');
-};
-
-/**
- * Update server environment
- */
-(function(sConfigFile){
-    const Configiration = require("./Configuration");
-
-    SERVER.environment = new Configiration(sConfigFile);
-
-})(__dirname + "/data/config.json");
-
- 
 (function(){
 
     const g_pEventManager = require("./eventmanager.js");
     const RoomManager = require("./game-management/RoomManager");
 
     SERVER.cards = require("./plugins/cards.js");
-    SERVER.cards.setConfiguration(SERVER.environment.mapPositionsFile(), SERVER.environment.cardUrl(), SERVER.environment.imageUrl());
+    SERVER.cards.setConfiguration(SERVER.configuration.mapPositionsFile(), SERVER.configuration.cardUrl(), SERVER.configuration.imageUrl());
     SERVER.cards.load();
 
     require("./plugins/events.js").registerEvents(g_pEventManager);
     
     SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
-        getHtmlCspPage("game.html"),
+        fs.readFileSync(__dirname + "/pages/game.html", 'utf8'),
         g_pEventManager, 
         SERVER.cards,
-        SERVER.environment.maxRooms(),
-        SERVER.environment.maxPlayersPerRoom());
+        SERVER.configuration.maxRooms(),
+        SERVER.configuration.maxPlayersPerRoom());
     
     SERVER.authenticationManagement = require("./game-management/authentication.js");
     SERVER.authenticationManagement.setUserManager(SERVER.roomManager);
@@ -125,13 +153,13 @@ SERVER.instance = g_pExpress();
 
         if (cspAllowRemoteImages(req.path))
         {
-            res.header('Content-Security-Policy', SERVER.environment.createContentSecurityPolicyMegaAdditionals());
-            res.header('X-Content-Security-Policy', SERVER.environment.createContentSecurityPolicyMegaAdditionals());    
+            res.header('Content-Security-Policy', SERVER.configuration.createContentSecurityPolicyMegaAdditionals());
+            res.header('X-Content-Security-Policy', SERVER.configuration.createContentSecurityPolicyMegaAdditionals());    
         }
         else
         {
-            res.header('Content-Security-Policy', SERVER.environment.createContentSecurityPolicySelfOnly());
-            res.header('X-Content-Security-Policy', SERVER.environment.createContentSecurityPolicySelfOnly());
+            res.header('Content-Security-Policy', SERVER.configuration.createContentSecurityPolicySelfOnly());
+            res.header('X-Content-Security-Policy', SERVER.configuration.createContentSecurityPolicySelfOnly());
         }
 
         next();
@@ -142,7 +170,7 @@ SERVER.instance = g_pExpress();
 })();
 
 const PLUGINS = {
-    decklist : require("./game-management/Decklist.js").load(SERVER.environment.deckListFolder())
+    decklist : require("./game-management/Decklist.js").load(SERVER.configuration.deckListFolder())
 };
 
 /**
@@ -181,37 +209,6 @@ SERVER.onListenSetupSocketIo = function ()
         }
     });
 };
-
-/**
- * Set the response to expire and not be cached at all
- * @param {Object} res 
- * @returns res
- * @param {String} sContentType 
- */
-SERVER.expireResponse = function(res, sContentType)
-{
-    res.header("Cache-Control", "no-store");
-    res.header("Expires", SERVER.environment.expiresDate());
-    if (sContentType !== undefined && sContentType !== "")
-        res.header('Content-Type', sContentType);
-    return res;
-}
-
-/**
- * Add cache header params
- * @param {Object} res 
- * @param {String} sContentType 
- * @returns res
- */
-SERVER.cacheResponse = function(res, sContentType)
-{
-    res.header("Cache-Control", "public, max-age=" + SERVER.environment.imageExpires());
-    res.header("Expires", SERVER.environment.cacheDate());
-    if (sContentType !== undefined && sContentType !== "")
-        res.header('Content-Type', sContentType);
-
-    return res;
-}
 
 /**
  * Shutdown game module and the http server
@@ -258,48 +255,6 @@ SERVER.shutdown = function ()
 }
 
 /**
- * Check if all necessary cookies are still valid
- * 
- * @param {Object} res 
- * @param {Object} req 
- * @returns 
- */
-SERVER.validateCookies = function (res, req) 
-{
-    /** no cookies available */
-    if (req.cookies.userId === undefined ||
-        req.cookies.room === undefined ||
-        req.cookies.userId.length !== UTILS.uuidLength() ||
-        req.cookies.joined === undefined || req.cookies.joined < SERVER.environment.startupTime()) 
-    {
-        SERVER.clearCookies(res);
-        return false;
-    }
-    else if (req.cookies.room !== undefined && !SERVER.roomManager.isValidRoomCreationTime(req.cookies.room, req.cookies.joined)) 
-    {
-        /** cookies do exist, but appear to be from a previous game */
-        SERVER.clearCookies(res);
-        return false;
-    }
-    else
-        return true;
-}
-
-/**
- * Clear Cookies
- * 
- * @param {Object} res 
- */
-SERVER.clearCookies = function (res) 
-{
-    res.clearCookie('userId');
-    res.clearCookie('joined');
-    res.clearCookie('room');
-    return res;
-};
-
-
-/**
  * These are the JS game files. Avoid caching.
  */
 SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
@@ -311,21 +266,21 @@ SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.cachin
 /**
  * Show list of available images. 
  */
-SERVER.instance.get("/data/list/images", (_req, res) => SERVER.cacheResponse(res, 'application/json').send(SERVER.cards.getImageList()).status(200));
+SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getImageList()).status(200));
 
 /**
  * Show list of available sites
  */
-SERVER.instance.get("/data/list/sites", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getSiteList()).status(200));
+SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
 
 const Personalisation = require("./Personalisation");
 
-SERVER.instance.get("/data/dices", (_req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getDices()).status(200));
-SERVER.instance.get("/data/backgrounds", (_req, res) => SERVER.expireResponse(res, "application/json").send(Personalisation.getBackgrounds()).status(200));
+SERVER.instance.get("/data/dices", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.getDices()).status(200));
+SERVER.instance.get("/data/backgrounds", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.getBackgrounds()).status(200));
 SERVER.instance.use("/media/personalisation/dice", g_pExpress.static(__dirname + "/media/personalisation/dice"));
 SERVER.instance.use("/media/personalisation/backgrounds", g_pExpress.static(__dirname + "/media/personalisation/backgrounds"));
 SERVER.instance.use("/media/personalisation/sounds", g_pExpress.static(__dirname + "/media/personalisation/sounds"));
-SERVER.instance.get("/media/personalisation/personalisation.css", (_req, res) => {
+SERVER.instance.get("/media/personalisation/personalisation.css", SERVER.caching.expires.generic, (_req, res) => {
     res.setHeader('content-type', 'text/css');
     Personalisation.writePersonalisationCss(res);
     res.end();
@@ -338,22 +293,19 @@ SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
  */
-SERVER.instance.get("/data/marshallingpoints", (req, res) => {
-    res.setHeader('content-type', 'application/json');
-    res.send(SERVER.cards.getMarshallingPoints(req.query.code));
-});
+SERVER.instance.get("/data/marshallingpoints", SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.cards.getMarshallingPoints(req.query.code)));
 
 /**
  * Get the navigation
  */
-SERVER.instance.get("/data/navigation", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER._navigation).status(200));
+SERVER.instance.get("/data/navigation", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER._navigation).status(200));
      
 /**
  * Provide the cards
  */
-SERVER.instance.get("/data/list/cards", (_req, res) => SERVER.cacheResponse(res, "application/json").send(SERVER.cards.getCards()).status(200));
+SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getCards()).status(200));
 
-SERVER.instance.get("/data/list/filters", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.cards.getFilters()).status(200));
+SERVER.instance.get("/data/list/filters", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getFilters()).status(200));
 
 SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.caching.headerData.jpeg));
 SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.caching.headerData.jpeg));
@@ -364,22 +316,22 @@ SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "
 /**
  * Get active games
  */
-SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.getActiveGames()).status(200));
+SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.getActiveGames()).status(200));
 
 /**
  * Get the status of a given player (access denied, waiting, addmitted)
  */
-SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER.roomManager.dump()).status(200));
+SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.dump()).status(200));
 
 /**
  * Load a list of available challenge decks to start right away
  */
-SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, (_req, res) => SERVER.cacheResponse(res,"application/json").send(PLUGINS.decklist).status(200));
+SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(PLUGINS.decklist).status(200));
 
 /**
   * Check if the deck is valid.
   */
-SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, function (req, res) 
+SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, function (req, res) 
 {
     let bChecked = false;
     let vsUnknown = [];
@@ -399,26 +351,26 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, func
         }
     }
     
-    SERVER.expireResponse(res, "application/json").send({
+    res.send({
         valid : bChecked && vsUnknown.length === 0,
         codes : vsUnknown
     }).status(200);
 });
 
-SERVER.instance.get("/data/samplerooms", (_req, res) => SERVER.expireResponse(res, "application/json").send(SERVER._sampleRooms).status(200));
+SERVER.instance.get("/data/samplerooms", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER._sampleRooms).status(200));
 
 
-if (SERVER.environment.hasLocalImages())
+if (SERVER.configuration.hasLocalImages())
 {
-    console.log("Card images are accessed locally from " + SERVER.environment.imageFolder());
-    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.environment.imageFolder(), SERVER.caching.headerData.generic));
+    console.log("Card images are accessed locally from " + SERVER.configuration.imageFolder());
+    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.configuration.imageFolder(), SERVER.caching.headerData.generic));
 }
 
 
-SERVER.instance.get("/about", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/about.html"));
-SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/deckbuilder.html"));
-SERVER.instance.get("/converter", (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/converter.html"));
-SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, (_req, res) => SERVER.cacheResponse(res, "text/html").sendFile(__dirname + "/pages/card-browser.html"));
+SERVER.instance.get("/about", SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/about.html"));
+SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/deckbuilder.html"));
+SERVER.instance.get("/converter", SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/converter.html"));
+SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/card-browser.html"));
 SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.caching.headerData.generic));
  
 /**
@@ -438,13 +390,8 @@ SERVER.instance.post("/login", (req, res) => {
         res.redirect("/login");
 });
 
-SERVER.instance.post("/csp-violation", (_req, res) => {
-    /** this is not needed here */
-    res.status(204).end();
-});
-
-require("./server/RoutingPlay")(SERVER, SERVER.environment.isProduction(), g_pAuthentication);
-require("./server/RoutingMap").setup(SERVER, SERVER.environment.isProduction(), g_pExpress);
+require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
+require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
 require("./server/RoutingHealth").setup(SERVER);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
@@ -505,14 +452,14 @@ SERVER.instance.use(function(err, _req, res, _next)
     });
 });
 
-SERVER.instanceListener = SERVER._http.listen(SERVER.environment.port(), SERVER.onListenSetupSocketIo);
+SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVER.onListenSetupSocketIo);
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {
     console.error(err);
     socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-console.log("Server started at port " + SERVER.environment.port());
+console.log("Server started at port " + SERVER.configuration.port());
 
 /**
  * allow CTRL+C

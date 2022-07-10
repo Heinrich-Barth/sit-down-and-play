@@ -18,13 +18,11 @@ describe('Configuration', () => {
         expect(instance.maxRooms()).toEqual(10);
         expect(instance.maxPlayersPerRoom()).toEqual(10);
         expect(instance.isProduction()).toBeFalsy();
-        expect(instance.imageExpires()).toEqual(8640000);
         expect(instance.imageUrl()).toEqual("/data/images");
         expect(instance.imageDomain()).toEqual("");
 
         expect(instance.cardUrl() !== "").toBeTruthy();
         expect(instance.startupTime() > 0).toBeTruthy();
-        expect(instance.expiresTime()).toEqual(instance.startupTime());
 
         expect(instance.createContentSecurityPolicyMegaAdditionals() !== "").toBeTruthy();
         expect(instance.createContentSecurityPolicySelfOnly() !== "").toBeTruthy();
@@ -43,13 +41,11 @@ describe('Configuration', () => {
         expect(instance.maxRooms()).toEqual(10);
         expect(instance.maxPlayersPerRoom()).toEqual(10);
         expect(instance.isProduction()).toBeFalsy();
-        expect(instance.imageExpires()).toEqual(8640000);
         expect(instance.imageUrl()).toEqual(data.image_path);
         expect(instance.imageDomain()).toEqual("https://test.com");
 
         expect(instance.cardUrl()).toEqual(data.cardsUrl);
         expect(instance.startupTime() > 0).toBeTruthy();
-        expect(instance.expiresTime()).toEqual(instance.startupTime());
 
         expect(instance.createContentSecurityPolicyMegaAdditionals() !== "").toBeTruthy();
         expect(instance.createContentSecurityPolicySelfOnly() !== "").toBeTruthy();

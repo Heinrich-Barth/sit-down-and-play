@@ -31,5 +31,5 @@ let g_nUptime = Date.now();
 exports.setup = function(SERVER)
 {
     g_nUptime = Date.now();
-    SERVER.instance.get("/health", (req, res) => SERVER.expireResponse(res, "application/json").send(getHealthData(SERVER.roomManager.getActiveGames())).status(200));
+    SERVER.instance.get("/health", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(getHealthData(SERVER.roomManager.getActiveGames())).status(200));
 };

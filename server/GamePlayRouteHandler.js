@@ -1,5 +1,6 @@
 const fs = require('fs');
 const UTILS = require("../meccg-utils");
+const ClearCookies = require("./ClearCookies");
 
 class GamePlayRouteHandler 
 {
@@ -9,6 +10,7 @@ class GamePlayRouteHandler
         this.contextPlay = sContext + "/";
         this.contextRoot = sContext;
         this.pAuthentication = g_pAuthentication;
+        this.startupTime = pServer.startupTime;
 
         const path = require('path');
         this.pageHome = path.join(__dirname, "/../pages/"  + sPagePlayRoot);
@@ -44,10 +46,15 @@ class GamePlayRouteHandler
         return this.m_pServerInstance;
     }
 
+    createExpireResponse(res, sResponseType)
+    {
+        this.m_pServerInstance.caching.expires.withResultType(res, sResponseType);
+        return res;
+    }
+
     onHome(_req, res)
     {
-        console.warn(this.pageHome);
-        this.m_pServerInstance.expireResponse(res, "text/html").sendFile(this.pageHome);
+        this.createExpireResponse(res, "text/html").sendFile(this.pageHome);
     }
 
     setupRoutes()
@@ -138,15 +145,6 @@ class GamePlayRouteHandler
 
     onLogin(req, res)
     {
-
-        /**
-         * 
-         *         ;
-        if (status !== null)
-
-         * 
-         */
-
         if (!UTILS.isAlphaNumeric(req.params.room))
         {
             res.redirect("/error");
@@ -163,13 +161,18 @@ class GamePlayRouteHandler
         }
         else
         {
-            this.m_pServerInstance.clearCookies(res);
+            this.clearCookies(res);
 
             const sUser = req.cookies.username === undefined ? "" : req.cookies.username;
             let sHtml = fs.readFileSync(this.pageLogin, 'utf8');
 
-            this.m_pServerInstance.expireResponse(res, "text/html").send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
+            this.createExpireResponse(res, "text/html").send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
         }
+    }
+
+    clearCookies(res)
+    {
+        ClearCookies.clearCookies(res);
     }
 
     validateDeck(jDeck)
@@ -212,12 +215,12 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
-            this.m_pServerInstance.expireResponse(res, 'text/plain').redirect("/play/" + req.params.room + "/lobby");
+            this.createExpireResponse(res, 'text/plain').redirect("/play/" + req.params.room + "/lobby");
         }
         catch (e) 
         {
             console.log(e);
-            this.m_pServerInstance.expireResponse(res).redirect("/error/login");
+            this.createExpireResponse(res).redirect("/error/login");
         }
     }
 
@@ -261,7 +264,7 @@ class GamePlayRouteHandler
 
             if (lNow === -1)
             {
-                this.m_pServerInstance.expireResponse(res).redirect("/");
+                this.createExpireResponse(res).redirect("/");
                 return;
             }
             
@@ -271,32 +274,32 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
-            this.m_pServerInstance.expireResponse(res, 'text/plain').redirect(this.contextPlay + req.params.room);
+            this.createExpireResponse(res, 'text/plain').redirect(this.contextPlay + req.params.room);
         }
         catch (e) 
         {
             console.log(e);
-            this.m_pServerInstance.expireResponse(res).redirect("/error/login");
+            this.createExpireResponse(res).redirect("/error/login");
         }
     }
 
     onWatch(req, res)
     {
-        this.m_pServerInstance.clearCookies(res);
+        this.clearCookies(res);
         
         if (!UTILS.isAlphaNumeric(req.params.room) || !this.m_pServerInstance.roomManager.roomExists(req.params.room))
             res.redirect("/error");
         else
         {
             const sHtml = fs.readFileSync(this.pageWatch, 'utf8');
-            this.m_pServerInstance.expireResponse(res, 'text/html').send(sHtml).status(200);
+            this.createExpireResponse(res, 'text/html').send(sHtml).status(200);
         }
     }
 
     onLobby(req, res)
     {
         /** assert that all necessary cookies are available and valid at this point  */
-        if (!this.m_pServerInstance.validateCookies(res, req)) 
+        if (!this.validateCookies(res, req)) 
         {
             res.redirect(this.contextPlay + req.params.room + "/login");
         }
@@ -308,7 +311,7 @@ class GamePlayRouteHandler
         {
             this.m_pServerInstance.roomManager.sendJoinNotification(req.params.room);
             let sHtml = fs.readFileSync(this.pageLobby, 'utf8');
-            this.m_pServerInstance.expireResponse(res, "text/html").send(sHtml.replace("{room}", req.params.room).replace("{id}",req.cookies.userId)).status(200);
+            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", req.params.room).replace("{id}",req.cookies.userId)).status(200);
         }
     }
 
@@ -321,7 +324,7 @@ class GamePlayRouteHandler
                 players : this.m_pServerInstance.roomManager.getPlayerList(req.params.room)
             }
 
-            this.m_pServerInstance.expireResponse(res, "application/json").send(data).status(200);
+            this.createExpireResponse(res, "application/json").send(data).status(200);
         }
         else
             res.sendStatus(401);
@@ -332,7 +335,7 @@ class GamePlayRouteHandler
         if (this.m_pServerInstance.roomManager.isGameHost(req.params.room, req.params.token))
         {
             this.m_pServerInstance.roomManager.inviteWaiting(req.params.room, req.params.id);
-            this.m_pServerInstance.expireResponse(res).sendStatus(204);
+            this.createExpireResponse(res).sendStatus(204);
         }
         else
             res.sendStatus(401);
@@ -343,7 +346,7 @@ class GamePlayRouteHandler
         if (this.m_pServerInstance.roomManager.isGameHost(req.params.room, req.params.token))
         {
             this.m_pServerInstance.roomManager.rejectEntry(req.params.room, req.params.id);
-            this.m_pServerInstance.expireResponse(res).sendStatus(204);
+            this.createExpireResponse(res).sendStatus(204);
         }
         else
             res.sendStatus(401);
@@ -354,7 +357,7 @@ class GamePlayRouteHandler
         if (this.m_pServerInstance.roomManager.isGameHost(req.params.room, req.params.token))
         {
             this.m_pServerInstance.roomManager.removePlayerFromGame(req.params.room, req.params.id);
-            this.m_pServerInstance.expireResponse(res).sendStatus(204);
+            this.createExpireResponse(res).sendStatus(204);
         }
         else
             res.sendStatus(401);
@@ -371,7 +374,7 @@ class GamePlayRouteHandler
         if (status !== null)
             _obj.status = status ? "ok" : "wait";
 
-        this.m_pServerInstance.expireResponse(res, 'application/json').send(_obj).status(200);
+        this.createExpireResponse(res, 'application/json').send(_obj).status(200);
     }
 
     onPlayAtTable(req, res)
@@ -391,7 +394,7 @@ class GamePlayRouteHandler
          * Check if player has never been in this room before.
          * Forward to login page for deck selection and display name
          */
-        if (!this.m_pServerInstance.validateCookies(res, req)) 
+        if (!this.validateCookies(res, req)) 
         {
             res.redirect(this.contextPlay + room + "/login");
             return;
@@ -429,8 +432,44 @@ class GamePlayRouteHandler
             /* Force close all existing other sessions of this player */
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
             this.m_pServerInstance.roomManager.updateDice(room, req.cookies.userId, dice);
-            this.m_pServerInstance.expireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, req.cookies.userId, req.cookies.username, lTimeJoined, dice)).status(200);
+            this.createExpireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, req.cookies.userId, req.cookies.username, lTimeJoined, dice)).status(200);
         }
+    }
+
+
+    /**
+     * Check if all necessary cookies are still valid
+     * 
+     * @param {Object} res 
+     * @param {Object} req 
+     * @returns 
+     */
+    validateCookies(res, req) 
+    {
+        /** no cookies available */
+        if (req.cookies.userId === undefined ||
+            req.cookies.room === undefined ||
+            req.cookies.joined === undefined)
+            return false;
+
+        try
+        {
+            if (req.cookies.userId.length !== UTILS.uuidLength())
+                throw new Error("Invalid player uuid.");
+            else if (req.cookies.joined < this.startupTime) 
+                throw new Error("Cookie server time is old.");
+            else if (!this.m_pServerInstance.roomManager.isValidRoomCreationTime(req.cookies.room, req.cookies.joined))
+                throw new Error("Cookie does not match room.");
+
+            return true;
+        }
+        catch (err)
+        {
+            console.warn(err.message);
+        }
+
+        this.clearCookies(res);
+        return false;
     }
 }
 
