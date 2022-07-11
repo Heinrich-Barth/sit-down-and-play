@@ -118,7 +118,7 @@ const extractCharacters = function(jDeck, pCardRepository)
  */
 const extractCharactersSpecial = function(jDeck, pCardRepository)
 {
-    return res = extractBySecondary(jDeck, pCardRepository, function(card) 
+    return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
         return card.type !== undefined && card.code === "Fram Framson (TD)";
     });
