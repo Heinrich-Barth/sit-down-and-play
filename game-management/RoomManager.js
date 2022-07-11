@@ -82,7 +82,7 @@ class RoomManager {
             return pRoom.getGame().getTappedSites(userid);
         else
         {
-            console.log("room does not exist: " + room);
+            console.log("cannot get tapped sites. room does not exist: " + room);
             return { };
         }
     }

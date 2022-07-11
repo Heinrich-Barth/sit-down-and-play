@@ -1,0 +1,152 @@
+
+const fs = require('fs');
+const CardsMeta = require("./CreateCardsMeta");
+const CardRepository = require("./CardRepository");
+const DeckValidator = require("./DeckValidator");
+const ImageList = require("./ImageList");
+
+class CardDataProvider extends CardRepository {
+   
+    constructor(mapPos, cardsUrl, imageUrl)
+    {
+        super();
+
+        this.imageUrl = imageUrl;
+        this.cardsUrl = cardsUrl;
+        this.mapPos = mapPos;
+        this.filters = { };
+        this.pCardRepository = null;
+        this.pImageList = new ImageList();
+        this.cardsMap = {};
+    }
+
+    onCardsReceived(body)
+    {
+        try 
+        {
+            this.pCardRepository = super.onCardsReceived(JSON.parse(body));
+            this.pImageList.create(this.getCards(), this.imageUrl);
+
+            this.cardsMap = require("./CardsMap")(this.getCards(), this.mapPos, this.pImageList.getImageList());
+
+            this.filters = new CardsMeta(this.getCards());
+            this.postProcessCardList();
+        } 
+        catch (error) 
+        {
+            console.error(error.message);
+            console.log(error);
+        }
+    }
+
+    getFilters()
+    {
+        return this.filters;    
+    }
+
+    loadLocally(file)
+    {
+        try 
+        {
+            console.log("Loading local card data from " + file);
+            this.onCardsReceived(fs.readFileSync(file, 'utf8'));
+            return true;
+        } 
+        catch (error) 
+        {
+            console.warn(error.message);
+        }
+        
+        return false;
+    }
+
+    loadFromUrl(cardsUrl)
+    {
+        console.log("Loading data from url " + cardsUrl);
+        const pThis = this;
+
+        const https = require('https');
+        https.get(cardsUrl,(res) => 
+        {
+            let body = "";
+        
+            res.on("data", (chunk) => body += chunk);
+            res.on("end", () => pThis.onCardsReceived(body));
+        
+        }).on("error", (error) => console.error(error.message));
+    }
+
+    load() 
+    {
+        if (this.cardsUrl === "")
+        {
+            console.warn("No Cards URL/Path provided.");
+            return;
+        }
+
+        if (!this.cardsUrl.startsWith("http") && !this.cardsUrl.startsWith("//"))
+        {
+            if (this.loadLocally(this.cardsUrl))
+            {
+                console.log("\t-- successfully loaded card data from local file " + this.cardsUrl + " --");
+                return;
+            }
+            else
+               console.log("Could not load locally");
+        }
+        
+        this.loadFromUrl(this.cardsUrl);
+    }
+
+    validateDeck(jDeck)
+    {
+        return DeckValidator.validate(jDeck);
+    }
+
+    validateDeckArda(jDeck)
+    {
+        return DeckValidator.validateArda(jDeck, this);
+    }
+
+    validateDeckSingleplayer(jDeck)
+    {
+        return DeckValidator.validateSingleplayer(jDeck, this);
+    }
+
+    getImageList()
+    {
+        return {
+            images: this.pImageList.getImageList(),
+            fliped : this.pImageList.getQuestList()
+        };
+    }
+
+    getMapdata = function(_imageList)
+    {
+        const data = this.cardsMap.mapdata;
+        data.images = this.pImageList.getImageList();
+        return data;
+    }
+
+    getSiteList()
+    {
+        return this.cardsMap.siteList;
+    }
+
+    getUnderdeepMapdata()
+    {
+        return this.cardsMap.underdeeps;
+    }
+
+
+    static create(mapPos, cardsUrl, imageUrl)
+    {
+        const pInstance = new CardDataProvider(mapPos, cardsUrl, imageUrl);
+        pInstance.load();
+        return pInstance;
+    }
+}
+
+module.exports = CardDataProvider;
+
+

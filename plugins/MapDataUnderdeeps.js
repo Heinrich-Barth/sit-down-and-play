@@ -120,6 +120,8 @@ class MapDataUnderdeeps {
         if (sites === undefined || sites.length === 0)
             return { }
 
+        console.log("\t- creating underdeep adjacent site list.");
+
         let surfaces;
         let adjList;
         let targetMap = {};
@@ -133,7 +135,7 @@ class MapDataUnderdeeps {
             {
                 if (!this.addCodesByTitle(adj, sitesByTitle, targetMap[site.code]) &&
                     !this.addCodesByTitle(MapDataUnderdeeps.normalizeString(adj), sitesByTitle, targetMap[site.code]))
-                    console.warn("Cannot find site by title " + adj);
+                    console.warn("\t\t- cannot find site by title " + adj);
 
                 /** check if this site is a surface site */
                 surfaces = this.getSurfaceSite(adj, sitesByTitle);

@@ -53,21 +53,26 @@ class ImageList {
         return list;
     }
 
-    init(jsonCards, imageUrl)
+    create(jsonCards, imageUrl)
     {
         if (imageUrl !== undefined)
         {
             this.g_ImageList = this.createImageList(jsonCards, ImageList.removeEndingSlash(imageUrl));
-            this.g_QuestList = require("./cards-quests").identifyQuests(jsonCards);
+            this.g_QuestList = require("./CardsQuests").identifyQuests(jsonCards);
         }
     }
 
-    getImages()
+    getImageList()
     {
         return this.g_ImageList;
     }
 
-    getList()
+    getQuestList()
+    {
+        return this.g_QuestList;
+    }
+
+    getLists()
     {
         return {
             images: this.g_ImageList,
@@ -77,10 +82,4 @@ class ImageList {
 
 }
 
-const pImageList = new ImageList();
-
-exports.init = (jsonCards, imageUrl) => pImageList.init(jsonCards, imageUrl);
-
-exports.getImages = () => pImageList.getImages();
-
-exports.getList = () => pImageList.getList();
+module.exports = ImageList;
