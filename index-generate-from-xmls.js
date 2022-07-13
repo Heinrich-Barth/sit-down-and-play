@@ -45,7 +45,7 @@ class Xml2Json
 
     getXmls()
     {
-        const data = this.readFile(this.baseDir + "/metw.xml");
+        const data = this.readFile(this.baseDir + "/sets.xml");
         if (data === null)
             return [];
 
