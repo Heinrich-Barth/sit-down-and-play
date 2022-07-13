@@ -1,4 +1,4 @@
-
+const fs = require("fs");
 
 class Configuration {
 
@@ -15,11 +15,31 @@ class Configuration {
         this._port = Configuration.assertString(process.env.PORT, 8080);
         this._deckDirectory = Configuration.assertString(process.env.DECKLISTFOLDER, "/data/decks");
 
-        this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
-        this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
+        if(Configuration.checkHasLocalImages())
+        {
+            this._hasLocaLImages = true;
+            this._imageUrl = "/data-images";
+        }
+        else
+        {
+            this._hasLocaLImages = false;
+            this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
+        }
+        
+        if (Configuration.hasLocalCardJson())
+        {
+            this._hasLocaLCards = true;
+            this._cardsUrl = __dirname + "/data-local/cards.json";
+        }
+        else
+        {
+            this._hasLocaLCards = false;
+            this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
+        }
+
         this._mapPositions = Configuration.assertUrlOrDataDirectory(process.env.MAPPOS, "/data/map-positions.json");
 
-        if (sLocalConfig !== undefined && sLocalConfig !== "")
+        if (!this._hasLocaLCards && sLocalConfig !== undefined && sLocalConfig !== "")
             this.loadConfig(sLocalConfig);
     }
 
@@ -73,7 +93,7 @@ class Configuration {
     {
         try
         {
-            let data = require('fs').readFileSync(sLocalConfig, 'utf8');
+            let data = fs.readFileSync(sLocalConfig, 'utf8');
             console.log("Loading custom app configuration.");
             this.loadFromJson(JSON.parse(data));
         }
@@ -219,6 +239,21 @@ class Configuration {
         }
 
         return this._csp_self;
+    }
+
+    static checkHasLocalImages()
+    {
+        return fs.existsSync(__dirname + "/data-local") && fs.existsSync(__dirname + "/data-local/images");
+    }
+
+    static hasLocalCardJson()
+    {
+        return fs.existsSync(__dirname + "/data-local") && fs.existsSync(__dirname + "/data-local/cards.json");
+    }
+
+    useLocalImages()
+    {
+        return this._hasLocaLImages;
     }
     
 }
