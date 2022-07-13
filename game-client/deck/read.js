@@ -13,10 +13,7 @@ const ReadDeck = {
    
     convert : function(data)
     {
-        console.log(data);
         const deck = this.createDeck(data);
-        
-        console.log(deck);
         if (deck !== null)
             document.body.dispatchEvent(new CustomEvent("meccg-deck-available", { "detail": deck }));
     },
@@ -47,6 +44,7 @@ const ReadDeck = {
         deck.hazards = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Hazard"));
         deck.character = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Character"));
         deck.resources = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Resource"));
+        deck.notes = this.extractDeckPart(data, "Notes");
         return deck;
     },
 

@@ -189,6 +189,8 @@ const DeckList =
     onPopulateDescription : function(e)
     {
         const jDeck = e.detail;
+        console.log("aa");
+        console.log(jDeck);
         if (jDeck !== undefined && jDeck.notes !== undefined)
             document.getElementById("notes").value = jDeck.notes;
         else
