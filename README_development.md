@@ -23,13 +23,13 @@ The application will make use of the local data files using `ENV` variables.
 
 `PORT` sets the app's port (8080) 
 
-`IMAGE_PATH` allows you to point to the subdirectory where your card images are stored. You can also use an URL to load external resources via a CDN or similar. If you use local images, these will be made available via the url path `/data/images`.
+`IMAGE_PATH` allows you to point to the subdirectory where your card images are stored. You can also use an URL to load external resources via a CDN or similar. If you use local images at `./data-local/images`, these will be made available via the url path `/data-local/images` on startup automatically.
 
-`CARDURL` allows to specify where the card data is retreived from. Usually, this is a local file inside your `./data` directory (cards.json). You can also provide an URL.
+`CARDURL` allows to specify where the card data is retreived from. If you have stored a local card file at `./data-local/cards.json`, this will be discovered automatically and used instead of pulling data.
 
 `MAPPOS` is the filename of your position marker geo coordinates (map-positions-example.json)
 
-Card data and images *are not part of this project* and you will have to provide them.
+Card data and images *are not part of this project* and you will have to provide them. See below for further information about how to do that.
 
 ### In Production
 
@@ -88,9 +88,11 @@ The file/url will be accessed via the env. variable `CARDURL`.
 
 ### Providing Card Images
 
-Images can either be accessed as part of this project (subfolder) or via an external URL (*https* will be required). The env. variable is `IMAGE_PATH`.
+Images can either be accessed as part of this project (subfolder) or via an external URL (*https* will be required and you will can use the env variable is `IMAGE_PATH`).
 
 The image URL is being constructed as part of the `plugins/imagelist.js` module. Your own endpoint may be added via the configuration file. 
+
+However, if your own cards.json file uses absolute image paths, those will be used explicitly.
 
 ## Maps
 
@@ -211,6 +213,51 @@ To add a marker, click on an image first. Thereafter, click on the map. The posi
 You can save your changes to your clipboard by clicking on the save icon. Thereafter, you have to manually merge these into your `map-positions.json`. The changes will be available after a restart the application.
 
 ## Providing your own cards
+
+### Automatically importing cards, e.g. from GCCG
+
+If you have created your game with GCCG, you may try and import those automatically. 
+
+```
+npm run build_xmls
+```
+
+This import process requires a master set XML file to be available at `./data-local/xmls/sets.xml` and its content needs to look simiar to this.
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<ccg>
+  <cardset source="spoiler1.xml"/>
+  <cardset source="spoiler2.xml"/>
+</ccg>
+```
+
+Other nodes and information will be ignored.
+
+Your individual set spoiler xml files referenced therein must be found at a subdirectory `./data-local/xmls/xmls`, e.g. `./data-local/xmls/xmls/spoiler1.xml`.
+
+During the import process, those card sets will be processed in the order of your xml nodes. The structure of such a spoiler xml file should be similar to this one:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<ccg-setinfo name="MYNAME" dir="ImageSubdirectory" abbrev="MN">
+    <cards>
+        <card name="John Doe" graphics="JohnDoe.jpg" text="Some description text">
+            <attr key="unique" value="yes"/>
+            <attr key="skills" value="Warrior"/>
+            <attr key="type" value="Hero Character"/>
+        </card>
+    <cards>
+</ccg-setinfo>
+```
+
+When using this format, the importer automatically creates your json card file for you.
+
+The card's image will automatically be set to `"/data-local/images/{ImageSubdirectory}/${graphics}"` and you have to make sure the graphic can be fount at this location.
+
+*The files will be read using `UTF-8`.*
+
+### Manually creating card data
 
 Now, this is not trivial at all, because you will have to put quite a lot of effort into your data.
 
