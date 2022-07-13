@@ -22,7 +22,6 @@ describe('Configuration', () => {
         expect(instance.imageDomain()).toEqual("");
 
         expect(instance.cardUrl() !== "").toBeTruthy();
-        expect(instance.startupTime() > 0).toBeTruthy();
 
         expect(instance.createContentSecurityPolicyMegaAdditionals() !== "").toBeTruthy();
         expect(instance.createContentSecurityPolicySelfOnly() !== "").toBeTruthy();
@@ -45,7 +44,6 @@ describe('Configuration', () => {
         expect(instance.imageDomain()).toEqual("https://test.com");
 
         expect(instance.cardUrl()).toEqual(data.cardsUrl);
-        expect(instance.startupTime() > 0).toBeTruthy();
 
         expect(instance.createContentSecurityPolicyMegaAdditionals() !== "").toBeTruthy();
         expect(instance.createContentSecurityPolicySelfOnly() !== "").toBeTruthy();

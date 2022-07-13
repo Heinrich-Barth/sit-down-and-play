@@ -1,5 +1,5 @@
 
-const CardsQuest = require("../plugins/cards-quests");
+const CardsQuest = require("../../plugins/CardsQuests");
 
 
 const readJson = function()
@@ -7,7 +7,7 @@ const readJson = function()
     try
     {
         const fs = require('fs');
-        return JSON.parse(fs.readFileSync(__dirname + "/../data/cards-raw.json", 'utf8'));
+        return JSON.parse(fs.readFileSync(__dirname + "/../../data/cards-raw.json", 'utf8'));
     }
     catch (e)
     {
