@@ -1,8 +1,10 @@
 # Collectible Card Game 
 
-This project allows you to play MECCG or similar.
+This project allows you to play MECCG or other Collectible Card Games.
 
 *Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. This is not affiliated with Middle-earth Enterprises or Iron Crown Enterprises.*
+
+*MECCG* assets are not included in this repository. Please respect the copyright and trademak.
 
 ## Watch a Demo
 
