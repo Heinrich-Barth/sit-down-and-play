@@ -91,14 +91,56 @@ class Xml2Json
         return str.replace(/[\u{0080}-\u{FFFF}]/gu, "");
     } 
 
-    processSetXml(file, setIndex)
+    processSetXmlCard(setInfo, cardXml)
     {
-        const data = this.readFile(file);
-        if (data === null)
+        let cardJson = this.extractAttributes(cardXml);
+        if (cardJson === null)
             return null;
 
-        const setinfo = this.extractNodeSimpleLine(data, "ccg-setinfo");
-        const result = {
+        cardJson.title = this.sanatiseString(this.removeQuotes(this.extractAttribute(cardXml, "name")));
+        cardJson.normalizedtitle = cardJson.title.toLowerCase().trim();
+        cardJson.ImageName = "/data/images/" + setInfo.dir + "/" + this.extractAttribute(cardXml, "graphics");
+        cardJson.alignment = this.getAlignmentByType(cardJson.type);
+        cardJson.type = this.removeAlignmentPrefix(cardJson.type);
+        cardJson.text = this.extractAttribute(cardXml, "text");
+        cardJson.full_set = setInfo.name;
+        cardJson.set_code = setInfo.abbrev;
+        cardJson.trimCode = "(" + cardJson.set_code + ")";
+
+        if (cardJson.class !== undefined)
+        {
+            cardJson.Secondary = cardJson.class;
+            delete cardJson.class;
+        }
+        if (cardJson.unique !== undefined)
+        {
+            cardJson.uniqueness = cardJson.unique;
+            delete cardJson.unique;
+        }
+
+        return cardJson;
+    }
+
+    addCardToSetList(result, cardJson)
+    {
+        if (result.cards[cardJson.normalizedtitle] === undefined)
+            result.cards[cardJson.normalizedtitle] = [cardJson];
+        else
+            result.cards[cardJson.normalizedtitle].push(cardJson);
+    }
+
+    addKnownKeys(cardJson)
+    {
+        for (let _key of Object.keys(cardJson))
+        {
+            if (!this.knownKeys.includes(_key))
+                this.knownKeys.push(_key);
+        }
+    }
+    
+    createSetInfo(setinfo, setIndex)
+    {
+        return {
             name : this.extractAttribute(setinfo, "name"),
             dir : this.extractAttribute(setinfo, "dir"),
             abbrev : this.extractAttribute(setinfo, "abbrev"),
@@ -106,70 +148,46 @@ class Xml2Json
             order: setIndex,
             cards: { }
         };
+    }
+
+    processSetXml(file, setIndex)
+    {
+        const data = this.readFile(file);
+        if (data === null)
+            return null;
+
+        const result = this.createSetInfo(this.extractNodeSimpleLine(data, "ccg-setinfo"), setIndex)
 
         let count = 0;
         let offset = 0, _end, _card;
         while (offset !== -1)
         {
             offset = data.indexOf("<card ", offset);
-            if (offset === -1)
-                break;
-
-            _end = data.indexOf("</card>", offset);
+            _end = offset === -1 ? -1 : data.indexOf("</card>", offset);
             if (_end === -1)
                 break;
             
             _card = data.substring(offset, _end);
             offset = _end;
 
-            let json = this.extractAttributes(_card);
-            if (json === null)
-                continue;
-
-            json.title = this.sanatiseString(this.removeQuotes(this.extractAttribute(_card, "name")));
-            json.normalizedtitle = json.title.toLowerCase().trim();
-            json.ImageName = "/data/images/" + result.dir + "/" + this.extractAttribute(_card, "graphics");
-            json.alignment = this.getAlignmentByType(json.type);
-            json.type = this.removeAlignmentPrefix(json.type);
-            json.text = this.extractAttribute(_card, "text");
-            json.full_set = result.name;
-            json.set_code = result.abbrev;
-            json.trimCode = "(" + json.set_code + ")";
-
-            if (json.class !== undefined)
+            const cardJson = this.processSetXmlCard(result, _card);
+            if (cardJson !== null)
             {
-                json.Secondary = json.class;
-                delete json.class;
+                this.addCardToSetList(result, cardJson)
+                this.addKnownKeys(cardJson);
+                this.addKnownTypes(cardJson);
+                count++;
             }
-            if (json.unique !== undefined)
-            {
-                json.uniqueness = json.unique;
-                delete json.unique;
-            }
-
-            
-
-            if (result.cards[json.normalizedtitle] === undefined)
-                result.cards[json.normalizedtitle] = [json];
-            else
-                result.cards[json.normalizedtitle].push(json);
-
-            for (let _key of Object.keys(json))
-            {
-                if (!this.knownKeys.includes(_key))
-                    this.knownKeys.push(_key);
-            }
-
-            if (json.type !== undefined && !this.knownTypes.includes(json.type))
-                this.knownTypes.push(json.type);
-
-            count++;
         }
 
         result.size = count;
         return result;
     }
-
+    addKnownTypes(cardJson)
+    {
+        if (cardJson.type !== undefined && !this.knownTypes.includes(cardJson.type))
+            this.knownTypes.push(cardJson.type);
+    }
 
     removeQuotes(sCode) 
     {
@@ -253,26 +271,19 @@ class Xml2Json
         return pos === -1 ? type : type.substring(pos+1);
     }
 
+    getAlignmentPrefix(type)
+    {
+        const pos = type.indexOf(" ");
+        return pos === -1 ? "" : type.substring(0,pos);
+    }
+
     getAlignmentByType(type)
     {
-        if (type === "Hazard")
+        const res = this.getAlignmentPrefix(type);
+        if (type !== "")
+            return res;
+        else if (type === "Hazard")
             return "Neutral";
-        else if (type.startsWith("Hero "))
-            return "Hero";
-        else if (type.startsWith("Minion "))
-            return "Minion";
-        else if (type.startsWith("Fallen-"))
-            return "Fallen-wizard";
-        else if (type.startsWith("Grey "))
-            return "Grey";
-        else if (type.startsWith("Elf-lord"))
-            return "Elf-lord";
-        else if (type.startsWith("Balrog"))
-            return "Balrog";
-        else if (type.startsWith("Dwarf-lord"))
-            return "Dwarf-lord";
-        else if (type.startsWith("Dual"))
-            return "Dual";
         else
             return "unspecific";
     }
@@ -305,28 +316,24 @@ class Xml2Json
 
     getAlignmentAbbrev(text)
     {
-        switch(text)
+        if (text.length < 1)
+            return text;
+
+        if ("Neutral" === text)
+            return "";
+
+        const pos = text.indexOf("-");
+        if (pos === -1)
+            return text.substring(0, 1);
+
+        let res = "";
+        for (let part of text.split("-"))
         {
-            case "Hero":
-                return "H";
-            case "Minion":
-                return "M";
-            case "Fallen-wizard":
-                return "FW";
-            case "Grey":
-                return "G";
-            case "Elf-lord":
-                return "EL";
-            case "Dwarf-lord":
-                return "DL";
-            case "Balrog":
-                return "BA";
-            case "Neutral":
-                return "";
-            default:
-                console.warn("Unkown alignment: " + text);
-                return "";
+            if (part !== "")
+                res += part.substring(0,1).toUpperCase();
         }
+        
+        return res;
     }
 
     createUniqueCardsMultiple(cards, result)
