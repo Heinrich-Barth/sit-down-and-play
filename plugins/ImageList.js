@@ -16,7 +16,10 @@ class ImageList {
 
     static createImageUrl(imageName, setCode, imageUrl)
     {
-        return imageUrl + "/" + setCode + "/" + imageName;
+        if (imageName.startsWith("/"))
+            return imageName;
+        else
+            return imageUrl + "/" + setCode + "/" + imageName;
     }
 
     newImage(card, imageUrl) 
