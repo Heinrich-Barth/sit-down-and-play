@@ -260,7 +260,12 @@ SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
 /* All media can be used with static routes */
 SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.caching.headerData.generic));
 SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.caching.headerData.generic));
-  
+
+if (SERVER.configuration.useLocalImages())
+{
+    console.log("Use local image path");
+    SERVER.instance.use("/data/images", g_pExpress.static("data-local/images", SERVER.caching.headerData.generic));
+}
 /**
  * Show list of available images. 
  */
