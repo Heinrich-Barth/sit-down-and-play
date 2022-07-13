@@ -17,8 +17,8 @@ const DropZone = {
             return;
 
         const reader = new FileReader();
-        reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
         reader.onerror = () => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot read given file." }));
+        reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
         reader.readAsText(file);
     },
 
@@ -27,16 +27,8 @@ const DropZone = {
         if (sText === undefined || sText.trim() === "")
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "File seems to be empty..." }));
 
-        try
-        {
-            let json = JSON.parse(sText);
-            document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": json }));
-            document.body.dispatchEvent(new CustomEvent("meccg-file-dropped-name", { "detail": file }));
-        }
-        catch (e)
-        {
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Failed to parse file data..." }));
-        }
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": sText }));
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped-name", { "detail": file }));
     },
 
     drop : function(ev)

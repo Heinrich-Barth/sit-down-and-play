@@ -7,10 +7,10 @@ const SaveJsonAsDialog = {
 
     onSaveDeck : function(e)
     {
-        SaveJsonAsDialog.onSave(e.detail.data, e.detail.name + ".meccg");
+        SaveJsonAsDialog.onSave(e.detail.data, e.detail.name + ".meccg", false);
     },
 
-    onSave : function(data, filename)
+    onSave : function(data, filename, toJson)
     {
         if (!data)
         {
@@ -20,9 +20,16 @@ const SaveJsonAsDialog = {
 
         try
         {
-            const content = [JSON.stringify(data)];
+            let content = data;
+            let type = "text/plain"
+            if (toJson === undefined || toJson)
+            {
+                content = JSON.stringify(data);
+                type = "application/json";
+            }
+            
             const a = document.createElement('a');
-            a.href = window.URL.createObjectURL(new Blob(content, {"type": "application/json"}));
+            a.href = window.URL.createObjectURL(new Blob([content], {"type": type}));
             a.download = filename;
             a.click();    
         }

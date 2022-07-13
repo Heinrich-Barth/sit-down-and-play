@@ -53,6 +53,8 @@ const getCode = function(line)
 
 const createDeck = function()
 {
+    let count = 0;
+
     function toJson(sId)
     {
         let asLines = document.getElementById(sId).value.split('\n');
@@ -64,22 +66,34 @@ const createDeck = function()
             let sCode = getCode(_entry);
 
             if (sCode !== "" && sCount !== "")
+            {
                 deck[sCode] = parseInt(sCount);
+                count += deck[sCode];
+            }
         }
 
         return deck;
     }
 
     let jDeck = {
-        pool: toJson("pool"),
-        sideboard: toJson("sideboard"),
-        chars : toJson("characters"),
-        resources : toJson("resources"),
-        hazards : toJson("hazards"),
-        notes: document.getElementById("notes").value.trim()
+        pool: {
+            characters: {},
+            resources: toJson("pool"),
+            hazards: {}
+        },
+        sideboard: {
+            resources: toJson("sideboard"),
+            characters: {},
+            hazards: {}
+        },
+        deck: {
+            characters : toJson("characters"),
+            resources : toJson("resources"),
+            hazards : toJson("hazards")
+        }
     };
 
-    if (isEmpty(jDeck.pool) || isEmpty(jDeck.chars) || (isEmpty(jDeck.hazards) && isEmpty(jDeck.resources)))
+    if (count === 0)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "This deck is not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
         return null;
@@ -96,7 +110,7 @@ const isEmpty = function(jDeck)
  
 const onPerformLogin = function()
 {
-    let data = createDeck();
+    const data = createDeck();
     if (data === null) 
         return false;
 
@@ -105,17 +119,17 @@ const onPerformLogin = function()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Provide a deck name first" }));
         document.getElementById("deckname").focus();
-        return;
     }
     else
+    {
         sName = sName.trim();
+        const det = {
+            data: ReadDeck.toString(data, sName, document.getElementById("notes").value.trim()),
+            name : sName
+        };
 
-    const det = {
-        data: data,
-        name : sName
-    };
-
-    document.body.dispatchEvent(new CustomEvent("meccg-saveas-deck", { "detail": det}));
+        document.body.dispatchEvent(new CustomEvent("meccg-saveas-deck", { "detail": det}));
+    }
 };
   
 

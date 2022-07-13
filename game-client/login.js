@@ -464,4 +464,4 @@ const loadSampleUserName = function()
 
 })();
 
-document.body.addEventListener("meccg-file-dropped", (e) => populateDeck(e.detail), false);
+document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);

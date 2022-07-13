@@ -735,4 +735,4 @@ const DeckList =
 document.body.addEventListener("meccg-deckbuilder-preparedecklist", DeckList.prepareDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-add-to-decklist", DeckList.onAddToDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-update-summary", DeckList.calculateAndUpdateDeckCounters, false);
-document.body.addEventListener("meccg-file-dropped", DeckList.onPopulateDescription, false);
+document.body.addEventListener("meccg-deck-available", DeckList.onPopulateDescription, false);

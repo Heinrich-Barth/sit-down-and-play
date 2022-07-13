@@ -208,6 +208,66 @@ const DeckbuilderApi =
         
         return size;
     },
+
+    createExtendedDeck : function(input)
+    {
+        const deck = {
+            pool: {
+                characters: {},
+                resources: {},
+                hazards: {}
+            },
+            deck: {
+                resources: {},
+                characters: {},
+                hazards: {}
+            },
+            sideboard: {
+                characters: {},
+                resources: {},
+                hazards: {}
+            }
+        };
+
+        function onProcessPart(cards, targetPart)
+        {
+            if (cards === undefined || cards === null)
+                return;
+
+            for (let code of Object.keys(cards))
+            {
+                if (cards[code].type === "Hazard")
+                    targetPart["hazards"][code] = cards[code].count;
+                else if (cards[code].type === "Character")
+                    targetPart["characters"][code] = cards[code].count;
+                else
+                    targetPart["resources"][code] = cards[code].count;
+            }
+        }
+
+        function onProcessTarget(cards, target)
+        {
+            if (cards === undefined || target === undefined || cards === null)
+                return;
+
+            for (let code of Object.keys(cards))
+                target[code] = cards[code].count;
+        }
+
+        onProcessPart(input.pool, deck.pool);
+        onProcessTarget(input.character, deck.deck.characters);
+        onProcessTarget(input.avatar, deck.deck.characters);
+        onProcessTarget(input.resource, deck.deck.resources);
+        onProcessTarget(input.hazard, deck.deck.hazards);
+        onProcessPart(input.sideboard, deck.sideboard);
+
+        return deck;
+    },
+
+    toString(jDeck, title, notes)
+    {
+        return ReadDeck.toString(jDeck, title, notes);
+    }
 }
 
 let g_bKeyIsCtrl = false;
@@ -237,10 +297,11 @@ document.getElementById("save_deck").onclick = function()
     else
         sName = sName.trim();
 
-    const _deck = DeckbuilderApi._deck;
-    _deck.notes = document.getElementById("notes").value;
+    const _deck = DeckbuilderApi.createExtendedDeck(DeckbuilderApi._deck);
+    const notes = document.getElementById("notes").value;
+
     const data = {
-        data: _deck,
+        data: DeckbuilderApi.toString(_deck, sName, notes),
         name : sName
     };
 
@@ -252,4 +313,4 @@ document.body.addEventListener("meccg-deckbuilder-load-deck", DeckbuilderApi.onL
 document.body.addEventListener("meccg-deckbuilder-add-to-deck", DeckbuilderApi.onAdd, false);
 document.body.addEventListener("meccg-deckbuilder-remove-from-deck", DeckbuilderApi.onRemove, false);
 document.body.addEventListener("meccg-file-dropped-name", DeckbuilderApi.onUpdateDeckName, false);
-document.body.addEventListener("meccg-file-dropped", DeckbuilderApi.onLoadDeck, false);
+document.body.addEventListener("meccg-deck-available", DeckbuilderApi.onLoadDeck, false);
