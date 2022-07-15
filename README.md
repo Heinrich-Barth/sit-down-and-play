@@ -20,6 +20,8 @@ Although the gameplay is guided by Middle-earth Collectible Card Game, you can e
 
 However, you will need to provide the card data and its images for the full experience. See section below on how to start.
 
+Here is a [step by step guide](README_setup.md) how to set everything up. Detailed information can also be found in the [development guide](README_development.md).
+
 ### Feature Overview
 
 Here are some essential features of this project:
