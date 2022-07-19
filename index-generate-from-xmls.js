@@ -107,11 +107,30 @@ class Xml2Json
         cardJson.set_code = setInfo.abbrev;
         cardJson.trimCode = "(" + cardJson.set_code + ")";
 
-        if (cardJson.class !== undefined)
+        if (cardJson.class !== undefined && cardJson.class !== "")
         {
-            cardJson.Secondary = cardJson.class;
+            /** probably a hazard */
+            cardJson.Secondary = this.getSecondaryFromClass(cardJson.class);
             delete cardJson.class;
         }
+
+        if (this.expectEquals(cardJson.type, "Hazard") && this.expectEquals(cardJson.keyword, "Hazard Agent"))
+        {
+            cardJson.type = "Character";
+            cardJson.Secondary = "Agent";
+        }
+        else if (cardJson.type === "Character")
+        {
+            if (this.expectEquals(cardJson.keyword, "avatar"))
+                cardJson.Secondary = "Avatar";
+            else
+                cardJson.Secondary = "character";
+        }
+        else if (cardJson.type === "Site" || cardJson.type === "Region")
+        {
+            cardJson.Secondary = cardJson.type.toLowerCase();
+        }
+
         if (cardJson.unique !== undefined)
         {
             cardJson.uniqueness = cardJson.unique;
@@ -119,6 +138,25 @@ class Xml2Json
         }
 
         return cardJson;
+    }
+
+    expectEquals(input1, input2)
+    {
+        return input1 !== undefined && input2 !== undefined && input1.toLowerCase() === input2.toLowerCase();
+    }
+
+    isAvatar(input)
+    {
+        return input !== undefined && input.toLowerCase() === "avatar";
+    }
+
+    getSecondaryFromClass(value)
+    {
+        const val_lower = value.toLowerCase();
+        if (val_lower.indexOf(" faction") !== -1 || val_lower.indexOf(" ally") !== -1)
+            return this.removeAlignmentPrefix(value);
+        else
+            return value;
     }
 
     addCardToSetList(result, cardJson)
