@@ -61,8 +61,8 @@ const createDecks = function(_list, sDirectory, sReplacePrefix)
     {
         try
         {
-            let name = stripPrefix(replaceType(_list[i]), sReplacePrefix).trim();
-            decks[name] = JSON.parse(fs.readFileSync(sDirectory + _list[i], 'utf8'));
+            const name = stripPrefix(replaceType(_list[i]), sReplacePrefix).trim();
+            decks[name] = fs.readFileSync(sDirectory + _list[i], 'utf8');
         }
         catch (err)
         {
