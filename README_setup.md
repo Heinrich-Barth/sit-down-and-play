@@ -5,6 +5,7 @@ You will need to follow these steps:
 * Provide card data and images
 * Provide the map image slices (optionally, if a map is needed)
 * Set the position markers on the map (optionally, if a map is needed)
+* Provide starter decks
 * Personalisation with custom dices, backgrounds and sounds (optionally)
 
 Once everything is setup, you can start the project via
@@ -145,6 +146,23 @@ The project provides a dedicated endpoint to access the map at `localhost:8080/m
 Once your map file is ready, you can access the map marker editor via `localhost:8080/map/regions/edit`.
 
 The map is grouped by regions and sites are assigned to a region. Therefore, you start by adding a region marker to the map first. Thereafter, you can add site markers.
+
+## Provide starter decks
+
+Starter decks can be useful for players to check out the game and start right away. You can provide as many starter decks as you want. Starter decks come in "collections", and each collection is represented by a dedicated folder. You can create a new collection, e.g. `Starter Decks` in `./data/decks`. A deck can be constructed with the deckbuilder at `localhost:8080/deckbuilder`.
+
+An example structure may look like this
+
+```
+./data/decks/Starter Decks/A - deckname1.meccg
+./data/decks/Starter Decks/A - deckname2.meccg
+./data/decks/Starter Decks/A - deckname3.meccg
+./data/decks/Starter Decks/A - deckname4.meccg
+```
+
+The deck collections's folder name will be used to group the decks during the deck selection process before a game. The deck's file names will be used (except the file extension) inside your collection list.
+
+The decks will be discovered upon application start automatically.
 
 
 ## Personalisation with custom dices and backgrounds
