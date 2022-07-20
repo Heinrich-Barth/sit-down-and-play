@@ -5,6 +5,7 @@ You will need to follow these steps:
 * Provide card data and images
 * Provide the map image slices (optionally, if a map is needed)
 * Set the position markers on the map (optionally, if a map is needed)
+* Personalisation with custom dices and backgrounds
 
 Once everything is setup, you can start the project via
 
@@ -145,3 +146,20 @@ Once your map file is ready, you can access the map marker editor via `localhost
 
 The map is grouped by regions and sites are assigned to a region. Therefore, you start by adding a region marker to the map first. Thereafter, you can add site markers.
 
+
+## Personalisation with custom dices and backgrounds
+
+If you want, you can deploy background image files into the folder `./media/personalisation/backgrounds`. These will be discovered upon application start and made available to the player automatically.
+
+Custom dices can be added to the folder `/media/personalisation/dice`. A dice collection consists of 6 `PNG` image files which have to be named using a specific pattern, e.g. `dice-1.png` .... `dice-6.png`. Each collection of dice images has to be stored in a separate folder, e.g-
+
+```
+./media/personalisation/dice/folder1/dice-1.png
+./media/personalisation/dice/folder1/dice-2.png
+./media/personalisation/dice/folder1/dice-3.png
+./media/personalisation/dice/folder1/dice-4.png
+./media/personalisation/dice/folder1/dice-5.png
+./media/personalisation/dice/folder1/dice-6.png
+```
+
+Dices will be discovered automatically upon application start.
