@@ -254,12 +254,12 @@ const onLoadDecks = function(data)
 
 const onChallengeDeckChosen = function(e)
 {
-    let sKey = e.target.getAttribute("data-deck-id");
-    let nArray = parseInt(e.target.getAttribute("data-deck-list"));
+    const sKey = e.target.getAttribute("data-deck-id");
+    const nArray = parseInt(e.target.getAttribute("data-deck-list"));
 
     document.getElementById("toggle_isstandard").click();
 
-    populateDeck(g_jDecks[nArray].decks[sKey]);
+    document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_jDecks[nArray].decks[sKey] }));
 }
 
 const stripHashFromUrl = function()
