@@ -96,7 +96,7 @@ let SERVER = {
 
 (function(){
 
-    const g_pEventManager = require("./eventmanager.js");
+    const g_pEventManager = require("./EventManager");
     const RoomManager = require("./game-management/RoomManager");
 
     SERVER.cards = require("./plugins/CardDataProvider").create(SERVER.configuration.mapPositionsFile(), SERVER.configuration.cardUrl(), SERVER.configuration.imageUrl());
