@@ -1,5 +1,26 @@
 # Collectible Card Game Setup
 
+You will need to follow these steps:
+
+* Provide card data and images
+* Provide the map image slices (optionally, if a map is needed)
+* Set the position markers on the map (optionally, if a map is needed)
+
+Once everything is setup, you can start the project via
+
+````
+npm install
+npm start
+````
+
+This will fire up the application and you can access everything via `http://localhost:8080`.
+
+In the beginning, be aware that the http server allows for very strong browser caching, so clear it regularly when testing.
+
+You can easily deploy this project in a docker container as well. By default, you would not need any volumes because nothing has to be persisted. A `Dockerfile` is not included in this project, though.
+
+## Provide card data and images
+
 There are 3 ways to setup this project.
 
 * use the local sample data of this project
@@ -14,19 +35,6 @@ Whichever of the first twho methods you prefer, please create the following loca
 If you want to use a CDN server, you do not need to create those folders.
 
 The very last chapter describes how to create map data if necessary (not all CCGs need that).
-
-Once everything is setup, you can start the project via
-
-````
-npm install
-npm start
-````
-
-This will fire up the application and you can access everything via `http://localhost:8080`.
-
-In the beginning, be aware that the http server allows for very strong browser caching, so clear it regularly when testing.
-
-## Providing Card Data
 
 ### Using the sample data provided in this project
 
@@ -64,13 +72,13 @@ This project comes with a sample configuration file at `./data/config-example.js
 
 If you use this approach, `cardsUrl` refers to the URL where you can find the content matching the `cards.json` data. `image_domain` is the URL where you can find the images. 
 
-## Providing and editing map data
+## Providing a Map
 
 You can either use the sample map data provided at `./data/map-positions-example.json` and copy that to `./data/map-positions.json`.
 
 You can always `edit` the map positions and add new markers to it via `localhost:8080/map/regions/edit`
 
-## Providing map images
+### Providing map images
 
 If your game uses a map, you will want to provide a map image. These need to be sliced into smaller tile images.
 
@@ -83,12 +91,24 @@ The map uses the following zoom levels at
 * `/media/maps/regions/5`
 * `/media/maps/regions/6`
 
+To make full use of the map, you can assign cards with locations/markers on the map. Such a position file has to be located at `./data/map-positions.json`. Please see below on how to create such a file using the map editor.
+
+#### Creating a suitable map file
+
 To create zoom levels and image tiles, your original map image must have any of the following resolutions:
 
 * 5.376x5.376px 
 * 13.312x13.312px
 
-The following script uses `imagemagic` to create tiles from a map saved as `map.jpg`.
+The following scripts use `imagemagic` to create tiles from a map saved as `map.jpg`.
+
+Your original map file may need some resizing. This can be done via any image processing application manually of automatically. Importantly, you may only need to enlarge the canvas size and resize the image by keeping the aspect ratio. For example, you may use this `imagemagic` command to create a `map.jpg`from your original image `map-original.jpg`:
+
+```
+convert map-original.jpg -resize 5376x5376  -background Black -gravity center -extent 5376x5376 map.jpg
+```
+
+With the resulting `map.jpg`, you may run the following script to create all necesasry tiles and zoom levels.
 
 ```
 #!/bin/bash
@@ -116,4 +136,12 @@ done
 ```
 
 You can move the required zoom level folders to `/media/maps/regions`
+
+The project provides a dedicated endpoint to access the map at `localhost:8080/map/regions`.
+
+### Setting the position markers on the map
+
+Once your map file is ready, you can access the map marker editor via `localhost:8080/map/regions/edit`.
+
+The map is grouped by regions and sites are assigned to a region. Therefore, you start by adding a region marker to the map first. Thereafter, you can add site markers.
 
