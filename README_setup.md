@@ -5,7 +5,7 @@ You will need to follow these steps:
 * Provide card data and images
 * Provide the map image slices (optionally, if a map is needed)
 * Set the position markers on the map (optionally, if a map is needed)
-* Personalisation with custom dices and backgrounds
+* Personalisation with custom dices, backgrounds and sounds (optionally)
 
 Once everything is setup, you can start the project via
 
@@ -149,7 +149,11 @@ The map is grouped by regions and sites are assigned to a region. Therefore, you
 
 ## Personalisation with custom dices and backgrounds
 
+### Custom Background Images
+
 If you want, you can deploy background image files into the folder `./media/personalisation/backgrounds`. These will be discovered upon application start and made available to the player automatically.
+
+### Custom Dices
 
 Custom dices can be added to the folder `/media/personalisation/dice`. A dice collection consists of 6 `PNG` image files which have to be named using a specific pattern, e.g. `dice-1.png` .... `dice-6.png`. Each collection of dice images has to be stored in a separate folder, e.g-
 
@@ -163,3 +167,24 @@ Custom dices can be added to the folder `/media/personalisation/dice`. A dice co
 ```
 
 Dices will be discovered automatically upon application start.
+
+### Sound Effects
+
+To make use of sound effects, you need to create the folder `./media/personalisation/sounds`. Its best to deploy all sound files here as well.
+
+Finally, create a json file `./media/personalisation/sounds/sounds.json` and paste this example
+
+```
+{
+    "dice": "/media/personalisation/sounds/roll_dice.ogg",
+    "drawcard": "/media/personalisation/sounds/card_pickup.ogg",
+    "discard": "/media/personalisation/sounds/card_drop.ogg",
+    "shuffle": "/media/personalisation/sounds/shuffle.ogg",
+    "score": "/media/personalisation/sounds/flip_coin.ogg",
+    "launch": "/media/personalisation/sounds/launch.ogg",
+    "yourturn": "/media/personalisation/sounds/launch.ogg",
+    "endgame": "/media/personalisation/sounds/endgame.ogg"
+}
+```
+
+You obviously want to change the URI paths to the different sound effects. If you do not want to use certain sound effects, simple leave the respective property empty.
