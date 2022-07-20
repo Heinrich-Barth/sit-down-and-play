@@ -135,7 +135,7 @@ class MapData
     {
         if (typeof jMapCard !== "undefined" && typeof jCards[jMapCard.code] === "undefined") 
         {
-            const newCard = requestNewestCard(jMapCard.code, jCards);
+            const newCard = this.requestNewestCard(jMapCard.code, jCards);
             if (newCard !== null) 
             {
                 jMapCard.code = newCard.code;
@@ -148,33 +148,62 @@ class MapData
     
     createMissingRegions(jMapData, jCards) 
     {
+        let added = 0;
         let count = 0;
         for (let i in jCards) 
         {
             let card = jCards[i];
-            if (card.type === "Region" && typeof jMapData[card.title] === "undefined")
+            if (card.type === "Region")
             {
                 count++;
-                jMapData[card.title] = {
-                    title: card.title,
-                    code: card.code,
-                    region_type: this.requireRegionType(card),
-                    dreamcard : card.dreamcard === true,
-                    area: [],
-                    sites: {}
-                };
+                if (typeof jMapData[card.title] === "undefined")
+                {
+                    added++;
+                    jMapData[card.title] = {
+                        title: card.title,
+                        code: card.code,
+                        region_type: this.requireRegionType(card),
+                        dreamcard : card.dreamcard === true,
+                        area: [],
+                        sites: {}
+                    };
+                }
+            }
+        }
+
+        for (let i in jCards) 
+        {
+            let card = jCards[i];
+            if (card.type === "Site")
+            {
+                count++;
+                if (typeof jMapData[card.Region] === "undefined")
+                {
+                    added++;
+                    jMapData[card.Region] = {
+                        title: card.Region,
+                        code: card.Region + " (" + card.set_code + ")",
+                        region_type: this.requireRegionType(null),
+                        dreamcard : card.dreamcard === true,
+                        area: [],
+                        sites: {}
+                    };
+                }
             }
         }
 
         if (count > 0)
+        {
             console.log("\t- " + count + " regions available.");
+            console.log("\t- " + added + " missing regions added to map data.");
+        }
     }
 
     requireRegionType(card)
     {
-        const val = card.RPath === undefined ? "" : card.RPath;
+        const val = card === null || card.RPath === undefined ? "" : card.RPath;
         if (val === "")
-            return "";
+            return "dd";
         
         switch(val)
         {
@@ -206,14 +235,25 @@ class MapData
 
     createMissingSites(jMapData, jCards) 
     {
+        let count = 0;
         for (let i in jCards) 
         {
             let card = jCards[i];
-
-            if (card.type !== "Site" || typeof jMapData[card.Region] === "undefined" || jMapData[card.Region].sites === "undefined")
+            if (card.type !== "Site")
                 continue;
 
-            if (typeof jMapData[card.Region].sites[card.title] === "undefined") 
+            count++;
+            if (typeof jMapData[card.Region] === "undefined")
+            {
+                console.warn("Region " + card.Region + " is missing in map data");
+                continue;
+            }
+            else if (typeof jMapData[card.Region].sites === "undefined")
+            {
+                console.warn("Region " + card.Region + " does not have sites property.");
+                continue;
+            }
+            else if (typeof jMapData[card.Region].sites[card.title] === "undefined") 
             {
                 jMapData[card.Region].sites[card.title] = {
                     area: [],
@@ -234,6 +274,9 @@ class MapData
             if (typeof jMapData[card.Region].sites[card.title][_align] === "undefined") 
                 jMapData[card.Region].sites[card.title][_align] = this.getSiteData(card);
         }
+
+        if (count > 0)
+            console.log("\t- " + count + " sites available");
     }
 
     replaceMapSiteCodes(jMapData, jCards) 

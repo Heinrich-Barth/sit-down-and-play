@@ -131,6 +131,12 @@ class Xml2Json
             cardJson.Secondary = cardJson.type.toLowerCase();
         }
 
+        if (cardJson.type === "Site" && cardJson.region !== undefined)
+        {
+            cardJson.Region = this.sanatiseString(cardJson.region);
+            delete cardJson.region;
+        }
+
         if (cardJson.unique !== undefined)
         {
             cardJson.uniqueness = cardJson.unique;
