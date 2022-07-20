@@ -76,10 +76,7 @@ const ReadDeck = {
         const pattern = "##\n" + label + "\n##";
         let nOffset = data.indexOf(pattern);
         if (nOffset === -1)
-        {
-            console.warn("Could not find deck part of type " + label);
             return "";
-        }
         
         nOffset = data.indexOf("\n", nOffset + pattern.length);
         if (nOffset === -1)
