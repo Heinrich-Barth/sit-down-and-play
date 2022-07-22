@@ -15,13 +15,13 @@ npm install
 npm start
 ````
 
-This will fire up the application and you can access everything via `http://localhost:8080`.
+This will fire up the application and you can access everything via `http://localhost:8080`. 
+
+> The application does not require any additional tech stack such as databases. Player's decks and savegames will be stored locally on the player's disk. You can easily deploy this project in a docker container as well. By default, you would not need any volumes because nothing has to be persisted. A `Dockerfile` is not included in this project, though.
 
 In the beginning, be aware that the http server allows for very strong browser caching, so clear it regularly when testing.
 
-You can easily deploy this project in a docker container as well. By default, you would not need any volumes because nothing has to be persisted. A `Dockerfile` is not included in this project, though.
-
-## Provide card data and images
+# Provide card data and images
 
 There are 3 ways to setup this project.
 
@@ -38,14 +38,14 @@ If you want to use a CDN server, you do not need to create those folders.
 
 The very last chapter describes how to create map data if necessary (not all CCGs need that).
 
-### Using the sample data provided in this project
+## Using the sample data provided in this project
 
 Simply copy 
 
 * `./data/cards.json` to `./data-local/cards.json`
 * `./data/card-images/*` to `./data-local/images`
 
-### Using the sample data provided in this project
+## Using the sample data provided in this project
 
 You can run the `build from xmls` script to create the `cards.json` data file. To do so, please proceed as follows.
 
@@ -61,7 +61,7 @@ npm run build_xmls
 
 Upon successfull creation of this file, you can copy the card images into the `./data-local/images` directory. It is very probably, that your individual card images are arranged by set folders as given in the spoiler.xml files. Please maintain that structure inside the `./data-local/images` directory as well.
 
-### Using a CDN sever
+## Using a CDN sever
 
 This project comes with a sample configuration file at `./data/config-example.json`. Simply copy this file to `./data/config.json` and edit it with the editor or your choice.
 
@@ -74,13 +74,13 @@ This project comes with a sample configuration file at `./data/config-example.js
 
 If you use this approach, `cardsUrl` refers to the URL where you can find the content matching the `cards.json` data. `image_domain` is the URL where you can find the images. 
 
-## Providing a Map
+# Providing a Map
 
 You can either use the sample map data provided at `./data/map-positions-example.json` and copy that to `./data/map-positions.json`.
 
 You can always `edit` the map positions and add new markers to it via `localhost:8080/map/regions/edit`
 
-### Providing map images
+## Providing map images
 
 If your game uses a map, you will want to provide a map image. These need to be sliced into smaller tile images.
 
@@ -95,7 +95,7 @@ The map uses the following zoom levels at
 
 To make full use of the map, you can assign cards with locations/markers on the map. Such a position file has to be located at `./data/map-positions.json`. Please see below on how to create such a file using the map editor.
 
-#### Creating a suitable map file
+## Creating a suitable map file
 
 To create zoom levels and image tiles, your original map image must have any of the following resolutions:
 
@@ -141,13 +141,13 @@ You can move the required zoom level folders to `/media/maps/regions`
 
 The project provides a dedicated endpoint to access the map at `localhost:8080/map/regions`.
 
-### Setting the position markers on the map
+## Setting the position markers on the map
 
 Once your map file is ready, you can access the map marker editor via `localhost:8080/map/regions/edit`.
 
 The map is grouped by regions and sites are assigned to a region. Therefore, you start by adding a region marker to the map first. Thereafter, you can add site markers.
 
-## Provide starter decks
+# Provide starter decks
 
 Starter decks can be useful for players to check out the game and start right away. You can provide as many starter decks as you want. Starter decks come in "collections", and each collection is represented by a dedicated folder. You can create a new collection, e.g. `Starter Decks` in `./data/decks`. A deck can be constructed with the deckbuilder at `localhost:8080/deckbuilder`.
 
@@ -164,14 +164,13 @@ The deck collections's folder name will be used to group the decks during the de
 
 The decks will be discovered upon application start automatically.
 
+# Personalisation with custom dices and backgrounds
 
-## Personalisation with custom dices and backgrounds
-
-### Custom Background Images
+## Custom Background Images
 
 If you want, you can deploy background image files into the folder `./media/personalisation/backgrounds`. These will be discovered upon application start and made available to the player automatically.
 
-### Custom Dices
+## Custom Dices
 
 Custom dices can be added to the folder `/media/personalisation/dice`. A dice collection consists of 6 `PNG` image files which have to be named using a specific pattern, e.g. `dice-1.png` .... `dice-6.png`. Each collection of dice images has to be stored in a separate folder, e.g-
 
@@ -186,7 +185,7 @@ Custom dices can be added to the folder `/media/personalisation/dice`. A dice co
 
 Dices will be discovered automatically upon application start.
 
-### Sound Effects
+## Sound Effects
 
 To make use of sound effects, you need to create the folder `./media/personalisation/sounds`. Its best to deploy all sound files here as well.
 
