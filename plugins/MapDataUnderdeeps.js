@@ -85,26 +85,15 @@ class MapDataUnderdeeps {
     }
 
     /**
-     * Identify adajacent sites from card text
-     * @param {String} text 
-     * @returns Array
-     */
-    listAdajacentSites(text)
-    {
-        if (text === undefined || text === null || text === "")
-            return [];
-
-
-        return [];
-    }
-
-    /**
      * Check if the card's RPath qualifies as Underdeep site
      * @param {JSON} card 
      * @returns Boolean
      */
     isCandidateUnderdeep(card)
     {
+        if (card.Region !== undefined && card.Region === "Under-deeps")
+            return true;
+            
         let val = card.RPath !== undefined ? "" + card.RPath : null;
         return val !== null && (val.indexOf("Under") === 0 || val === "The Under-gates");
     }
@@ -130,7 +119,7 @@ class MapDataUnderdeeps {
             if (targetMap[site.code] === undefined)
                 targetMap[site.code] = [];
 
-            adjList = this.extractAdjacentSites(site.text);
+            adjList = this.splitAdjacentSites(this.extractAdjacentInfo(site));
             for (let adj of adjList)
             {
                 if (!this.addCodesByTitle(adj, sitesByTitle, targetMap[site.code]) &&
@@ -145,6 +134,41 @@ class MapDataUnderdeeps {
         }
 
         return this.sortMapByKey(targetMap);
+    }
+
+    extractAdjacentInfoFromText(text)
+    {
+        const pattern = "DCE: add to adjacent sites: ";
+        let pos = text === undefined || text === null ? -1 : text.indexOf(pattern);
+        if (pos === -1)
+            return "";
+
+        text = text.substring(pos+pattern.length).trim();
+        if (text.endsWith(","))
+            return text.substring(0, text.length-2).trim();
+        else
+            return text;
+    }
+
+    extractAdjacentInfo(site)
+    {
+        let textFinal = "";
+        if (site.adjacent !== undefined) // DCE: add to adjacent sites: 
+        {
+            let text1 = site.adjacent.trim();
+            let text2 = this.extractAdjacentInfoFromText(site.text);
+
+            if (text2 === "")
+                textFinal = text1;
+            else if (text1.endsWith(","))
+                textFinal = text1+text2;
+            else
+                textFinal = text1 + ", " + text2;
+        }
+        else
+            textFinal = this.extractAdjacentPart(site.text === undefined ? "" : site.text);
+
+        return textFinal;
     }
 
     sortMapByKey(map)
@@ -280,17 +304,7 @@ class MapDataUnderdeeps {
 
         return list;
     }
-
-    /**
-     * Create an array of adjacent sites from a given text
-     * @param {String} text Adjacent sites text
-     * @returns Array of titles in lowercase
-     */
-    extractAdjacentSites(text)
-    {
-        return this.splitAdjacentSites(this.extractAdjacentPart(text));
-    }
-
+    
     /**
      * Create an array of adjacent sites from a komma-separated text
      * @param {String} text 
