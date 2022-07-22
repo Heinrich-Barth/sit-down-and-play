@@ -39,6 +39,7 @@ CreateCardsMeta.prototype.updateAlign = function (cards)
     }
 
     result.sort();
+    return result;
 };
 
 CreateCardsMeta.prototype.updateTypes = function(cards) 
