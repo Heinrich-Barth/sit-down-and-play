@@ -11,7 +11,6 @@ class RoomManager {
         this.gamePageHtml = sGameHtmlPageUri;
         this._eventManager = pEventManager;
         this.gameCardProvider = pGameCardProvider;
-        this.fnGetAgentList = pGameCardProvider.getAgents;
         this.fnSocketIo = fnSocketIo;
 
         this._rooms = {};
@@ -47,10 +46,7 @@ class RoomManager {
 
     getAgentList()
     {
-        if (typeof this.fnGetAgentList === "function")
-            return this.fnGetAgentList();
-        else
-            return [];
+        return this.gameCardProvider.getAgents();
     }
 
     getRoom(room)
