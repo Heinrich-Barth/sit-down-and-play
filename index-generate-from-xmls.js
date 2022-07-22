@@ -12,16 +12,35 @@ class Xml2Json
         this.knownTypes = [];
     }
 
-    getFileEncoding()
+    readFile(file)
     {
-        return 'utf-8';
+        let xmlUtf8 = this.readFileWithEncoding(file, "utf-8");
+        let enc = this.extractXmlEncoding(xmlUtf8);
+        if (enc === "utf-8" || enc === "")
+            return xmlUtf8;
+        else if (enc === "iso-8859-1")
+            enc = "latin1";
+
+        let xmlOther = this.readFileWithEncoding(file, enc);
+        if (xmlOther === null)
+        {
+            console.log(file + " could not be read with encoding " + enc + ". Using UTF-8 instead.");
+            return xmlUtf8;
+        }
+        else
+        {
+            return Buffer.from(xmlOther).toString();
+        } 
     }
 
-    readFile(file)
+    readFileWithEncoding(file, encoding)
     {
         try
         {
-            return fs.readFileSync(file, this.getFileEncoding())
+            if (encoding === undefined || encoding === null)
+                encoding = "utf-8";
+            
+            return fs.readFileSync(file, { encoding : encoding  });
         }
         catch (err)
         {
@@ -29,6 +48,21 @@ class Xml2Json
         }
 
         return null;
+    }
+
+    extractXmlEncoding(content)
+    {
+        const PATTERN = "encoding=\"";
+        let pos = content === null ? -1 : content.indexOf("?>");
+        if (pos === -1)
+            return "";
+
+        let line = content.substring(0, pos).trim();
+        pos = line.indexOf(PATTERN)
+        if (pos === -1)
+            return "";
+        else
+            return line.substring(pos + PATTERN.length).replace('"', "").replace('"', "").trim().toLowerCase();
     }
 
     extractNodeSimpleLine(data, open)
@@ -88,7 +122,7 @@ class Xml2Json
 
     sanatiseString(str)
     {
-        return str.replace(/[\u{0080}-\u{FFFF}]/gu, "");
+        return str;
     } 
 
     processSetXmlCard(setInfo, cardXml)
