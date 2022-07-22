@@ -94,12 +94,14 @@ let SERVER = {
     }
 };
 
+const CardDataProvider = require("./plugins/CardDataProvider");
+SERVER.cards = new CardDataProvider(SERVER.configuration.mapPositionsFile(), SERVER.configuration.cardUrl(), SERVER.configuration.imageUrl());
+SERVER.cards.load();
+
 (function(){
 
     const g_pEventManager = require("./EventManager");
     const RoomManager = require("./game-management/RoomManager");
-
-    SERVER.cards = require("./plugins/CardDataProvider").create(SERVER.configuration.mapPositionsFile(), SERVER.configuration.cardUrl(), SERVER.configuration.imageUrl());
 
     require("./plugins/events").registerEvents(g_pEventManager);
     
