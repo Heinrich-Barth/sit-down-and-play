@@ -15,7 +15,6 @@ class CardDataProvider extends CardRepository {
         this.cardsUrl = cardsUrl;
         this.mapPos = mapPos;
         this.filters = { };
-        this.pCardRepository = null;
         this.pImageList = new ImageList();
         this.cardsMap = {};
     }
@@ -24,18 +23,17 @@ class CardDataProvider extends CardRepository {
     {
         try 
         {
-            this.pCardRepository = super.onCardsReceived(JSON.parse(body));
+            super.onCardsReceived(body);
+
             this.pImageList.create(this.getCards(), this.imageUrl);
-
             this.cardsMap = require("./CardsMap")(this.getCards(), this.mapPos, this.pImageList.getImageList());
-
             this.filters = new CardsMeta(this.getCards());
+            
             this.postProcessCardList();
         } 
         catch (error) 
         {
             console.error(error.message);
-            console.log(error);
         }
     }
 
@@ -121,7 +119,7 @@ class CardDataProvider extends CardRepository {
         };
     }
 
-    getMapdata = function(_imageList)
+    getMapdata(_imageList)
     {
         const data = this.cardsMap.mapdata;
         data.images = this.pImageList.getImageList();
@@ -138,15 +136,10 @@ class CardDataProvider extends CardRepository {
         return this.cardsMap.underdeeps;
     }
 
-
-    static create(mapPos, cardsUrl, imageUrl)
+    getAgents()
     {
-        const pInstance = new CardDataProvider(mapPos, cardsUrl, imageUrl);
-        pInstance.load();
-        return pInstance;
+        return super.getAgents();
     }
 }
 
 module.exports = CardDataProvider;
-
-
