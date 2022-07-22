@@ -375,8 +375,6 @@ class CardRepository {
 
     createAgentList()
     {
-        this._agentList = [];
-
         for (let card of this._raw) 
         {
             if (card["type"] === "Character" && card["Secondary"] === "Agent") 
@@ -391,9 +389,9 @@ class CardRepository {
         return this._agentList;
     }
 
-    onCardsReceived(jData)
+    onCardsReceived(body)
     {
-        this.setup(jData);
+        this.setup(JSON.parse(body));
     }
 }
 
