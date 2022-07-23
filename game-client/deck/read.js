@@ -8,7 +8,7 @@ const ReadDeck = {
 
     isTextDeck : function(data)
     {
-        return data.indexOf("####") > 0;
+        return data.indexOf("####") != -1;
     },
    
     convert : function(data)
@@ -25,7 +25,9 @@ const ReadDeck = {
             if (this.isJson(data))
                 return JSON.parse(data);
             else if (this.isTextDeck(data))
-                return this.convertDeck(data)
+                return this.convertDeck(data);
+            else
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Unknown deck. Cannot process it." }));
         }
 
         return null;
