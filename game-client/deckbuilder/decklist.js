@@ -89,7 +89,7 @@ const DeckList =
                         <img src="/media/assets/images/icon-transparent.png" alt="decrease">
                     </a>
                 </span>
-                <span class="title card_deck_title">{title}</span>&nbsp;(<span class="count count_deck_entry">1</span>)
+                <span class="title card_deck_title" title="copy to clipboard">{title}</span>&nbsp;(<span class="count count_deck_entry">1</span>)
             </div>
         </div>`;
 
@@ -559,6 +559,23 @@ const DeckList =
 
             return false;
         };
+
+        elem.querySelector(".card_deck_title").onclick = function(e)
+        {
+            const sCode = e.target.innerText;
+            /* Copy the text inside the text field */
+            if (sCode !== null && sCode !== undefined && navigator && navigator.clipboard)
+            {
+                navigator.clipboard.writeText(sCode).then(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Copied code to clipboard."})), function(err) 
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy code to  clipboard."}));
+                    console.error(err);
+                });
+            }
+            else
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy code to  clipboard."}));
+
+        };      
 
         for (let _elem of elem.getElementsByClassName("decklist-action-move"))
             _elem.onclick = DeckList.onMoveCard.bind(DeckList);

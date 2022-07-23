@@ -79,6 +79,10 @@ body.addtodeck #result .image {
     border-radius: 5px;
 }
 
+.card_deck_title {
+    cursor: pointer;
+}
+
 .category .image .actions a.fa {
 	font-size: 3em;
     color: white;
