@@ -176,8 +176,8 @@ const DeckList =
             if (_val === "Site" || _val === "Region")
                 continue;
             
-            ViewCards.config.vsDeckContainerIds.push({ "id" : "hazard_" + index, "type" : _val, "resource":false});
-            html += '<div id="hazard_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
+            ViewCards.config.vsDeckContainerIds.push({ "id" : "hazards_" + index, "type" : _val, "resource":false});
+            html += '<div id="hazards_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
         }
 
         {
