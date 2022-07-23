@@ -90,12 +90,12 @@ const SearchResult = {
 
                 const pJson = ViewCards.config.jsonData[vnIndicesCharacters[key][_index]];
                 const index = vnIndicesCharacters[key][_index];
-
+                const cardCode = CardData.get(pJson, "code", "");
                 {
                     const _image = document.createElement("img");
                     _image.setAttribute("src", "/data/card-not-found-generic");
-                    _image.setAttribute("data-src", getImageUrlByCode(CardData.get(pJson, "code", "")));
-                    _image.setAttribute("title", CardData.get(pJson, "code", ""));
+                    _image.setAttribute("data-src", getImageUrlByCode(cardCode));
+                    _image.setAttribute("title", cardCode);
                     _image.setAttribute("class", "preview");
                     _image.setAttribute("decoding", "async");
 
@@ -139,6 +139,18 @@ const SearchResult = {
                     _a.setAttribute("title", "add to sideboard");
                     _a.setAttribute("data-target", "sideboard");
                     _a.onclick = SearchResult.onClickLinkAddTo;
+                    _tmp.appendChild(_a); 
+
+                    _entry.appendChild(_tmp);
+
+                    _a = document.createElement("a");
+                    _a.innerHTML = "&nbsp;"
+                    _a.setAttribute("href", "#");
+                    _a.setAttribute("class", "fa fa-solid fa-copy");
+                    _a.setAttribute("title", "Copy code");
+                    _a.setAttribute("data-target", "");
+                    _a.setAttribute("data-code", cardCode);
+                    _a.onclick = SearchResult.onClickLinkCopyCode;
                     _tmp.appendChild(_a); 
 
                     _entry.appendChild(_tmp);
@@ -256,6 +268,28 @@ const SearchResult = {
         elem = pDiv.querySelector(".count_bubble");
         if (elem !== null)
             elem.innerHTML = count;
+    },
+
+    onClickLinkCopyCode : function(e)
+    {
+        const pLink = e.target;
+        const sCode = pLink.getAttribute("data-code");
+
+        /* Copy the text inside the text field */
+        if (navigator && navigator.clipboard)
+        {
+            navigator.clipboard.writeText(sCode).then(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Copied code to clipboard."})), function(err) 
+            {
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy code to  clipboard."}));
+                console.error(err);
+            });
+        }
+        else
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy code to  clipboard."}));
+
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     },
 
     onClickLinkAddTo : function(e)

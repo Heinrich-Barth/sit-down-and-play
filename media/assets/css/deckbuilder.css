@@ -79,6 +79,15 @@ body.addtodeck #result .image {
     border-radius: 5px;
 }
 
+.category .image .actions a.fa {
+	font-size: 3em;
+    color: white;
+    padding: 5px;
+    height: auto;
+}
+.category .image .actions a.fa:hover {
+    color: #ffa500;
+}
 .decklist-action-move
 {
     display: inline-block;
