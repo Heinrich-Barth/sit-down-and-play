@@ -24,21 +24,23 @@ Here is a [step by step guide](README_setup.md) how to set everything up. Detail
 
 ### Feature Overview
 
+The project allows you to 
+
+* Play Games (Singleplayer, Multiplayer 2-10, Arda Format)
+* Deckbuilder (gccg compatible format if card codes match)
+* Browse cards
+* Import a deck (copy&paste)
+* Browse maps and edit position markers
+
+### Plattform Architecture
+
 Here are some essential features of this project:
 
 * Intuitive gameplay via drag and drop.
 * All works *in-memory* (no persistence necessary).
 * No user identity management needed (database server is not needed).
-
-### What you can do
-
-This project allows to
-
-* Play a game (see below for further details)
-* Play a shared deck game (arda)
-* Browse cards
-* Browse maps and edit position markers
-* Build a deck
++ Strict CSP header policy
+* Import cards from GCCG or other 3rd party card data provider.
 
 Special information about *development* can be accessed in a dedicated [README_development.md](README_development.md).
 
@@ -65,13 +67,7 @@ The application will make use of the local data files using `ENV` variables.
 
 `PORT` sets the app's port (8080) 
 
-`IMAGE_PATH` allows you to point to the subdirectory where your card images are stored. You can also use an URL to load external resources via a CDN or similar. If you use local images, these will be made available via the url path `/data/images`.
-
-`CARDURL` allows to specify where the card data is retreived from. Usually, this is a local file inside your `./data` directory (cards.json). You can also provide an URL.
-
-`MAPPOS` is the filename of your position marker geo coordinates (map-positions-example.json)
-
-Card data and images *are not part of this project* and you will have to provide them.
+Card data and images *are not part of this project* and you will have to provide them. Checkout [README_development.md](README_development.md) for more information about this.
 
 ## Security
 
