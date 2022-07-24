@@ -163,7 +163,7 @@ class GamePlayRouteHandler
         {
             this.clearCookies(res);
 
-            const sUser = req.cookies.username === undefined ? "" : req.cookies.username;
+            const sUser = req.cookies.username === undefined ? "" : this.sanatiseCookieValue(req.cookies.username);
             let sHtml = fs.readFileSync(this.pageLogin, 'utf8');
 
             this.createExpireResponse(res, "text/html").send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
@@ -311,7 +311,7 @@ class GamePlayRouteHandler
         {
             this.m_pServerInstance.roomManager.sendJoinNotification(req.params.room);
             let sHtml = fs.readFileSync(this.pageLobby, 'utf8');
-            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", req.params.room).replace("{id}",req.cookies.userId)).status(200);
+            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", req.params.room).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
         }
     }
 
@@ -432,10 +432,30 @@ class GamePlayRouteHandler
             /* Force close all existing other sessions of this player */
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
             this.m_pServerInstance.roomManager.updateDice(room, req.cookies.userId, dice);
-            this.createExpireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, req.cookies.userId, req.cookies.username, lTimeJoined, dice)).status(200);
+            this.createExpireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, this.sanatiseCookieValue(req.cookies.userId), this.sanatiseCookieValue(req.cookies.username), lTimeJoined, dice)).status(200);
         }
     }
 
+    /**
+     * Simple cookie value check to avoid some illegal characters that could add 
+     * custom code snippets - it basically removes potential string breaking characters
+     * such as Quotes, Single Quotes, line break, tabs
+     * 
+     * @param {String} value 
+     * @returns Value or random UUID to avoid any problems
+     */
+    sanatiseCookieValue(value)
+    {
+        if (value === undefined ||
+            value === null ||
+            value.indexOf("\"") !== -1 || 
+            value.indexOf("'") !== -1 || 
+            value.indexOf("\t") !== -1 || 
+            value.indexOf("\n") !== -1)
+            return UTILS.generateFlatUuid();
+        else
+            return value.trim();
+    }
 
     /**
      * Check if all necessary cookies are still valid
