@@ -51,7 +51,7 @@ class RoomManager {
 
     getRoom(room)
     {
-        if (room !== undefined && room !== "" && this._rooms[room] !== undefined)
+        if (room !== undefined && room !== "" && room.length <= 50 && this._rooms[room] !== undefined)
             return this._rooms[room];
         else
             return null;
