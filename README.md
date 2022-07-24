@@ -54,11 +54,11 @@ Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron
 
 Make sure you have [Node.js](http://nodejs.org/) installed. You will find further details about development and adaptation at the end of this page.
 
-Open your terminal and access this project folder. THen run the following commands:
+Open your terminal and access this project folder. Then run the following commands:
 
 ````
 npm install
-npm run local
+npm start
 ````
 
 Your app should now be running on [localhost:8080](http://localhost:8080/).
@@ -68,6 +68,15 @@ The application will make use of the local data files using `ENV` variables.
 `PORT` sets the app's port (8080) 
 
 Card data and images *are not part of this project* and you will have to provide them. Checkout [README_development.md](README_development.md) for more information about this.
+
+## System Requirements
+
+The project does have a very low resource requirements:
+
+* About 100 MB RAM
+* Single Core CPU is enough
+
+By default, the project does *does not* spawn separate processes, because room/game management via socket.io does not consider a multi-thread approach.
 
 ## Security
 
