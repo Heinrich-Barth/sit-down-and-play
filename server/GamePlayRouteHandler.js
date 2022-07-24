@@ -311,7 +311,7 @@ class GamePlayRouteHandler
         {
             this.m_pServerInstance.roomManager.sendJoinNotification(req.params.room);
             let sHtml = fs.readFileSync(this.pageLobby, 'utf8');
-            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", req.params.room).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
+            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", this.sanatiseCookieValue(req.params.room)).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
         }
     }
 
