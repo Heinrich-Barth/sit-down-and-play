@@ -80,6 +80,7 @@ body.addtodeck #result .image {
 }
 
 .card_deck_title {
+    padding-left: 5px;
     cursor: pointer;
 }
 
