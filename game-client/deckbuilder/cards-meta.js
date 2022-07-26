@@ -52,11 +52,10 @@ CreateCardsMeta.prototype.updateSets = function (cards)
     for (let card of cards)
     {
         if (card.set_code !== "")
-            _data[card.set_code] = true;
+            _data[card.set_code] = card.full_set;
     }
-    
-    this._listSets = Object.keys(_data);
-    this._listSets.sort();
+
+    this._listSets = _data;
 };
 
 

@@ -41,9 +41,31 @@ const SearchBar = {
         SearchBar.fillSelect("view_card_type", e.detail.type, "_alltype");
         SearchBar.fillSelect("view_card_align", e.detail.align, "_allalign");
         SearchBar.fillSelect("view_card_category", e.detail.category, "_allcategory");
-        SearchBar.fillSelect("view_card_set", e.detail.sets, "");
+        SearchBar.fillSelectSet("view_card_set", e.detail.sets);
         SearchBar.initFormFields();
     },
+
+    fillSelectSet : function(sId, sortedList)
+    {
+        if (sortedList === undefined)
+            sortedList = [];
+
+        const pSelectType = document.getElementById(sId);
+
+        let keyList = Object.keys(sortedList);
+        keyList.sort();
+
+        for (let key of keyList)
+        {
+            if (key === "")
+                continue;
+                
+            let option = document.createElement("option");
+            option.text = sortedList[key];
+            option.value = key;
+            pSelectType.add(option);
+        }
+    },    
 
     fillSelect : function(sId, sortedList, sAllowAll)
     {
