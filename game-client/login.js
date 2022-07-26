@@ -117,14 +117,13 @@ const removeQuotes = function(sCode)
 
 const getCardCodeList = function()
 {
-    function toJson(sId)
+    function toJson(sId, vsCards)
     {
-        let vsCards = [];
         let _code;
         for (_code of document.getElementById(sId).value.split('\n'))
         {
             let sCode = getCode(_code);
-            if (sCode !== "")
+            if (sCode !== "" && !vsCards.includes(sCode))
                 vsCards.push(sCode);
         }
 
@@ -133,11 +132,11 @@ const getCardCodeList = function()
 
     let _res = [];
 
-    _res = _res.concat(toJson("pool")); 
-    _res = _res.concat(toJson("sideboard")); 
-    _res = _res.concat(toJson("characters")); 
-    _res = _res.concat(toJson("resources")); 
-    _res = _res.concat(toJson("hazards")); 
+    toJson("pool", _res); 
+    toJson("sideboard", _res); 
+    toJson("characters", _res); 
+    toJson("resources", _res);
+    toJson("hazards", _res);
 
     return _res;
 };
@@ -358,6 +357,60 @@ const getGameType = function()
         return "standard"
 };
 
+
+const onProcessDeckCheckResult = function(codes)
+{
+    if (codes === undefined || codes.length === 0)
+        return;
+
+    const ul = document.createElement("ul");
+    ul.setAttribute("class", "cookie_notice");
+
+    const sRes = document.getElementById("resources").value;
+    const sHaz = document.getElementById("hazards").value;
+    const sSide = document.getElementById("sideboard").value;
+    const sChars = document.getElementById("characters").value;
+    const sPool = document.getElementById("pool").value;
+
+    let divider = "";
+    for (let code of codes)
+    {
+        let li = document.createElement("li");
+        li.innerText = code + " (";
+        divider = "";
+        if (sRes.indexOf(code) !== -1)
+        {
+            li.innerText += divider + "Resources";
+            divider = ", ";
+        }
+        if (sHaz.indexOf(code) !== -1)
+        {
+            li.innerText += divider + "Hazards";
+            divider = ", ";
+        }
+        if (sSide.indexOf(code) !== -1)
+        {
+            li.innerText += divider + "Sideboard";
+            divider = ", ";
+        }
+        if (sChars.indexOf(code) !== -1)
+        {
+            li.innerText += divider + "Characters";
+            divider = ", ";
+        }
+        if (sPool.indexOf(code) !== -1)
+        {
+            li.innerText += divider + "Pool";
+        }
+
+        li.innerText += ")";
+        ul.appendChild(li);
+    }
+
+    document.getElementById("invalid-cards-info-result").appendChild(ul);
+    document.getElementById("invalid-cards-info").classList.remove("hidden");
+};
+
 const onCheckCardCodes = function()
 {
     if (!validateUserName())
@@ -393,17 +446,7 @@ const onCheckCardCodes = function()
                 if (data.valid === true)
                     onPerformLogin();
                 else
-                {
-                    let sHtml = "";
-                    let nSize = data.codes.length;
-                    for (let i = 0; i < nSize; i++)
-                        sHtml += "<li>" + data.codes[i] + "</li>";
-
-                    document.getElementById("invalid-cards-info-result").innerHTML = '<ul class="cookie_notice">' + sHtml + "</ul>";
-                    document.getElementById("invalid-cards-info").classList.remove("hidden");
-
-                    document.body.classList.remove("isLoggingIn");
-                }
+                    onProcessDeckCheckResult(data.codes);
             });
         }
     }).catch(() => 
