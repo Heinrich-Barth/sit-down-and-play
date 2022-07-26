@@ -409,6 +409,7 @@ const onProcessDeckCheckResult = function(codes)
 
     document.getElementById("invalid-cards-info-result").appendChild(ul);
     document.getElementById("invalid-cards-info").classList.remove("hidden");
+    document.body.classList.remove("isLoggingIn");
 };
 
 const onCheckCardCodes = function()
