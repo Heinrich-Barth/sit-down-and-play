@@ -459,6 +459,8 @@ class GamePlayRouteHandler
             value.indexOf("\"") !== -1 || 
             value.indexOf("'") !== -1 || 
             value.indexOf("\t") !== -1 || 
+            value.indexOf(" ") !== -1 || 
+            value.indexOf(";") !== -1 || 
             value.indexOf("\n") !== -1)
             return UTILS.generateFlatUuid();
         else
