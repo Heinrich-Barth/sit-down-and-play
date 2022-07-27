@@ -1,5 +1,4 @@
 
-const fs = require('fs');
 
 const Personalisation = {
 
@@ -15,6 +14,8 @@ const Personalisation = {
 
 (function()
 {
+    const fs = require('fs');
+
     const readDir = function(rootDir)
     {
         try
