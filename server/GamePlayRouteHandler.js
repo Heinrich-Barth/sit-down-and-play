@@ -13,10 +13,25 @@ class GamePlayRouteHandler
         this.startupTime = pServer.startupTime;
 
         const path = require('path');
-        this.pageHome = path.join(__dirname, "/../pages/"  + sPagePlayRoot);
-        this.pageLogin = path.join(__dirname, "/../pages/" + sPageLogin);
-        this.pageLobby = path.join(__dirname, "/../pages/" + sLobbyPage);
-        this.pageWatch = path.join(__dirname, "/../pages/login-watch.html");
+        this.pageHome = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/"  + sPagePlayRoot));
+        this.pageLogin = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/" + sPageLogin));
+        this.pageLobby = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/" + sLobbyPage));
+        this.pageWatch = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/login-watch.html"));
+    }
+
+    static readFile(file)
+    {
+        try
+        {
+            console.log("reading " + file);
+            return fs.readFileSync(file, 'utf8').trim();
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
+
+        return "";
     }
 
     static maxRooms = 5;
@@ -54,7 +69,7 @@ class GamePlayRouteHandler
 
     onHome(_req, res)
     {
-        this.createExpireResponse(res, "text/html").sendFile(this.pageHome);
+        this.createExpireResponse(res, "text/html").status(200).send(this.pageHome);
     }
 
     setupRoutes()
@@ -164,9 +179,7 @@ class GamePlayRouteHandler
             this.clearCookies(res);
 
             const sUser = req.cookies.username === undefined ? "" : this.sanatiseCookieValue(req.cookies.username);
-            let sHtml = fs.readFileSync(this.pageLogin, 'utf8');
-
-            this.createExpireResponse(res, "text/html").send(sHtml.replace("{DISPLAYNAME}", sUser)).status(200);
+            this.createExpireResponse(res, "text/html").send(this.pageLogin.replace("{DISPLAYNAME}", sUser)).status(200);
         }
     }
 
@@ -290,10 +303,7 @@ class GamePlayRouteHandler
         if (!UTILS.isAlphaNumeric(req.params.room) || !this.m_pServerInstance.roomManager.roomExists(req.params.room))
             res.redirect("/error");
         else
-        {
-            const sHtml = fs.readFileSync(this.pageWatch, 'utf8');
-            this.createExpireResponse(res, 'text/html').send(sHtml).status(200);
-        }
+            this.createExpireResponse(res, 'text/html').send(this.pageWatch).status(200);
     }
 
     onLobby(req, res)
@@ -310,8 +320,7 @@ class GamePlayRouteHandler
         else 
         {
             this.m_pServerInstance.roomManager.sendJoinNotification(req.params.room);
-            let sHtml = fs.readFileSync(this.pageLobby, 'utf8');
-            this.createExpireResponse(res, "text/html").send(sHtml.replace("{room}", this.sanatiseCookieValue(req.params.room)).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
+            this.createExpireResponse(res, "text/html").send(this.pageLobby.replace("{room}", this.sanatiseCookieValue(req.params.room)).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
         }
     }
 
