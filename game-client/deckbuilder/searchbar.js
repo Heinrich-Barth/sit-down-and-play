@@ -51,19 +51,19 @@ const SearchBar = {
             sortedList = [];
 
         const pSelectType = document.getElementById(sId);
+        
+        let arrayList = Array.from(Object.entries(sortedList));
+        arrayList.sort((a, b) => a[1].localeCompare(b[1]));
 
-        let keyList = Object.keys(sortedList);
-        keyList.sort();
-
-        for (let key of keyList)
+        for (let set of arrayList)
         {
-            if (key === "")
-                continue;
-                
-            let option = document.createElement("option");
-            option.text = sortedList[key];
-            option.value = key;
-            pSelectType.add(option);
+            if (set[0] !== "" && set[1] !== "")
+            {
+                let option = document.createElement("option");
+                option.text = set[1];
+                option.value = set[0];
+                pSelectType.add(option);
+            }
         }
     },    
 
