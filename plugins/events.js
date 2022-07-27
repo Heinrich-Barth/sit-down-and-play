@@ -1,9 +1,4 @@
 
-const navigationEntry = function(url, label)
-{
-    return { url: url, label: label };
-};
-
 let g_jsonList = [];
 (function()
 {
@@ -44,17 +39,6 @@ function _register(pEventManager)
         SampleList.sort();
         SampleList.forEach((e) => targetList.push(e));
         console.log("Sample room names loaded: " + SampleList.length);
-    });
-
-    pEventManager.addEvent("main-navigation", function(targetList)
-    {
-        targetList.push(navigationEntry("/cards", "Card Browser"));
-        targetList.push(navigationEntry("/deckbuilder", "Deckbuilder"));
-        targetList.push(navigationEntry("/converter", "Import a deck"));
-        targetList.push(navigationEntry("/", "Play a game"));
-        targetList.push(navigationEntry("/map/regions", "Region Map"));
-        targetList.push(navigationEntry("/map/underdeeps", "Underdeeps Map"));
-        targetList.push(navigationEntry("/about", "About"));
     });
 
     pEventManager.addEvent("add-sample-names", function(targetList)

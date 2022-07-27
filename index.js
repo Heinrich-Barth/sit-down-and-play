@@ -83,7 +83,6 @@ let SERVER = {
     cards : null,
     _io : null,
     _sampleRooms : [],
-    _navigation : [],
     _sampleNames : [],
 
     startupTime : Date.now(),
@@ -116,7 +115,6 @@ SERVER.cards.load();
     SERVER.authenticationManagement.setUserManager(SERVER.roomManager);
 
     g_pEventManager.trigger("add-sample-rooms", SERVER._sampleRooms);
-    g_pEventManager.trigger("main-navigation", SERVER._navigation);
     g_pEventManager.trigger("add-sample-names", SERVER._sampleNames);
 
 })();
@@ -278,18 +276,9 @@ SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback, (_re
  */
 SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
 
-const Personalisation = require("./Personalisation");
 
-SERVER.instance.get("/data/dices", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.getDices()).status(200));
-SERVER.instance.get("/data/backgrounds", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.getBackgrounds()).status(200));
-SERVER.instance.use("/media/personalisation/dice", g_pExpress.static(__dirname + "/media/personalisation/dice"));
-SERVER.instance.use("/media/personalisation/backgrounds", g_pExpress.static(__dirname + "/media/personalisation/backgrounds"));
-SERVER.instance.use("/media/personalisation/sounds", g_pExpress.static(__dirname + "/media/personalisation/sounds"));
-SERVER.instance.get("/media/personalisation/personalisation.css", SERVER.caching.expires.generic, (_req, res) => {
-    res.setHeader('content-type', 'text/css');
-    Personalisation.writePersonalisationCss(res);
-    res.end();
-});
+require("./Personalisation")(SERVER, g_pExpress);
+
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
  */
@@ -300,11 +289,6 @@ SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.
  */
 SERVER.instance.get("/data/marshallingpoints", SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.cards.getMarshallingPoints(req.query.code)));
 
-/**
- * Get the navigation
- */
-SERVER.instance.get("/data/navigation", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER._navigation).status(200));
-     
 /**
  * Provide the cards
  */
@@ -371,13 +355,9 @@ if (SERVER.configuration.hasLocalImages())
     SERVER.instance.use("/data/images", g_pExpress.static(SERVER.configuration.imageFolder(), SERVER.caching.headerData.generic));
 }
 
+/** load navigation and non-game endpoints */
+require("./plugins/Navigation")(SERVER, g_pExpress, g_pAuthentication, __dirname);
 
-SERVER.instance.get("/about", SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/about.html"));
-SERVER.instance.get("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/deckbuilder.html"));
-SERVER.instance.get("/converter", SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/converter.html"));
-SERVER.instance.get("/cards", g_pAuthentication.isSignedInCards, SERVER.caching.cache.htmlCallback, (_req, res) => res.sendFile(__dirname + "/pages/card-browser.html"));
-SERVER.instance.use("/help", g_pExpress.static(__dirname + "/pages/help.html", SERVER.caching.headerData.generic));
- 
 /**
   * Home Page redirects to "/play"
   */
