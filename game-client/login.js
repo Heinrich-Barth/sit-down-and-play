@@ -279,15 +279,25 @@ const focusUsername = function()
 
 const validateUserName = function()
 {
-    const sName = document.getElementById("user").value.trim();
-    if (sName === "")
+    try
     {
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Enter valid username first." }));
-        focusUsername();
-        return "";
+        const sName = document.getElementById("user").value.trim();
+        if (sName === "" || sName.length < 2)
+            throw new Error("Enter valid username first.");
+        else if(!sName.match(/^[0-9a-zA-Z]+$/))
+            throw new Error("Please only use latin characters or numbers");
+        if (sName.length > 20)
+            throw new Error("Your username may only have 20 characters");
+        else
+            return sName;
     }
-    else
-        return sName;
+    catch(err)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": err.message }));
+        focusUsername();
+    }
+
+    return "";
 };
 
 const onPerformLogin = function()
