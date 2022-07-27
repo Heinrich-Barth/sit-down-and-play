@@ -380,7 +380,7 @@ require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction()
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
 require("./server/RoutingHealth").setup(SERVER);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
-require("./server/RoutingErrorPages")(SERVER);
+require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
 SERVER.onIoConnection = function (socket) 
 {
