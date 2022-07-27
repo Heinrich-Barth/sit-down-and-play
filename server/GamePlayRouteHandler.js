@@ -23,7 +23,6 @@ class GamePlayRouteHandler
     {
         try
         {
-            console.log("reading " + file);
             return fs.readFileSync(file, 'utf8').trim();
         }
         catch (err)
