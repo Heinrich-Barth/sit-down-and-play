@@ -476,8 +476,6 @@ class GameStandard extends GamePlayers
             isEmpty : true
         };
 
-        let list = []
-
         if (card.type !== "character" || obj.source !== "inplay")
         {
             /**
@@ -508,21 +506,18 @@ class GameStandard extends GamePlayers
     }
 
 
-    refreshAllHandsOfAllPlayers()
+    refreshAllHandsOfAllPlayers(userid, socket)
     {
-        for (let id of this.getPlayerIds())
-        {
-            let res = [];
-            const _list = this.getPlayboardManager().GetCardsInHand(id);
-            for (let card of _list)
-                res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
-    
-            if (res.length > 0)
-                this.replyToPlayerById("/game/card/hand", id, { cards: res });
-        }
+        let res = [];
+        const _list = this.getPlayboardManager().GetCardsInHand(userid);
+        for (let card of _list)
+            res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
+
+        if (res.length > 0)
+            this.replyToPlayer("/game/card/hand", socket, { cards: res });
     }
 
-    onCardMove(userid, _socket, obj)
+    onCardMove(userid, socket, obj)
     {
         const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
         
@@ -535,7 +530,7 @@ class GameStandard extends GamePlayers
         if (!result.isEmpty)
         {
             if (obj.drawTop)
-                this.refreshAllHandsOfAllPlayers();
+                this.refreshAllHandsOfAllPlayers(userid, socket);
         
             this.updateHandCountersPlayer(userid);
             this.publishToPlayers("/game/event/cardmoved", userid, {list: result.codes, target: obj.target, source: obj.source});
