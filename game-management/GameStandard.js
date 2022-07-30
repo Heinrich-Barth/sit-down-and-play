@@ -466,16 +466,18 @@ class GameStandard extends GamePlayers
             return cardOwner;
     }
 
-    onCardMove(userid, socket, obj)
+    onCardMoveDoMove(userid, obj, card)
     {
-        const drawTop = obj.drawTop;
-        const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
-        const card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
-        if (card === null)
-            return;
+        let result = {
+            codes: [],
+            uuids : [],
+            countMoved : 0,
+            affectedCompanyUuid : "",
+            isEmpty : true
+        };
 
-        let list = [];
-        let affectedCompanyUuid;
+        let list = []
+
         if (card.type !== "character" || obj.source !== "inplay")
         {
             /**
@@ -484,30 +486,44 @@ class GameStandard extends GamePlayers
              */
             const _targetPlayer = this.identifyCardOwnerWhenMoving(userid, card.owner, obj.target);
             if (this.getPlayboardManager().MoveCardTo(obj.uuid, _targetPlayer, obj.target))
-                list.push(obj.uuid);
+                result.uuids.push(obj.uuid);
         } 
         else
         {
-            affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
-            list = this.getPlayboardManager().MoveCardCharacterTo(obj.uuid, card.owner, obj.target);
+            result.affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
+            result.uuids = this.getPlayboardManager().MoveCardCharacterTo(obj.uuid, card.owner, obj.target);
         }
 
-        if (list.length > 0)
+        for (let _uid of result.uuids)
         {
-            if (drawTop)
-                this.onGetTopCardFromHand(card.owner, socket, list.length);
+            const _card = this.getPlayboardManager().GetCardByUuid(_uid);
+            if (_card !== null)
+                result.codes.push({code: _card.code, owner: _card.owner, uuid: _uid});
+        }
 
+        result.countMoved = result.uuids.length;
+        result.isEmpty = result.countMoved === 0;
+
+        return result;
+    }
+
+    onCardMove(userid, socket, obj)
+    {
+        const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
+        
+        const card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
+        if (card === null)
+            return;
+
+        const result = this.onCardMoveDoMove(userid, obj, card);
+
+        if (!result.isEmpty)
+        {
+            if (obj.drawTop)
+                this.onGetTopCardFromHand(card.owner, socket, result.countMoved.length);
+        
             this.updateHandCountersPlayer(userid);
-
-            let listCodes = [];
-            for (let _uid of list)
-            {
-                const _card = this.getPlayboardManager().GetCardByUuid(_uid);
-                if (_card !== null)
-                    listCodes.push({code: _card.code, owner: _card.owner, uuid: _uid});
-            }
-
-            this.publishToPlayers("/game/event/cardmoved", userid, {list: listCodes, target: obj.target, source: obj.source});
+            this.publishToPlayers("/game/event/cardmoved", userid, {list: result.codes, target: obj.target, source: obj.source});
         }
 
         if (bShufflePlaydeck)
@@ -516,13 +532,15 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
 
-        // now we have to remove the cards from the board again
-        this.publishToPlayers("/game/card/remove", userid, list);
+        /* now we have to remove the cards from the board */
+        this.publishToPlayers("/game/card/remove", userid, result.uuids);
+
         if (bShufflePlaydeck)
-            this.publishChat(userid, "Shuffled " + list.length + " card(s) into playdeck");
+            this.publishChat(userid, "Shuffled " + result.countMoved + " card(s) into playdeck");
         else
-            this.publishChat(userid, "Moved " + list.length + " card(s) to top of " + obj.target);
-        this.onRedrawCompany(userid, affectedCompanyUuid);
+            this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target);
+
+        this.onRedrawCompany(userid, result.affectedCompanyUuid);
     }
 
     onCardToken(userid, _socket, data)
