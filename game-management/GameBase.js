@@ -194,6 +194,11 @@ class GameBase {
         this.apis.meccgApi.reply(path, socket, obj);
     }
 
+    replyToPlayerById(path, userid, obj)
+    {
+        this.apis.meccgApi.replyTo(path, userid, obj);
+    }
+
     getDeckManager()
     {
         return this.getPlayboardManager().getDecks();

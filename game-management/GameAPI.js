@@ -167,14 +167,9 @@ class GameAPI
      * @param {String} userid Socket
      * @param {JSON} data Data to be sent
      */
-     replyTo(sPath, userid, data)
+    replyTo(sPath, userid, data)
     {
-        if (typeof data === "undefined")
-            return;
-
-        let socket = this._sockets[userid]
-        if (socket !== undefined)
-            socket.emit(sPath, {target: socket.userid, payload: data});
+        this.reply(sPath, this._sockets[userid], data);
     }
 
     /**
@@ -185,6 +180,9 @@ class GameAPI
      */
     reply(sPath, socket, data)
     {
+        if (socket === undefined || socket === null)
+            return;
+
         if (typeof data === "undefined")
             data = {};
 

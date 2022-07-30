@@ -507,7 +507,22 @@ class GameStandard extends GamePlayers
         return result;
     }
 
-    onCardMove(userid, socket, obj)
+
+    refreshAllHandsOfAllPlayers()
+    {
+        for (let id of this.getPlayerIds())
+        {
+            let res = [];
+            const _list = this.getPlayboardManager().GetCardsInHand(id);
+            for (let card of _list)
+                res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
+    
+            if (res.length > 0)
+                this.replyToPlayerById("/game/card/hand", id, { cards: res });
+        }
+    }
+
+    onCardMove(userid, _socket, obj)
     {
         const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
         
@@ -520,7 +535,7 @@ class GameStandard extends GamePlayers
         if (!result.isEmpty)
         {
             if (obj.drawTop)
-                this.onGetTopCardFromHand(card.owner, socket, result.countMoved.length);
+                this.refreshAllHandsOfAllPlayers();
         
             this.updateHandCountersPlayer(userid);
             this.publishToPlayers("/game/event/cardmoved", userid, {list: result.codes, target: obj.target, source: obj.source});

@@ -250,8 +250,7 @@ class GameArda extends GameStandard
                 this.publishToPlayers("/game/notification", userid, { type: "warning", message: sDeck } );
             return;
         }
-            
-
+        
         const card = this.getDeckManager().getFullPlayerCard(uuid);
         if (card === null)
             return;
@@ -272,6 +271,33 @@ class GameArda extends GameStandard
         };
 
         this.replyToPlayer("/game/arda/checkdraft", socket, data);
+    }
+
+    refreshAllHandsOfAllPlayers()
+    {
+        super.refreshAllHandsOfAllPlayers();
+
+        let userid = "";
+        for (let id of this.getPlayerIds())
+        {
+            if (userid === "")
+                userid = id;
+
+            const listMP = this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(id));
+            this.replyToPlayerById("/game/arda/hand/marshallingpoints", id, {list: listMP});
+        }
+
+        const pAdminDeck = this.getDeckManager().getAdminDeck();
+        if (pAdminDeck !== null)
+        {
+            let list = this.getCardList(pAdminDeck.getHandCharacters());
+            console.log("Updaging characters: " + list.length);
+            this.publishToPlayers("/game/arda/hand/characters", userid, {list: list});
+
+            list = this.getCardList(pAdminDeck.getHandMinorItems());
+            console.log("Updaging minors: " + list.length);
+            this.publishToPlayers("/game/arda/hand/minor", userid, {list: list});
+        }
     }
 
     onGetHandMinorItems(userid)

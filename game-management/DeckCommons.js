@@ -161,7 +161,7 @@ class DeckCommons {
     {
         if (listPlaydeck.length === 0)
         {
-            console.log("no cards in source list");
+            console.log("no cards in source list to transfer card");
             return "";
         }
 
@@ -183,7 +183,7 @@ class DeckCommons {
     {
         if (listPlaydeck.length === 0)
         {
-            console.log("no cards in source list");
+            console.log("no cards in source list to transfer to top");
             return "";
         }
 

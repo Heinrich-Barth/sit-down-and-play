@@ -344,6 +344,15 @@ class DeckArda extends DeckDefault {
     }
 
     /**
+     * Get minor item hand list
+     * @returns Array of Strings
+     */
+    getHandMinorItems()
+    {
+        return this.handMinorItems;
+    }
+
+    /**
      * Move characters with mind 6+ to playdeck
      */
     mergeCharacterListsOnce()
