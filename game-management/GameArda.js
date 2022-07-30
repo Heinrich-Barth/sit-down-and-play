@@ -291,11 +291,9 @@ class GameArda extends GameStandard
         if (pAdminDeck !== null)
         {
             let list = this.getCardList(pAdminDeck.getHandCharacters());
-            console.log("Updaging characters: " + list.length);
             this.publishToPlayers("/game/arda/hand/characters", userid, {list: list});
 
             list = this.getCardList(pAdminDeck.getHandMinorItems());
-            console.log("Updaging minors: " + list.length);
             this.publishToPlayers("/game/arda/hand/minor", userid, {list: list});
         }
     }
