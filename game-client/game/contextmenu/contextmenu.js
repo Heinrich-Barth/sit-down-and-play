@@ -102,6 +102,7 @@ const ContextMenu = {
 
         elem.oncontextmenu = ContextMenu.contextActions.onContextSite;
         elem.ondblclick = ContextMenu.contextActions.onDoubleClickSite;
+        elem.onclick = ContextMenu.contextActions.onDoubleClickSite;
         elem.classList.add("context-cursor");
     },
 
@@ -118,6 +119,7 @@ const ContextMenu = {
         pCard.setAttribute("data-contextmenu-site-arrive-company", companyId);
         pCard.oncontextmenu = ContextMenu.contextActions.onContextSiteArrive; 
         pCard.ondblclick = ContextMenu.contextActions.onDoubleClickSiteArrive;
+        pCard.onclick = ContextMenu.contextActions.onDoubleClickSiteArrive;
         pCard.classList.add("context-cursor");
     },
 
@@ -133,9 +135,15 @@ const ContextMenu = {
         {
             elem.oncontextmenu = ContextMenu.contextActions.onContextGeneric;
             if (isOnguard)
+            {
                 elem.ondblclick = ContextMenu.contextActions.onFlipClick;
+                elem.onclick = ContextMenu.contextActions.onFlipClick;
+            }
             else
+            {
                 elem.ondblclick = ContextMenu.contextActions.onDoubleClick;
+                elem.onclick = ContextMenu.contextActions.onDoubleClick;
+            }
             elem.classList.add("context-cursor");
         }
     },
