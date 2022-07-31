@@ -44,29 +44,6 @@ class GameAPI
     }
     
     /**
-     * Random dice [1-6] number
-     */
-    getRandomDiceNumber()
-    {
-        return Math.floor(Math.random() * Math.floor(6)) + 1;
-    }
-
-    /**
-     * Obtain dice roll
-     * @returns Number
-     */
-    getRandomDiceRoll()
-    {
-        const nTimes = this.getRandomDiceNumber();
-        
-        let _res = nTimes;
-        for (let i = 0; i < nTimes; i++)
-            _res = this.getRandomDiceNumber();
-
-        return _res;
-    }
-
-    /**
      * Set a callback function to handle given path data
      * @param {String} sPath 
      * @param {Function} func_callback 
@@ -158,18 +135,6 @@ class GameAPI
             data = {};
 
         this._io.to(socket.room).emit(path, data);
-    }
-
-    /**
-     * Send a reply to the given user only
-     * 
-     * @param {String} sPath Path
-     * @param {String} userid Socket
-     * @param {JSON} data Data to be sent
-     */
-    replyTo(sPath, userid, data)
-    {
-        this.reply(sPath, this._sockets[userid], data);
     }
 
     /**

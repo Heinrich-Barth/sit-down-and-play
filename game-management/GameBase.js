@@ -168,6 +168,11 @@ class GameBase {
         return false;
     }
 
+    replyToPlayer(path, socket, obj)
+    {
+        this.apis.meccgApi.reply(path, socket, obj);
+    }
+
     publishChat(userid, message)
     {
         if (message !== "")
@@ -187,16 +192,6 @@ class GameBase {
     importCardDuringGame(playerId, code, bAsCharacter)
     {
         return this.getPlayboardManager().ImportCardsToHand(playerId, code, bAsCharacter);
-    }
-
-    replyToPlayer(path, socket, obj)
-    {
-        this.apis.meccgApi.reply(path, socket, obj);
-    }
-
-    replyToPlayerById(path, userid, obj)
-    {
-        this.apis.meccgApi.replyTo(path, userid, obj);
     }
 
     getDeckManager()

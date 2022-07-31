@@ -508,18 +508,15 @@ class GameStandard extends GamePlayers
     }
 
 
-    refreshAllHandsOfAllPlayers()
+    refreshAllHandsOfAllPlayers(userid, socket)
     {
-        for (let id of this.getPlayerIds())
-        {
-            let res = [];
-            const _list = this.getPlayboardManager().GetCardsInHand(id);
-            for (let card of _list)
-                res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
-    
-            if (res.length > 0)
-                this.replyToPlayerById("/game/card/hand", id, { cards: res });
-        }
+        let res = [];
+        const _list = this.getPlayboardManager().GetCardsInHand(userid);
+        for (let card of _list)
+            res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
+
+        if (res.length > 0)
+            this.replyToPlayer("/game/card/hand", socket, { cards: res });
     }
 
     onCardMove(userid, _socket, obj)

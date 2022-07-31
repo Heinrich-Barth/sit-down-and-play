@@ -273,18 +273,14 @@ class GameArda extends GameStandard
         this.replyToPlayer("/game/arda/checkdraft", socket, data);
     }
 
-    refreshAllHandsOfAllPlayers()
+    refreshAllHandsOfAllPlayers(userid, socket)
     {
-        super.refreshAllHandsOfAllPlayers();
+        super.refreshAllHandsOfAllPlayers(userid, socket);
 
-        let userid = "";
         for (let id of this.getPlayerIds())
         {
-            if (userid === "")
-                userid = id;
-
             const listMP = this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(id));
-            this.replyToPlayerById("/game/arda/hand/marshallingpoints", id, {list: listMP});
+            this.publishToPlayers("/game/arda/hand/marshallingpoints", id, {list: listMP});
         }
 
         const pAdminDeck = this.getDeckManager().getAdminDeck();
