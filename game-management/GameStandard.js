@@ -519,7 +519,7 @@ class GameStandard extends GamePlayers
             this.replyToPlayer("/game/card/hand", socket, { cards: res });
     }
 
-    onCardMove(userid, _socket, obj)
+    onCardMove(userid, socket, obj)
     {
         const bShufflePlaydeck = obj.shuffle !== undefined && obj.shuffle === true && "playdeck" === obj.target;
         
@@ -532,7 +532,7 @@ class GameStandard extends GamePlayers
         if (!result.isEmpty)
         {
             if (obj.drawTop)
-                this.refreshAllHandsOfAllPlayers();
+                this.refreshAllHandsOfAllPlayers(userid, socket);
         
             this.updateHandCountersPlayer(userid);
             this.publishToPlayers("/game/event/cardmoved", userid, {list: result.codes, target: obj.target, source: obj.source});
