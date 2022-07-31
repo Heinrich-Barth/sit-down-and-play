@@ -14,36 +14,6 @@ class GameAPI
     }
 
     /**
-     * Empty socket map
-     */
-    removeSockets()
-    {
-        this._sockets = {};
-    }
-
-    /**
-     * Remove socket by id
-     * @param {String} id 
-     */
-    removeSocket(id)
-    {
-        if (id !== "" && typeof this._sockets[id] !== "undefined")
-            delete this._sockets[id];
-    }
-
-    /**
-     * Add given socket to a map
-     * 
-     * @param {String} id 
-     * @param {Object} socket 
-     */
-    addSocket(id, socket)
-    {
-        if (typeof this._sockets[id] === "undefined")
-            this._sockets[id] = socket;
-    }
-    
-    /**
      * Set a callback function to handle given path data
      * @param {String} sPath 
      * @param {Function} func_callback 
@@ -87,39 +57,17 @@ class GameAPI
     }
 
     /**
-     * Add socket message listener
-     * @param {Object} socket 
-     */
-    onInitPaths(socket)
-    {
-        const THIS = this;
-        for (const path of this._vsPaths)
-            socket.on(path, (data) => THIS.onPath(socket, path, data));
-
-        socket.isingame = true;
-    }
-
-    /**
-     * Init socket game endpoints.
-     */
-    initGameEndpoints()
-    {
-        for (const key in this._sockets)
-        {
-            this.initGameEndpoint(this._sockets[key]);
-            this._sockets[key] = null;
-            delete this._sockets[key];
-        }
-    }
-
-    /**
      * Init socket game endpoint for given socket
      * 
      * @param {Object} socket 
      */
     initGameEndpoint(socket)
     {
-        this.onInitPaths(socket);
+        const THIS = this;
+        for (const path of this._vsPaths)
+            socket.on(path, (data) => THIS.onPath(socket, path, data));
+
+        socket.isingame = true;
     }
 
     /**
