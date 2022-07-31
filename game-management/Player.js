@@ -34,12 +34,22 @@ class Player
 
     disconnect()
     {
-        if (this.socket !== null)
+        try
         {
-            this.socket.leave(this.socket.room);
-            this.socket.disconnect(true);
-            this.socket = null;
+            if (this.socket !== null)
+                this.socket.leave(this.socket.room);
+
+            if (this.isConnected())
+            {
+                this.socket.disconnect(true);
+                this.socket = null;
+            }
         }
+        catch (err)
+        {
+            console.error(err);
+        }
+
     }    
 
     getName()
