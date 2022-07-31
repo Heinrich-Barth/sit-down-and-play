@@ -382,6 +382,8 @@ class RoomManager {
             pRoom.publish("/game/player/add", "", { userid: userid, name: pPlayer.getName() });
 
         /* now join the game room to receive all "published" messages as well */
+        pPlayer.disconnect();
+        
         pPlayer.socket = socket;
         pPlayer.socket.join(room);
         pPlayer.visitor = !isPlayer;
