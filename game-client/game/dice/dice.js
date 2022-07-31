@@ -4,7 +4,7 @@ class DiceContainer {
     
     static _jPlayerMap = {};
     static _count = 1;
-    static _timeout = 2500;
+    static _timeout = 5500;
     static _folder = "black";
     static _fallback = "/media/client/game/dice"
 
