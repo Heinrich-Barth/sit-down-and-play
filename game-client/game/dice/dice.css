@@ -6,21 +6,29 @@
     top: 60px;
     left: 50%;
     transform: translateX(-50%); }
-#dice_roll .dice-content { 
+
+.dice-result-list .dice-content { 
     position:  relative;
     text-align: center; 
-    color: white; padding: 5px; font-size: 0.9em; margin-bottom: 10px; display: block; 
+    color: white; 
+    padding: 5px; 
+    font-size: 0.9em; 
+    margin-bottom: 10px; 
+    display: block; 
+    animation: hideAnimation 0s ease-in 5s;
+    animation-fill-mode: forwards;
 }
-#dice_roll span.who  { color: #ffa500; }
-#dice_roll span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
-#dice_roll span.dice-info { font-style: italic; }
+
+.dice-content span.who  { color: #ffa500; }
+.dice-content span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
+.dice-content span.dice-info { font-style: italic; }
 
 .dice-result-list img.dice-icon { filter: invert(100%); width: 30px; }
 .dice-result-list img.dice-image { margin-right: 10px; width: 32px; }
 
-#dice_roll .dice-line-countdown 
+.dice-result-list .dice-line-countdown 
 {   
-    animation: dice-line 2.5s linear forwards;
+    animation: dice-line 5s linear forwards;
     height: 2px;
     background: white;
     width: 1%;
@@ -32,4 +40,7 @@
 @keyframes dice-line {
     from { width: 0%; }
     to { width: 100%; }
+}
+@keyframes hideAnimation {
+    to { display: none !important; opacity: 0;}
 }

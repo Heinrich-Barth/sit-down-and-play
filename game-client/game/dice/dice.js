@@ -50,14 +50,30 @@ class DiceContainer {
         const img1 = DiceContainer.getImage(asset, nFirst);
         const img2 = DiceContainer.getImage(asset, nSecond);
 
+        const htmlP = document.createElement("p");
+        htmlP.innerHTML = `<img class="dice-icon" src="/media/assets/images/icons/icon-dices.png"> <span class="who">${sName}</span> rolled a <span class="total big">${nTotal}</span><br>`;
+
+        let htmlImage1 = document.createElement("img");
+        htmlImage1.setAttribute("class", "dice-image");
+        htmlImage1.setAttribute("src", img1);
+        
+        let htmlImage2 = document.createElement("img");
+        htmlImage2.setAttribute("class", "dice-image");
+        htmlImage2.setAttribute("src", img2);
+
+        htmlP.appendChild(htmlImage1);
+        htmlP.appendChild(htmlImage2);
+
+        const divLine = document.createElement("div");
+        divLine.setAttribute("class", "dice-line-countdown");
+
         const div = document.createElement("div");
         div.setAttribute("class","dice-content blue-box pos-rel");
         div.setAttribute("id", id);
-        div.innerHTML = `<p><img class="dice-icon" src="/media/assets/images/icons/icon-dices.png"> <span class="who">${sName}</span> rolled a <span class="total big">${nTotal}</span><br>
-        <img class="dice-image" src="${img1}"><img class="dice-image" src="${img2}"></p>
-        <div class="dice-line-countdown"></div>`;
-        return div;
+        div.appendChild(htmlP);
+        div.appendChild(divLine);
 
+        return div;
     }
 
     getDiceAsset(dice)
