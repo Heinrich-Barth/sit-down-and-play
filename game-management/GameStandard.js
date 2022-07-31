@@ -476,8 +476,6 @@ class GameStandard extends GamePlayers
             isEmpty : true
         };
 
-        let list = []
-
         if (card.type !== "character" || obj.source !== "inplay")
         {
             /**
