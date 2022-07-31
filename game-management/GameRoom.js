@@ -175,7 +175,7 @@ class GameRoom
 
     static disconnectPlayer(socket)
     {
-        if (socket == undefined || socket.room === undefined || socket.room === "")
+        if (socket === null || socket == undefined || socket.room === undefined || socket.room === "")
             return;
     
         try
