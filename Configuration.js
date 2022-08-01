@@ -37,10 +37,27 @@ class Configuration {
             this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
         }
 
-        this._mapPositions = Configuration.assertUrlOrDataDirectory(process.env.MAPPOS, "/data/map-positions.json");
+        this._mapPositions = Configuration.obtainMapPositionFile();
 
         if (!this._hasLocaLCards && sLocalConfig !== undefined && sLocalConfig !== "")
             this.loadConfig(sLocalConfig);
+    }
+
+    static obtainMapPositionFile()
+    {
+        try
+        {
+            if (fs.existsSync(__dirname + "/data/map-positions.json"))
+                return __dirname + "/data/map-positions.json";
+            else if (fs.existsSync(__dirname + "/data-local/map-positions.json"))
+                return __dirname + "/data-local/map-positions.json";
+            else
+                return "";
+        }
+        catch (err)
+        {
+            console.warn(err);
+        }
     }
 
     static assertString(input, def)
