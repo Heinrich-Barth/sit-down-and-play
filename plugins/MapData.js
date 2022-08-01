@@ -71,8 +71,11 @@ class MapData
     {
         try
         {
-            const fs = require("fs");
-            return JSON.parse(fs.readFileSync(positionFile, 'utf8'));
+            if (positionFile !== "")
+            {
+                const fs = require("fs");
+                return JSON.parse(fs.readFileSync(positionFile, 'utf8'));
+            }
         }
         catch(err)
         {
