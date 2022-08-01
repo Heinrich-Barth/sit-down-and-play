@@ -16,7 +16,7 @@ class ImageList {
 
     static createImageUrl(imageName, setCode, imageUrl)
     {
-        if (imageName.startsWith("/"))
+        if (imageName.startsWith("/") || imageName.startsWith("https://"))
             return imageName;
         else
             return imageUrl + "/" + setCode + "/" + imageName;
