@@ -39,7 +39,7 @@ class Configuration {
 
         this._mapPositions = Configuration.obtainMapPositionFile();
 
-        if (!this._hasLocaLCards && sLocalConfig !== undefined && sLocalConfig !== "")
+        if (sLocalConfig !== undefined && sLocalConfig !== "")
             this.loadConfig(sLocalConfig);
     }
 
@@ -102,7 +102,7 @@ class Configuration {
         if (this.isValid(json.image_path))
             this._imageUrl = json.image_path;
 
-        if (this.isValid(json.cardsUrl))
+        if (this.isValid(json.cardsUrl) && !this._hasLocaLCards)
             this._cardsUrl = json.cardsUrl;
     }
 
@@ -181,7 +181,7 @@ class Configuration {
 
         pos = sInput.indexOf("/", pos);
         if (pos === -1)
-            return "";
+            return sInput;
         else
             return sInput.substring(0, pos).trim();        
     }
@@ -230,7 +230,6 @@ class Configuration {
                 "img-src": "'self' " + this.imageDomain(),
                 "report-uri": "/csp-violation"
             };
-            
             this._csp_header = this.joinMap(jEntries);                
         }
 
