@@ -67,22 +67,28 @@ class MapData
         this.alignments = [];
     }
 
-    init(jsonCards, positionFile)
+    getPositionFileContent(positionFile)
     {
         try
         {
             const fs = require("fs");
-            const jPos = JSON.parse(fs.readFileSync(positionFile, 'utf8'));
-            this.mapData = this.create(jsonCards, jPos);
-            this.createSiteCodeRegionList(this.mapData);
-            this.createSiteImageList(jsonCards);
-            this.alignments = SiteAlignments.get();
+            return JSON.parse(fs.readFileSync(positionFile, 'utf8'));
         }
         catch(err)
         {
             console.warn(err.message);
-            this.clear();
         }
+
+        return  { };
+    }
+
+    init(jsonCards, positionFile)
+    {
+        const jPos = this.getPositionFileContent(positionFile);
+        this.mapData = this.create(jsonCards, jPos);
+        this.createSiteCodeRegionList(this.mapData);
+        this.createSiteImageList(jsonCards);
+        this.alignments = SiteAlignments.get();
     }
 
     getMapdata()
