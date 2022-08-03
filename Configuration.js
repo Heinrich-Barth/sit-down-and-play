@@ -99,6 +99,9 @@ class Configuration {
 
     loadFromJson(json)
     {
+        if (json === null)
+            return;
+
         if (this.isValid(json.image_path))
             this._imageUrl = json.image_path;
 
@@ -106,18 +109,24 @@ class Configuration {
             this._cardsUrl = json.cardsUrl;
     }
 
-    loadConfig(sLocalConfig)
+    readJson(sFile)
     {
         try
         {
-            let data = fs.readFileSync(sLocalConfig, 'utf8');
-            console.log("Loading custom app configuration.");
-            this.loadFromJson(JSON.parse(data));
+            return JSON.parse(fs.readFileSync(sFile, 'utf8'));
         }
-        catch (er)
+        catch (err)
         {
-    
+            console.warn(err.message);
         }
+
+        return null;
+    }
+
+    loadConfig(sLocalConfig)
+    {
+        console.log("Loading custom app configuration.");
+        this.loadFromJson(this.readJson(sLocalConfig));
     }
 
     mapPositionsFile()
@@ -212,6 +221,15 @@ class Configuration {
         return sVal.trim();
     }
 
+    getCspImageValue()
+    {
+        const val = this.readJson(__dirname + "/data-local/csp-data.json");
+        if (val === null || val.image == undefined || val.image == null || val.image.indexOf("\"") !== -1)
+            return "";
+        else
+            return val.image;
+    }
+
     createContentSecurityPolicyMegaAdditionals()
     {
         this._csp_header = "";
@@ -230,6 +248,10 @@ class Configuration {
                 "img-src": "'self' " + this.imageDomain(),
                 "report-uri": "/csp-violation"
             };
+
+            jEntries["img-src"] += " " + this.getCspImageValue();
+            jEntries["img-src"] = jEntries["img-src"].trim();
+
             this._csp_header = this.joinMap(jEntries);                
         }
 
