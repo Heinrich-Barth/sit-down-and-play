@@ -133,7 +133,7 @@ class Xml2Json
 
         cardJson.title = this.sanatiseString(this.removeQuotes(this.extractAttribute(cardXml, "name")));
         cardJson.normalizedtitle = cardJson.title.toLowerCase().trim();
-        cardJson.ImageName = "/data/images/" + setInfo.dir + "/" + this.extractAttribute(cardXml, "graphics");
+        cardJson.ImageName = "https://meccg.es/meta/cards/graphics/en-remastered/" + setInfo.abbrev.toLowerCase() + "/" + this.extractAttribute(cardXml, "graphics");
         cardJson.alignment = this.getAlignmentByType(cardJson.type);
         cardJson.type = this.removeAlignmentPrefix(cardJson.type);
         cardJson.text = this.extractAttribute(cardXml, "text");
@@ -261,6 +261,7 @@ class Xml2Json
         result.size = count;
         return result;
     }
+
     addKnownTypes(cardJson)
     {
         if (cardJson.type !== undefined && !this.knownTypes.includes(cardJson.type))
@@ -432,10 +433,60 @@ class Xml2Json
     }
 }
 
+const updates =  {
+
+}
+
+const addUpdate = function(sTitle, sSet, sSetName)
+{
+    updates[sTitle] = {
+        set: sSet.toUpperCase(),
+        name: sSetName
+    };
+}
+
+addUpdate("Fury of the Iron Crown", "tw", "The Wizards");
+addUpdate("Deadly Dart", "le", "The Lidless Eye");
+addUpdate("The Arkenstone", "le", "The Lidless Eye");
+addUpdate("Fatty Bolger", "tw", "The Wizards");
+addUpdate("Ireful Flames", "td", "The Dragons");
+addUpdate("Black Arrow", "tw", "The Wizards");
+addUpdate("Neeker-breekers", "tw", "The Wizards");
+addUpdate("The Iron Crown", "tw", "The Wizards");
+
+console.log(updates);
+
 const json = new Xml2Json().createCardsJson(__dirname + "/data-local/xmls");
+const res = []
+for (let card of json)
+{
+    if (card.set_code === "FB" || card.set_code === "DF")
+        continue;
+
+    if (card.set_code === "PR")
+    {
+        if (updates[card.title] !== undefined)
+        {
+            const newTimCode = "(" + updates[card.title].set + ")";
+            card.code = card.code.replace(card.trimCode, newTimCode);
+            card.ImageName = card.ImageName.replace("/" + card.set_code.toLowerCase() + "/", "/" + updates[card.title].set.toLowerCase() + "/");
+            card.set_code = updates[card.title].set;
+            card.full_set = updates[card.title].name;
+            card.trimCode = "(" + updates[card.title].set + ")";
+            console.log("Updating " + card.code);
+        }
+        else
+        {
+            console.log("Cannot find " + card.title);
+        }
+    }
+
+    res.push(card);
+}
+
 if (json.length > 0)
 {
-    fs.writeFileSync(__dirname + "/data-local/cards.json", JSON.stringify(json, null, '\t'), 'utf-8');
+    fs.writeFileSync(__dirname + "/data-local/cards.json", JSON.stringify(res, null, '\t'), 'utf-8');
     console.log(json.length + " cards saved to ./data-local/cards.json");
 }
 else

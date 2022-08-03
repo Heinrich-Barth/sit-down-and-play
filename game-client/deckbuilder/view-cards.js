@@ -98,6 +98,8 @@ const ViewCards =
             console.log("empty code.");
             return null;
         }
+
+        code = code.toLowerCase();
         
         if (typeof ViewCards.config.vsCodeIndices[code] === "undefined")
         {
