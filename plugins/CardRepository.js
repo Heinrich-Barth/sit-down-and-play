@@ -49,6 +49,18 @@ class CardRepository {
         }
     }
 
+    codesLowercase()
+    {
+        for (let card of this._raw) 
+        {
+            card.code = card.code.toLowerCase();
+            card.title = card.title.toLowerCase();
+
+            if (card.Region !== undefined)
+                card.Region = card.Region.toLowerCase();
+        }
+    }
+
     removeQuotes(sCode) 
     {
         if (sCode.indexOf('"') === -1)
@@ -283,6 +295,7 @@ class CardRepository {
 
         this._raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
+        this.codesLowercase();
         this.integrityCheck();
         this.sort();
         this.addIndices();
@@ -305,12 +318,20 @@ class CardRepository {
     
     getCardType(code)
     {
-        return code === undefined || code === "" || this._types[code] === undefined ? "" : this._types[code];
+        if (code === undefined || code === "")
+            return "";
+        
+        code = code.toLowerCase();
+        return this._types[code] === undefined ? "" : this._types[code];
     }
 
     getCardByCode(code)
     {
-        return code === undefined || code === "" || this._CardRepository[code] === undefined ? null : this._CardRepository[code];
+        if (code === undefined || code === "")
+            return "";
+        
+        code = code.toLowerCase();
+        return this._CardRepository[code] === undefined ? null : this._CardRepository[code];
     }
 
     getCardMind(code)
@@ -361,7 +382,7 @@ class CardRepository {
 
     isCardAvailable(code)
     {
-        return code !== undefined && code !== "" && this._types[code] !== undefined;
+        return code !== undefined && code !== "" && this._types[code.toLowerCase()] !== undefined;
     }
 
     postProcessCardList()

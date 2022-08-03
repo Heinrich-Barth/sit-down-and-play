@@ -120,7 +120,7 @@ const extractCharactersSpecial = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
-        return card.type !== undefined && card.code === "Fram Framson (TD)";
+        return card.type !== undefined && card.code === "fram framson (td)";
     });
 };
 
@@ -152,7 +152,7 @@ const copyGenericCards = function(res, jDeck)
         if (count === 0)
             continue;
 
-        _code = k.replace(/"/g, '');
+        _code = k.replace(/"/g, '').toLowerCase();
         if (_code === "")
             continue;
 

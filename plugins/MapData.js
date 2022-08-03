@@ -510,10 +510,20 @@ class MapData
         return jMapData;
     }
 
+    lowerCasePositionKeys(json)
+    {
+        let res = { };
+
+        for (let key in json)
+            res[key.toLowerCase()] = json[key];
+
+        return res;
+    }
+
     create(jCards, _posData) 
     {
         let jMapData = this.updateMissingMapRegions(this.replaceMapSiteCodes({}, jCards), jCards);
-        return this.updatePositions(jMapData, _posData);
+        return this.updatePositions(jMapData, this.lowerCasePositionKeys(_posData));
     }
 
     createSiteCodeRegionList(jMap)

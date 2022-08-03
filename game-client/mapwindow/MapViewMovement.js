@@ -84,6 +84,39 @@ class MapViewMovement extends MapViewMovementSelection {
                 for (let i = 0; i < len; i++)
                 {
                     _key = _keys[i];
+                    console.log("through " + _site[_key]["code"])
+                    if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
+                        return _site[_key];
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    getSiteByCodeInRegion(sCode, jRegion)
+    {
+        if (sCode === "" || jRegion === null || jRegion === undefined)
+            return null;
+
+        let _keys, _key;
+        let _site;
+        let len;
+
+        let _region = jRegion.title;
+        if (this.jMap[_region] !== undefined)
+        {
+            for (let _siteKey in this.jMap[_region].sites)
+            {
+                if (sCode.indexOf(_siteKey) !== 0)
+                    continue;
+
+                _site = this.jMap[_region].sites[_siteKey];
+                _keys = Object.keys(_site);
+                len = _keys.length;
+                for (let i = 0; i < len; i++)
+                {
+                    _key = _keys[i];
                     if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
                         return _site[_key];
                 }
@@ -308,7 +341,7 @@ class MapViewMovement extends MapViewMovementSelection {
             return true;
         
         const jRegion = this.getRegionBySiteCode(sStartLocationCode);
-        const jSite = this.getSiteByCode(sStartLocationCode);
+        const jSite = jRegion !== null ? this.getSiteByCodeInRegion(sStartLocationCode, jRegion) : this.getSiteByCode(sStartLocationCode);
         
         if (jRegion === null)
         {
