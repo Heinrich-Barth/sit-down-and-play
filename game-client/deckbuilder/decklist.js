@@ -186,17 +186,6 @@ const DeckList =
         }
     },
 
-    onPopulateDescription : function(e)
-    {
-        const jDeck = e.detail;
-        console.log("aa");
-        console.log(jDeck);
-        if (jDeck !== undefined && jDeck.notes !== undefined)
-            document.getElementById("notes").value = jDeck.notes;
-        else
-            document.getElementById("notes").value = "";
-    },
-
     onAddToDeckList : function(e)
     {
         DeckList.addToDeckCard(ViewCards.config.jsonData[e.detail.index], e.detail.target);
@@ -754,4 +743,3 @@ const DeckList =
 document.body.addEventListener("meccg-deckbuilder-preparedecklist", DeckList.prepareDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-add-to-decklist", DeckList.onAddToDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-update-summary", DeckList.calculateAndUpdateDeckCounters, false);
-document.body.addEventListener("meccg-deck-available", DeckList.onPopulateDescription, false);

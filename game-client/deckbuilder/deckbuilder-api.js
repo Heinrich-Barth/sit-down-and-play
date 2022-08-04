@@ -118,6 +118,9 @@ const DeckbuilderApi =
         if (e === undefined)
             return;
 
+        let vsMissing = [];
+        let sNotes = "";
+
         const jDeck = e.detail;
         if (jDeck !== undefined)
         {
@@ -127,8 +130,36 @@ const DeckbuilderApi =
             /** necessary to update the counters again to remove previous deck stats */
             DeckList.removeExisting();
             ViewCards.resetCounter();
-            DeckbuilderApi.initAddCards(jDeck);
+       
+            if (jDeck !== undefined && jDeck.notes !== undefined)
+                sNotes = jDeck.notes;
+
+            vsMissing = DeckbuilderApi.initAddCards(jDeck);
         }
+
+        if (vsMissing.length > 0)
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Some cards are missing. Check description field at the end." }));
+
+        document.getElementById("notes").value = DeckbuilderApi.createNotesText(sNotes, vsMissing);
+    },
+
+    createNotesText(sText, vsMissing)
+    {
+        if (vsMissing.length === 0)
+            return sText;
+
+        for (let _val of vsMissing)
+        {
+            if (_val !== "")
+            {
+                if (sText !== "")
+                    sText += "\n\n";
+
+                sText += _val;
+            }
+        }
+
+        return sText;
     },
     
     initAddCards : function(cards)
@@ -171,7 +202,8 @@ const DeckbuilderApi =
 
         function addCardGroup(cardList, groupkey, target)
         {
-            let nSize = 0;
+            let sNotFound = "";
+
             for (let key in cardList[groupkey])
             {
                 let count = getCardCount(cardList[groupkey][key]);
@@ -180,33 +212,35 @@ const DeckbuilderApi =
     
                 const card = ViewCards.getCardFromCardCode(key);
                 if (card === null)
-                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot get " + groupkey + " card from code " + key }));
+                {
+                    if (sNotFound === "")
+                        sNotFound = "Not found in " + groupkey.toUpperCase() + "\n" + count + " " + key;
+                    else
+                        sNotFound += "\n" + count + " " + key;
+                }
                 else
                 {
                     if (target !== "" && target !== undefined)
                         DeckbuilderApi.onInitAddCard(card, count, target);
                     else
                         doAddCard(card, count);
-
-                    nSize += count;
                 }
             }
     
-            return nSize;
+            return sNotFound;
         }
 
-        let size = 0;
-        size += addCardGroup(cards, DeckbuilderApi.DECK_POOL, DeckbuilderApi.DECK_POOL);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_RESOURCE);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_RESOURCES);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_HAZARD);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_HAZARDS);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER2);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_AVATAR, DeckbuilderApi.DECK_AVATAR);
-        size += addCardGroup(cards, DeckbuilderApi.DECK_SIDEBOARD, DeckbuilderApi.DECK_SIDEBOARD);
-        
-        return size;
+        let _notFound = [];
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_POOL, DeckbuilderApi.DECK_POOL));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_RESOURCE));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_RESOURCES));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_HAZARD));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_HAZARDS));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER2));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_AVATAR, DeckbuilderApi.DECK_AVATAR));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_SIDEBOARD, DeckbuilderApi.DECK_SIDEBOARD));
+        return _notFound;
     },
 
     createExtendedDeck : function(input)
