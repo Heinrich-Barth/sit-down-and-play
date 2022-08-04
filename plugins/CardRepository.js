@@ -394,11 +394,19 @@ class CardRepository {
         console.log("\t-- all data card loaded --");
     }
 
+    isAgent(card)
+    {
+        if (card["type"] !== "Character")
+            return false;  
+        else
+            return card["Secondary"] === "Agent" || card["agent"] === "yes";
+    }
+
     createAgentList()
     {
         for (let card of this._raw) 
         {
-            if (card["type"] === "Character" && card["Secondary"] === "Agent") 
+            if (this.isAgent(card))
                 this._agentList.push(card.code);
         }
 
