@@ -348,16 +348,21 @@ td.w100 { width: 100px; }
 #deck_card_view {
     position: fixed;
     left: 314px;
-    top: 100px;
+    top: 0;
+    bottom: 0;
+    padding: 50px 0;
 }
 
 #deck_card_view img {
-    width: 350px;
     border-radius: 5px;
     background-color: rgba(255,165,0,0.35);
     border: 1px solid #ffa500;
     box-shadow: 0px 3px 6px 4px #ffa500;
+    position: relative;
+    height: 100%;
+    max-height: 100%;
 }
+
 
 .deck_rem img ,
 .deck_add img { cursor: pointer; }
