@@ -141,18 +141,29 @@ const ContextMenu = {
             }
             else
             {
-                elem.ondblclick = ContextMenu.contextActions.onDoubleClick;
-                elem.onclick = ContextMenu.contextActions.onDoubleClick;
+                elem.ondblclick = ContextMenu.contextActions.onDoubleClickGenericCard;
+                elem.onclick = ContextMenu.contextActions.onDoubleClickGenericCard;
             }
             elem.classList.add("context-cursor");
         }
     },
 
-    cardGetTapClass : function(elem)
+    cardGetTapClass : function(elem, allowWound)
     {
-        return elem.parentElement !== null && elem.parentElement.classList.contains("state_tapped") ? "ready" : "tap"
-    },
+        if (elem.parentElement === null)
+            return "tap";
+        else if (allowWound === undefined || !allowWound)
+            return elem.parentElement.classList.contains("state_tapped") ? "ready" : "tap"
 
+        const pParent = elem.parentElement;
+        if (pParent.classList.contains("state_wounded"))
+            return "ready";
+        else if (pParent.classList.contains("state_tapped"))
+            return "wound";
+        else
+            return "tap";
+    },
+    
     contextActions : {
 
         onDoubleClickSite : function(e)
@@ -164,7 +175,7 @@ const ContextMenu = {
                 return false;
 
             const code = ContextMenu._getCardCode(e.target);
-            ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target));
+            ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
         },
 
         onDoubleClickSiteArrive : function(e)
@@ -204,6 +215,28 @@ const ContextMenu = {
             }
         },
 
+        onDoubleClickGenericCard : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+                
+            let code = ContextMenu._getCardCode(e.target);
+            if (code === "")
+                code = ContextMenu.getAttribute(e.target, "data-card-code");
+
+            let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
+            if (uuid === "")
+                uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+
+            if (e.ctrlKey)
+                ContextMenu.hightlightCard(uuid, code);
+            else
+                ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target, true));
+        },
+
         onDoubleClick : function(e)
         {
             e.preventDefault();
@@ -223,7 +256,7 @@ const ContextMenu = {
             if (e.ctrlKey)
                 ContextMenu.hightlightCard(uuid, code);
             else
-                ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target));
+                ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target, false));
         },
         
         onContextGeneric : function(e)
