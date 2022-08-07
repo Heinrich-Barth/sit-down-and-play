@@ -137,13 +137,27 @@ const DeckbuilderApi =
             vsMissing = DeckbuilderApi.initAddCards(jDeck);
         }
 
-        if (vsMissing.length > 0)
+        if (!DeckbuilderApi.isEmptyArray(vsMissing))
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Some cards are missing. Check description field at the end." }));
 
         document.getElementById("notes").value = DeckbuilderApi.createNotesText(sNotes, vsMissing);
     },
 
-    createNotesText(sText, vsMissing)
+    isEmptyArray : function(vsMissing)
+    {
+        if (vsMissing === null || vsMissing === undefined || vsMissing.length === 0)
+            return true;
+
+        for (let entry of vsMissing)
+        {
+            if (entry !== "")
+                return false;
+        }
+    
+        return true;
+    },
+
+    createNotesText : function(sText, vsMissing)
     {
         if (vsMissing.length === 0)
             return sText;
