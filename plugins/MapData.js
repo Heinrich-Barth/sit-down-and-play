@@ -208,38 +208,60 @@ class MapData
         }
     }
 
-    requireRegionType(card)
+
+    requireRegionTypeByValue(val)
     {
-        const val = card === null || card.RPath === undefined ? "" : card.RPath;
-        if (val === "")
-            return "dd";
-        
+        if (val === undefined || val === null || val === "")
+            return "";
+    
         switch(val)
         {
             case "Boarder-land":
             case "Border-land":
+            case "{b}":
                 return "bl";
             case "Double Coastal Sea":
             case "Triple Coastal Seas":
             case "Coastal Sea":
+            case "{c}":
                 return "cs";
             case "Dark-domain":
+            case "{d}":
                 return "dd";
             case "Double Desert":
             case "Desert":
                 return "de";
             case "Double Wilderness":
             case "Wilderness":
-                return "wi";
+            case "{w}":
+                    return "wi";
             case "Free-domain":
+            case "{f}":
                 return "fd";
             case "Jungle":
                 return "ju";
             case "Shadow-land":
+            case "{s}":
                 return "sl";
             default: 
                 return "";
-        }
+        }   
+    }
+
+    requireRegionType(card)
+    {
+        if (card === null || card === undefined)
+            return "dd";
+
+        const val1 = this.requireRegionTypeByValue(card.RPath);
+        if(val1 !== "")
+            return val1;
+
+        const val2 = this.requireRegionTypeByValue(card.region_type);
+        if (val2 !== "")
+            return val2;
+
+        return "dd";
     }
 
     createMissingSites(jMapData, jCards) 
@@ -466,12 +488,40 @@ class MapData
                 let isDreamcard = _card.dreamcard === true;
 
                 this.createifNecessary(_card, jRegion, region, title);
-                this.updateSite(jRegion, region, title, _card.Site, isHero(_card), isMinion(_card), isBalrog(_card), isDreamcard);
+                this.updateSite(jRegion, region, title, this.identifySiteHoldType(_card), isHero(_card), isMinion(_card), isBalrog(_card), isDreamcard);
                 this.updateUnderdeep(jRegion, region, title, isUnderdeep(_card), isDreamcard);
             }
         }
 
         return jRegion;
+    }
+
+    identifySiteHoldType(card)
+    {
+        if (card.site_type === undefined)
+            return card.Site;
+            
+        switch(card.site_type.replace("{", "").replace("}", "").toUpperCase())
+        {
+            case "F":
+                return "Free-hold";
+            case "R":
+                return "Ruins & Lairs";
+            case "B":
+                return "Border-hold";
+            case "D":
+                return "Dark-hold";
+            case "S":
+                return "Shadow-hold";
+            case "H":
+                return "Haven";
+            default:
+                console.warn("Unknown site type: " + card.site_type);
+                break;
+
+        }
+
+        return "";
     }
 
     updatePositions(jMapData, jPos)

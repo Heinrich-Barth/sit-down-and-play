@@ -102,7 +102,7 @@ class MapViewRegions extends MapView {
         this.MARKER.dark = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-dark.png"});
         this.MARKER.ruins = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-ruins.png"});
         this.MARKER.shadow = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon-shadow.png"});
-
+        this.MARKER.haven = new LeafIcon({iconUrl: "/media/maps/marker/marker-icon.png"});
         LeafIcon = L.Icon.extend({
                 options: 
                 {
@@ -474,7 +474,7 @@ class MapViewRegions extends MapView {
                 break;
         }
         
-        return null;
+        return this.MARKER.haven;
     }
 
     preselectRegionSite(sSite)
