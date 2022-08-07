@@ -93,6 +93,20 @@ const DeckList =
             </div>
         </div>`;
 
+        const divButton = document.createElement("button");
+        divButton.innerText = " Load a deck";
+        divButton.setAttribute("class", "fa fa-folder");
+        divButton.onclick = () => document.getElementById("load_deck_file").click();
+    
+        const divFile = document.createElement("input");
+        divFile.setAttribute("class", "hidden");
+        divFile.setAttribute("type", "file");
+        divFile.setAttribute("id", "load_deck_file");
+        divFile.onchange = DeckList.readSingleFromInput;
+    
+        elem.appendChild(divButton);
+        elem.appendChild(divFile);
+
         elem.querySelector("h2").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck", { "detail": "" }));
 
         document.getElementById("result_container").prepend(elem);
@@ -117,6 +131,30 @@ const DeckList =
             }
         }
             
+    },
+
+    readSingleFromInput : function(e)
+    {
+        const file = e.target.files[0];
+        if (!file)
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please choose a file..." }));
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) 
+        {
+            const contents = e.target.result;
+            if (contents === "" || contents.indexOf("#") === -1)
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "File seems to be empty..." }));
+            else
+            {
+                document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": contents }));
+                document.body.dispatchEvent(new CustomEvent("meccg-file-dropped-name", { "detail": file.name }));
+            }
+        };
+        reader.readAsText(file);
     },
 
     removeExisting : function()
