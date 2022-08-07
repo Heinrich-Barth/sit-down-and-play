@@ -248,7 +248,41 @@ const onLoadDecks = function(data)
         i++;
     }
 
+    const divButton = document.createElement("button");
+    divButton.innerText = " Load a deck";
+    divButton.setAttribute("class", "fa fa-folder");
+    divButton.onclick = () => document.getElementById("load_deck_file").click();
+
+    const divFile = document.createElement("input");
+    divFile.setAttribute("class", "hidden");
+    divFile.setAttribute("type", "file");
+    divFile.setAttribute("id", "load_deck_file");
+    divFile.onchange = readSingleFromInput;
+
+    divGroup.appendChild(divButton);
+    divGroup.appendChild(divFile);
     document.querySelector(".deck-list-entries").appendChild(divGroup);
+}
+
+const readSingleFromInput = function(e)
+{
+    const file = e.target.files[0];
+    if (!file)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please choose a file..." }));
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) 
+    {
+        const contents = e.target.result;
+        if (contents === "" || contents.indexOf("#") === -1)
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "File seems to be empty..." }));
+        else    
+            document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": contents }));
+    };
+    reader.readAsText(file);
 }
 
 const onChallengeDeckChosen = function(e)
