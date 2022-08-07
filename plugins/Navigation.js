@@ -26,7 +26,7 @@ module.exports = function(SERVER, g_pExpress, g_pAuthentication, htmlDir)
     SERVER.instance.get("/data/navigation", SERVER.caching.cache.jsonCallback, getNavigationJson);
 
     SERVER.instance.use("/about", g_pExpress.static(htmlDir + "/pages/about.html", SERVER.caching.headerData.generic));
-    SERVER.instance.get("/converter", g_pExpress.static(htmlDir + "/pages/converter.html", SERVER.caching.headerData.generic));
+    SERVER.instance.use("/converter", g_pExpress.static(htmlDir + "/pages/converter.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/help", g_pExpress.static(htmlDir + "/pages/help.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, g_pExpress.static(htmlDir + "/pages/deckbuilder.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/cards", g_pAuthentication.isSignedInCards, g_pExpress.static(htmlDir + "/pages/card-browser.html", SERVER.caching.headerData.generic));
