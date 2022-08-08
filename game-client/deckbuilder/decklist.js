@@ -192,8 +192,8 @@ const DeckList =
             }
             else
             {
-                ViewCards.config.vsDeckContainerIds.push({ "id" : "resource_" + index, "type" : _val, "resource":true});
-                html += '<div id="resource_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
+                ViewCards.config.vsDeckContainerIds.push({ "id" : "resources_" + index, "type" : _val, "resource":true});
+                html += '<div id="resources_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
             }
         }
         
@@ -347,6 +347,7 @@ const DeckList =
     
     addCardToDeck : function(pCard, index)
     {
+        console.log("addCardToDeck");
         const isHzard = pCard.type === "Hazard";
         const targetType = isHzard ? "hazard" : "resource";
         const _containerId = isHzard ? "deck_hazards" : "deck_resources";
@@ -366,6 +367,7 @@ const DeckList =
         }
         
         const pEntry = document.getElementById(targetType + "_" + index);
+        console.log(pEntry);
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");
