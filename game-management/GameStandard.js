@@ -779,6 +779,8 @@ class GameStandard extends GamePlayers
         this.onRedrawCompany(userid, _id);
         this.removeEmptyCompanies();
 
+        const card = this.getPlayboardManager().GetCardByUuid(_uuid);
+        if (card !== null && card.revealed !== false)
         {
             let sCode = this.getCardCode(_uuid, "");
             if (sCode !== "")
@@ -786,6 +788,8 @@ class GameStandard extends GamePlayers
             else
                 this.publishChat(userid, "New company created");
         }
+        else
+            this.publishChat(userid, "A character created a new company");
 
         return true;
     }
