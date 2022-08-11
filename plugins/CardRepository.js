@@ -242,6 +242,13 @@ class CardRepository {
     {
         for (let card of this._raw) 
         {
+            if (card.MPs === undefined && card.mp !== undefined)
+            {
+                card.MPs = card.mp;
+                delete card.mp;
+                console.log(card.code + " = " + card.MPs);
+            }
+
             if (card.MPs === undefined)
                 continue;
             else if (card.MPs === "" || card.normalizedtitle === "grim voiced and grim faced")
@@ -260,6 +267,12 @@ class CardRepository {
     {
         for (let card of this._raw) 
         {
+            if (card.Mind === undefined && card.mind !== undefined)
+            {
+                card.Mind = card.mind;
+                delete card.mind;
+            }
+
             if (card.Mind === undefined)
                 continue;
             else if (card.Mind === "")
