@@ -335,7 +335,7 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, SERV
         if (code !== "")
         {
             bChecked = true;
-            if (!SERVER.cards.isCardAvailable(code))
+            if (!SERVER.cards.isCardAvailable(code) && !SERVER.cards.isCardAvailableGuessed(code))
                 vsUnknown.push(code);
         }
     }

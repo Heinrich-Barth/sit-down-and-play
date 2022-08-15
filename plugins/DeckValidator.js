@@ -139,9 +139,9 @@ const extractCharactersMindMin7 = function(jDeck, pCardRepository)
     });
 };
 
-const copyGenericCards = function(res, jDeck)
+const copyGenericCards = function(res, jDeck, pCardRepository)
 {
-    if (isEmpty(jDeck) || res === undefined)
+    if (isEmpty(jDeck) || res === undefined || pCardRepository === undefined)
         return 0;
 
     let nAdded = 0;
@@ -152,9 +152,9 @@ const copyGenericCards = function(res, jDeck)
         if (count === 0)
             continue;
 
-        _code = k.replace(/"/g, '').toLowerCase();
+        _code = pCardRepository.getVerifiedCardCode(k.replace(/"/g, '').toLowerCase());
         if (_code === "")
-            continue;
+            continue;        
 
         if (res[_code] === undefined)
             res[_code] = count;
@@ -173,7 +173,7 @@ const copyGenericCards = function(res, jDeck)
  * @param {Object} jDeck 
  * @returns Object or NULL
  */
-const validateDeck = function(jDeck)
+const validateDeck = function(jDeck, pCardRepository)
 {
     if (isEmpty(jDeck))
         return null;
@@ -186,12 +186,12 @@ const validateDeck = function(jDeck)
 
     let count = 0;
     
-    count += copyGenericCards(res.pool, jDeck.pool);
-    count += copyGenericCards(res.sideboard, jDeck.sideboard);
+    count += copyGenericCards(res.pool, jDeck.pool, pCardRepository);
+    count += copyGenericCards(res.sideboard, jDeck.sideboard, pCardRepository);
 
-    count += copyGenericCards(res.playdeck, jDeck.chars);
-    count += copyGenericCards(res.playdeck, jDeck.resources);
-    count += copyGenericCards(res.playdeck, jDeck.hazards);
+    count += copyGenericCards(res.playdeck, jDeck.chars, pCardRepository);
+    count += copyGenericCards(res.playdeck, jDeck.resources, pCardRepository);
+    count += copyGenericCards(res.playdeck, jDeck.hazards, pCardRepository);
 
     return count === 0 ? null : res;
 };
@@ -211,7 +211,7 @@ exports.validate = validateDeck;
  */
 exports.validateArda = function(jDeck, pCardRepository)
 {
-    jDeck = jDeck === null ? null : validateDeck(jDeck);
+    jDeck = jDeck === null ? null : validateDeck(jDeck, pCardRepository);
     if (jDeck !== null)
     {
         /** make sure there are no avatars in the playdeck anymore */
