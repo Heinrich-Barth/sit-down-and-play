@@ -45,10 +45,6 @@ body.addtodeck #result img.preview {
         width: 450px;
         height: auto;
     }
-    #deck_card_view img {
-        width: 450px;
-    }
-        
 }
 
 body.addtodeck .list_left { margin-left: 230px }
