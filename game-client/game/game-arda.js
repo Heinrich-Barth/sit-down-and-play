@@ -72,8 +72,7 @@ let Arda = {
 
     updateSinglePlayer : function()
     {
-        let isSingle = "true" === document.body.getAttribute("data-is-singleplayer");
-        if (isSingle)
+        if (this.isSinglePlayer())
         {
             DomUtils.remove(document.getElementById("arda-action-container-randomchars"));
             DomUtils.remove(document.getElementById("arda-action-container-minor"));
@@ -94,7 +93,7 @@ let Arda = {
         this.addCss();
         this.insertArdaContainer();
 
-        if (bAllowRecyling)
+        if (!this.isSinglePlayer() && bAllowRecyling)
             this.insertArdaSetupContainer();
 
         let idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
@@ -108,6 +107,11 @@ let Arda = {
         
         this._ready = true;
         MeccgApi.send("/game/arda/checkdraft", {});
+    },
+
+    isSinglePlayer()
+    {
+        return document.body.getAttribute("data-is-singleplayer") === "true";
     },
 
     getOpeningHands()
@@ -245,8 +249,15 @@ let Arda = {
         div.setAttribute("class", "arda-card-hands blue-box hidden arda-card-hand-" + dataType);
         div.setAttribute("id", id);
 
-        let _sizerId = ResolveHandSizeContainer.create(div, title + " - Always resolve to", nHandSize, "cards.");
-        div.getElementsByClassName("card-hands-sizer")[0].classList.add("arda-card-hands-sizer");
+        let _sizerId = "";
+        
+        if (!this.isSinglePlayer())
+        {
+            _sizerId = ResolveHandSizeContainer.create(div, title + " - Always resolve to", nHandSize, "cards.");
+            div.getElementsByClassName("card-hands-sizer")[0].classList.add("arda-card-hands-sizer");
+        }
+        else 
+            nHandSize = -1;
 
         let _div = document.createElement("div");
         _div.setAttribute("class", "arda-inline");
@@ -448,8 +459,8 @@ let Arda = {
         let nDefault = -1;
         try
         {
-            nDefault = elem.getAttribute("data-handsize");
-            
+            nDefault = parseInt(elem.getAttribute("data-handsize"));
+                        
             const list = container === null ? null : container.getElementsByClassName("card-hands-sizer-size");
             if(list !== null && list.length === 1)
                 return parseInt(list[0].innerText);
@@ -474,7 +485,7 @@ let Arda = {
             return;
 
         const nCount = list.getElementsByClassName("card-hand").length;
-        if (nCount < nLen)
+        if (nCount < nLen || nLen === -1)
             MeccgApi.send("/game/arda/draw", { type : type });
         else
             document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Hand already holds " + nLen + " cards." }));
