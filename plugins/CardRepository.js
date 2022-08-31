@@ -246,7 +246,6 @@ class CardRepository {
             {
                 card.MPs = card.mp;
                 delete card.mp;
-                console.log(card.code + " = " + card.MPs);
             }
 
             if (card.MPs === undefined)
