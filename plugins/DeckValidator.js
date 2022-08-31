@@ -60,7 +60,7 @@ const extractHazards = function(jDeck, pCardRepository)
 {
     return extractBySecondary(jDeck, pCardRepository, function(card) 
     {
-        return card.alignment.toLowerCase() === "neutral";
+        return card.alignment.toLowerCase() === "neutral" || (card.type !== undefined && card.type === "Hazard");
     });
 };
 
@@ -243,7 +243,7 @@ exports.validateArda = function(jDeck, pCardRepository)
  */
 exports.validateSingleplayer = function(jDeck, pCardRepository)
 {
-    jDeck = jDeck === null ? null : validateDeck(jDeck);
+    jDeck = jDeck === null ? null : validateDeck(jDeck, pCardRepository);
     if (jDeck !== null)
     {
         jDeck.minors = { };
