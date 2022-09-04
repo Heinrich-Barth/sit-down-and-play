@@ -302,6 +302,9 @@ const HandCardsDraggable = {
 
     MeccgApi : null,
 
+    _warnReDeckAt : 5,
+    _warnHasShown : false,
+
     getApi : function()
     {
         return HandCardsDraggable.MeccgApi;
@@ -811,6 +814,33 @@ const HandCardsDraggable = {
             HandCardsDraggable.getApi().send("/game/company/create", {source: source, uuid: _uuid});
     },
     
+    /**
+     * Show a notice once if the deck close to exhaust
+     * 
+     * @param {Number} countPlaydeck 
+     * @returns void
+     */
+    checkReDeckNoteForPlayer: function(countPlaydeck)
+    {
+
+        if (HandCardsDraggable._warnHasShown || countPlaydeck === undefined || countPlaydeck === null)
+            return;
+
+        try
+        {
+            const val = parseInt(countPlaydeck);
+            if (val > 0 && val <= HandCardsDraggable._warnReDeckAt)
+            {
+                HandCardsDraggable._warnHasShown = true;
+                new ReDeckInfoNotification().show();
+            }
+        }
+        catch (err)
+        {
+            console.warn(err);
+        }
+    },
+
     /**
      * Join a company from hand
      * @param {String} _joiningCharacterUuid
