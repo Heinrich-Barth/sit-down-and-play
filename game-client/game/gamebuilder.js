@@ -446,7 +446,7 @@ const GameBuilder = {
         MeccgApi.addListener("/game/update-deck-counter/player/hand", function(bIsMe, jData)
         { 
             if (bIsMe)
-                document.getElementById("icon_hand").querySelector("span").innerHTML = jData.hand;
+                document.getElementById("icon_hand").querySelector("span").innerText = jData.hand;
             
             GameBuilder.CompanyManager.updateHandSize(jData.player, jData.hand, jData.playdeck);
         });
