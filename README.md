@@ -48,6 +48,10 @@ Special information about *development* can be accessed in a dedicated [README_d
 
 Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises.
 
+The rights belong to their respective owners.
+
+This is a non-profit project made by fans entirely.
+
 *MECCG* assets are not included in this repository. 
 
 ## Getting started
