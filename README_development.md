@@ -357,9 +357,9 @@ A username will be rejected if it contains HTML breaking characters `<` or `>` a
 
 ## Current Third-Party on Github
 
-[https://github.com/rezwits/cardnum](Cardnum - Play Online)
+[Cardnum - Play Online](https://github.com/rezwits/cardnum)
 
-[https://github.com/council-of-rivendell](GCCG - Play online)
+[GCCG - Play online](https://github.com/council-of-rivendell)
 
 ## License
 
