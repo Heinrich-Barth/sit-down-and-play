@@ -242,6 +242,12 @@ class CardRepository {
     {
         for (let card of this._raw) 
         {
+            if (card.MPs === undefined && card.mp !== undefined)
+            {
+                card.MPs = card.mp;
+                delete card.mp;
+            }
+
             if (card.MPs === undefined)
                 continue;
             else if (card.MPs === "" || card.normalizedtitle === "grim voiced and grim faced")
@@ -260,6 +266,12 @@ class CardRepository {
     {
         for (let card of this._raw) 
         {
+            if (card.Mind === undefined && card.mind !== undefined)
+            {
+                card.Mind = card.mind;
+                delete card.mind;
+            }
+
             if (card.Mind === undefined)
                 continue;
             else if (card.Mind === "")
@@ -383,6 +395,44 @@ class CardRepository {
     isCardAvailable(code)
     {
         return code !== undefined && code !== "" && this._types[code.toLowerCase()] !== undefined;
+    }
+
+    isCardAvailableGuessed(code)
+    {
+        if (code === undefined || code === "")
+            return false;
+
+        let sCode = code.toLowerCase();
+        if (this._types[sCode.replace(" (", " [h] (")] !== undefined)
+            return true;
+        else if (this._types[sCode.replace(" (", " [m] (")] !== undefined)
+            return true;
+        else if (this._types[sCode.replace(" [h] (", "( ")] !== undefined)
+            return true;
+        else if (this._types[sCode.replace(" [m] (", "( ")] !== undefined)
+            return true;
+        else
+            return false;
+    }
+
+    getVerifiedCardCode(code)
+    {
+        if (code === undefined || code === "" || code === null)
+            return "";
+
+        let sCode = code.toLowerCase();
+        if (this._types[sCode] !== undefined)
+            return sCode;
+        else if (this._types[sCode.replace(" (", " [h] (")] !== undefined)
+            return sCode.replace(" (", " [h] (");
+        else if (this._types[sCode.replace(" (", " [m] (")] !== undefined)
+            return sCode.replace(" (", " [m] (");
+        else if (this._types[sCode.replace(" [h] (", "( ")] !== undefined)
+            return sCode.replace(" [h] (", "( ");
+        else if (this._types[sCode.replace(" [m] (", "( ")] !== undefined)
+            return sCode.replace(" [m] (", "( ");
+        else
+            return "";
     }
 
     postProcessCardList()

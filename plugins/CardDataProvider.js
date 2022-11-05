@@ -98,7 +98,7 @@ class CardDataProvider extends CardRepository {
 
     validateDeck(jDeck)
     {
-        return DeckValidator.validate(jDeck);
+        return DeckValidator.validate(jDeck, this);
     }
 
     validateDeckArda(jDeck)
