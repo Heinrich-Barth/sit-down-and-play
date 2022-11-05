@@ -355,6 +355,12 @@ All usernames will be evaluated and the following rules applied:
 
 A username will be rejected if it contains HTML breaking characters `<` or `>` and the login attempt will fail.
 
+## Current Third-Party on Github
+
+[https://github.com/rezwits/cardnum] Cardnum - Play Online
+
+[https://github.com/council-of-rivendell] GCCG - Play online
+
 ## License
 
 All information is given in a dedicated [README_license.md](README_license.md).
