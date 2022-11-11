@@ -1,4 +1,19 @@
 
+const insertFlipPrefix = function(sImage)
+{
+    if (sImage === undefined || sImage === null || sImage === "")
+        return "";
+
+    const nPos = sImage.lastIndexOf("/");
+    if (nPos === -1)
+        return "flip-" + sImage;
+
+    const sLeft = sImage.substring(0, nPos + 1);
+    const sRight = sImage.substring(nPos + 1);
+
+    return sLeft + "flip-" + sRight;
+};
+
 exports.identifyQuests = function(jsonCards)
 {
     let missingSide = [];
@@ -22,15 +37,15 @@ exports.identifyQuests = function(jsonCards)
     let _image, _flipCode;
     for (let _code in list) 
     {
-        if (code_to_images[_code].startsWith("flip-"))
+        if (code_to_images[_code].indexOf("/flip-") !== -1)
         {
             _image = code_to_images[_code].replace("flip-", "");
             _flipCode = images_to_code[_image];
         }
         else
         {
-            _image = code_to_images[_code];
-            _flipCode = images_to_code["flip-" + _image];
+            _image = insertFlipPrefix(code_to_images[_code]);
+            _flipCode = images_to_code[_image];
         }
 
         if (_flipCode === undefined || _flipCode === "")
@@ -49,6 +64,7 @@ exports.identifyQuests = function(jsonCards)
         console.log("\t- removing missing quest " + missingSide[i] + " from quest list.");
     }
 
-    console.log("\t- missing quest removed: " + nSize);
+    console.log("\t- Missing quest removed: " + nSize);
+    console.log("\t- Quests available: " + Object.keys(list).length);
     return list;
 };
