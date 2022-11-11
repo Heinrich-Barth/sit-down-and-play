@@ -438,6 +438,13 @@ SERVER.instance.use(function(err, _req, res, _next)
 });
 
 SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVER.onListenSetupSocketIo);
+
+{
+    const seconds = SERVER.configuration.getRequestTimeout();
+    console.log("Request timeout is " + seconds + "s");
+    SERVER.instanceListener.setTimeout(1000 * seconds);
+}
+
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {
     console.error(err);
