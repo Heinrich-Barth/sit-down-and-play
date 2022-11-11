@@ -604,14 +604,14 @@ class MapData
 
     imageListJson(card) 
     {
-        let isDCErratum = card.erratum !== undefined && card.erratum === true;
-        let isICErratum = card.ice_errata !== undefined && card.ice_errata === true;
+        let isDCErratum = card.ImageNameErrataDC !== undefined && card.ImageNameErrataDC !== "";
 
         return {
             title: card.title,
             image: card.ImageName,
+            image_dc: isDCErratum ? card.ImageNameErrataDC : "",
             errata_dc : isDCErratum,
-            errata_ic : isICErratum,
+            errata_ic : false,
             set_code: card.set_code.toUpperCase()
         };
     }
