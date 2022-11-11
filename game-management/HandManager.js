@@ -28,7 +28,7 @@ class HandManager
     {
         if (typeof this.DECKS._deck[playerId] === "undefined")
         {
-            console.log("Cannod find deck of player #" + playerId);
+            console.log("decksize: Cannod find deck of player #" + playerId);
             return null;
         }
         else
