@@ -83,12 +83,27 @@ CardList.prototype.getImageByCode = function(code, sDefault)
         return sDefault;
     
     const image = this._list[code];
-    if (this.useImagesDC() && image.errata_dc !== undefined && image.errata_dc !== "")
-        return this._list[code].errata_dc;
+    if (this.useImagesDC())
+    {
+        let _url = this.getImageErratumDc(image);
+        if (_url !== undefined && _url !== "")
+            return _url;
+    }
     else if (this.useImagesIC() && image.errata_ic !== undefined && image.errata_ic !== "")
-        return this._list[code].errata_ic;
+        return image.errata_ic;
+
+    return image.image
+};
+
+CardList.prototype.getImageErratumDc = function(image)
+{
+    if (image.ImageNameErrataDC !== undefined && image.ImageNameErrataDC !== "")
+        return image.ImageNameErrataDC;
+    else if (image.errata_dc !== undefined && image.errata_dc !== "")
+        return image.errata_dc;
     else
-        return this._list[code].image
+        return "";
+
 };
 
 CardList.prototype.removeSetInformation = function(_code)
