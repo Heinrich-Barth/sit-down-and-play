@@ -21,6 +21,7 @@ class RoomManager {
 
         this.maxRooms = maxRooms;
         this.maxPlayers = maxPlayers;
+        this.roomCountAll = 0;
     }
 
     tooManyRooms()
@@ -60,7 +61,10 @@ class RoomManager {
     _createRoom(room, isArda, isSinglePlayer, userId) 
     {
         if (this._rooms[room] === undefined)
+        {
             this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
+            this.roomCountAll++;
+        }
     
         return this._rooms[room];
     }
@@ -69,7 +73,7 @@ class RoomManager {
     {
         if (userid === undefined || userid === "")
         {
-            console.log("invalid input.");
+            console.warn("invalid input.");
             return { };
         }
 
@@ -194,6 +198,11 @@ class RoomManager {
         }
 
         return res;
+    }
+
+    getGameCount()
+    {
+        return this.roomCountAll;
     }
 
     /**
@@ -403,16 +412,20 @@ class RoomManager {
             if (isPlayer)
                 pRoom.sendMessage(userid, " joined the game.");
             else
-                pRoom.sendMessage(userid, " joined as visitor.");
+                pRoom.sendMessage(userid, " joined as spectator.");
 
                 /* add indicator */
             if (isPlayer)
                 pRoom.publish("/game/player/indicator", "", { userid: userid, connected: true });
 
-            /** additional game data */
+            /** additional game data *
             pRoom.reply("/game/data/all", socket, pRoom.getGame().getPlayboardDataObject());
-
-            console.log("User " + pPlayer.getName() + " rejoined the game " + room);
+            */
+           
+            if (isPlayer)
+                console.log("User " + pPlayer.getName() + " rejoined the game " + room);
+            else
+                console.log("Spectator " + pPlayer.getName() + " rejoined the game " + room);
 
             return true;
         }
