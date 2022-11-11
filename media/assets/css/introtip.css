@@ -1,0 +1,50 @@
+
+.intro-tooltip { 
+    position: fixed;
+    z-index: 598;
+}
+
+.intro-tooltip .tip-opverlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    cursor: pointer;
+}
+
+.intro-tooltip .tip-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 599;
+    padding: 0 50px;
+}
+.intro-tooltip .tip-content { color: #fff; }
+.intro-tooltip .tip-content h2, 
+.intro-tooltip .tip-content h3 { color: #ffa500; text-transform: uppercase; }
+
+.intro-tooltip h3 { text-transform: uppercase; }
+.intro-tooltip .text-white { color: #ff0; }
+
+.intro-tooltip .tip-content h2,
+.intro-tooltip p.text-center { text-align: center;}
+.intro-tooltip button  {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
