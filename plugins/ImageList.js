@@ -16,16 +16,13 @@ class ImageList {
 
     static createImageUrl(imageName, setCode, imageUrl)
     {
-        if (imageName.startsWith("/") || imageName.startsWith("https://"))
-            return imageName;
-        else
-            return imageUrl + "/" + setCode + "/" + imageName;
+        return imageName;
     }
 
     newImage(card, imageUrl) 
     {
-        let isDCErratum = card.erratum !== undefined && card.erratum === true;
-        let isICErratum = card.ice_errata !== undefined && card.ice_errata === true;
+        let isDCErratum = card.ImageNameErrataDC !== undefined && card.ImageNameErrataDC !== "";
+        let isICErratum = false;
         
         if (isDCErratum)
             this.g_nCountErrataDC++;
@@ -36,8 +33,8 @@ class ImageList {
         return {
             title: card.title,
             image: ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl),
-            errata_dc : isDCErratum ? ImageList.createImageUrl("dce-" + card.ImageName, card.set_code.toUpperCase(), imageUrl) : "",
-            errata_ic : isICErratum ? ImageList.createImageUrl("ice-" + card.ImageName, card.set_code.toUpperCase(), imageUrl) : "",
+            ImageNameErrataDC : isDCErratum ? ImageList.createImageUrl(card.ImageNameErrataDC, card.set_code.toUpperCase(), imageUrl) : "",
+            errata_ic : "",
             set_code: card.set_code.toUpperCase()
         };
     }

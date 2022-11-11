@@ -81,7 +81,7 @@ class MapDataUnderdeeps {
     prepareImages(cards)
     {
         for (let site of cards)
-            this.images[site.code] = site.set_code + "/" + site.ImageName;
+            this.images[site.code] = site.ImageName;
     }
 
     /**
