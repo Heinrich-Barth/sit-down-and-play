@@ -1,5 +1,5 @@
 
-const g_pCardList = new CardList();
+const g_pCardList = new CardList({}, [], true, true);
 
 const getImageUrlByCode = function(code)
 {
