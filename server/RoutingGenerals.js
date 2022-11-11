@@ -19,5 +19,10 @@ module.exports = function(SERVER, g_pExpress)
     SERVER.instance.use("/robots.txt", g_pExpress.static(rootDir + "/robots.txt"));
 
 
-    SERVER.instance.post("/csp-violation", (_req, res) => res.status(204).end());
+    SERVER.instance.post("/csp-violation", (req, res) => 
+    {
+        console.warn("CSP violation at " + (req.headers.referrer || req.headers.referer));
+        res.status(204).end();
+    });
+    
 }
