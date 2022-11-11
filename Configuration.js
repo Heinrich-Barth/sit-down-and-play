@@ -9,6 +9,8 @@ class Configuration {
 
         this._isProd = process.env.NODE_ENV === "production";
 
+
+
         this._maxRooms = Configuration.assertString(process.env.ROOMS, 10);
         this._maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
 
@@ -43,6 +45,23 @@ class Configuration {
             this.loadConfig(sLocalConfig);
     }
 
+    getRequestTimeout()
+    {
+        try
+        {
+            const sTimeout = process.env.REQ_TIMEOUT !== undefined ? process.env.REQ_TIMEOUT : "";
+            const seconds = sTimeout === "" ? 0 : parseInt(sTimeout);
+            if (seconds > 0)
+                return seconds;   
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+
+        return 20;
+    }
+    
     static obtainMapPositionFile()
     {
         try
@@ -245,7 +264,7 @@ class Configuration {
                 "media-src": "'self'",
                 "script-src": "'self' 'nonce-START'",
                 "frame-src": "'self'",
-                "img-src": "'self' " + this.imageDomain(),
+                "img-src": "'self' data: " + this.imageDomain(),
                 "report-uri": "/csp-violation"
             };
 
@@ -293,7 +312,6 @@ class Configuration {
     {
         return this._hasLocaLImages;
     }
-    
 }
 
 module.exports = Configuration;
