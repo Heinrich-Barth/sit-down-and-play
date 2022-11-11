@@ -25,7 +25,7 @@ const pInstance = requireAuthenticationModule();
 
 module.exports = {
 
-    showLoginPage : function(_req, res, _next) 
+    showLoginPage : function(req, res, next) 
     {
         let data = pInstance.getLoginPageData();
         if (data === "")
