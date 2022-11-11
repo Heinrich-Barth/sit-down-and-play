@@ -1,35 +1,49 @@
 
-const getHealthData = function(jGames)
+const getLoadavg = function()
 {
     const os = require('os');
-
-    const data = { 
-
-        startup: {
-            startup: g_nUptime,
-            readable: new Date(g_nUptime).toUTCString()
-        },
-
-        loadavg : os.loadavg(),
-        
-        memory : {
-            raw: process.memoryUsage(),
-            megabytes : { }
-        },
-
-        games: jGames
-    };
-
-    for (let key in data.memory.raw) 
-        data.memory.megabytes[key] = (Math.round(data.memory.raw[key] / 1024 / 1024 * 100) / 100);
-
-    return data;
+    return os.loadavg();
 };
 
-let g_nUptime = Date.now();
+const getMemory = function()
+{
+    let data = {
+        raw: process.memoryUsage(),
+        megabytes : { }
+    };
+
+    for (let key in data.raw) 
+        data.megabytes[key] = (Math.round(data.raw[key] / 1024 / 1024 * 100) / 100);
+
+    return data;
+}
+
+const onHealth = function(_req, res)
+{
+    const jGames = g_Server.roomManager.getActiveGames();
+    const gameCount = g_Server.roomManager.getGameCount();
+    
+    const data = { 
+
+        startup: g_sUptime,
+
+        loadavg : getLoadavg(),
+        memory : getMemory(),
+
+        games: jGames,
+        count: gameCount
+    };
+
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(data, null, 3));
+};
+
+const g_sUptime = new Date(Date.now()).toUTCString();
+let g_Server = null;
 
 exports.setup = function(SERVER)
 {
-    g_nUptime = Date.now();
-    SERVER.instance.get("/health", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(getHealthData(SERVER.roomManager.getActiveGames())).status(200));
+    g_Server = SERVER;
+    SERVER.instance.get("/health", SERVER.caching.expires.jsonCallback, onHealth);
 };
