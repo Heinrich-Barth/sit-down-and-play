@@ -2,13 +2,13 @@
 {
     position: fixed;
     z-index: 1001;
-    max-height: 50%;
     height: 100%;
+    max-height: 60%;
+    max-width: 49%;
 }
 
-.large-preview .preview-container div
-{
-    max-height: 60%;
+.large-preview .preview-container div {
+    max-height: 80%;
 }
 
 .preview-container img {
