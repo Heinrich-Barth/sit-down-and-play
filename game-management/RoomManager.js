@@ -21,7 +21,7 @@ class RoomManager {
 
         this.maxRooms = maxRooms;
         this.maxPlayers = maxPlayers;
-        this.roomCountAll = 0;
+        this.roomCountAll = [];
     }
 
     tooManyRooms()
@@ -63,7 +63,11 @@ class RoomManager {
         if (this._rooms[room] === undefined)
         {
             this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
-            this.roomCountAll++;
+            
+            if (this.roomCountAll.length >= 10)
+                this.roomCountAll.shift();
+
+            this.roomCountAll.push(Date.now());
         }
     
         return this._rooms[room];
@@ -213,7 +217,14 @@ class RoomManager {
 
     getGameCount()
     {
-        return this.roomCountAll;
+        if (this.roomCountAll.length === 0)
+            return [];
+
+        let res = [];
+        for (let _time of this.roomCountAll)
+            res.push(new Date(_time).toISOString());
+
+        return res;
     }
 
     /**
