@@ -22,7 +22,13 @@ const onHealth = function(_req, res)
 {
     const jGames = g_Server.roomManager.getActiveGames();
     const gameCount = g_Server.roomManager.getGameCount();
-    
+    const visits = {
+        deckbuilder : g_Server.endpointVisits.deckbuilder,
+        cards : g_Server.endpointVisits.cards,
+        converter : g_Server.endpointVisits.converter,
+        games: gameCount
+    };
+
     const data = { 
 
         startup: g_sUptime,
@@ -31,19 +37,22 @@ const onHealth = function(_req, res)
         memory : getMemory(),
 
         games: jGames,
-        count: gameCount
+        count: visits
     };
 
-
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(data, null, 3));
+    res.header('Content-Type', 'application/json');
+    res.header("Cache-Control", "no-store");
+    res.send(JSON.stringify(data, null, 3));
 };
 
 const g_sUptime = new Date(Date.now()).toUTCString();
 let g_Server = null;
+let g_pAuthentication = null;
 
-exports.setup = function(SERVER)
+exports.setup = function(SERVER, pAuthentication)
 {
     g_Server = SERVER;
-    SERVER.instance.get("/health", SERVER.caching.expires.jsonCallback, onHealth);
+    g_pAuthentication = pAuthentication;
+
+    SERVER.instance.use("/health", g_pAuthentication.isSignedInPlay, onHealth);
 };

@@ -90,6 +90,34 @@ let SERVER = {
     getSocketIo : function()
     {
         return SERVER._io;
+    }, 
+
+    endpointVisits : {
+
+        deckbuilder: 0,
+        cards: 0,
+        converter: 0,
+
+        increase : function(req, _res, next)
+        {
+            console.log(req.baseUrl);
+            switch(decodeURIComponent(req.baseUrl))
+            {
+                case "/deckbuilder":
+                    SERVER.endpointVisits.deckbuilder++;
+                    break;
+                case "/cards":
+                    SERVER.endpointVisits.cards++;
+                    break;
+                case "/converter":
+                    SERVER.endpointVisits.converter++;
+                    break;
+                default:
+                    break;
+            }
+
+            next();
+        }
     }
 };
 
@@ -208,6 +236,50 @@ SERVER.onListenSetupSocketIo = function ()
     });
 };
 
+SERVER.doShutdown = function()
+{
+    try{
+
+        try 
+        {
+            console.log("- shutdown IO http server.");
+            SERVER._io.httpServer.close();
+        }
+        catch (e) 
+        {
+            console.error(e);
+        }
+
+        try 
+        {
+            console.log("- shutdown IO.");
+            SERVER._io.close();
+        }
+        catch (e) 
+        {
+            console.error(e);
+        }
+
+        try 
+        {
+            console.log("- shutdown server.");
+            SERVER.instanceListener.close();
+        }
+        catch (e) 
+        {
+            console.error(e);
+        }
+    }
+    finally
+    {
+        SERVER._io = null;
+        SERVER.instanceListener = null;
+    
+        console.log("- stop application.");
+        process.exit(0);
+    }
+};
+
 /**
  * Shutdown game module and the http server
  */
@@ -215,41 +287,17 @@ SERVER.shutdown = function ()
 {
     console.log("\nShutting down game server.");
 
-    try 
+    /** send save game instruction to running games */
+    if (SERVER.roomManager.sendShutdownSaving())
     {
-        console.log("- shutdown IO http server.");
-        SERVER._io.httpServer.close();
+        function sleep (time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
+            
+        sleep(2000).then(SERVER.doShutdown);
     }
-    catch (e) 
-    {
-        console.error(e);
-    }
-
-    try 
-    {
-        console.log("- shutdown IO.");
-        SERVER._io.close();
-    }
-    catch (e) 
-    {
-        console.error(e);
-    }
-
-    try 
-    {
-        console.log("- shutdown server.");
-        SERVER.instanceListener.close();
-    }
-    catch (e) 
-    {
-        console.error(e);
-    }
-
-    SERVER._io = null;
-    SERVER.instanceListener = null;
-
-    console.log("- stop application.");
-    process.exit(0);
+    else
+        SERVER.doShutdown();
 }
 
 /**
@@ -378,7 +426,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-require("./server/RoutingHealth").setup(SERVER);
+require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
