@@ -246,6 +246,23 @@ class GameRoom
         this.game.setGameAdminUser(adminUser);
     }
 
+    sendSaveOnShutdown()
+    {
+        let _player;
+        for (let userid in this.players)
+        {
+            _player = this.players[userid];
+            if (_player.isAdmin())
+            {
+                console.log("send savegame to player");
+                this.game.publishToPlayers("/game/score/final-only", userid, this.game.getFinalScore());
+                this.game.publishToPlayers("/disconnect/shutdown", userid, {});
+                this.game.globalSaveGame(userid, _player.getSocket());
+                break;
+            }
+        }
+    }
+
     getGame()
     {
         return this.game;

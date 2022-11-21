@@ -200,6 +200,17 @@ class RoomManager {
         return res;
     }
 
+    sendShutdownSaving()
+    {
+        if (this.countRooms() === 0)
+            return false;
+
+        for (let room in this._rooms) 
+            this._rooms[room].sendSaveOnShutdown();
+
+        return true;
+    }
+
     getGameCount()
     {
         return this.roomCountAll;
