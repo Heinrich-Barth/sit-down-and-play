@@ -103,7 +103,7 @@ const SearchBar = {
         elem.setAttribute("id", "searchbar");
         elem.innerHTML = `
             <form method="post" action="#">
-                <div class="fields" style="margin: 0px;">
+                <div class="fields">
                     <div class="field"><input type="text" name="card_title" id="card_title" placeholder="Search card title" /></div>
                     <div class="field"><input type="text" name="card_text" id="card_text" placeholder="Search card text" /></div>
                     <div class="field">
