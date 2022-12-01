@@ -18,7 +18,7 @@ const DeckList =
         elem.setAttribute("id", "deck_container");
         elem.innerHTML = `<h2><span class="fa fa-eye" id="deck_name"></span><input type="text" class="deckname" id="deckname" placeholder="Your deck name" value=""> (<span id="deck_count">0</span>)</h2>
 
-        <div style="text-align: center; margin: 20px 0;">
+        <div>
             <button class="button-small" id="save_deck"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save deck</button>
         </div>
 
@@ -110,6 +110,7 @@ const DeckList =
         elem.querySelector("h2").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck", { "detail": "" }));
 
         document.getElementById("result_container").prepend(elem);
+        document.getElementById("result_container").classList.add("deck-builder");
         document.getElementById("linklist").parentNode.classList.add("list_left");
 
         elem = document.createElement("div");
@@ -347,7 +348,6 @@ const DeckList =
     
     addCardToDeck : function(pCard, index)
     {
-        console.log("addCardToDeck");
         const isHzard = pCard.type === "Hazard";
         const targetType = isHzard ? "hazard" : "resource";
         const _containerId = isHzard ? "deck_hazards" : "deck_resources";
@@ -367,7 +367,6 @@ const DeckList =
         }
         
         const pEntry = document.getElementById(targetType + "_" + index);
-        console.log(pEntry);
         if (pEntry === null)
         {
             categoryContainer.classList.remove("hidden");
