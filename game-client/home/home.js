@@ -36,53 +36,36 @@ const toNumberString = function(nValue)
     return (nValue < 10 ? "0" : "") + nValue;
 };
 
-const addGameTypes = function(data, isArda, existing)
+const addGameTypes = function(container, data, isArda, existing)
 {
-    let title = isArda ? "Arda" : "Standard/Dreamcard"
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr>
-                            <th colspan="3">${title} Game</th>
-                            <th>Players</th>
-                            <th>Started</th>
-                        </tr></thead>`;
-
-    const container = document.createElement("tbody");
-    
-    let count = 0;
-    const size = data.length;
-    for (let i = 0; i < size; i++)
+    for (let value of data)
     {
-        let value = data[i];
         if (isArda !== value.arda)
             continue;
 
         let _room = value.room;
         let _players = value.players.sort().join(", ");
         let _context = value.arda ? "arda" : "play";
-        const pDate = new Date(value.time);
 
-        const sMins = toNumberString(pDate.getMinutes());
-        const sHrs = toNumberString(pDate.getHours());
-        const sDay = toNumberString(pDate.getDate());
-        const sMonth = toNumberString(pDate.getMonth()+1);
-        const sDate = sDay + "." + sMonth + " " + sHrs + ":" + sMins;
+        const pDate = new Date(new Date().getTime() - value.time);
 
-        count++;
+        let lMins = ((pDate.getHours()-1) * 60 +  pDate.getMinutes());
+        if (lMins > 0)
+            lMins += "min";
+        else
+            lMins = "now";
+
+        const since = (isArda ? "Arda, " : "") + "since " + lMins 
+        
         const _tr = document.createElement("tr");
-        _tr.innerHTML = `<td>${count}</td>
-                        <td><a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in">${_room}</td>
-                        <td><a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"></a></td>
-                        <td class="players">${_players}</td>
-                        <td class="date">${sDate}</td>`;
+        _tr.innerHTML = `
+                        <td class="action"><a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a></td>
+                        <td class="action"><a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> join</a></td>
+                        <td class="name">${_room} (${since})</td>
+                        <td class="players">${_players}</td>`.trim();
         container.appendChild(_tr);
         existing.push(_room)
     }
-
-    if (count === 0)
-        return null;
-
-    table.appendChild(container);
-    return table;
 };
 
 
@@ -93,9 +76,9 @@ const hideContainer = function(id)
         elem.classList.add("hidden");
 };
 
-const showContainer = function(_id)
+const showContainer = function(id)
 {
-    const elem = document.getElementById("no_games");
+    const elem = document.getElementById(id);
     if (elem !== null && elem.classList.contains("hidden"))
         elem.classList.remove("hidden");
 };
@@ -118,20 +101,21 @@ const onResult = function(data)
 
     data.sort(function(a, b) { return a.room.toLowerCase().localeCompare(b.room.toLowerCase()); });
 
-    let existing = [], table;
+    const existing = [];
+    const table = document.createElement("table")
+    const container = document.createElement("tbody")
 
-    table = addGameTypes(data, false, existing);
-    if (table !== null)
-        pContainer.appendChild(table);
+    addGameTypes(container, data, false, existing);
+    addGameTypes(container, data, true, existing);
 
-    table = addGameTypes(data, true, existing);
-    if (table !== null)
-        pContainer.appendChild(table);
-    
-    document.getElementById("active_games").classList.remove("hidden");
+    table.appendChild(container);
+    pContainer.appendChild(table);
+
     showContainer("active_games");
     hideContainer("no_games");
     loadSampleRooms(existing);
+
+    console.log("HALLO");
 };
 
 const isAlphaNumeric = function(sInput)
