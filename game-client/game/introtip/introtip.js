@@ -17,7 +17,7 @@ setTimeout(() => {
     const divParent = document.createElement("div");
     divParent.setAttribute("class", "help-wrapper blue-box cursor-pointer");
     divParent.appendChild(div);
-    divParent.onclick = () => MapWindow.showIframe("/help", "");
+    divParent.onclick = () => window.open("/help", "_blank");
     
     document.body.appendChild(divParent);
 }, 200);
