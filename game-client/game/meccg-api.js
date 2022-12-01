@@ -145,6 +145,11 @@ const MeccgApi =
         MeccgApi._ignoreDisconnection = true;
     },
     
+    expectShutdown : function()
+    {
+        MeccgApi.expectDisconnect();
+    },
+    
     onQuitGame : function()
     {
         MeccgApi.expectDisconnect();
@@ -257,7 +262,7 @@ const MeccgApi =
         this._socket.on("connect_error", MeccgApi.onSocketError.bind(MeccgApi));
 
         this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess.bind(MeccgApi));
-
+        this._socket.on('/disconnect/shutdown', MeccgApi.expectShutdown);
         this._socket.on('disconnect', () => 
         {
             if (MeccgApi._ignoreDisconnection)
@@ -270,20 +275,6 @@ const MeccgApi =
 
             MeccgApi.onDisconnected();
         });
-    },
-
-    onSuggestReload : function()
-    {
-        /** do not show question if game has ended anyway */
-        if (MeccgApi._ignoreDisconnection)
-            return;
-
-        new Question().onOk(function() {
-
-            window.location.reload();
-
-        }).show("Page reload recommended", "It seems the connection to the server could not be re-established.", "Reload everything");
-
     },
 
     onSocketError : function(error)
