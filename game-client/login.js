@@ -206,32 +206,15 @@ const onLoadDecks = function(data)
 
     let i = 0;
 
-    const divGroup = document.createDocumentFragment();
-    const divHtml = document.createElement("div");
-    divHtml.setAttribute("class", "title");
-    divHtml.innerText = "Choose your deck";
-    divGroup.appendChild(divHtml);
-
+    let divGroup = document.createDocumentFragment();
     for (let deck of g_jDecks)
     {
-        let divDeckType = document.createElement("div");
-        divDeckType.setAttribute("class", "deck-group");
-
-        let input = document.createElement("input");
-        divDeckType.appendChild(input);
-        input.setAttribute("type", "checkbox");
-        input.setAttribute("id", "toggle_"+i);
-        input.setAttribute("name", "toggle_"+i);
-        input.setAttribute("value", "");
-        if (i === 0)
-            input.checked = true;
-
-        let label = document.createElement("label");
-        divDeckType.appendChild(label);
-        label.setAttribute("class", "fa fa-chevron-down");
-        label.setAttribute("for", "toggle_"+i);
-        label.setAttribute("name", "toggle_"+i);
-        label.innerText = " " + deck.name + " (" + Object.keys(deck.decks).length + ")";
+        let label = document.createElement("details");
+        divGroup.appendChild(label);
+        
+        let summary = document.createElement("summary");
+        summary.innerText = " " + deck.name + " (" + Object.keys(deck.decks).length + ")";
+        label.appendChild(summary);
 
         for (let key in deck.decks)
         {
@@ -241,16 +224,24 @@ const onLoadDecks = function(data)
             divDeck.setAttribute("data-deck-id", key);
             divDeck.onclick = onChallengeDeckChosen;
             divDeck.innerText = key;
-            divDeckType.appendChild(divDeck);
+            label.appendChild(divDeck);
         }
 
-        divGroup.appendChild(divDeckType);
+        divGroup.appendChild(label);
         i++;
     }
 
+    document.querySelector(".deck-list-entries").appendChild(divGroup);
+
+    const divParent = document.querySelector(".deck-list");
+
+    const divHtml = document.createElement("h2");
+    divHtml.innerText = "Choose your deck";
+    divParent.prepend(divHtml);
+
     const divButton = document.createElement("button");
     divButton.innerText = " Load a deck";
-    divButton.setAttribute("class", "fa fa-folder");
+    divButton.setAttribute("class", "fa fa-folder load-deck-file");
     divButton.onclick = () => document.getElementById("load_deck_file").click();
 
     const divFile = document.createElement("input");
@@ -259,9 +250,8 @@ const onLoadDecks = function(data)
     divFile.setAttribute("id", "load_deck_file");
     divFile.onchange = readSingleFromInput;
 
-    divGroup.appendChild(divButton);
-    divGroup.appendChild(divFile);
-    document.querySelector(".deck-list-entries").appendChild(divGroup);
+    divParent.appendChild(divButton);
+    divParent.appendChild(divFile);
 }
 
 const readSingleFromInput = function(e)
@@ -276,6 +266,7 @@ const readSingleFromInput = function(e)
     const reader = new FileReader();
     reader.onload = function(e) 
     {
+        removeSelectedDeck();
         const contents = e.target.result;
         if (contents === "" || contents.indexOf("#") === -1)
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "File seems to be empty..." }));
@@ -285,11 +276,19 @@ const readSingleFromInput = function(e)
     reader.readAsText(file);
 }
 
+const removeSelectedDeck = function()
+{
+    let elem = document.querySelector(".selected-deck");
+    if (elem !== null)
+        elem.classList.remove("selected-deck");
+};
+
 const onChallengeDeckChosen = function(e)
 {
     const sKey = e.target.getAttribute("data-deck-id");
     const nArray = parseInt(e.target.getAttribute("data-deck-list"));
-
+    removeSelectedDeck();
+    e.target.classList.add("selected-deck");
     document.getElementById("toggle_isstandard").click();
 
     document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_jDecks[nArray].decks[sKey] }));
