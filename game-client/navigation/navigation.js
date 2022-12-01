@@ -6,7 +6,7 @@ const Navigation = {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/navigation/navigation.css");
+        styleSheet.setAttribute("href", "/media/assets/css/navigation.css");
         document.head.appendChild(styleSheet);
     },
 
@@ -27,6 +27,9 @@ const Navigation = {
 
         Navigation.insertCss();
 
+        if (!document.body.classList.contains("navigation-full-width"))
+            document.body.classList.add("navigation-toggled");
+
         const label = document.createElement("label");
         label.setAttribute("for", "navigation_toggle");
         label.innerHTML = `Navigation <i class="fa fa-bars" aria-hidden="true"></i>`;
@@ -44,12 +47,18 @@ const Navigation = {
         const target = Navigation.isGame() ? 'target="_blank"' : "";
         const linkIcon = Navigation.isGame() ? '<i class="fa fa-external-link-square" aria-hidden="true"></i>' : "";
 
-        const len = json.length;
-        for (let i = 0; i < len; i++)
+        for (let _elem of json)
         {
-            const li = document.createElement("li");
-            li.innerHTML = `<a href="${json[i].url}" ${target}>${linkIcon} ${json[i].label}</a>`
-            nav.appendChild(li);
+            if (window.location.pathname !== _elem.url)
+            {
+                let _target = target;
+                if (target === "" && _elem.blank)
+                    _target = 'target="_blank"';
+
+                const li = document.createElement("li");
+                li.innerHTML = `<a href="${_elem.url}" ${_target}>${linkIcon} ${_elem.label}</a>`
+                nav.appendChild(li);
+            }
         }
         
         div.appendChild(label);
