@@ -9,36 +9,38 @@
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
 
-        <link rel="stylesheet" href="/media/assets/css/main.css" />
-        <link rel="stylesheet" href="/media/assets/css/deckbuilder.css" />
-        <link rel="stylesheet" href="/media/assets/css/backgrounds.css" />
+        <link rel="stylesheet" href="/media/assets/css/cards.css" />
 
         <script src="/media/client/httpsonly.js"></script>
         <base target="_self">
     </head>
-    <body class="bgnature deckbuilding" data-image-cdn="">
+    <body class="deckbuilding" data-image-cdn="">
 
         <h1>Displaying <span id="size">0</span> card(s)</h1>
+        <div class="content">
 
-        <div class="result_container" id="result_container">
-            <div class="">
-                <div id="linklist" class="linklist fl"></div>
+            <div class="result_container" id="result_container">
                 <div class="">
-                    <div id="result"></div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tpl" class="hidden">
-            <div class="characters" id="tplDefault">
-                <div class="fl image" id="{gindex}" >
-                    <div class="image_overlay" >
-                        <img src="/data/card-not-found-generic" data-hide="/data/card-not-found-generic" data-src="{img}" class="preview" decoding="async">
+                    <div id="linklist" class="linklist fl"></div>
+                    <div class="">
+                        <div id="result"></div>
+                        <div class="clear"></div>
                     </div>
                 </div>
             </div>
+    
+            <div id="tpl" class="hidden">
+                <div class="characters" id="tplDefault">
+                    <div class="fl image" id="{gindex}" >
+                        <div class="image_overlay" >
+                            <img src="/data/card-not-found-generic" data-hide="/data/card-not-found-generic" data-src="{img}" class="preview" decoding="async">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
+
 
         <script src="/media/client/game/libraries.js?version=1"></script>
         <script src="/media/client/notification/notification.js"></script>

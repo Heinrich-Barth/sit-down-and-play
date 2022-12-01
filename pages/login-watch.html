@@ -6,11 +6,10 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Sit down and join a game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    
+
     <link rel="icon" type="image/png" href="/media/assets/favicon.png">
     <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/media/assets/css/join-game.css" />
-    <link rel="stylesheet" href="/media/assets/css/backgrounds.css" />
+    <link rel="stylesheet" href="/media/assets/css/deckselection.css" />
 
     <script src="/media/client/httpsonly.js"></script>
     <script src="/media/assets/js/jquery.min.js"></script>
@@ -18,60 +17,68 @@
     <base target="_self">
 </head>
 
-<body class="bgnature">
+<body class="ǵame-join-screen navigation-full-width">
 
-    <div class="blue-box join-game on-drag-hide" id="login">
+    <div class="content" id="login">
+        <div class="inner-content">
+            <h1>Watch the game.</h1>
 
-        <h1>Watch the game.</h1>
-
-        <form method="post" action="#">
-            <div class="fields">
-                <div class="field">
-                    <label for="user">Your Name: </label><input type="text" class="w50" name="user" id="user" value=""
-                        maxlength="20" placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
-
-                    <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Ask to watch</button>
+            <form method="post" action="#">
+                <div class="fields-join">
+                    <input type="text" class="w50" name="user" id="user" value="" maxlength="20"
+                        placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
+                    <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle"
+                            aria-hidden="true"></i> Ask to watch</button>
 
                 </div>
                 <p class="arda-text hidden">
                     Choose a game type:
-                    <input type="radio" id="toggle_isarda" value="standard" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label>
-                    <input type="radio" id="toggle_issingleplayer" value="standard" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
-                    <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label>
+                    <input type="radio" id="toggle_isarda" value="standard" name="gameType"><label
+                        for="toggle_isarda"><strong>Arda</strong></label>
+                    <input type="radio" id="toggle_issingleplayer" value="standard" name="gameType"><label
+                        for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                    <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label
+                        for="toggle_isstandard"><strong>Standard</strong></label>
                 </p>
-                <p class="cookie_notice">By joining, you agree that this site sets <a href="/about" target="_blank">cookies</a> necessary to play a game.</p>
-            </div>
-            
-            <div class="fields hidden">
-                <div class="deck-fields w50">
-                    <div class="fields">
-                        <div class="field"><textarea id="resources" class="card-type" placeholder="Paste Resources here">1 Annalena (TW)</textarea></div>
+                <p class="cookie_notice">By joining, you agree that this site sets <a href="/about"
+                        target="_blank">cookies</a> necessary to play a game.</p>
+
+
+                <div class="fields hidden">
+                    <div class="deck-fields w50">
+                        <div class="fields">
+                            <div class="field"><textarea id="resources" class="card-type"
+                                    placeholder="Paste Resources here">1 Annalena (TW)</textarea></div>
+                        </div>
+                        <div class="fields">
+                            <div class="field"><textarea id="hazards" class="card-type"
+                                    placeholder="Paste Hazards here">1 Annalena (TW)</textarea></div>
+                        </div>
+                        <div class="fields">
+                            <div class="field"><textarea id="sideboard" class="card-type"
+                                    placeholder="Paste Sideboard here"></textarea></div>
+                        </div>
+                        <div class="fields">
+                            <div class="field"><textarea id="characters" class="card-type"
+                                    placeholder="Paste Characters here">1 Annalena (TW)</textarea></div>
+                        </div>
+                        <div class="fields">
+                            <div class="field"><textarea id="pool" class="card-type"
+                                    placeholder="Paste Pool here">1 Annalena (TW)</textarea></div>
+                        </div>
                     </div>
-                    <div class="fields">
-                        <div class="field"><textarea id="hazards" class="card-type" placeholder="Paste Hazards here">1 Annalena (TW)</textarea></div>
+                    <div class="deck-list hidden">
+                        <div class="deck-list-entries"></div>
                     </div>
-                    <div class="fields">
-                        <div class="field"><textarea id="sideboard" class="card-type" placeholder="Paste Sideboard here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <div class="field"><textarea id="characters" class="card-type" placeholder="Paste Characters here">1 Annalena (TW)</textarea></div>
-                    </div>
-                    <div class="fields">
-                        <div class="field"><textarea id="pool" class="card-type" placeholder="Paste Pool here">1 Annalena (TW)</textarea></div>
-                    </div>
-                </div>          
-                <div class="deck-list hidden">
-                    <div class="deck-list-entries"></div>
+                    <div class="clear"></div>
                 </div>
                 <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
-        </form>
-        <form method="post" action="#" class="hidden" id="form">
-            <textarea name="data"></textarea>
-        </form>
+            </form>
+            <form method="post" action="#" class="hidden" id="form">
+                <textarea name="data"></textarea>
+            </form>
+        </div>
     </div>
-    
     <script src="/media/client/notification/notification.js"></script>
     <script src="/media/client/game/libraries.js"></script>
     <script src="/media/client/deck/read.js"></script>
