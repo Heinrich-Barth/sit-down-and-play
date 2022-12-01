@@ -206,7 +206,7 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
      let pImage = document.createElement("img");
      pImage.setAttribute("class", "card-icon");
      pImage.setAttribute("src", "/data/backside");
-     pImage.setAttribute("data-image-backside", "/data/backside");
+     pImage.setAttribute("data-image-backside", GameCompanies.CardList.getFlipSide(card.code));
      pImage.setAttribute("data-image-path", "");
      pImage.setAttribute("decoding", "async");
      pImage.setAttribute("data-uuid", card.uuid);
