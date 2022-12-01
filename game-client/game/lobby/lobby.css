@@ -40,7 +40,12 @@
 
 .lobby-overlay { z-index: 500; }
 
-.lobby-requests h3 { margin-top: 0; color: #ffa500}
+.lobby-requests h3 { margin-top: 0; color: #ffa500; text-transform: uppercase;
+    text-align: center;}
 
 .lobby-requests i { cursor: pointer; margin-right: 10px;}
 
+.lobby-requests .lobby-time {
+    font-size: 0.8em;
+    padding-left: 10px;
+}
