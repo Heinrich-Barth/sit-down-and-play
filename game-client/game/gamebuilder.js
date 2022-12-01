@@ -610,6 +610,12 @@ const GameBuilder = {
             GameBuilder.Scoring.showFinalScore(jData.score, jData.stats);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
+
+        MeccgApi.addListener("/game/score/final-only", function(_bIsMe, jData)
+        {
+            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats);
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
+        });
         
         MeccgApi.addListener("/game/rejoin/immediately", (_bIsMe, jData) => GameBuilder.restoreBoard(jData));
 
