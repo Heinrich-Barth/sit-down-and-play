@@ -1,0 +1,106 @@
+@import "../variables.scss";
+
+.navigation-toggled {
+
+    .navigation {
+
+        position: fixed;
+        right: 0;
+        top: 0;
+        margin: 0;
+        padding: 5px 10px;
+        font-size: 12px;
+        background: rgba(39, 56, 76, 0.82);
+        border-radius: 5px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        display: block;
+        color: white;
+        z-index: 101;
+
+        a,
+        a:active,
+        a:visited {
+            color: #ff0;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ffa500;
+        }
+
+        input,
+        ul {
+            display: none;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            margin: 20px 0 10px 0;
+        }
+
+        label {
+            display: block;
+            text-align: right;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        label:hover {
+            color: #ffa500;
+        }
+
+        input:checked~ul {
+            display: block;
+        }
+
+        a {
+            display: block;
+            border-radius: 5px;
+            padding: 0 5px;
+        }
+
+        a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+.navigation-full-width {
+
+    .navigation {
+
+        position: absolute;
+        top: 1em;
+        left: 0;
+        width: 100%;
+        line-height: 1.5em;
+        z-index: 101;
+
+        input,
+        label {
+            display: none;
+        }
+        ul{ text-align: center;}
+        a,
+        a:active,
+        a:visited {
+            color: $color-white;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 1em;
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #ffa500;
+        }
+
+        li {
+            display: inline-block;
+            text-align: center;
+        }
+    }
+}

@@ -16,8 +16,8 @@ html, body {
 .full-height { height: 100%; }
 .blue-box 
 {
-    background: rgba(39,56,76,0.82);
-    border-radius: 5px;
+    background: rgba(61, 65, 70, 0.82);
+    border-radius: 3px;
     box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
 }
 
@@ -37,7 +37,7 @@ a:hover { color: #ff0; }
     right: 0px;
     display: block;
     background: rgba(0,0,0,0.5);
-    border-radius: 5px;
+    border-radius: 3px;
 }
 .taskbar a { margin: 5px 18px; }
 .is-admin .taskbar.turn-opponent .task_overlay { display: none; }

@@ -1,0 +1,472 @@
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Medium devices (landscape tablets, 768px and up) */
+/* Large devices (laptops/desktops, 992px and up) */
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+html {
+  height: 100%;
+  width: 100%;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: default;
+  background-color: #000;
+  font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+  font-size: 1em;
+  user-select: none;
+  line-height: 1.5em;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  background-image: url("/media/assets/backgrounds/nature.webp");
+  background-attachment: fixed;
+  background-size: cover;
+  letter-spacing: 0.025em;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.bgblue,
+.blue-box {
+  background: rgba(39, 56, 76, 0.82);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+h1, h2 {
+  color: #ffa500;
+  font-weight: 300;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #ffa500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul, ol {
+  list-style-type: none;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+ul li, ol li {
+  text-align: left;
+  margin: 0.5em 0 0 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.button,
+button {
+  cursor: pointer;
+  text-align: center;
+}
+
+select,
+input {
+  border: solid 2px #e5e6e7;
+}
+
+textarea,
+.button,
+input,
+select,
+button {
+  border: 0;
+  display: inline-block;
+  height: 3.5em;
+  border-radius: 0.5em;
+  line-height: 3.5em;
+  outline: 0;
+  padding: 0 2em 0 2em;
+  text-decoration: none;
+  background-color: #fff;
+  width: 100%;
+  color: #39454b;
+}
+
+.button,
+button {
+  color: #fff;
+  background-color: #98c593;
+  overflow: hidden;
+  text-align: center;
+}
+.button:hover, .button:active,
+button:hover,
+button:active {
+  background-color: #a8cea4;
+}
+
+body {
+  background-image: url("/media/assets/backgrounds/deckbuilding.webp");
+  color: #fff;
+}
+body:before {
+  content: " ";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  background-color: #000;
+  z-index: 1;
+}
+body h4 {
+  display: inline;
+  color: #ff0;
+  border-bottom: 1px solid #ff0;
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+
+.result_container {
+  z-index: 2;
+  position: relative;
+  margin-top: 10px;
+}
+
+.deckbuilding h1 {
+  display: none;
+}
+.deckbuilding .filters {
+  padding: 1em;
+  position: relative;
+  z-index: 2;
+}
+.deckbuilding .filters .field {
+  padding: 0.5em;
+  display: inline-block;
+  width: 15%;
+}
+.deckbuilding .filters input,
+.deckbuilding .filters select {
+  display: inline-block;
+}
+
+.linklist ul {
+  display: inline;
+  width: 20%;
+  float: left;
+}
+.linklist ul a {
+  display: inline-block;
+  margin: 3px 10px;
+  padding: 5px 5px;
+  vertical-align: top;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #fff;
+  color: #000;
+  font-size: 0.6em;
+}
+.linklist ul li.current a,
+.linklist ul a:hover {
+  color: #fff;
+  background-color: rgba(255, 165, 0, 0.35);
+  border: 1px solid #ffa500;
+}
+.linklist:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.scroll_top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  color: #ffa500;
+  padding: 10px;
+  font-size: 2em;
+  z-index: 10;
+}
+.scroll_top:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+.category .image {
+  margin-right: 5px;
+  width: 300px;
+  height: 430px;
+  display: inline-block;
+}
+.category .image img {
+  width: 100%;
+  max-height: 100%;
+  background: url(/data/backside) 0 0 no-repeat;
+  background-size: contain;
+}
+
+#notifications {
+  padding: 0px;
+}
+
+.deckbuilding-summary {
+  position: fixed;
+  padding: 5px 10px;
+  right: 2px;
+  top: 35px;
+  font-size: 0.8em;
+  line-height: 1em;
+  z-index: 100;
+  color: #fff;
+}
+.deckbuilding-summary span {
+  width: 20px;
+  display: inline-block;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.deck-builder {
+  display: flex;
+  column-gap: 20px;
+  align-items: start;
+}
+.deck-builder input[type=checkbox] {
+  display: none;
+}
+.deck-builder input[type=checkbox]:checked ~ .deck_part, .deck-builder input[type=checkbox]:checked ~ .list_toggle, .deck-builder input[type=checkbox]:checked ~ .d_container {
+  display: none !important;
+}
+.deck-builder .fa:before {
+  padding-right: 5px;
+}
+.deck-builder .decklist {
+  flex: 1 30%;
+  padding: 10px;
+  margin-left: 5px;
+  font-size: 0.8em;
+}
+.deck-builder .decklist .fa:before {
+  padding-right: 5px;
+}
+.deck-builder .decklist a:hover {
+  color: #fff;
+}
+.deck-builder .decklist h2 {
+  cursor: pointer;
+  font-size: 15px;
+  text-align: center;
+}
+.deck-builder .decklist h2:hover {
+  color: #fff;
+}
+.deck-builder .decklist label {
+  padding-top: 10px;
+  border-bottom: 1px dotted #ffa500;
+  display: block;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  margin: 1em 0;
+  color: #ffa500;
+}
+.deck-builder .decklist label:hover {
+  color: #fff;
+}
+.deck-builder .decklist .decklist-action-move {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-size: 16px 16px;
+  background-position: 0 1px !important;
+  background-size: 16px 16px !important;
+}
+.deck-builder .decklist .deckname {
+  display: inline;
+  width: 150px;
+  line-height: 1em;
+  padding: 5px;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+}
+.deck-builder .decklist .card_of_deck_construct:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+.deck-builder .list_left {
+  flex: 3 70%;
+}
+.deck-builder .builder-hint {
+  transform: translateX(25%);
+  padding: 20px;
+  text-align: center;
+  max-width: 50%;
+  margin-top: 3em;
+}
+.deck-builder .category .actions[data-count="0"] {
+  background: rgba(0, 0, 0, 0.4);
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.deck-builder .category .actions[data-count="0"] a {
+  display: none !important;
+}
+.deck-builder .category .image {
+  position: relative;
+}
+.deck-builder .category .image .count_bubble {
+  right: 5px;
+  top: 5px;
+  color: #fff;
+  position: absolute;
+  border-radius: 10px;
+  background: #ffa500;
+  padding: 5px;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 1em;
+}
+.deck-builder .category .image .actions {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  width: 44px;
+}
+.deck-builder .category .image .actions a {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 64px;
+  margin-top: 5px;
+  border-radius: 5px;
+  font-size: 2em;
+  text-align: center;
+  padding: 13px 5px;
+  color: #fff;
+}
+.deck-builder .category .image .actions a:hover {
+  color: #ffa500;
+}
+
+.deck_move_pool,
+.actions .icon_add_pool {
+  background: url("/media/assets/images/icons/icon-hand.png") 5px 15px no-repeat;
+}
+
+.deck_move_pool:hover,
+.actions a.icon_add_pool:hover {
+  background-image: url("/media/assets/images/icons/icon-hand-hover.png");
+}
+
+.deck_move_play:hover,
+.actions a.icon_add_deck:hover {
+  background-image: url("/media/assets/images/icons/icon-playdeck-hover.png");
+}
+
+.deck_move_play,
+.actions a.icon_add_deck {
+  background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat;
+}
+
+.deck_move_sideboard:hover,
+.actions a.icon_add_sideboard:hover {
+  background-image: url("/media/assets/images/icons/icon-sideboard-hover.png");
+}
+
+.deck_move_sideboard,
+.actions a.icon_add_sideboard {
+  background: url("/media/assets/images/icons/icon-sideboard.png") 5px 15px no-repeat;
+}
+
+#pool .deck_move_pool,
+#deck_resources .deck_move_play,
+#deck_chars .deck_move_play,
+#deck_hazards .deck_move_play,
+#sideboard .deck_move_sideboard {
+  display: none;
+}
+
+#help_observer {
+  float: left;
+}
+
+#deck_card_view {
+  position: fixed;
+  z-index: 100;
+  left: 24%;
+  top: 0;
+}
+#deck_card_view img {
+  position: fixed;
+  top: 50%;
+  height: auto;
+  max-height: 100%;
+  margin: 2px;
+  transform: translateY(-50%);
+}
+
+@media only screen and (min-width: 1500px) {
+  .category .image {
+    margin-right: 5px;
+    width: 400px;
+    height: auto;
+  }
+  .decklist {
+    flex: 250px !important;
+  }
+}
+@media only screen and (max-width: 767.98px) {
+  .deck-builder {
+    display: block;
+  }
+  .deck-builder .builder-hint {
+    transform: none;
+    text-align: center;
+    max-width: 95%;
+    margin: 20px auto;
+  }
+  .deckbuilding .filters .field {
+    width: 30%;
+  }
+  .category .image {
+    margin-right: 5px;
+    width: 400px;
+    height: auto;
+  }
+  .list_left,
+  .decklist {
+    display: block;
+  }
+}
+@media only screen and (max-width: 575.98px) {
+  .deckbuilding .filters .field {
+    width: 100%;
+  }
+}

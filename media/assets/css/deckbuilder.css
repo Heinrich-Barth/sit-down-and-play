@@ -1,20 +1,3 @@
-#result {
-    padding-bottom: 200px;
-}
-
-#linklist ul {
-    display: inline;
-    float: left;
-}
-
-.linklist li {
-    display: block;
-    width: auto;
-}
-
-.clearAfter::after,
-.clear { clear: both; float: none; }
-h1 { display: none; }
 
 #result table {
     width: 100%;
@@ -53,42 +36,7 @@ body.addtodeck #result .image {
     width: 200px;
     height: 282px;
 }
-.decklist .fl { float: none !important; }
-.decklist div.w48 { width: 100%; }
 
-.decklist h2 { cursor: pointer; }
-.decklist h2:hover { color: #fff; }
-
-.category .image .actions
-{
-    position: absolute;
-    top: 35px;
-    right: 20px;
-    width: 44px;
-}
-
-.category .image .actions a {
-    display: block;
-    height: 64px;
-    margin-top: 5px;
-    background-color: rgba(0,0,0,0.5);
-    border-radius: 5px;
-}
-
-.card_deck_title {
-    padding-left: 5px;
-    cursor: pointer;
-}
-
-.category .image .actions a.fa {
-	font-size: 3em;
-    color: white;
-    padding: 5px;
-    height: auto;
-}
-.category .image .actions a.fa:hover {
-    color: #ffa500;
-}
 .decklist-action-move
 {
     display: inline-block;
@@ -98,127 +46,7 @@ body.addtodeck #result .image {
     background-position: 0 1px !important;
     background-size: 16px 16px !important;
 }
-.category .image .actions a:hover
-{
-    background-color: rgba(152,197,147,0.7);
 
-}
-
-.deck_move_pool,
-.actions  .icon_add_pool 
-{ 
-    background: url("/media/assets/images/icons/icon-hand.png") 5px 15px no-repeat
-}
-.deck_move_pool:hover,
-.actions a.icon_add_pool:hover 
-{ 
-    background-image: url("/media/assets/images/icons/icon-hand-hover.png"); 
-}
-.deck_move_play:hover,
-.actions a.icon_add_deck:hover 
-{ 
-    background-image: url("/media/assets/images/icons/icon-playdeck-hover.png");
-}
-.deck_move_play,
-.actions a.icon_add_deck 
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat; 
-}
-.deck_move_sideboard:hover,
-.actions a.icon_add_sideboard:hover 
-{ 
-    background-image: url("/media/assets/images/icons/icon-sideboard-hover.png");
-}
-.deck_move_sideboard,
-.actions a.icon_add_sideboard 
-{ 
-    background: url("/media/assets/images/icons/icon-sideboard.png") 5px 15px no-repeat
-}
-
-#pool .deck_move_pool,
-#deck_resources .deck_move_play,
-#deck_chars .deck_move_play,
-#deck_hazards .deck_move_play,
-#sideboard .deck_move_sideboard
-{ display: none; }
-
-.category .image div.actions[data-count="0"] 
-{
-    background: rgba(0,0,0,0.4);
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.category .image div.actions[data-count="0"] a { display: none; }
-
-.list_left {
-    margin-left: 330px;
-}
-
-.decklist {
-    position: relative;
-    width: 300px;
-    padding: 10px;
-    display: inline-block;
-    margin-left: 5px;   
-}
-div.linklist {
-    display: block;
-    width: 100%;
-}
-
-div.category { float: left; }
-div.count_bubble {
-    right: 5px;
-    top: 5px;
-    color: #fff;
-    position: absolute;
-    border-radius: 10px;
-    background: #ffa500;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 1em;
-}
-
-.deckbuilding .filters {
-    display: inline-block;
-    margin-bottom: 10px; display: inline-block;
-}
-.deckbuilding form { margin: 0;}
-.deckbuilding .filters .field 
-{
-    width: 175px;
-}
-
-.deckbuilding-summary {
-    padding: 5px 10px;
-    position: fixed;
-    right: 2px;
-    top: 35px;
-    font-size: 10px;
-    line-height: 13px;
-    z-index: 100;
-}
-.deckbuilding-summary span { width: 20px; display: inline-block; text-align: right; padding-right: 10px; }
-
-.scroll_top {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-}
-
-.scroll_top i {
-    padding: 15px;
-    cursor: pointer;
-    font-size: 2em;
-}
-
-.scroll_top:hover i {
-    color: #fff;
-}
 
 .empty_result {
     padding: 30px;
@@ -229,73 +57,10 @@ div.count_bubble {
     color: #fff;
 }
 
-.result-end-of-list {
-    text-align: center;
-    font-size: 2em;
-    color: #fff;
-    padding: 20px 0;
-}
-
-.result-end-of-list i {
-    padding: 20px;
-    transform: rotate(-90deg);
-    cursor: pointer;
-}
-
-#help_observer { float: left;}
-
-.decklist .action a { color: #ffa500; }
-.decklist .action a:hover { color:  #fff; }
-
-.builder-hint {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-}
-
-.builder-hint-content {
-    max-width: 300px; 
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-}
-
 span.builder-white { color: #fff !important; font-weight: bold;}
-.decklist label
-{ padding-top: 10px; border-bottom: 1px dotted #ffa500; display: block; cursor: pointer; text-transform: uppercase; font-size: 1.2em; margin: 12px 0;}
 
 .decklist .no-pad-top { padding-top: 0; }
-.decklist label:hover {
-    color: #fff;
-}
-.decklist input[type="checkbox"] { display: none; }
-.decklist input[type="checkbox"]:checked ~ .deck_part,
-.decklist input[type="checkbox"]:checked ~ .list_toggle,
-.decklist input[type="checkbox"]:checked ~ .d_container { display: none; }
-.decklist .fa:before {
-    padding-right: 5px;
-}
 
-#notes {
-    width: 93%
-}
-
-#deckname {
-    display: inline;
-    width: 150px;
-    line-height: 1em;
-    padding: 5px;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    background: transparent;
-    color: #fff;
-}
-
-#deck_container h2,
-#deckname
-{ font-size: 15px; }
 
 #notifications {
     padding: 0px;

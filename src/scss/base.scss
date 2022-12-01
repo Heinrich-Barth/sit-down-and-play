@@ -1,0 +1,83 @@
+@import "variables.scss";
+
+html
+{
+    height: 100%;
+    width: 100%;
+}
+
+html, body
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    cursor: default;
+
+    background-color: $color-black;
+    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+    font-size: 1em;
+    user-select: none;
+    line-height: 1.5em;
+    box-sizing:border-box;
+}
+
+body
+{
+    min-height: 100%;
+    background-image: url("/media/assets/backgrounds/nature.webp");
+    background-attachment: fixed;
+    background-size: cover;
+    letter-spacing: 0.025em;
+
+}
+
+*, *:before, *:after 
+{
+    box-sizing: inherit;
+}
+
+.bgblue,
+.blue-box {
+    background: rgba(39,56,76,0.82);
+    border-radius: 5px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+h1, h2 { 
+    color: $color-orange;
+    font-weight: 300;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2em; 
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em; 
+    margin-bottom: 10px; 
+}
+
+a {
+    color: $color-orange;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul, ol {
+    list-style-type: none;
+    margin: 0 0 1em 0;
+    padding: 0;
+
+    li {
+        text-align: left;
+        margin: 0.5em 0 0 0;
+    }
+}
+
+.hidden { display: none !important;}
+.center { text-align: center;}

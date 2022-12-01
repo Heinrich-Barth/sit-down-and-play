@@ -1,0 +1,91 @@
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Medium devices (landscape tablets, 768px and up) */
+/* Large devices (laptops/desktops, 992px and up) */
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+.navigation-toggled .navigation {
+  position: fixed;
+  right: 0;
+  top: 0;
+  margin: 0;
+  padding: 5px 10px;
+  font-size: 12px;
+  background: rgba(39, 56, 76, 0.82);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  display: block;
+  color: white;
+  z-index: 101;
+}
+.navigation-toggled .navigation a,
+.navigation-toggled .navigation a:active,
+.navigation-toggled .navigation a:visited {
+  color: #ff0;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.navigation-toggled .navigation a:hover {
+  color: #ffa500;
+}
+.navigation-toggled .navigation input,
+.navigation-toggled .navigation ul {
+  display: none;
+}
+.navigation-toggled .navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  margin: 20px 0 10px 0;
+}
+.navigation-toggled .navigation label {
+  display: block;
+  text-align: right;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.navigation-toggled .navigation label:hover {
+  color: #ffa500;
+}
+.navigation-toggled .navigation input:checked ~ ul {
+  display: block;
+}
+.navigation-toggled .navigation a {
+  display: block;
+  border-radius: 5px;
+  padding: 0 5px;
+}
+.navigation-toggled .navigation a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navigation-full-width .navigation {
+  position: absolute;
+  top: 1em;
+  left: 0;
+  width: 100%;
+  line-height: 1.5em;
+  z-index: 101;
+}
+.navigation-full-width .navigation input,
+.navigation-full-width .navigation label {
+  display: none;
+}
+.navigation-full-width .navigation ul {
+  text-align: center;
+}
+.navigation-full-width .navigation a,
+.navigation-full-width .navigation a:active,
+.navigation-full-width .navigation a:visited {
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1em;
+  display: inline-block;
+}
+.navigation-full-width .navigation a:hover {
+  color: #ffa500;
+}
+.navigation-full-width .navigation li {
+  display: inline-block;
+  text-align: center;
+}

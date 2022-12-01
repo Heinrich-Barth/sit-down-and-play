@@ -1,0 +1,71 @@
+@import "../base.scss";
+
+body {
+  background-color: $color-black;
+  color: $color-white;
+  background-image: url("/media/assets/backgrounds/home.webp");
+
+  &.lantern {
+    background-image: url("/media/assets/backgrounds/forrest.webp");
+  }
+}
+
+.auth-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  text-align: center;
+
+  padding: 2em;
+
+  background:linear-gradient(130deg, rgba(0,0,0,0), rgba(0,0,0,0) 30%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,1) 60%);
+
+  .box-content {
+    position: absolute;
+    right: 25%;
+    top: 50%;
+    transform: translateY(-50%) translateX(25%);
+    min-width: 50%;
+
+    .progress-value {
+      animation: load 3s normal infinite;
+      border-radius: 100px;
+      background: #fff;
+      height: 30px;
+      width: 10%;
+    }
+
+    @keyframes load {
+      0% {
+        margin-left: 0
+      }
+
+      25% {
+        margin-left: 50%
+      }
+
+      50% {
+        margin-left: 90%;
+      }
+
+      75% {
+        margin-left: 50%;
+      }
+
+      100% {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (max-width: $xl-max) {
+  .auth-box {
+    left: 0;
+  }
+}

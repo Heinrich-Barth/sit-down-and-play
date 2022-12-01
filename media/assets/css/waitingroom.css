@@ -84,24 +84,59 @@ ul li, ol li {
 }
 
 body {
-  padding: 0;
+  background-color: #000;
+  color: #fff;
   background-image: url("/media/assets/backgrounds/home.webp");
 }
-
-.content {
-  color: #fff;
-  background: linear-gradient(170deg, transparent, rgb(0, 0, 0) 40%);
-  border-top: 0;
-  padding: 0;
-}
-.content .inner-content {
-  padding: 20em 5em 5em 5em;
+body.lantern {
+  background-image: url("/media/assets/backgrounds/forrest.webp");
 }
 
-h1 {
-  margin-top: 2em;
+.auth-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  padding: 2em;
+  background: linear-gradient(130deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.4) 40%, rgb(0, 0, 0) 60%);
+}
+.auth-box .box-content {
+  position: absolute;
+  right: 25%;
+  top: 50%;
+  transform: translateY(-50%) translateX(25%);
+  min-width: 50%;
+}
+.auth-box .box-content .progress-value {
+  animation: load 3s normal infinite;
+  border-radius: 100px;
+  background: #fff;
+  height: 30px;
+  width: 10%;
+}
+@keyframes load {
+  0% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: 50%;
+  }
+  50% {
+    margin-left: 90%;
+  }
+  75% {
+    margin-left: 50%;
+  }
+  100% {
+    margin-left: 0;
+  }
 }
 
-h2 {
-  margin-top: 1.5em;
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (max-width: 1199.98px) {
+  .auth-box {
+    left: 0;
+  }
 }

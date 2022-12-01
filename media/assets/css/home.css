@@ -1,0 +1,221 @@
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Medium devices (landscape tablets, 768px and up) */
+/* Large devices (laptops/desktops, 992px and up) */
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+html {
+  height: 100%;
+  width: 100%;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: default;
+  background-color: #000;
+  font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+  font-size: 1em;
+  user-select: none;
+  line-height: 1.5em;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  background-image: url("/media/assets/backgrounds/nature.webp");
+  background-attachment: fixed;
+  background-size: cover;
+  letter-spacing: 0.025em;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.bgblue,
+.blue-box {
+  background: rgba(39, 56, 76, 0.82);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+h1, h2 {
+  color: #ffa500;
+  font-weight: 300;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #ffa500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul, ol {
+  list-style-type: none;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+ul li, ol li {
+  text-align: left;
+  margin: 0.5em 0 0 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.button,
+button {
+  cursor: pointer;
+  text-align: center;
+}
+
+select,
+input {
+  border: solid 2px #e5e6e7;
+}
+
+textarea,
+.button,
+input,
+select,
+button {
+  border: 0;
+  display: inline-block;
+  height: 3.5em;
+  border-radius: 0.5em;
+  line-height: 3.5em;
+  outline: 0;
+  padding: 0 2em 0 2em;
+  text-decoration: none;
+  background-color: #fff;
+  width: 100%;
+  color: #39454b;
+}
+
+.button,
+button {
+  color: #fff;
+  background-color: #98c593;
+  overflow: hidden;
+  text-align: center;
+}
+.button:hover, .button:active,
+button:hover,
+button:active {
+  background-color: #a8cea4;
+}
+
+body {
+  background-image: url("/media/assets/backgrounds/home.webp");
+  color: #fff;
+  text-align: center;
+  padding: 2em;
+}
+body:before {
+  content: " ";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  background-color: #000;
+  z-index: 1;
+}
+
+body, p {
+  font-weight: 300;
+  font-size: 16px;
+  font-stretch: 100%;
+}
+
+.content {
+  color: #fff;
+  padding: 2em;
+  z-index: 2;
+  position: relative;
+}
+.content h1 {
+  text-align: center;
+}
+.content input {
+  width: 60%;
+  display: inline-block;
+}
+.content button {
+  width: 35%;
+  display: inline-block;
+  overflow: hidden;
+}
+.content .join-game {
+  padding: 2em;
+  margin-top: 5em;
+  align-items: flex-start;
+}
+
+.game-list {
+  padding: 2em;
+  margin-top: 5em;
+}
+.game-list table {
+  width: 100%;
+  border-spacing: 0;
+}
+.game-list tr {
+  vertical-align: middle;
+}
+.game-list tr:nth-child(2) {
+  margin-top: 20px;
+}
+.game-list tr:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.game-list tr td {
+  text-align: left;
+}
+.game-list tr td:first-child {
+  padding-right: 10px;
+}
+.game-list tr .action {
+  width: 100px;
+}
+.game-list tr .name {
+  width: 40%;
+}
+.game-list a {
+  display: block;
+  text-transform: uppercase;
+  color: #ff0;
+}
+.game-list a:hover {
+  color: #ffa500;
+}
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (max-width: 767.98px) {
+  input,
+  button {
+    width: 100% !important;
+    margin-bottom: 2em;
+  }
+}
