@@ -47,6 +47,21 @@ const Lobby = {
         return input.length < 30 ? input : input.substring(0, 29);
     },
 
+    reduceTime : function(input)
+    {
+        const year = "" + new Date().getFullYear();
+        if (input === undefined || input === "")
+            return "";
+
+        let pos = input.indexOf(year);
+        console.log(pos);
+        if (pos === -1)
+            return input;
+
+        pos += 4;
+        return input.substring(pos).replace("GMT", "").trim();
+    },
+
     createWaitingList : function(data)
     {
         const nLen = data.length;
@@ -59,12 +74,10 @@ const Lobby = {
 
         Lobby.insertH3(lobbyList, "Users requesting to join");
 
-        let _entry;
-        for (let i = 0; i < nLen; i++)
+        for (let _entry of data)
         {
-            _entry = data[i];
             if (_entry.name.indexOf("<") === -1 && _entry.id.indexOf("<") === -1)
-                Lobby.appendPlayer(lobbyList, _entry.name, _entry.id, _entry.time, true);
+                Lobby.appendPlayer(lobbyList, _entry.name, _entry.id, Lobby.reduceTime(_entry.time), true);
         }
 
         return true;
@@ -83,7 +96,7 @@ const Lobby = {
         const elemP = document.createElement("p");
         elemP.innerHTML = `<i data-id="${id}"  class="fa fa-trash" aria-hidden="true" title="Reject player"></i>` + 
         (bAdd ? `<i data-id="${id}" class="fa fa-user-plus" aria-hidden="true" title="Add to game"></i>` : "") +
-        _temp + " (" + time + ")";
+        _temp + ` <span class="lobby-time">(since ${time})</span>`;
 
         elem.appendChild(elemP);
     },
@@ -100,12 +113,10 @@ const Lobby = {
 
         Lobby.insertH3(lobbyList, "Players at the table");
 
-        let _entry;
-        for (let i = 0; i < nLen; i++)
+        for (let _entry of data)
         {
-            _entry = data[i];
             if (_entry.name.indexOf("<") === -1 && _entry.id.indexOf("<") === -1)
-                Lobby.appendPlayer(lobbyList, _entry.name, _entry.id, _entry.time, false);
+                Lobby.appendPlayer(lobbyList, _entry.name, _entry.id, Lobby.reduceTime(_entry.time), false);
         }
 
         return true;
