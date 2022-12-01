@@ -28,7 +28,7 @@
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^5.1.0",
-    "sass": "^1.49.7"
+    "sass": "^1.56.1"
   },
   "repository": {
     "type": "git",
