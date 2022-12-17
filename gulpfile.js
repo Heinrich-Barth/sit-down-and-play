@@ -22,7 +22,7 @@ console.log('\x1b[7m%s\x1b[0m', '\n---------- ' + initMsg + ' ----------');
 const sourcePath = './src/scss';
 const targetPath = './media/assets/css';
 
-const compileFile = function(file)
+const compileFile = function(file, targetFilepath)
 {
     console.log("Compile " + file)
     let css_file = gulp.src(sourcePath + file).pipe(sass());
@@ -30,9 +30,10 @@ const compileFile = function(file)
     if (!isDebug)
         css_file = css_file.pipe(cleanCSS({format: {"wrapAt": 1024}}));
 
+    const dirTarget = targetFilepath === undefined ? targetPath : targetFilepath;
     return css_file
         .pipe(rename({extname : '.css'}))
-        .pipe(gulp.dest(targetPath));
+        .pipe(gulp.dest(dirTarget));
 
 }
 
@@ -46,6 +47,9 @@ gulp.task('compile-sass-cards', () => compileFile('/modules/cards.scss'));
 gulp.task('compile-saas-waitingroom', () => compileFile('/modules/waitingroom.scss'));
 gulp.task('compile-saas-deckselection', () => compileFile('/modules/deckselection.scss'));
 gulp.task('compile-saas-navigation', () => compileFile('/modules/navigation.scss'));
+gulp.task('compile-saas-tabletop', () => compileFile('/modules/tabletop.scss'));
+gulp.task('compile-saas-mapview', () => compileFile('/modules/mapview.scss'));
+gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./game-client/game/score"));
 
 
 const sccsModules = [
@@ -55,7 +59,10 @@ const sccsModules = [
     "compile-sass-auth",
     "compile-saas-waitingroom",
     "compile-saas-deckselection",
-    "compile-saas-navigation"
+    "compile-saas-navigation",
+    "compile-saas-tabletop",
+    "compile-saas-score",
+    "compile-saas-mapview"
 ]
 
 // 

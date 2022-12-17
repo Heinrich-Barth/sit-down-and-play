@@ -1,0 +1,61 @@
+body {
+
+    &.on-drag-event-generic {
+        .area-player .company-character-host {
+            z-index: 900;
+        }
+        .card-hands {
+            z-index: 100;
+        }
+    }
+
+    &.on-drag-event-character .area-player {
+        .company-characters-add {
+            display: block;
+            background-image: url(/media/assets/images/icon-company-join.png);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .create-new-company {
+            background-image: url(/media/assets/images/icon-company-new.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            visibility: visible;
+        }
+        .company-character-influenced .company-character-host {
+            background-color: transparent;
+            border: 0px;
+        }
+    }
+    
+    &.on-drag-event-hazard .staging-area-drop,
+    &.on-drag-event-resource .staging-area-drop {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 200px;
+    }
+
+    &.on-drag-event-hazard .staging-area-drop,
+    &.on-drag-event-resource .staging-area-drop,
+    &.on-drag-event-hazard .area-opponent .company-character-host,
+    &.on-drag-event-hazard .area-opponent .site-regions,
+    &.on-drag-event-generic .area-opponent .site-target,
+    &.on-drag-event-generic .area-player .ui-droppable-active,
+    &.on-drag-event-generic .card-bar .ui-droppable-active {
+        background-color: rgba(0, 0, 0, 0.3) !important;
+        border: 3px dashed #000 !important;
+        border-radius: 5px !important;
+        z-index: 900;
+    }    
+    
+    &.on-drag-event-resource .area-player .company-character-host .card img,
+    &.on-drag-event-character .area-player .company-character-host .card img {
+        opacity: 0.7;
+    }
+}
+
+
+

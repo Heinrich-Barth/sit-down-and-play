@@ -1,0 +1,693 @@
+@import "../base.scss";
+
+body {
+    line-height: 1em;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: auto;
+    box-sizing: content-box;
+}
+
+a {
+    color: #ffa500;
+    text-decoration: none;
+
+    &:hover {
+        color: #ff0;
+    }
+}
+
+@import "tabletop_cardbar.scss";
+
+.taskbar {
+
+    display: inline-block;
+    margin-bottom: 5px;
+
+    .task_overlay {
+        display: none;
+    }
+
+    &.turn-opponent .task_overlay {
+        position: absolute;
+        left: 80px;
+        top: 0;
+        bottom: 0;
+        right: 0px;
+        display: block;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 3px;
+    }
+
+    a {
+        margin: 5px 18px;
+    }
+}
+
+.is-admin .taskbar.turn-opponent .task_overlay {
+    display: none;
+}
+
+@import "tabletop_icons.scss";
+
+
+.player_selector {
+
+    i {
+        margin-right: 5px;
+        padding-left: 17px;
+        font-style: normal;
+    }
+
+    .player-handcard-count {
+        background: url("/media/assets/images/icons/icon-hand-small.png") 0 0px no-repeat;
+    }
+
+    .player-playdeck-count {
+        background: url("/media/assets/images/icons/icon-playdeck-small.png") 0 0px no-repeat;
+    }
+
+    .cur {
+        .player-handcard-count {
+            background: url("/media/assets/images/icons/icon-hand-small-hover.png") 0 0px no-repeat;
+        }
+
+        .player-playdeck-count {
+            background: url("/media/assets/images/icons/icon-playdeck-small-hover.png") 0 0px no-repeat;
+        }
+    }
+}
+
+
+
+.location-icon-image {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    z-index: 100;
+    color: #000;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 4px;
+    opacity: 0.6;
+    width: 16px;
+    height: 16px;
+
+    &:hover {
+        opacity: 1;
+        color: #fff;
+        background-color: #ffa500;
+    }
+}
+
+.location-icon {
+    top: 6px;
+}
+
+.location-underdeep {
+    top: 30px;
+    right: 43px;
+}
+
+.location-reveal {
+    bottom: 10px;
+}
+
+.table {
+    position: relative;
+    width: 100%;
+
+    &.full-height {
+        height: 100%;
+    }
+
+    .area {
+        width: 100%;
+    }
+
+    .area-player {
+        position: relative;
+        min-height: 30%;
+
+        .card-bar {
+            bottom: 0;
+        }
+    }
+
+    .area-opponent {
+        margin-bottom: 20px;
+        position: relative;
+        min-height: 30%;
+
+        .ui-draggable-dragging {
+            transform: rotate(180deg);
+        }
+
+        .hiddenToOpponent,
+        .company-characters-add {
+            display: none !important;
+        }
+    }
+}
+
+img.card-icon {
+    width: 57px;
+    height: 80px;
+    background: url("/data/backside") 0 0 no-repeat;
+    background-size: contain;
+}
+
+.clear {
+    float: none;
+    clear: both;
+}
+
+.company-host,
+.company {
+    padding-right: 20px;
+    min-width: 200px;
+    height: 100%;
+    min-width: 60px !important;
+}
+
+
+.card-bar {
+    position: fixed;
+    z-index: 100;
+    width: 40px;
+    bottom: 5px;
+    height: 320px;
+
+    a {
+        text-align: center;
+        color: white;
+
+        &:hover {
+            color: #ffa500;
+        }
+    }
+}
+
+
+.hand span,
+.card-bar a span {
+    padding: 1px;
+    background: green;
+    border-radius: 5px;
+    margin-top: 8px;
+    display: inline-block;
+    margin-left: 15px;
+    text-align: right;
+    font-size: 11px;
+}
+
+.rot90,
+.state_tapped img,
+.state_tapped_fixed img,
+.tapped {
+    transform: rotate(90deg);
+}
+
+.rot180,
+.state_wounded img,
+.wounded {
+    transform: rotate(180deg);
+}
+
+.rot270 {
+    transform: rotate(270deg);
+}
+
+.state_rot270 img {
+    transform: rotate(-90deg);
+}
+
+.card-hands {
+    position: fixed;
+    left: 50px;
+    bottom: 5px;
+    z-index: 400;
+    padding: 5px;
+    max-width: 90%;
+    min-width: 480px;
+    min-height: 84px;
+
+    .card-generic,
+    .card-hand {
+        display: inline-block;
+        position: relative;
+        width: 60px;
+        min-height: 60px;
+    }
+
+    .hand-card-sizer {
+        padding: 5px 10px;
+        text-align: right;
+        color: #fff;
+        font-size: 10px;
+    }
+
+    .card-hand {
+        cursor: move;
+
+        .draw {
+            position: absolute;
+            left: 9px;
+            top: 13px;
+            color: #ffa500;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        &:hover {
+
+            .draw {
+                color: #ff0;
+            }
+
+            img {
+                opacity: 0.8;
+            }
+        }
+
+        &.card-draw:hover img {
+            opacity: 0.6;
+        }
+    }
+
+}
+
+.on-drag-event-generic #playercard_hand {
+    z-index: 0;
+    opacity: 0.7;
+}
+
+
+@import "tabletop_cardlistcontainer.scss";
+
+
+#playercard_hand_container {
+    display: inline-block;
+    margin-left: 60px;
+    min-height: 83px;
+
+    a.discardpile,
+    a.discardpile:hover {
+        background-size: 20px 20px !important;
+        background-position-x: 0px;
+        background-position-y: 0px;
+    }
+
+    a.discardpile {
+        position: absolute;
+        bottom: 5px;
+        width: 20px;
+        margin: 0;
+        height: 20px;
+        left: 25%;
+    }
+}
+
+/* COMPANY AREA */
+.staging-area {
+    flex: 1 20%;
+    position: relative;
+
+    .staging-area-drop {
+        display: none;
+    }
+
+    &.staging-area-opponent {
+        padding-top: 20px;
+    }
+
+    .card {
+        float: left;
+        margin-left: 2px;
+
+        img.card-icon {
+            height: 70px;
+            width: auto;
+        }
+    }
+
+}
+
+
+.companies {
+    white-space: nowrap;
+    flex: 1 79%;
+
+    .emptyContainer {
+        width: 300px;
+        height: 100px;
+        border: 2px dashed transparent;
+    }
+
+    .company {
+        margin-right: 20px;
+        border-radius: 20px;
+        position: relative;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .company-character:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .company-site-list {
+            height: 83px;
+            max-height: 83px;
+            min-width: 72px;
+            padding: 5px;
+            border-bottom: 3px dashed black;
+        }
+
+        .company-character {
+            border: 3px dashed transparent;
+        }
+
+        .company-characters-add {
+            margin-left: 0;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 96px;
+        }
+
+    }
+
+    .create-new-company {
+        background: rgba(0, 0, 0, 0.3);
+        height: 100%;
+        width: 60px !important;
+        border: 3px dashed #000;
+        border-radius: 5px;
+        max-width: 60px !important;
+        min-height: 270px;
+        visibility: hidden;
+    }
+}
+
+
+.row {
+    padding: 0 10px 0 50px;
+}
+
+@import "tabletop-dragging.scss";
+
+.company-character-reosurces,
+.company-character-reosurces .card,
+.company-character-host {
+    position: relative;
+    text-align: left;
+}
+
+.company-character-reosurces {
+    margin-top: -60px;
+    min-height: 84px;
+
+    .card {
+        margin-top: -60px;
+        z-index: 101;
+        max-height: 80px;
+        display: flex;
+
+        &:nth-child(1) {
+            transform: translateX(15px);
+        }
+
+        &:nth-child(2) {
+            transform: translateX(30px);
+        }
+
+        &:nth-child(3) {
+            transform: translateX(45px);
+        }
+
+        &:nth-child(4) {
+            transform: translateX(60px);
+        }
+
+        &:nth-child(5) {
+            transform: translateX(75px);
+        }
+
+        &:nth-child(6) {
+            transform: translateX(90px);
+        }
+
+        &:nth-child(7) {
+            transform: translateX(105px);
+        }
+
+        &:nth-child(8) {
+            transform: translateX(130px);
+        }
+
+        &:nth-child(9) {
+            transform: translateX(145px);
+        }
+
+        &:nth-child(10) {
+            transform: translateX(160px);
+        }
+
+        &:nth-child(10) {
+            transform: translateX(175px);
+        }
+
+        &:nth-child(11) {
+            transform: translateX(190px);
+        }
+
+        &:nth-child(12) {
+            transform: translateX(205px);
+        }
+    }
+}
+
+.company-character-reosurces {
+    &[data-stack-size="1"] {
+        width: 72px
+    }
+
+    &[data-stack-size="2"] {
+        width: 87px
+    }
+
+    &[data-stack-size="3"] {
+        width: 102px
+    }
+
+    &[data-stack-size="4"] {
+        width: 117px
+    }
+
+    &[data-stack-size="5"] {
+        width: 132px
+    }
+
+    &[data-stack-size="6"] {
+        width: 147px
+    }
+
+    &[data-stack-size="7"] {
+        width: 162px
+    }
+
+    &[data-stack-size="8"] {
+        width: 177px
+    }
+
+    &[data-stack-size="9"] {
+        width: 192px
+    }
+
+    &[data-stack-size="10"] {
+        width: 207px
+    }
+
+    &[data-stack-size="11"] {
+        width: 222px
+    }
+
+    &[data-stack-size="12"] {
+        width: 237px
+    }
+}
+
+.site-regions .card,
+.site-onguard .card {
+    display: inline-block;
+    margin-left: -30px;
+}
+
+.site-regions .card:nth-child(1),
+.site-onguard .card:nth-child(1) {
+    margin-left: 0px;
+}
+
+.site-onguard .card {
+    transform: rotate(180deg);
+}
+
+div.card img:hover {
+    box-shadow: 0px 0px 10px 2px #ff0;
+}
+
+.card-dice {
+    background: url("/media/assets/images/icons/icon-dices.png") 0 -0 no-repeat;
+
+    &:hover {
+        background: url("/media/assets/images/icons/icon-dices-hover.png") 0 0 no-repeat;
+    }
+}
+
+
+
+div#opponent_table .company {
+    transform: rotate(180deg);
+}
+
+.hand-card-actions {
+    width: 60px;
+    position: fixed;
+    bottom: 13px;
+    height: 80px;
+    overflow: hidden;
+}
+
+.card-generic.card-dice {
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    max-height: 30px;
+    min-height: 30px;
+}
+
+#draw_card {
+    display: block;
+    height: 40px;
+    margin-top: 4px;
+    background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
+
+    &:hover {
+        background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat;
+    }
+}
+
+.hosts_nothing {
+    display: none !important;
+}
+
+#lidles-eye {
+    z-index: 601;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+
+    img {
+        position: fixed;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        animation: eyepulse 1s linear infinite;
+    }
+}
+
+@keyframes eyepulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#card_counter div.pos-rel {
+    position: relative;
+
+    &:hover .hidden {
+        display: block;
+    }
+}
+
+
+
+.card-hands-sizer {
+    display: inline;
+    margin-left: 20px;
+
+    i {
+        color: #ffa500;
+        font-weight: bold;
+        padding: 0 5px;
+
+        &:hover {
+            cursor: pointer;
+            color: #fff;
+        }
+    }
+
+    .card-hands-sizer-size {
+        font-weight: bold;
+    }
+}
+
+
+body.on-show-map-window .location-icon {
+    display: none;
+}
+
+.smallCaps {
+    font-variant-caps: small-caps;
+}
+
+@media only screen and (max-width: 1299px) {
+
+    .area-player::after {
+        content: '';
+        display: block;
+        min-height: 250px;
+    }
+
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: black grey;
+}
+
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: black;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 5px;
+    border: 3px solid darkgrey;
+}
+
+/* playercard_hand */

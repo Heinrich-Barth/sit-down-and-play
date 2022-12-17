@@ -1,0 +1,279 @@
+.score-overlay {
+    background: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 300;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.scoring-card {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    text-align: center;
+    z-index: 101;
+
+    img {
+        max-width: 300px;
+        max-height: 300px;
+        margin: 0 20px;
+    }
+
+    .view-score-container h2 {
+        text-align: center;
+        color: #ffa500;
+    }
+
+    select.req {
+        border: 2px solid red;
+        animation: scoreGlowRed linear 1s 1 forwards;
+    }
+
+    .score-type {
+        width: 200px;
+        float: left;
+        text-align: left;
+        color: #fff;
+        line-height: 1.5em;
+    }
+    .score_label 
+    {
+        cursor: pointer;
+        &:hover {
+            background-color: rgba(255, 165, 0, 0.5);
+            border-radius: 5px;
+        }
+        label,
+        input {
+            cursor: pointer;
+        }
+    }    
+}
+
+.scoring-sheet {
+
+    .text-right {
+        text-align: right;
+    }
+
+    .view-score-container {
+        top: 5px;
+        right: 5px;
+        position: fixed;
+        font-size: 14px;
+        padding: 10px;
+        z-index: 600;
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .dice-stats {
+
+        th,
+        td {
+            padding: 0 5px;
+            text-align: center;
+        }
+
+        td {
+            padding: 2px 3px;
+        }
+
+        th:nth-child(even),
+        td:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    table {
+        color: white;
+        width: 100%;
+        font-variant-caps: small-caps;
+
+        &.dice-stats {
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+
+        td {
+            text-align: center;
+
+            span {
+                display: inline-block;
+                width: 20px;
+            }
+        }
+
+        th {
+            padding-right: 10px;
+        }
+
+        thead th {
+            border-bottom: 1px solid white;
+        }
+
+        tfoot {
+            tr.score-total th {
+                border-top: 1px solid white;
+                border-bottom: 1px solid white;
+
+                &.score-total {
+                    text-align: center;
+                }
+            }
+
+            tr:last-child th {
+                padding-top: 10px;
+            }
+        }
+
+        tbody th {
+            font-weight: normal;
+            text-align: left;
+        }
+
+        a {
+            padding: 5px;
+            display: inline-block;
+        }
+    }
+
+    &.final-score {
+        .view-score-container {
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+            font-size: 1.1em;
+        }
+
+        .menu-overlay {
+            z-index: 500;
+            cursor: default;
+        }
+
+        a,
+        .button {
+            display: none !important;
+        }
+    }
+}
+
+.scoring-card .view-score-container {
+    position: relative;
+    margin: 0 auto;
+    min-width: 300px;
+    top: 30%;
+    padding: 20px;
+    z-index: 502;
+    display: inline-block;
+}
+
+.scoring-sheet .button,
+.scoring-card .button {
+    background-color: #98c593;
+    border: 0;
+    border-radius: 3.5em;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 3.5em;
+    line-height: 3.5em;
+    outline: 0;
+    padding: 0 2em 0 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    background-color: #a8cea4;
+}
+
+.view-score-victory-container {
+    position: fixed;
+    left: 5%;
+    top: 5%;
+    max-height: 500px;
+    z-index: 500;
+
+    .view-card-list-container {
+        max-height: 500px;
+        width: 545px;
+        max-width: 50%;
+        overflow: auto;
+        left: 5%;
+        top: 5%;
+        transform: none;
+    }
+
+    .container-title-bar-title {
+        padding: 5px;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+}
+
+#scoring-sheet 
+{
+    input.buttonCancel {
+        background-color: #c32222;
+    }
+    
+    input.buttonCancel:hover {
+        background-color: #dc2600;
+    }
+    
+    table {
+        border-spacing: 0;
+        tbody tr
+        {
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            &:nth-child(even) {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    .view-card-list-container a {
+        background-size: 20px 20px !important;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 5px;
+        width: 20px;
+        height: 20px;
+        background-position-y: 0;
+    }
+}
+
+
+#scoring-sheet {
+    .view-card-list-container {
+        a,
+        a:hover
+        {
+            background-size: 20px 20px !important;   
+        }
+    }
+}
+
+
+@keyframes scoreGlowRed {
+    0% {
+        box-shadow: 0 0 10px -10px #9b0404;
+    }
+
+    50% {
+        box-shadow: 0 0 10px 10px #9b0404;
+    }
+
+    99% {
+        box-shadow: 0 0 10px -10px #9b0404;
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}

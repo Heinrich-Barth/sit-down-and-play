@@ -9,7 +9,7 @@
 }
 
 .config-wrapper-game {
-    z-index: 200;
+    z-index: 500;
     left: 5px;
     top: 40px;
 }
