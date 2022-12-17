@@ -310,6 +310,34 @@ class MapViewMovement extends MapViewMovementSelection {
         this.lazyloadImages();
     }
 
+    injectRegionInfo()
+    {
+        const cont = document.getElementById("site_movement");
+        if (cont === null)
+            return;
+
+        const elem = document.createElement("div");
+        elem.setAttribute("class", "region-movement-info blue-box");
+        elem.setAttribute("id", "region-movement-info")
+
+        const txt = document.createElement("p");
+        txt.innerHTML = "Optionally, Click on region card to add<br>it to the sitepath or click on the region<br>above to remove it.";
+
+        const line = document.createElement("div");
+        line.setAttribute("class", "line-countdown");
+
+        elem.append(txt);
+        elem.append(line);
+        cont.appendChild(elem);
+    }
+
+    removeRegionInfo()
+    {
+        const cont = document.getElementById("region-movement-info");
+        if (cont != null)
+            cont.setAttribute("class", "hide");
+    }
+
     createInstance(sStartSiteCode)
     {
         super.createInstance();
@@ -318,6 +346,10 @@ class MapViewMovement extends MapViewMovementSelection {
         document.getElementById("movement_cancel").onclick = this.onCancelMovement.bind(this);    
 
         this.onChooseLocationMovement(sStartSiteCode);
+
+        setTimeout(this.injectRegionInfo, 1000 * 1);
+        setTimeout(this.removeRegionInfo, 1000 * 9);
+
         return true;
     }
 
