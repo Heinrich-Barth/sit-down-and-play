@@ -6,6 +6,7 @@ let Arda = {
     _hasReceivedMps : false,
     _hasReceivedCharacters : false,
     _idCount : 1,
+    _exchangeBox : new ArdaExchangeBox(),
 
     createHtmlElement: function(_code, _img, _uuid, type)
     {
@@ -104,6 +105,12 @@ let Arda = {
 
         this.getOpeningHands();
         this.updateSinglePlayer();
+
+        if (!this.isSinglePlayer())
+        {
+            this._exchangeBox = new ArdaExchangeBox();
+            this._exchangeBox.create("arda-hand-wrapper");
+        }
         
         this._ready = true;
         MeccgApi.send("/game/arda/checkdraft", {});
@@ -116,7 +123,7 @@ let Arda = {
 
     getOpeningHands()
     {
-        MeccgApi.send("/game/arda/hands", { });    
+        MeccgApi.send("/game/arda/hands", { });
     },
 
     insertArdaSetupContainer : function()
@@ -538,7 +545,6 @@ let Arda = {
                 div = document.getElementById("arda_characters_hand");
                 if (div !== null)
                     div.classList.remove("hidden");
-
             }
         }
         else
@@ -596,7 +602,9 @@ if ("true" === document.body.getAttribute("data-game-arda"))
     MeccgApi.addListener("/game/arda/hand/card/remove", (_bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  
     MeccgApi.addListener("/game/arda/draw", (bIsMe, jData) => Arda.onDrawCard(bIsMe, jData));
     MeccgApi.addListener("/game/arda/checkdraft", (_bIsMe, jData) => Arda.onCheckDraft(jData.ready, jData.characters, jData.minoritems));
-    MeccgApi.addListener("/game/arda/view", (bIsMe, jData) => g_Game.TaskBarCards.onShow(bIsMe, jData));    
+    MeccgApi.addListener("/game/arda/view", (bIsMe, jData) => g_Game.TaskBarCards.onShow(bIsMe, jData));
+
+    Arda._exchangeBox.addRoutes();
 }
 else
     Arda = null;
