@@ -276,6 +276,12 @@ const GameBuilder = {
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "drawcard" }));
         });
 
+        MeccgApi.addListener("/game/watch/draw", function(_bIsMe, jData)
+        {
+            if (GameBuilder.isVisitor())
+                GameBuilder.onDrawCardVisitor(jData.playerid, jData.code, jData.uuid, jData.type);
+        });
+
         MeccgApi.addListener("/game/watch/hand", function(_bIsMe, jData)
         {
             if (!GameBuilder.isVisitor())
@@ -573,9 +579,8 @@ const GameBuilder = {
                 }
             }
 
-            if (bIsMe)
+            if (bIsMe || GameBuilder.isVisitor())
                 document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
-
         });
 
         MeccgApi.addListener("/game/company/arrive", function(_bIsMe, jData)
