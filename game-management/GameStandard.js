@@ -568,8 +568,10 @@ class GameStandard extends GamePlayers
         let res = [];
         for (let id of this.getPlayerIds())
         {
-            const _list = this.getPlayboardManager().GetCardsInHand(id);
-            for (let card of _list)
+            for (let card of this.getPlayboardManager().GetCardsInHand(id))
+                res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: id} );
+                
+            for (let card of this.getPlayboardManager().GetCardsInHandMarshallingPoints(id))
                 res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: id} );
         }
 
