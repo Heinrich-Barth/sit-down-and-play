@@ -589,6 +589,8 @@ let Arda = {
         const elem = document.getElementById("arda-hand-card-" + uuid);
         if (elem !== null)
             DomUtils.remove(elem);
+        else
+            DomUtils.remove(document.getElementById("card_icon_nr_" + uuid));
     }
 };
 
