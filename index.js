@@ -414,19 +414,60 @@ SERVER.instance.get("/", (_req, res) => {
     res.redirect("/play")
 });
 
+const getRefererPath = function(url)
+{
+    try
+    {
+        let pos = url === undefined || url === "" || url === null ? -1 :  url.indexOf("//");
+        if (pos === -1)
+            throw new Error("Invalid URL");
+    
+        pos = url.indexOf("/", pos + 3);
+        const parts = pos === -1 ? [] : url.substring(pos+1).split("/");
+        if (parts.length < 2)
+            return "";
+
+        if (parts[0] !== "play" && parts[0] !== "arda")
+            return "";
+
+        const room = parts[1].trim();
+        const watch = parts.length === 3 ? parts[2].trim() : "";
+
+        if (room === "")
+            return "";
+        else if (watch === "")
+            return "/" + parts[0] + "/" + room;
+        else
+            return "/" + parts[0] + "/" + room + "/" + watch;
+    }
+    catch(err)
+    {
+        console.warn(err);
+    }
+
+    return "";
+};
+
 SERVER.instance.get("/login", (req, res) => g_pAuthentication.showLoginPage(req, res, __dirname + "/pages/authentication-login.html"));
 SERVER.instance.post("/login", (req, res) => {
 
-    if (g_pAuthentication.signIn(req, res))
-        res.redirect("/");
-    else 
+    if (!g_pAuthentication.signIn(req, res))
+    {
         res.redirect("/login");
+        return;
+    }
+
+    const url = getRefererPath(req.headers.referer);
+    if (url === "")
+        res.redirect("/");
+    else
+        res.redirect(url);
 });
 
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
