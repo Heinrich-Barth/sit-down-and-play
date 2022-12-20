@@ -392,6 +392,9 @@ class GameArda extends GameStandard
         const data = {uuid:uuid, code:card.code, hand:obj.type, clear : false};
         this.publishToPlayers("/game/arda/draw", userid, data);
         this.publishChat(userid, "drew 1 " + obj.type + " item card");
+
+        if (type === "mps")
+            this.publishToPlayers("/game/watch/draw", userid, {uuid:uuid, code:card.code, type: card.type, playerid:userid });
     }
 
     onCheckDraft(_userid, socket)
