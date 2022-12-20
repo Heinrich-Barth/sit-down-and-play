@@ -27,7 +27,7 @@ class ArdaExchangeBox {
         const div = document.createElement("div");
         const a = document.createElement("i");
 
-        a.setAttribute("title", "Click to trade cards with another player");
+        a.setAttribute("title", "Click to exchange cards with another player");
         a.setAttribute("class", "blue-box fa fa-exchange");
         a.setAttribute("aria-hidden", "true");
         a.onclick = this.onChoosePlayer.bind(this);
