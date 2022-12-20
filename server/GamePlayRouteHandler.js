@@ -73,11 +73,13 @@ class GamePlayRouteHandler
 
     setupRoutes()
     {
+        this.m_pServerInstance.instance.use(this.contextRoot, this.pAuthentication.isSignedInPlay);
+
         /**
          * Home
          */
-        this.m_pServerInstance.instance.get(this.contextRoot, this.pAuthentication.isSignedInPlay, this.onHome.bind(this));
-
+        this.m_pServerInstance.instance.get(this.contextRoot, this.onHome.bind(this));
+        
         /**
          * The LOGIN page.
          * 
@@ -86,7 +88,7 @@ class GamePlayRouteHandler
          * 
          * The page forwards to a login page which will create all cookies.
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/login", this.pAuthentication.isSignedInPlay, this.onLogin.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/login", this.onLogin.bind(this));
         
         /**
          * Perform the login and set all necessary cookies.
@@ -95,7 +97,7 @@ class GamePlayRouteHandler
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/login/check", this.pAuthentication.isSignedInPlay, this.onLoginCheck.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/login/check", this.onLoginCheck.bind(this));
 
         /**
          * Player enters the lobby to wait until addmitted to the table.
@@ -106,37 +108,37 @@ class GamePlayRouteHandler
          * If the player does not yet have logged in, redirect to login.
          * Otherwise, simply show the waiting screen
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room/lobby", this.pAuthentication.isSignedInPlay, this.onLobby.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room/lobby", this.onLobby.bind(this));
 
         /**
          * Get a list of players who are waiting to join this game
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room/waiting/:token", this.pAuthentication.isSignedInPlay, this.onWaiting.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room/waiting/:token", this.onWaiting.bind(this));
 
         /**
          * Allow player to access the table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/invite/:id/:token", this.pAuthentication.isSignedInPlay, this.onJoinTable.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/invite/:id/:token", this.onJoinTable.bind(this));
 
         /**
          * Reject player access to table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/reject/:id/:token", this.pAuthentication.isSignedInPlay, this.onReqjectEntry.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/reject/:id/:token", this.onReqjectEntry.bind(this));
 
         /**
          * Reject player access to table
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/remove/:id/:token", this.pAuthentication.isSignedInPlay, this.onRemovePlayer.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/remove/:id/:token", this.onRemovePlayer.bind(this));
 
         /**
          * Get the status of a given player (access denied, waiting, addmitted)
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.pAuthentication.isSignedInPlay, this.onPlayerStatus.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
 
         /**
          * Setup spectator
          */
-        this.m_pServerInstance.instance.get(this.contextPlay + ":room/watch", this.pAuthentication.isSignedInPlay, this.onWatch.bind(this));
+        this.m_pServerInstance.instance.get(this.contextPlay + ":room/watch", this.onWatch.bind(this));
 
 
         /**
@@ -146,7 +148,7 @@ class GamePlayRouteHandler
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.m_pServerInstance.instance.post(this.contextPlay + ":room/watch/check", this.pAuthentication.isSignedInPlay, this.onWatchCheck.bind(this));
+         this.m_pServerInstance.instance.post(this.contextPlay + ":room/watch/check", this.onWatchCheck.bind(this));
 
 
         /**
@@ -154,7 +156,7 @@ class GamePlayRouteHandler
          * 
          * The room name has to be ALPHANUMERIC. Otherwise, the requets will fail.
          */
-         this.m_pServerInstance.instance.get(this.contextPlay + ":room", this.pAuthentication.isSignedInPlay, this.onPlayAtTable.bind(this));
+         this.m_pServerInstance.instance.get(this.contextPlay + ":room", this.onPlayAtTable.bind(this), this.onAfterPlayAtTableSuccess.bind(this));
     }
 
     onLogin(req, res)
@@ -385,7 +387,7 @@ class GamePlayRouteHandler
         this.createExpireResponse(res, 'application/json').send(_obj).status(200);
     }
 
-    onPlayAtTable(req, res)
+    onPlayAtTable(req, res, next)
     {
         if (!UTILS.isAlphaNumeric(req.params.room))
         {
@@ -441,6 +443,18 @@ class GamePlayRouteHandler
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
             this.m_pServerInstance.roomManager.updateDice(room, req.cookies.userId, dice);
             this.createExpireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, this.sanatiseCookieValue(req.cookies.userId), this.sanatiseCookieValue(req.cookies.username), lTimeJoined, dice)).status(200);
+
+            next();
+        }
+    }
+
+    onAfterPlayAtTableSuccess(req, _res)
+    {
+        /* enforece lowercase room, is always alphanumeric */
+        const room = req.params.room.toLocaleLowerCase();
+        if (this.m_pServerInstance.roomManager.roomExists(room) && this.m_pServerInstance.roomManager.countPlayersInRoom(room)===1)
+        {
+            console.log("FIRST PLAYER");
         }
     }
 
