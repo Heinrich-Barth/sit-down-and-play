@@ -55,6 +55,11 @@ class HandManager
         return this.getCardPils(playerId, "playdeck");
     }
 
+    handMarshallingPoints(_playerId)
+    {
+        return [];
+    }
+
     victory(playerId)
     {
         return this.getCardPils(playerId, "victory");
