@@ -18,6 +18,12 @@ const WatchOnly = {
         return false;
     },
 
+    onProgressToPhase(e)
+    {
+        if (e.detail === "organisation")
+            return WatchOnly.showHands();
+    },
+
     injectIcons : function()
     {
         const container = this.getIconContainer();
@@ -68,3 +74,4 @@ const WatchOnly = {
 };
 
 document.body.addEventListener("meccg-api-init", WatchOnly.init, false);
+document.body.addEventListener("meccg-event-phase", WatchOnly.onProgressToPhase, false);
