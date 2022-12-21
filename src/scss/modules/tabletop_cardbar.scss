@@ -1,0 +1,33 @@
+.card-bar
+{
+    &.card-bar-shared{
+        top: 40%;
+        height: 100px;
+        transform: translateY(-50%);
+        position: absolute;
+
+        .icon {
+            font-size: 25px;
+            padding: 5px 0;
+            height: auto;
+        }
+    }
+
+    .icon
+    {
+        height: 50px;
+        color: white;
+        font-size: 12px;
+    
+        span.count
+        {
+            padding-left: 2px;
+        }
+    }
+    
+    .icons a.backside
+    {
+        background: url("/data/backside") 0 0 no-repeat; 
+        background-size: 31px 50px !important;  
+    }
+}

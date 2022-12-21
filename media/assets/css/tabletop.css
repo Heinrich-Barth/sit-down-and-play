@@ -1,808 +1,983 @@
-
-body {
-    background-color: #000;
-    padding: 0px;
-    margin: 0;
-    background-color: #3d4b5c;
-    user-select: none;
-    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Medium devices (landscape tablets, 768px and up) */
+/* Large devices (laptops/desktops, 992px and up) */
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+html {
+  height: 100%;
+  width: 100%;
 }
 
 html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: default;
+  background-color: #000;
+  font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+  font-size: 1em;
+  user-select: none;
+  line-height: 1.5em;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  background-image: url("/media/assets/backgrounds/nature.webp");
+  background-attachment: fixed;
+  background-size: cover;
+  letter-spacing: 0.025em;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.bgblue,
+.blue-box {
+  background: rgba(61, 65, 70, 0.82);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+h1, h2 {
+  color: #ffa500;
+  font-weight: 300;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #ffa500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul, ol {
+  list-style-type: none;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+ul li, ol li {
+  text-align: left;
+  margin: 0.5em 0 0 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center;
+}
+
+body {
+  line-height: 1em;
+}
+
+html,
+body {
   height: 100%;
   overflow: auto;
+  box-sizing: content-box;
 }
 
-.full-height { height: 100%; }
-.blue-box 
-{
-    background: rgba(61, 65, 70, 0.82);
-    border-radius: 3px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+a {
+  color: #ffa500;
+  text-decoration: none;
+}
+a:hover {
+  color: #ff0;
 }
 
-.padR5 { padding-right: 5px; }
-a { color: #ffa500; text-decoration: none; }
-a:hover { color: #ff0; }
-
-.pos-rel { position: relative; }
-.taskbar { text-align: center; }
-.taskbar .task_overlay { display: none; }
-.taskbar.turn-opponent .task_overlay
-{
-    position: absolute;
-    left: 80px;
-    top: 0;
-    bottom: 0;
-    right: 0px;
-    display: block;
-    background: rgba(0,0,0,0.5);
-    border-radius: 3px;
+.card-bar.card-bar-shared {
+  top: 40%;
+  height: 100px;
+  transform: translateY(-50%);
+  position: absolute;
 }
-.taskbar a { margin: 5px 18px; }
-.is-admin .taskbar.turn-opponent .task_overlay { display: none; }
-
-.icon.bt { border-top: 1px solid black; }
-.icon.bb { border-bottom: 1px solid black; }
-.icons { margin-bottom: 3px; }
-.icon { width: 32px; height: 32px; display: block; }
-
-.icons a,
-.icons a:hover { display: inline-block; cursor: pointer; margin-top: 5px; background-size: 32px 32px !important;     }
-
-.card-bar.card-bar-shared{
-    top: 40%;
-    height: 100px;
-    transform: translateY(-50%);
-    position: absolute;
-}
-
 .card-bar.card-bar-shared .icon {
-    font-size: 25px;
-    padding: 5px 0;
-    height: auto;
+  font-size: 25px;
+  padding: 5px 0;
+  height: auto;
+}
+.card-bar .icon {
+  height: 50px;
+  color: white;
+  font-size: 12px;
+}
+.card-bar .icon span.count {
+  padding-left: 2px;
+}
+.card-bar .icons a.backside {
+  background: url("/data/backside") 0 0 no-repeat;
+  background-size: 31px 50px !important;
 }
 
-.card-bar .icon
-{
-    height: 50px;
-    color: white;
-    font-size: 12px;
+.taskbar {
+  display: inline-block;
+  margin-bottom: 5px;
 }
-.card-bar .icon span.count
-{
-    padding-left: 2px;
+.taskbar .task_overlay {
+  display: none;
 }
-
-.card-bar .icons a.backside
-{
-    background: url("/data/backside") 0 0 no-repeat; 
-    background-size: 31px 50px !important;  
+.taskbar.turn-opponent .task_overlay {
+  position: absolute;
+  left: 80px;
+  top: 0;
+  bottom: 0;
+  right: 0px;
+  display: block;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
 }
-
-.icons a.orga 
-{ 
-    background: url("/media/assets/images/icons/icon-orga.png") 0 0 no-repeat; 
-} 
-.icons a.orga.act, 
-.icons a.orga:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-orga-hover.png") 0 0 no-repeat; 
-}
-.icons a.taskbar-score
-{ 
-    background: url("/media/assets/images/icons/icon-score.png") 0 0 no-repeat; 
-} 
-.icons a.taskbar-score.act, 
-.icons a.taskbar-score:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-score-hover.png") 0 0 no-repeat; 
+.taskbar a {
+  margin: 5px 18px;
 }
 
-
-.icons a.startphase 
-{ 
-    background: url("/media/assets/images/icons/icon-game-start.png") 0 0 no-repeat; 
-} 
-.icons a.startphase.act, 
-.icons a.startphase:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-game-start-hover.png") 0 0 no-repeat; 
-}
-.icons a.site
-{ 
-    background: url("/media/assets/images/icons/icon-site.png") 0 0 no-repeat; 
-} 
-.icons a.site.act,
-.icons a.site:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-site-hover.png") 0 0 no-repeat; 
+.is-admin .taskbar.turn-opponent .task_overlay {
+  display: none;
 }
 
-.icons a.move
-{ 
-    background: url("/media/assets/images/icons/icon-movement.png") 0 0 no-repeat; 
-} 
-.icons a.move.act, 
-.icons a.move:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-movement-hover.png") 0 0 no-repeat; 
+.icon {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
-.icons a.eot
-{ 
-    background: url("/media/assets/images/icons/icon-eot.png") 0 0 no-repeat; 
-} 
-.icons a.eot.act,
-.icons a.eot:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-eot-hover.png") 0 0 no-repeat; 
+.icon.bt {
+  border-top: 1px solid black;
+}
+.icon.bb {
+  border-bottom: 1px solid black;
 }
 
-.icons a.eotdiscard
-{ 
-    background: url("/media/assets/images/icons/eot-discard.png") 0 0 no-repeat; 
-} 
-.icons a.eotdiscard.act,
-.icons a.eotdiscard:hover 
-{ 
-    background: url("/media/assets/images/icons/eot-discard-hover.png") 0 0 no-repeat; 
+.icons {
+  margin-bottom: 3px;
 }
-
-.icons a.longevent
-{ 
-    background: url("/media/assets/images/icons/longevent.png") 0 0 no-repeat; 
-} 
-.icons a.longevent.act,
-.icons a.longevent:hover 
-{ 
-    background: url("/media/assets/images/icons/longevent-hover.png") 0 0 no-repeat; 
+.icons a,
+.icons a:hover {
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 5px;
+  background-size: 32px 32px !important;
 }
-
-
-
-
-.icons a.sideboard.act,
-.icons a.sideboard:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat; 
+.icons a {
+  border: 3px solid transparent;
 }
-.icons a.sideboard 
-{ 
-    background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat; 
+.icons .orga {
+  background: url("/media/assets/images/icons/icon-orga.png") 0 0 no-repeat;
 }
-
-.icons a.onoffer.act,
-.icons a.onoffer:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-offer-hover.png") 0 12px no-repeat; 
+.icons .orga:hover, .icons .orga.act {
+  background: url("/media/assets/images/icons/icon-orga-hover.png") 0 0 no-repeat;
 }
-.icons a.onoffer
-{ 
-    background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat; 
+.icons .taskbar-score {
+  background: url("/media/assets/images/icons/icon-score.png") 0 0 no-repeat;
+}
+.icons .taskbar-score.act, .icons .taskbar-score:hover {
+  background: url("/media/assets/images/icons/icon-score-hover.png") 0 0 no-repeat;
+}
+.icons .startphase {
+  background: url("/media/assets/images/icons/icon-game-start.png") 0 0 no-repeat;
+}
+.icons .startphase.act, .icons .startphase:hover {
+  background: url("/media/assets/images/icons/icon-game-start-hover.png") 0 0 no-repeat;
+}
+.icons .site {
+  background: url("/media/assets/images/icons/icon-site.png") 0 0 no-repeat;
+}
+.icons .site.act, .icons .site:hover {
+  background: url("/media/assets/images/icons/icon-site-hover.png") 0 0 no-repeat;
+}
+.icons .move {
+  background: url("/media/assets/images/icons/icon-movement.png") 0 0 no-repeat;
+}
+.icons .move.act, .icons .move:hover {
+  background: url("/media/assets/images/icons/icon-movement-hover.png") 0 0 no-repeat;
+}
+.icons .eot {
+  background: url("/media/assets/images/icons/icon-eot.png") 0 0 no-repeat;
+}
+.icons .eot.act, .icons .eot:hover {
+  background: url("/media/assets/images/icons/icon-eot-hover.png") 0 0 no-repeat;
+}
+.icons .eotdiscard {
+  background: url("/media/assets/images/icons/eot-discard.png") 0 0 no-repeat;
+}
+.icons .eotdiscard.act, .icons .eotdiscard:hover {
+  background: url("/media/assets/images/icons/eot-discard-hover.png") 0 0 no-repeat;
+}
+.icons .longevent {
+  background: url("/media/assets/images/icons/longevent.png") 0 0 no-repeat;
+}
+.icons .longevent.act, .icons .longevent:hover {
+  background: url("/media/assets/images/icons/longevent-hover.png") 0 0 no-repeat;
+}
+.icons .sideboard {
+  background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat;
+}
+.icons .sideboard.act, .icons .sideboard:hover {
+  background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat;
+}
+.icons .sideboard.ui-droppable-active {
+  background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 12px no-repeat;
+}
+.icons .onoffer {
+  background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat;
+}
+.icons .onoffer.act, .icons .onoffer:hover {
+  background: url("/media/assets/images/icons/icon-offer-hover.png") 0 12px no-repeat;
+}
+.icons .victory {
+  background: url("/media/assets/images/icons/icon-crown.png") 0 12px no-repeat;
+}
+.icons .victory.act, .icons .victory:hover {
+  background: url("/media/assets/images/icons/icon-crown-hover.png") 0 12px no-repeat;
+}
+.icons .hand {
+  background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat;
+}
+.icons .hand.act, .icons .hand:hover {
+  background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat;
+}
+.icons .hand.ui-droppable-active {
+  background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat;
+}
+.icons .playdeck {
+  background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat;
+}
+.icons .playdeck.act, .icons .playdeck:hover {
+  background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 12px no-repeat;
+}
+.icons .playdeck.ui-droppable-active {
+  background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 12px no-repeat;
+}
+.icons .playdeck-shuffle {
+  background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 12px no-repeat;
+}
+.icons .playdeck-shuffle.act, .icons .playdeck-shuffle:hover {
+  background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 12px no-repeat;
+}
+.icons .discardpile.ui-droppable-active {
+  background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 12px no-repeat;
 }
 
 #playercard_hand_container a.discardpile:hover,
 .icons a.discardpile.act,
-.icons a.discardpile:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat; 
+.icons a.discardpile:hover {
+  background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat;
 }
+
 #playercard_hand_container a.discardpile,
-.icons a.discardpile
-{ 
-    background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat; 
-}
-.icons a.victory.act,
-.icons a.victory:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-crown-hover.png") 0 12px no-repeat; 
-}
-.icons a.victory
-{ 
-    background: url("/media/assets/images/icons/icon-crown.png") 0 12px no-repeat; 
+.icons a.discardpile {
+  background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat;
 }
 
-.icons a.hand.act,
-.icons a.hand:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat; 
+.player_selector i {
+  margin-right: 5px;
+  padding-left: 17px;
+  font-style: normal;
 }
-.icons .hand 
-{ 
-    background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
+.player_selector .player-handcard-count {
+  background: url("/media/assets/images/icons/icon-hand-small.png") 0 0px no-repeat;
 }
-
-.player_selector i { margin-right: 5px; padding-left: 17px; font-style: normal; }
-
-.player-handcard-count { background: url("/media/assets/images/icons/icon-hand-small.png") 0 0px no-repeat; }
-.player-playdeck-count { background: url("/media/assets/images/icons/icon-playdeck-small.png") 0 0px no-repeat;  }
-
-.cur .player-handcard-count { background: url("/media/assets/images/icons/icon-hand-small-hover.png") 0 0px no-repeat; }
-.cur .player-playdeck-count { background: url("/media/assets/images/icons/icon-playdeck-small-hover.png") 0 0px no-repeat;  }
-
-.icons a.playdeck.act,
-.icons a.playdeck:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 12px no-repeat; 
+.player_selector .player-playdeck-count {
+  background: url("/media/assets/images/icons/icon-playdeck-small.png") 0 0px no-repeat;
 }
-.icons a.playdeck 
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat; 
+.player_selector .cur .player-handcard-count {
+  background: url("/media/assets/images/icons/icon-hand-small-hover.png") 0 0px no-repeat;
+}
+.player_selector .cur .player-playdeck-count {
+  background: url("/media/assets/images/icons/icon-playdeck-small-hover.png") 0 0px no-repeat;
 }
 
-.icons a.playdeck-shuffle.act,
-.icons a.playdeck-shuffle:hover 
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 12px no-repeat; 
+.location-icon-image {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  z-index: 100;
+  color: #000;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  opacity: 0.6;
+  width: 16px;
+  height: 16px;
+}
+.location-icon-image:hover {
+  opacity: 1;
+  color: #fff;
+  background-color: #ffa500;
 }
 
-.icons a.playdeck-shuffle
-{
-    background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 12px no-repeat; 
+.location-icon {
+  top: 6px;
 }
 
-.location-icon-image
-{
-    position: absolute;
-    right: 0;
-    cursor: pointer;
-    z-index: 100;
-    color: #000;
-    background-color: #fff;
-    border-radius: 50%;
-    padding: 4px;
-    opacity: 0.6;
-    width: 16px;
-    height: 16px;
+.location-underdeep {
+  top: 30px;
+  right: 43px;
 }
 
-.location-icon-image:hover { opacity: 1; 
-    color: #fff; 
-    background-color: #ffa500;
+.location-reveal {
+  bottom: 10px;
 }
 
-.location-icon { top: 6px; }
-.location-underdeep { top: 30px; right: 43px; }
-.location-reveal { bottom: 10px; }
-
-.table { position: relative; width: 100%; }
-.table .area { width: 100%; }
-.table .area-opponent, 
-.table .area-player {position: relative; min-height: 48%; }
-.table .area-opponent { margin-bottom: 20px; }
-img.card-icon { 
-    width: 57px;
-    height: 80px;
-    background: url("/data/backside") 0 0 no-repeat;
-    background-size: contain;
+.table {
+  position: relative;
+  width: 100%;
 }
-.fl { float: left; }
-.clear { float: none; clear: both; }
+.table.full-height {
+  height: 100%;
+}
+.table .area {
+  width: 100%;
+}
+.table .area-player {
+  position: relative;
+  min-height: 30%;
+}
+.table .area-player .card-bar {
+  bottom: 0;
+}
+.table .area-opponent {
+  margin-bottom: 20px;
+  position: relative;
+  min-height: 30%;
+}
+.table .area-opponent .ui-draggable-dragging {
+  transform: rotate(180deg);
+}
+.table .area-opponent .hiddenToOpponent,
+.table .area-opponent .company-characters-add {
+  display: none !important;
+}
+
+img.card-icon {
+  width: 57px;
+  height: 80px;
+  background: url("/data/backside") 0 0 no-repeat;
+  background-size: contain;
+}
+
+.clear {
+  float: none;
+  clear: both;
+}
+
 .company-host,
-.company { 
-    padding-right: 20px; 
-    min-width: 200px; 
-    height: 100%; 
-    min-width: 60px !important;
+.company {
+  padding-right: 20px;
+  min-width: 200px;
+  height: 100%;
+  min-width: 60px !important;
 }
-
-.area-player .card-bar { bottom: 0; }
 
 .card-bar {
-    position: fixed;
-    z-index: 100;
-    width: 40px;
-    bottom: 5px;
-    height: 320px;
+  position: fixed;
+  z-index: 100;
+  width: 40px;
+  bottom: 5px;
+  height: 320px;
+}
+.card-bar a {
+  text-align: center;
+  color: white;
+}
+.card-bar a:hover {
+  color: #ffa500;
 }
 
-.table .area-opponent .ui-draggable-dragging { transform: rotate(180deg); }
-
-.card-bar a:hover { color: #ffa500; }
-.card-bar a { text-align: center; color: white;}
-
-.hand span, .card-bar a span {
-    padding: 1px;
-    background: green;
-    border-radius: 5px;
-    margin-top: 8px;
-    display: inline-block;
-    margin-left: 15px;
-    text-align: right;
-    font-size: 11px;
+.hand span,
+.card-bar a span {
+  padding: 1px;
+  background: green;
+  border-radius: 5px;
+  margin-top: 8px;
+  display: inline-block;
+  margin-left: 15px;
+  text-align: right;
+  font-size: 11px;
 }
-.rot90, .tapped { transform: rotate(90deg); }
-.rot180, .wounded { transform: rotate(180deg); }
-.rot270 { transform: rotate(270deg); }
+
+.rot90,
+.state_tapped img,
+.state_tapped_fixed img,
+.tapped {
+  transform: rotate(90deg);
+}
+
+.rot180,
+.state_wounded img,
+.wounded {
+  transform: rotate(180deg);
+}
+
+.rot270 {
+  transform: rotate(270deg);
+}
+
+.state_rot270 img {
+  transform: rotate(-90deg);
+}
 
 .card-hands {
-    position: fixed;
-    left: 50px;
-    bottom: 5px;
-    z-index: 400;
-    padding: 5px;
-    max-width: 580px;
-    min-width: 480px;
-    min-height: 84px;
+  position: fixed;
+  left: 50px;
+  bottom: 5px;
+  z-index: 400;
+  padding: 5px;
+  max-width: 90%;
+  min-width: 480px;
+  min-height: 84px;
 }
 .card-hands .card-generic,
 .card-hands .card-hand {
-    display: inline-block;
-    position: relative;
-    width: 60px;
-    min-height: 60px;
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  min-height: 60px;
 }
-
-.card-hands .card-hand:hover img
-{
-    opacity: 0.8;
+.card-hands .hand-card-sizer {
+  padding: 5px 10px;
+  text-align: right;
+  color: #fff;
+  font-size: 10px;
 }
-.card-hands .card-hand.card-draw:hover img
-{
-    opacity: 0.6;
+.card-hands .card-hand {
+  cursor: move;
 }
-
-.card-hands .card-hand:hover .draw
-{
-    color: #ff0;
+.card-hands .card-hand .draw {
+  position: absolute;
+  left: 9px;
+  top: 13px;
+  color: #ffa500;
+  text-transform: uppercase;
+  font-size: 12px;
 }
-.card-hands .card-hand
-{
-    cursor: move;
+.card-hands .card-hand:hover .draw {
+  color: #ff0;
 }
-.card-hands .card-hand .draw
-{
-    position: absolute; left: 9px; top: 13px; color: #ffa500; text-transform: uppercase; font-size: 12px;
+.card-hands .card-hand:hover img {
+  opacity: 0.8;
+}
+.card-hands .card-hand.card-draw:hover img {
+  opacity: 0.6;
 }
 
 .on-drag-event-generic #playercard_hand {
-    z-index: 0;
-    opacity: 0.7;
+  z-index: 0;
+  opacity: 0.7;
 }
 
-.emptyContainer {
-    width: 300px;
-    height: 100px;
-    border: 2px dashed transparent;
+#view_card_list_container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  cursor: pointer;
 }
 
-#view_card_list_container
-{
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0,0,0,0.75);
-    z-index: 1000;
-    cursor: pointer;
+.view-card-list-container {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  z-index: 1001;
 }
-
-#view-score-sheet-card-list .container-data { padding: 10px; }
-#view-score-sheet-card-list .card-hand,
-#view_card_list_container .view-card-list-container .card-hand {
-    float: left;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    min-width: 107px;
-    min-height: 153px;
+.view-card-list-container .container-title-bar {
+  padding-bottom: 10px;
+  color: #ff0;
+  font-size: 12px;
+  cursor: default;
+}
+.view-card-list-container .container-title-bar .container-title-bar-shuffle {
+  cursor: pointer;
+  visibility: hidden;
+}
+.view-card-list-container .container-title-bar .container-title-bar-shuffle:hover {
+  color: #ffa500;
 }
 .view-card-list-container img.card-icon {
-    width: auto;
-    height: 150px;
+  width: auto;
+  height: 150px;
 }
-#view_card_list_container .view-card-list-container
-{
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px;
-    z-index: 1001;
+.view-card-list-container .container-data {
+  overflow-y: auto;
+  max-width: 100%;
+  min-height: 104px;
+  max-height: 510px;
+}
+.view-card-list-container .card-hand {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  min-width: 107px;
+  min-height: 153px;
+}
+.view-card-list-container .view-card-list-actions.icons {
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.view-card-list-container .view-card-list-actions a {
+  width: 21px;
+  height: 21px;
+  display: inline-block;
+  border-radius: 5px;
+  background-position-y: 0 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+.view-card-list-container a,
+.view-card-list-container a:hover {
+  background-size: 20px 20px !important;
+}
+.view-card-list-container.view-playdeck {
+  cursor: default;
+}
+.view-card-list-container.view-playdeck .container-title-bar-shuffle {
+  visibility: visible !important;
+}
+.view-card-list-container .icons a.onoffer {
+  display: none;
+}
+.view-card-list-container.offered .icons a {
+  display: none;
+}
+.view-card-list-container.offered .container-title-bar {
+  visibility: hidden;
+}
+.view-card-list-container.offer .hideOnOffer {
+  visibility: hidden;
+}
+.view-card-list-container.offer .icons a {
+  display: inline-block;
+}
+.view-card-list-container.offer .icons a.hand, .view-card-list-container.offer .icons a.sideboard {
+  display: none;
+}
+.view-card-list-container.offer img.card-icon {
+  opacity: 0.4;
+}
+.view-card-list-container.offer img.on-offer-orevealed {
+  opacity: 1;
+}
+.view-card-list-container.view-sideboard .card-hand a.sideboard, .view-card-list-container.view-hand.offer .card-hand a.hand, .view-card-list-container.view-discard .card-hand a.discardpile, .view-card-list-container.view-playdeck .card-hand a.playdeck, .view-card-list-container.view-playdeck .card-hand a.playdeck-shuffle {
+  display: none;
+}
+.view-card-list-container.view-outofplay .container-title-bar-divider,
+.view-card-list-container.view-outofplay .container-title-bar-reveal,
+.view-card-list-container.view-outofplay .view-card-list-actions {
+  display: none !important;
+}
+.view-card-list-container.view-victory {
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: none;
+  background: rgba(0, 0, 0, 0.9);
 }
 
-#view_card_list_container .container-data
-{
-    overflow-y: auto;
-    width: 100%;
-    min-height: 104px;
-    max-height: 510px;
+#view-score-sheet-card-list .container-data {
+  padding: 10px;
+}
+#view-score-sheet-card-list .card-hand {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  min-width: 107px;
+  min-height: 153px;
 }
 
-#view_card_list_container .view-card-list-container.view-playdeck
-{
-    cursor: default;
-}
-.view-card-list-actions.icons
-{
-    padding: 5px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-}
-#scoring-sheet .view-card-list-container a,
-#scoring-sheet .view-card-list-container a:hover,
-#view_card_list_container .view-card-list-container a,
-#view_card_list_container .view-card-list-container a:hover
-{
-    background-size: 20px 20px !important;   
-}
-#view_card_list_container .view-sideboard .card-hand a.sideboard
-{
-    display: none;
-}
-
-#view_card_list_container .view-hand.offer .card-hand a.hand
-{
-    display: none;
-}
-
-#view_card_list_container .view-discard .card-hand a.discardpile
-{
-    display: none;
-}
-#view_card_list_container .view-playdeck .card-hand a.playdeck,
-#view_card_list_container .view-playdeck .card-hand a.playdeck-shuffle
-{
-    display: none;
-}
-
-#view_card_list_container .view-card-list-actions a 
-{
-    background-position-y: 0;
-    width: 21px;
-    height: 21px;
-    display: inline-block;
-    background-color: rgba(0,0,0,0.6);
-    border-radius: 5px;
-}
-
-#view_card_list_container .view-outofplay .container-title-bar-divider,
-#view_card_list_container .view-outofplay .container-title-bar-reveal,
-#view_card_list_container .view-outofplay .view-card-list-actions {
-    display: none !important;
+#playercard_hand_container {
+  display: inline-block;
+  margin-left: 60px;
+  min-height: 83px;
 }
 #playercard_hand_container a.discardpile,
 #playercard_hand_container a.discardpile:hover {
-    background-size: 20px 20px !important;
-    background-position-x: 0px;
-    background-position-y: 0px;
+  background-size: 20px 20px !important;
+  background-position-x: 0px;
+  background-position-y: 0px;
 }
-#playercard_hand_container a.discardpile
-{
-    position: absolute;
-    bottom: 5px;
-    width: 20px;
-    margin: 0;
-    height: 20px;
-    left: 25%;
-}
-.container-title-bar {
-    padding-bottom: 10px;
-    color: #ff0;
-    cursor: default;
-    font-family: "Titillium Web", "Helvetica Neue", sans-serif;
-    font-size: 12px;
-}
-.container-title-bar-shuffle
-{
-    cursor: pointer;
-    visibility: hidden;
-}
-#view_card_list_container .view-playdeck .container-title-bar-shuffle
-{
-    visibility: visible;
-}
-.container-title-bar-shuffle:hover{
-    color: #ffa500;
+#playercard_hand_container a.discardpile {
+  position: absolute;
+  bottom: 5px;
+  width: 20px;
+  margin: 0;
+  height: 20px;
+  left: 25%;
 }
 
-.create-new-company {
-    background: rgba(0,0,0,0.3);
-    height: 100%;
-    width: 60px !important;
-    border: 3px dashed #000;
-    border-radius: 5px;
-    max-width: 60px !important;
-    min-height: 270px;
-    visibility: hidden;
+/* COMPANY AREA */
+.staging-area {
+  flex: 1 20%;
+  position: relative;
 }
-
-.pad10 { padding: 10px; }
-
-.company-site-list
-{
-    height: 83px;
-    max-height: 83px;
-    min-width: 72px;
-    padding: 5px;
+.staging-area .staging-area-drop {
+  display: none;
 }
-
-.company-character
-{
-    border: 3px dashed transparent;
+.staging-area.staging-area-opponent {
+  padding-top: 20px;
 }
-
-.companies .company
-{
-    margin-right: 20px;
-    border-radius: 20px;
-    position: relative;
+.staging-area .card {
+  float: left;
+  margin-left: 2px;
 }
-
-
-.companies .company:hover { background: rgba(255,255,255,0.15); }
-.companies .company .company-character:hover { background: rgba(255,255,255,0.3); border-radius: 10px; }
-.company-site-list { border-bottom: 3px dashed black; }
-
-.staging-area 
-{
-    flex: 1 20%;
-    position: relative;
+.staging-area .card img.card-icon {
+  height: 70px;
+  width: auto;
 }
 
 .companies {
-    white-space: nowrap;
-    flex: 1 79%;
+  white-space: nowrap;
+  flex: 1 79%;
+}
+.companies .emptyContainer {
+  width: 300px;
+  height: 100px;
+  border: 2px dashed transparent;
+}
+.companies .company {
+  margin-right: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+.companies .company:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.companies .company .company-character:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.companies .company .company-site-list {
+  height: 83px;
+  max-height: 83px;
+  min-width: 72px;
+  padding: 5px;
+  border-bottom: 3px dashed black;
+}
+.companies .company .company-character {
+  border: 3px dashed transparent;
+}
+.companies .company .company-characters-add {
+  margin-left: 0;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 96px;
+}
+.companies .create-new-company {
+  background: rgba(0, 0, 0, 0.3);
+  height: 100%;
+  width: 60px !important;
+  border: 3px dashed #000;
+  border-radius: 5px;
+  max-width: 60px !important;
+  min-height: 270px;
+  visibility: hidden;
 }
 
 .row {
-    padding: 0 10px 0 50px;
+  padding: 0 10px 0 50px;
 }
 
-
-.staging-area-drop { display: none; }
-
-.staging-area .card { float: left; margin-left: 2px; }
-.staging-area .card img.card-icon { height: 70px; width: auto; }
-
-.company-characters-add
-{
-    margin-left: 0;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 96px;
+body.on-drag-event-generic .area-player .company-character-host {
+  z-index: 900;
 }
-
-.area-opponent .company-characters-add
-{
-    display: none;
+body.on-drag-event-generic .card-hands {
+  z-index: 100;
 }
-
-
-body.on-drag-event-character .area-player .company-characters-add 
-{
-    display: block;
-    background-image: url(/media/assets/images/icon-company-join.png);
-    background-repeat: no-repeat;
-    background-position: center;
+body.on-drag-event-character .area-player .company-characters-add {
+  display: block;
+  background-image: url(/media/assets/images/icon-company-join.png);
+  background-repeat: no-repeat;
+  background-position: center;
 }
-
-body.on-drag-event-hazard .staging-area-drop,
-body.on-drag-event-resource .staging-area-drop
-{
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 200px;
+body.on-drag-event-character .area-player .create-new-company {
+  background-image: url(/media/assets/images/icon-company-new.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  visibility: visible;
 }
-
-body.on-drag-event-hazard .staging-area-drop,
-body.on-drag-event-resource .staging-area-drop,
-body.on-drag-event-hazard .area-opponent .company-character-host,
-body.on-drag-event-hazard .area-opponent .site-regions,
-body.on-drag-event-generic .area-opponent .site-target,
-body.on-drag-event-generic .area-player .ui-droppable-active,
-body.on-drag-event-generic .card-bar .ui-droppable-active
-{
-    background-color: rgba(0,0,0,0.3) !important;
-    border: 3px dashed #000 !important;
-    border-radius: 5px !important;
-    z-index: 900;
+body.on-drag-event-character .area-player .company-character-influenced .company-character-host {
+  background-color: transparent;
+  border: 0px;
 }
-
-body.on-drag-event-generic .area-player .company-character-host
-{
-    z-index: 900;
+body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 200px;
 }
-
-body.on-drag-event-character .area-player .company-character-influenced .company-character-host
-{
-    background-color: transparent;
-    border: 0px;
+body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop, body.on-drag-event-hazard .area-opponent .company-character-host, body.on-drag-event-hazard .area-opponent .site-regions, body.on-drag-event-generic .area-opponent .site-target, body.on-drag-event-generic .area-player .ui-droppable-active, body.on-drag-event-generic .card-bar .ui-droppable-active {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border: 3px dashed #000 !important;
+  border-radius: 5px !important;
+  z-index: 900;
 }
-
-body.on-drag-event-generic .card-hands { z-index: 100; }
-
-body.on-drag-event-resource  .area-player .company-character-host .card img,
-body.on-drag-event-character .area-player .company-character-host .card img
-{
-    opacity: 0.7;
+body.on-drag-event-resource .area-player .company-character-host .card img, body.on-drag-event-character .area-player .company-character-host .card img {
+  opacity: 0.7;
 }
-
-body.on-drag-event-character .area-player .create-new-company
-{
-    background-image: url(/media/assets/images/icon-company-new.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    visibility: visible;
-}
-
-.icons a { border: 3px solid transparent; }
-
-.icons a.sideboard.ui-droppable-active
-{ 
-    background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 12px no-repeat; 
-}
-
-.icons a.discardpile.ui-droppable-active
-{ 
-    background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 12px no-repeat; 
-}
-
-.icons a.playdeck.ui-droppable-active
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 12px no-repeat; 
-}
-
-.icons a.hand.ui-droppable-active
-{ 
-    background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat; 
-}
-
-.state_tapped img { transform: rotate(90deg);    }
-.state_tapped_fixed img { transform: rotate(90deg);    }
-.state_wounded img { transform: rotate(180deg);    }
-.state_rot270 img { transform: rotate(-90deg);    }
 
 .company-character-reosurces,
 .company-character-reosurces .card,
-.company-character-host { position: relative; text-align: left;}
+.company-character-host {
+  position: relative;
+  text-align: left;
+}
 
+.company-character-reosurces {
+  margin-top: -60px;
+  min-height: 84px;
+}
+.company-character-reosurces .card {
+  margin-top: -60px;
+  z-index: 101;
+  max-height: 80px;
+  display: flex;
+}
+.company-character-reosurces .card:nth-child(1) {
+  transform: translateX(15px);
+}
+.company-character-reosurces .card:nth-child(2) {
+  transform: translateX(30px);
+}
+.company-character-reosurces .card:nth-child(3) {
+  transform: translateX(45px);
+}
+.company-character-reosurces .card:nth-child(4) {
+  transform: translateX(60px);
+}
+.company-character-reosurces .card:nth-child(5) {
+  transform: translateX(75px);
+}
+.company-character-reosurces .card:nth-child(6) {
+  transform: translateX(90px);
+}
+.company-character-reosurces .card:nth-child(7) {
+  transform: translateX(105px);
+}
+.company-character-reosurces .card:nth-child(8) {
+  transform: translateX(130px);
+}
+.company-character-reosurces .card:nth-child(9) {
+  transform: translateX(145px);
+}
+.company-character-reosurces .card:nth-child(10) {
+  transform: translateX(160px);
+}
+.company-character-reosurces .card:nth-child(10) {
+  transform: translateX(175px);
+}
+.company-character-reosurces .card:nth-child(11) {
+  transform: translateX(190px);
+}
+.company-character-reosurces .card:nth-child(12) {
+  transform: translateX(205px);
+}
 
-.company-character-reosurces {  margin-top: -60px; min-height: 84px; }
-.company-character-reosurces .card { margin-top: -60px; z-index: 101; max-height: 80px; display: flex; }
-.company-character-reosurces .card:nth-child(1) { transform: translateX(15px); }
-.company-character-reosurces .card:nth-child(2) { transform: translateX(30px); }
-.company-character-reosurces .card:nth-child(3) { transform: translateX(45px); }
-.company-character-reosurces .card:nth-child(4) { transform: translateX(60px); }
-.company-character-reosurces .card:nth-child(5) { transform: translateX(75px); }
-.company-character-reosurces .card:nth-child(6) { transform: translateX(90px); }
-.company-character-reosurces .card:nth-child(7) { transform: translateX(105px); }
-.company-character-reosurces .card:nth-child(8) { transform: translateX(130px); }
-.company-character-reosurces .card:nth-child(9) { transform: translateX(145px); }
-.company-character-reosurces .card:nth-child(10) { transform: translateX(160px); }
-.company-character-reosurces .card:nth-child(10) { transform: translateX(175px); }
-.company-character-reosurces .card:nth-child(11) { transform: translateX(190px); }
-.company-character-reosurces .card:nth-child(12) { transform: translateX(205px); }
-
-.company-character-reosurces[data-stack-size="1"] { width: 72px }
-.company-character-reosurces[data-stack-size="2"] { width: 87px }
-.company-character-reosurces[data-stack-size="3"] { width: 102px }
-.company-character-reosurces[data-stack-size="4"] { width: 117px }
-.company-character-reosurces[data-stack-size="5"] { width: 132px }
-.company-character-reosurces[data-stack-size="6"] { width: 147px }
-.company-character-reosurces[data-stack-size="7"] { width: 162px }
-.company-character-reosurces[data-stack-size="8"] { width: 177px }
-.company-character-reosurces[data-stack-size="9"] { width: 192px }
-.company-character-reosurces[data-stack-size="10"] { width: 207px }
-.company-character-reosurces[data-stack-size="11"] { width: 222px }
-.company-character-reosurces[data-stack-size="12"] { width: 237px }
-
+.company-character-reosurces[data-stack-size="1"] {
+  width: 72px;
+}
+.company-character-reosurces[data-stack-size="2"] {
+  width: 87px;
+}
+.company-character-reosurces[data-stack-size="3"] {
+  width: 102px;
+}
+.company-character-reosurces[data-stack-size="4"] {
+  width: 117px;
+}
+.company-character-reosurces[data-stack-size="5"] {
+  width: 132px;
+}
+.company-character-reosurces[data-stack-size="6"] {
+  width: 147px;
+}
+.company-character-reosurces[data-stack-size="7"] {
+  width: 162px;
+}
+.company-character-reosurces[data-stack-size="8"] {
+  width: 177px;
+}
+.company-character-reosurces[data-stack-size="9"] {
+  width: 192px;
+}
+.company-character-reosurces[data-stack-size="10"] {
+  width: 207px;
+}
+.company-character-reosurces[data-stack-size="11"] {
+  width: 222px;
+}
+.company-character-reosurces[data-stack-size="12"] {
+  width: 237px;
+}
 
 .site-regions .card,
-.site-onguard .card { display: inline-block; margin-left: -30px; }
+.site-onguard .card {
+  display: inline-block;
+  margin-left: -30px;
+}
+
 .site-regions .card:nth-child(1),
-.site-onguard .card:nth-child(1) { margin-left: 0px; }
-.site-onguard .card { transform: rotate(180deg); }
-
-/* .company-character-reosurces.hosts_nothing { margin-top: 0px; } */
-.area-opponent .hiddenToOpponent { display: none !important; }
-
-
-
-div.card img:hover { box-shadow: 0px 0px 10px 2px #ff0; }
-
-.card-dice { background: url("/media/assets/images/icons/icon-dices.png") 0 -0 no-repeat;  }
-.card-dice:hover { background: url("/media/assets/images/icons/icon-dices-hover.png") 0 0 no-repeat; }
-
-
-
-div#opponent_table .company { transform: rotate(180deg); }
-
-.staging-area.staging-area-opponent { padding-top: 20px; }
-
-#view_card_list_container .view-card-list-container .icons a.onoffer { display: none; }
-#view_card_list_container .view-card-list-container.offered .icons a { display: none; }
-#view_card_list_container .view-card-list-container.offer .icons a.onoffer { display: block; }
-#view_card_list_container .view-card-list-container.offered .container-title-bar { visibility: hidden; }
-#view_card_list_container .view-card-list-container.offer .hideOnOffer { visibility: hidden; }
-#view_card_list_container .view-card-list-container.offer img.card-icon { opacity: 0.4; }
-#view_card_list_container .view-card-list-container.offer img.on-offer-orevealed { opacity: 1; }
-
-#playercard_hand_container {
-    display: inline-block;
-    margin-left: 60px;
-    max-width: 485px;
-    min-height: 83px;
+.site-onguard .card:nth-child(1) {
+  margin-left: 0px;
 }
+
+.site-onguard .card {
+  transform: rotate(180deg);
+}
+
+div.card img:hover {
+  box-shadow: 0px 0px 10px 2px #ff0;
+}
+
+.card-dice {
+  background: url("/media/assets/images/icons/icon-dices.png") 0 0 no-repeat;
+}
+.card-dice:hover {
+  background: url("/media/assets/images/icons/icon-dices-hover.png") 0 0 no-repeat;
+}
+
+div#opponent_table .company {
+  transform: rotate(180deg);
+}
+
 .hand-card-actions {
-    width: 60px;
-    position: fixed;
-    bottom: 13px;
-    height: 80px;
-    overflow: hidden;
+  width: 60px;
+  position: fixed;
+  bottom: 13px;
+  height: 80px;
+  overflow: hidden;
 }
-.card-generic.card-dice 
-{
-    display: inline-block;
-    width: 60px;
-    height: 30px;
-    max-height: 30px;
-    min-height: 30px;
-}
-#draw_card
-{
-    display: block;
-    height: 40px;
-    margin-top: 4px;
-    background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
-}
-#draw_card:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
-.hosts_nothing { display: none !important; }
 
-#lidles-eye { z-index: 601;position: fixed;left: 0;top: 0;bottom: 0;right: 0; background: rgba(0,0,0,0.85); }
-#lidles-eye img { position: fixed; transform: translate(-50%, -50%); top: 50%; left: 50%; animation: eyepulse 1s linear infinite;}
+.card-generic.card-dice {
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  max-height: 30px;
+  min-height: 30px;
+}
+
+#draw_card {
+  display: block;
+  height: 40px;
+  margin-top: 4px;
+  background: url("/media/assets/images/icons/icon-draw.png") 0 0 no-repeat;
+}
+#draw_card:hover {
+  background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat;
+}
+
+.hosts_nothing {
+  display: none !important;
+}
+
+#lidles-eye {
+  z-index: 601;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+#lidles-eye img {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  animation: eyepulse 1s linear infinite;
+}
+
 @keyframes eyepulse {
-    0% { opacity:1; }
-    50% { opacity:0.5 }
-    100% { opacity:1; } 
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-#card_counter div.pos-rel { position: relative; }
-#card_counter div.pos-rel:hover .hidden { display: block; }
-
-
-.card-hands .card-hands-sizer
-{
-    display: inline;
-    margin-left: 20px;
+#card_counter div.pos-rel {
+  position: relative;
 }
-
-.hand-card-sizer {
-    padding: 5px 10px;
-    text-align: right;
-    color: #fff;
-    font-size: 10px;
+#card_counter div.pos-rel:hover .hidden {
+  display: block;
 }
 
-
-.card-hands-sizer-size { font-weight: bold; }
-
+.card-hands-sizer {
+  display: inline;
+  margin-left: 20px;
+}
 .card-hands-sizer i {
-    color: #ffa500;
-    font-weight: bold;
-    padding: 0 5px;
+  color: #ffa500;
+  font-weight: bold;
+  padding: 0 5px;
 }
-
 .card-hands-sizer i:hover {
-    cursor: pointer;
-    color: #fff;
+  cursor: pointer;
+  color: #fff;
+}
+.card-hands-sizer .card-hands-sizer-size {
+  font-weight: bold;
 }
 
-body.on-show-map-window .location-icon { display: none; }
-
-.container-caption {
-    white-space: normal;
-    text-transform: uppercase;
-    font-size: 0.8em;
-    text-align: left;
-    padding: 5px;
-    color: #fff;
+body.on-show-map-window .location-icon {
+  display: none;
 }
 
-.smallCaps { font-variant-caps: small-caps; }
+.smallCaps {
+  font-variant-caps: small-caps;
+}
+
+@media only screen and (max-width: 1299px) {
+  .area-player::after {
+    content: "";
+    display: block;
+    min-height: 250px;
+  }
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: black grey;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: black;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 5px;
+  border: 3px solid darkgrey;
+}
+
+/* playercard_hand */

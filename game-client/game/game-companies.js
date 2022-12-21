@@ -203,14 +203,15 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
      if (card.uuid === "")
          return "";
 
-     let pImage = document.createElement("img");
-     pImage.setAttribute("class", "card-icon");
-     pImage.setAttribute("src", "/data/backside");
-     pImage.setAttribute("data-image-backside", GameCompanies.CardList.getFlipSide(card.code));
-     pImage.setAttribute("data-image-path", "");
-     pImage.setAttribute("decoding", "async");
-     pImage.setAttribute("data-uuid", card.uuid);
-     pImage.setAttribute("data-img-image", GameCompanies.CardList.getImage(card.code));
+    const _backside = GameCompanies.CardList.getFlipSide(card.code);
+    let pImage = document.createElement("img");
+    pImage.setAttribute("class", "card-icon");
+    pImage.setAttribute("src", _backside);
+    pImage.setAttribute("data-image-backside", _backside);
+    pImage.setAttribute("data-image-path", "");
+    pImage.setAttribute("decoding", "async");
+    pImage.setAttribute("data-uuid", card.uuid);
+    pImage.setAttribute("data-img-image", GameCompanies.CardList.getImage(card.code));
 
      if (typeof card.owner === "undefined" || card.owner === "")
          pImage.setAttribute("data-owner", "");
@@ -627,6 +628,28 @@ const GameCompanies = {
         return parent !== null && parent.getAttribute("id") === "player_companies";
     },
 
+    detectIsAgentCompany : function(companyContainer)
+    {
+        if (companyContainer == null)
+            return false;
+        
+        let bHasRevealed = false;
+        let nCharacters = 0;
+        
+        ArrayList(companyContainer.querySelectorAll(".company-character-host")).each(function(elem)
+        {
+            const img = elem.querySelector("img.card-icon");
+            if (img !== null)
+            {
+                nCharacters++;
+                if (img.getAttribute("src") !== "/data/backside")
+                    bHasRevealed = true;
+            }
+        });
+
+        return nCharacters === 1 && !bHasRevealed;
+    },
+
     drawLocations: function (company, start, regions, target, isRevealed, attached, current_tapped, target_tapped, revealStartSite)
     {
         let code, img;
@@ -638,6 +661,7 @@ const GameCompanies = {
             return;
 
         const bIsPlayer = this.isPlayersCompany(companyElem);
+        const isAgent = this.detectIsAgentCompany(companyElem);
 
         ArrayList(companyElem.querySelectorAll(".site-container")).each(DomUtils.removeAllChildNodes);
 
@@ -652,6 +676,9 @@ const GameCompanies = {
 
         if (isRevealed === undefined)
             isRevealed = false;
+
+        if (!isRevealed && isAgent)
+            revealStartSite = false;
 
         if (start !== "")
         {

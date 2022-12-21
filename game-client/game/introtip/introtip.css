@@ -23,7 +23,7 @@
     z-index: 599;
     padding: 0 50px;
 }
-.intro-tooltip .tip-content { color: #fff; }
+.intro-tooltip .tip-content { color: #fff; padding-top: 20px;}
 .intro-tooltip .tip-content h2, 
 .intro-tooltip .tip-content h3 { color: #ffa500; text-transform: uppercase; }
 

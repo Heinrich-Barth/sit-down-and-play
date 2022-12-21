@@ -1,0 +1,160 @@
+
+#view_card_list_container
+{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.75);
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.view-card-list-container 
+{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    z-index: 1001;
+
+    .container-title-bar {
+        padding-bottom: 10px;
+        color: #ff0;
+        font-size: 12px;
+        cursor: default;
+
+        .container-title-bar-shuffle
+        {
+            cursor: pointer;
+            visibility: hidden;
+
+            &:hover{
+                color: #ffa500;
+            }
+        }
+    }
+
+    img.card-icon {
+        width: auto;
+        height: 150px;
+    }
+    
+    .container-data
+    {
+        overflow-y: auto;
+        max-width: 100%;
+        min-height: 104px;
+        max-height: 510px;
+    }
+    
+    .card-hand {
+        float: left;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        min-width: 107px;
+        min-height: 153px;
+    }
+    
+    .view-card-list-actions { 
+
+        &.icons
+        {
+            padding: 5px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+        a 
+        {
+            width: 21px;
+            height: 21px;
+            display: inline-block;
+            border-radius: 5px;
+            background-position-y: 0 !important;
+            background-color: rgba(0,0,0,0.6) !important;
+        }
+    }
+
+    a,
+    a:hover
+    {
+        background-size: 20px 20px !important;   
+    }
+
+    &.view-playdeck
+    {
+        cursor: default;
+        .container-title-bar-shuffle
+        {
+            visibility: visible !important;
+        }
+    }
+
+    .icons a.onoffer { display: none; }
+    
+    &.offered 
+    {
+        .icons a { display: none; }
+        .container-title-bar { visibility: hidden; }
+    }
+        
+    &.offer {
+        .hideOnOffer { visibility: hidden; }
+
+        .icons a {
+            display: inline-block;
+            
+            &.hand,
+            &.sideboard { display: none; }
+        }
+        
+        img {
+            &.card-icon { opacity: 0.4; }
+            &.on-offer-orevealed { opacity: 1; }
+        }
+        
+    }
+
+    &.view-sideboard .card-hand a.sideboard,
+    &.view-hand.offer .card-hand a.hand,
+    &.view-discard .card-hand a.discardpile,
+    &.view-playdeck .card-hand a.playdeck,
+    &.view-playdeck .card-hand a.playdeck-shuffle
+    {
+        display: none;
+    }
+
+    &.view-outofplay 
+    {
+        .container-title-bar-divider,
+        .container-title-bar-reveal,
+        .view-card-list-actions {
+            display: none !important;
+        }
+    }
+
+    &.view-victory {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        background: rgba(0,0,0,0.9);
+    }
+}
+
+
+#view-score-sheet-card-list {
+    .container-data { padding: 10px; }
+    .card-hand {
+        float: left;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        min-width: 107px;
+        min-height: 153px;
+    }
+}
+
+

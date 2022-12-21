@@ -1,0 +1,189 @@
+.icon { 
+    width: 32px; 
+    height: 32px; 
+    display: block;
+    &.bt { border-top: 1px solid black; }
+    &.bb { border-bottom: 1px solid black; }
+}
+
+
+.icons 
+{
+    margin-bottom: 3px;
+
+    a,
+    a:hover { 
+        display: inline-block; 
+        cursor: pointer; 
+        margin-top: 5px; 
+        background-size: 32px 32px !important;     
+    }
+    
+    a { border: 3px solid transparent; }
+
+    .orga 
+    { 
+        background: url("/media/assets/images/icons/icon-orga.png") 0 0 no-repeat; 
+
+        &:hover,
+        &.act {
+            background: url("/media/assets/images/icons/icon-orga-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    .taskbar-score
+    { 
+        background: url("/media/assets/images/icons/icon-score.png") 0 0 no-repeat; 
+        &.act, 
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-score-hover.png") 0 0 no-repeat; 
+        }
+    }
+    .startphase 
+    { 
+        background: url("/media/assets/images/icons/icon-game-start.png") 0 0 no-repeat; 
+        &.act, 
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-game-start-hover.png") 0 0 no-repeat; 
+        }
+    } 
+
+    .site
+    { 
+        background: url("/media/assets/images/icons/icon-site.png") 0 0 no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-site-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    
+    .move
+    { 
+        background: url("/media/assets/images/icons/icon-movement.png") 0 0 no-repeat; 
+        &.act, 
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-movement-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    .eot
+    { 
+        background: url("/media/assets/images/icons/icon-eot.png") 0 0 no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-eot-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    
+    .eotdiscard
+    { 
+        background: url("/media/assets/images/icons/eot-discard.png") 0 0 no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/eot-discard-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    
+    .longevent
+    { 
+        background: url("/media/assets/images/icons/longevent.png") 0 0 no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/longevent-hover.png") 0 0 no-repeat; 
+        }
+    } 
+    
+    .sideboard 
+    { 
+        background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat; 
+        }
+        &.ui-droppable-active
+        { 
+            background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 12px no-repeat; 
+        }
+    }
+
+    .onoffer
+    { 
+        background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-offer-hover.png") 0 12px no-repeat; 
+        }
+    }
+    .victory
+    { 
+        background: url("/media/assets/images/icons/icon-crown.png") 0 12px no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-crown-hover.png") 0 12px no-repeat; 
+        }
+    }
+    
+    .hand 
+    { 
+        background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat; 
+        }
+        &.ui-droppable-active
+        { 
+            background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat; 
+        }
+    }
+
+    .playdeck 
+    { 
+        background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat; 
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 12px no-repeat; 
+        }
+        &.ui-droppable-active
+        { 
+            background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 12px no-repeat; 
+        }
+    }
+    
+    .playdeck-shuffle
+    {
+        background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 12px no-repeat; 
+    
+        &.act,
+        &:hover 
+        { 
+            background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 12px no-repeat; 
+        }
+    }
+
+    .discardpile.ui-droppable-active
+    { 
+        background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 12px no-repeat; 
+    }    
+}
+
+#playercard_hand_container a.discardpile:hover,
+.icons a.discardpile.act,
+.icons a.discardpile:hover 
+{ 
+    background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat; 
+}
+#playercard_hand_container a.discardpile,
+.icons a.discardpile
+{ 
+    background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat; 
+}

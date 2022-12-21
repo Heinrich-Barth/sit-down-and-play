@@ -93,6 +93,138 @@ class GameArda extends GameStandard
         }
     }
 
+    onTradeStart(userid, _socket, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second,
+            cards: {
+                first: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.first)),
+                second: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.second))
+            }
+        }
+
+        this.publishToPlayers("/game/arda/trade/start", userid, data);
+    }
+
+    onTradeCancel(userid, _socket, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second
+        }
+
+        this.publishToPlayers("/game/arda/trade/cancel", userid, data);
+        this.publishChat(userid, "cancelled a trade.");
+    }
+
+    onTradeRemove(userid, _socket, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second,
+            code: obj.code,
+            uuid: obj.uuid
+        }
+
+        this.publishToPlayers("/game/arda/trade/remove", userid, data);
+    }
+
+    onTradeOffer(userid, _socket, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second,
+            code: obj.code,
+            uuid: obj.uuid
+        }
+
+        this.publishToPlayers("/game/arda/trade/offer", userid, data);
+    }
+
+    onTradeAccept(userid, _socket, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second
+        }
+
+        this.publishToPlayers("/game/arda/trade/accept", userid, data);
+        this.publishChat(userid, "accepted a card trade.");
+    }
+
+    onTradeSuccess(userid, obj)
+    {
+        const data = {
+            first: obj.first,
+            second: obj.second
+        }
+        this.publishToPlayers("/game/arda/trade/success", userid, data);
+        this.publishChat(userid, "completed a card trade.");
+    }
+
+    onTradePerformMoveToDeck(traderIds, traderCounts, obj)
+    {
+        const pAdminDeck = this.getDeckManager().getAdminDeck();
+        if (pAdminDeck === null || traderIds.length !== 2)
+            return false;
+
+        let _moved = false;
+
+        /** move all trading cards to playdeck to simply draw again */
+        for (let _id of traderIds)
+        {
+            const deck = this.getDeckManager().getPlayerDeck(_id);
+            if (deck === null)
+            {
+                console.warn("Could not obtain trading deck #" + _id);
+                continue;
+            }
+
+            /** the opposite trader draws equal to the number of cards this current player removes from his hand */
+            let _oppositeTraderId = traderIds[0] === _id ? traderIds[1] : traderIds[0];
+            traderCounts[_oppositeTraderId] = obj.cards[_id].length;
+
+            for (let _cardUuid of obj.cards[_id])
+            {
+                if (deck.pop().fromHandMps(_cardUuid))
+                {
+                    pAdminDeck.push().toPlaydeck(_cardUuid);
+                    _moved = true;
+                }
+            }
+        }
+
+        return _moved;
+    }
+
+    onTradePerform(userid, _socket, obj)
+    {
+        /** trading did not work */
+        const traderIds = Object.keys(obj.cards);
+        const traderCounts = { };
+
+        if (!this.onTradePerformMoveToDeck(traderIds, traderCounts, obj))
+        {
+            this.onTradeCancel(userid, null, obj);
+            return;
+        }
+
+        /** now each player draws cards again based on the number of discarded cards of the other player */
+        for (let _id of traderIds)
+        {
+            /** only draw, the update will be sent later from each player on success signal */
+            const deck = this.getDeckManager().getPlayerDeck(_id);
+            if (deck !== null && traderCounts[_id] !== undefined)
+            {
+                for (let i = 0; i < traderCounts[_id]; i++)
+                    deck.drawCardMarshallingPoints();
+            }
+        }
+
+        this.onTradeSuccess(userid, obj);
+    }
+    
     onRecycle(userid, socket, obj)
     {
         const deck = this.getDeckManager().getAdminDeck();
@@ -368,6 +500,12 @@ class GameArda extends GameStandard
         this.getMeccgApi().addListener("/game/arda/assign-characters", this.onAssignCharacters.bind(this));
         this.getMeccgApi().addListener("/game/arda/view", this.onViewCards.bind(this));
         this.getMeccgApi().addListener("/game/arda/shuffle", this.onShuffle.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/start", this.onTradeStart.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/cancel", this.onTradeCancel.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/remove", this.onTradeRemove.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/offer", this.onTradeOffer.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/accept", this.onTradeAccept.bind(this));
+        this.getMeccgApi().addListener("/game/arda/trade/perform", this.onTradePerform.bind(this));
     }
 }
 

@@ -669,7 +669,7 @@ class GameStandard extends GamePlayers
         {
             const cardChar = this.getPlayboardManager().GetCardByUuid(character);
             if (cardChar === null || cardChar.revealed === false)
-                this.publishChat(userid, " character hosts " + card.code);
+                this.publishChat(userid, " character hosts a card");
             else
                 this.publishChat(userid, cardChar.code + " hosts " + card.code);
         }

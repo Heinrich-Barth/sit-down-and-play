@@ -1,99 +1,141 @@
-
-
-.arda-hand-wrapper {position: fixed;right: 5px;top: 50%;transform: translateY(-50%);}
-
-.arda-hand-container { text-align: right; margin-bottom: 5px; }
-.arda-hand-container i { cursor: pointer; color: #fff; padding: 5px; min-width: 20px; text-align: center; }
-.arda-hand-container i:hover { color: #ffa500; }
-
-.arda-card-hands {
-    position: fixed;
-    right: 5px;
-    z-index: 400;
-    padding: 5px;
-    max-width: 400px;
-    min-width: 200px;
-    min-height: 84px;
-    overflow-y: auto;
-    max-height: 200px;
+.arda-hand-wrapper {
+  position: fixed;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-div#arda_characters_hand { top: 75px; }
-div#arda_minors_hand { top: 195px; }
-div#arda_mps_hand { bottom: 10px; }
+.arda-hand-container {
+  text-align: right;
+  margin-bottom: 5px;
+}
+.arda-hand-container i {
+  cursor: pointer;
+  color: #fff;
+  padding: 5px;
+  min-width: 20px;
+  text-align: center;
+}
+.arda-hand-container i:hover {
+  color: #ffa500;
+}
+
+.arda-card-hands {
+  position: fixed;
+  right: 5px;
+  z-index: 400;
+  padding: 5px;
+  min-width: 200px;
+  max-width: 360px;
+  min-height: 84px;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+div#arda_characters_hand {
+  top: 75px;
+}
+
+div#arda_minors_hand {
+  top: 195px;
+}
+
+div#arda_mps_hand {
+  bottom: 10px;
+}
 
 .arda-card-hands-sizer {
-    color: #fff;
-    font-size: 10px;
-    padding: 5px 10px;
-    text-align: right;
+  color: #fff;
+  font-size: 10px;
+  padding: 5px 10px;
+  text-align: right;
+  margin-left: 0;
+  display: block;
+}
+.arda-card-hands-sizer strong {
+  color: #ffa500;
 }
 
 .arda-card-recycle {
-    display: block;
-    font-size: 20px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 10px;
+  display: block;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
+
 .arda-hand-card-actions-fl {
-    float: left;
+  float: left;
 }
-
 .arda-hand-card-actions-fl::after {
-    clear: both;
+  clear: both;
 }
-.arda-card-hands-sizer strong { color: #ffa500; }
 
-.arda-inline { display: inline-block; margin-right: 60px;}
+.arda-inline {
+  display: inline-block;
+  margin-right: 60px;
+}
+
 .arda-card-hands .arda-card-hand,
 .arda-card-hands .card-hand {
-    display: inline-block;
-    position: relative;
-    width: 60px;
-    min-height: 60px;
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  min-height: 60px;
 }
 
 .arda-hand-card-actions .arda-pile-action img,
 .arda-actions img {
-    border: 1px solid #000;
-    width: 20px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 5px;
+  border: 1px solid #000;
+  width: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
 }
 
 .arda-actions img {
-    position: absolute;
-    cursor: pointer;
-    right: 5px;
-}
-.arda-hand-card-actions {
-    position: absolute;
-    right: 5px;
-    width: 60px;
-    margin-right: 0;
-    text-align: center;
-    cursor: pointer;
+  position: absolute;
+  cursor: pointer;
+  right: 5px;
 }
 
-.arda-actions img:nth-child(1) { bottom: 10px; }
-.arda-actions img:nth-child(2) { top: 10px; }
+.arda-hand-card-actions {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 60px;
+  margin-right: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.arda-actions img:nth-child(1) {
+  bottom: 10px;
+}
+
+.arda-actions img:nth-child(2) {
+  top: 10px;
+}
 
 .arda-pile-action:hover img,
-.arda-actions img:hover  { background-color: #ffa500; }
-
-.arda-pile-action:first-child { margin-right: 5px;}
-
-.arda-card-draw
-{
-    display: block;
-    height: 40px;
-    width: 60px;
-    cursor: pointer;
-    margin-top: 4px;
-    background: url("/media/assets/images/icons/icon-draw.png") 0 -0 no-repeat;
+.arda-actions img:hover {
+  background-color: #ffa500;
 }
-.arda-card-draw:hover { background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat; }
+
+.arda-pile-action:first-child {
+  margin-right: 5px;
+}
+
+.arda-card-draw {
+  display: block;
+  height: 40px;
+  width: 60px;
+  cursor: pointer;
+  margin-top: 4px;
+  background: url("/media/assets/images/icons/icon-draw.png") 0 0 no-repeat;
+}
+.arda-card-draw:hover {
+  background: url("/media/assets/images/icons/icon-draw-hover.png") 0 0 no-repeat;
+}
 
 #view_card_list_container .view-charackters .hideOnOffer,
 #view_card_list_container .view-charackters .view-card-list-actions .hand,
@@ -106,33 +148,107 @@ div#arda_mps_hand { bottom: 10px; }
 #view_card_list_container .view-minor .hideOnOffer,
 #view_card_list_container .view-minor .view-card-list-actions .hand,
 #view_card_list_container .view-minor .view-card-list-actions .sideboard,
-#view_card_list_container .view-minor .view-card-list-actions .playdeck-shuffle
-{
-    display: none;
+#view_card_list_container .view-minor .view-card-list-actions .playdeck-shuffle {
+  display: none;
 }
 
 .arda-setup-container {
-    position: absolute;
-    left: 10%;
-    top: 10%;
-    display: block !important;
-    width: 300px;
+  position: absolute;
+  left: 10%;
+  top: 10%;
+  display: block !important;
+  width: 300px;
+  padding: 10px;
 }
-
 .arda-setup-container h2 {
-    text-align: center;
-    font-size: 1.1em;
-    color: #fff;
-    color: #ffa500;
+  text-align: center;
+  font-size: 1.1em;
+  color: #fff;
+  color: #ffa500;
 }
 .arda-setup-container p {
-    color: #fff;
-    padding: 10px;
+  color: #fff;
+  padding: 10px;
 }
 
 .arda-setup-container .arda-hand-container,
 .arda-setup-container .arda-hand-container i,
 .arda-setup-container a {
-    text-align: center;
-    color:  #ff0;
+  text-align: center;
+  color: #ff0;
+}
+
+#playercard_hand.card-hands {
+  max-width: 60%;
+}
+
+@media only screen and (max-width: 1299px) {
+  .area-player {
+    margin-bottom: 200px;
+  }
+}
+@media only screen and (min-width: 1300px) and (max-width: 1550px) {
+  #playercard_hand.card-hands {
+    max-width: 70%;
+  }
+}
+@media only screen and (min-width: 1551px) {
+  #playercard_hand.card-hands {
+    max-width: 76%;
+  }
+}
+.trade-panel .config-panel {
+  padding-top: 20px;
+}
+.trade-panel .config-panel button {
+  color: #fff;
+  margin: 2px;
+}
+.trade-panel .config-panel button.trade-cancel {
+  background-color: #c32222;
+}
+.trade-panel .config-panel button.trade-cancel:hover {
+  background-color: #dc2600;
+}
+.trade-panel .config-panel button.trade-accept {
+  background-color: #98c593;
+}
+.trade-panel .config-panel button.trade-accept:hover {
+  background-color: #a8cea4;
+}
+.trade-panel .config-panel li a {
+  display: block;
+  text-align: center;
+}
+.trade-panel .config-panel.trade-await-reply button {
+  visibility: hidden;
+}
+.trade-panel .config-panel .offered-list {
+  min-height: 85px;
+  border-bottom: 2px dotted #ffa500;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.trade-panel .config-panel .offered-list div {
+  display: inline-block;
+  margin: 0 3px;
+}
+.trade-panel .config-panel .offering-list div {
+  display: inline-block;
+  margin: 0 3px;
+  position: relative;
+  border: 1px solid transparent;
+}
+.trade-panel .config-panel .offering-list div.fa {
+  border: 1px solid #98c593;
+}
+.trade-panel .config-panel .offering-list div::before {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background: #98c593;
+  border-radius: 3px;
+}
+.trade-panel .config-panel .offering-list div img {
+  cursor: pointer;
 }
