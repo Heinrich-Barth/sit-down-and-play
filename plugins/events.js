@@ -30,6 +30,10 @@ let g_jsonList = [];
 })();
 
 const Arda = require("./game-arda");
+const Discord = require("./discord");
+
+const g_pDiscord = new Discord();
+
 
 function _register(pEventManager)
 {
@@ -48,6 +52,8 @@ function _register(pEventManager)
     });
 
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
+    
+    g_pDiscord.registerEvents(pEventManager);
 
     pEventManager.dump();
 }
