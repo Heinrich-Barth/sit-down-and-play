@@ -74,6 +74,12 @@ class CreateHandCardsDraggableUtils {
         }
     }
 
+    static removeDraggableDomElement(elem)
+    {
+        if (elem !== null)
+            CreateHandCardsDraggableUtils.removeDraggable(jQuery(elem));       
+    }
+
     static requireMessageId()
     {
         return (++CreateHandCardsDraggableUtils._locationMessageId);
