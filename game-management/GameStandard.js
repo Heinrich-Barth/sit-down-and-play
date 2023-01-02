@@ -57,6 +57,7 @@ class GameStandard extends GamePlayers
 
         this.getMeccgApi().addListener("/game/company/create", this.onGameCompanyCreate.bind(this));
         this.getMeccgApi().addListener("/game/company/arrive", this.onGameCompanyArrives.bind(this));
+        this.getMeccgApi().addListener("/game/company/returntoorigin", this.onGameCompanyReturnsToOrigin.bind(this));
         this.getMeccgApi().addListener("/game/company/highlight", this.onGameCompanyHighlight.bind(this));
         this.getMeccgApi().addListener("/game/company/location/set-location", this.onGameCompanyLocationSetLocation.bind(this));
         this.getMeccgApi().addListener("/game/company/location/reveal", this.onGameCompanyLocationReveal.bind(this));
@@ -833,6 +834,21 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "The company arrives");
     }
 
+    onGameCompanyReturnsToOrigin(userid, _socket, jData)
+    {
+        if (typeof jData.company === "undefined" || jData.company === "")
+            return;
+
+        this.getPlayboardManager().CompanyReturnsToOrigin(jData.company);
+        this.publishToPlayers("/game/company/returntoorigin", userid, {company: jData.company});
+
+        let sCompanyCharacter = this.getFirstCompanyCharacterCode(jData.company, "");
+        if (sCompanyCharacter !== "")
+            this.publishChat(userid, "The company of " + sCompanyCharacter + " returns to site of origin");
+        else
+            this.publishChat(userid, "The company returns to site of origin");
+    }
+
     onGameCompanyLocationSetLocation(userid, _socket, obj)
     {
         this.getPlayboardManager().SetCompanyStartSite(obj.companyUuid, obj.start, obj.regions, obj.destination);
@@ -1114,7 +1130,6 @@ class GameStandard extends GamePlayers
         if (data.game === null)
         {
             let message = pEval.getMessageString();
-            console.log(message);
             this.publishChat(userid, " savegame is invalid");
             this.publishChat(userid, message);
             

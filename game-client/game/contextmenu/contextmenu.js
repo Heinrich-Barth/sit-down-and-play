@@ -136,7 +136,7 @@ const ContextMenu = {
             elem.oncontextmenu = ContextMenu.contextActions.onContextGeneric;
             if (isOnguard)
             {
-                elem.ondblclick = ContextMenu.contextActions.onFlipClick;
+                elem.ondblclick = ContextMenu.contextActions.onOnGuardDoubleClick;
                 elem.onclick = ContextMenu.contextActions.onFlipClick;
             }
             else
@@ -189,6 +189,26 @@ const ContextMenu = {
                 if (companyId !== "")
                     MeccgApi.send("/game/company/arrive", {company : companyId });
             }
+        },
+
+        onOnGuardDoubleClick : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+                
+            let code = ContextMenu._getCardCode(e.target);
+            if (code === "")
+                code = ContextMenu.getAttribute(e.target, "data-card-code");
+
+            let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
+            if (uuid === "")
+                uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+
+            CreateHandCardsDraggableUtils.removeDraggableDomElement(e.target);
+            MeccgApi.send("/game/card/move", {uuid: uuid, target: "hand", source: "inplay", drawTop : true});
         },
 
         onFlipClick : function(e)
@@ -491,6 +511,13 @@ const ContextMenu = {
             let code = ContextMenu.getAttribute(pMenu, "data-card-code");
             if (code !== "")
                 MeccgApi.send("/game/card/import", {code : code, type: "character" });
+        },
+
+        returnToSiteOfOrigin : function(pMenu)
+        {
+            const companyId = ContextMenu.getAttribute(pMenu, "data-company");
+            if (companyId !== "")
+                MeccgApi.send("/game/company/returntoorigin", {company : companyId });
         }
     },
     
@@ -523,10 +550,11 @@ const ContextMenu = {
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive, "Doubleclick on opponents target site to indicate NO MORE HAZARDS");
         this.addItem("add_ressource", "Add this site as a ressource", "fa-clipboard", "context-menu-item-arrive", ContextMenu.callbacks.addRessource, "Adds this site as RESSOURCE to your hand and will be played facedown.");
         this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
+        this.addItem("movement_return", "Return to site of origin", "fa-ban", "context-menu-item-arrive", ContextMenu.callbacks.returnToSiteOfOrigin, "Remove target site.");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
-        this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character"];
-        this.data.types["arrive"] = ["arrive"];
+        this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
+        this.data.types["arrive"] = ["arrive", "movement_return"];
 
         this.data.specialClasses["card"] = "";
         this.data.specialClasses["location"] = "context-menu-site";

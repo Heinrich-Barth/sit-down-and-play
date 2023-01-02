@@ -588,6 +588,11 @@ const GameBuilder = {
             GameBuilder.CompanyManager.onCompanyArrivesAtDestination(jData.company, true);
             GameBuilder.resolveHandNotification();
         });
+        MeccgApi.addListener("/game/company/returntoorigin", function(_bIsMe, jData)
+        {
+            GameBuilder.CompanyManager.onCompanyReturnsToOrigin(jData.company, true);
+            GameBuilder.resolveHandNotification();
+        });
 
         MeccgApi.addListener("/game/company/highlight", (_bIsMe, jData) => GameBuilder.CompanyManager.onCompanyArrivesAtDestination(jData.company, false));
         MeccgApi.addListener("/game/company/location/reveal", (_bIsMe, jData) => GameBuilder.CompanyManager.revealLocations(jData.company));

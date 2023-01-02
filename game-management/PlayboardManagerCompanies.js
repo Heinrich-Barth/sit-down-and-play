@@ -429,6 +429,19 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
           jCompanySites.regions = [];
           jCompanySites.revealed = false;
       }
+
+      CompanyReturnsToOrigin(companyUuid)
+      {
+          if (!this.companyExists(companyUuid))
+              return;
+          
+          let jCompanySites = this.companies[companyUuid].sites;
+          if (jCompanySites.target !== "")
+              jCompanySites.target = "";
+  
+          jCompanySites.regions = [];
+          jCompanySites.revealed = false;
+      }
   
      /**
       * Add a hazard to a company location
