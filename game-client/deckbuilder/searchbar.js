@@ -10,7 +10,7 @@ const SearchBar = {
         {
             document.getElementById(_id).onkeydown = function(e)
             {
-                if(e.keyCode === '13')
+                if(e.key === "Enter")
                     SearchBar.onTriggerSearch();
             };
         }
