@@ -14,4 +14,5 @@ module.exports = function(SERVER, g_pExpress)
     SERVER.instance.use("/error/https-required", ClearCookies.clearCookiesCallback, g_pExpress.static(rootDir + "/error-https-required.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/error/denied", ClearCookies.clearCookiesCallback, g_pExpress.static(rootDir + "/error-access-denied.html", SERVER.caching.headerData.generic));
     SERVER.instance.use("/error/login", ClearCookies.clearCookiesCallback, g_pExpress.static(rootDir + "/error-login.html",SERVER.caching.headerData.generic));   
+    SERVER.instance.use("/error/nosuchroom", ClearCookies.clearCookiesCallback, g_pExpress.static(rootDir + "/error-nosuchroom.html",SERVER.caching.headerData.generic));   
 }
