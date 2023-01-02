@@ -132,6 +132,7 @@ SERVER.cards.load();
 
     require("./plugins/events").registerEvents(g_pEventManager);
     
+    SERVER.eventManager = g_pEventManager;
     SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
         fs.readFileSync(__dirname + "/pages/game.html", 'utf8'),
         g_pEventManager, 
@@ -542,6 +543,11 @@ SERVER.instanceListener.on('clientError', (err, socket) =>
 
 console.log("Server started at port " + SERVER.configuration.port());
 
+process.on('beforeExit', code => {console.log(`Process will exit with code: ${code}`); })
+process.on('exit', code => console.log(`Process exited with code: ${code}`));
+process.on('uncaughtException', err => console.error(err));
+process.on('unhandledRejection', (err, promise) => console.warn('Unhandled rejection at ', promise, `reason: ${err.message}`));
+  
 /**
  * allow CTRL+C
  */
