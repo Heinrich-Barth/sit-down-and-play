@@ -24,6 +24,17 @@ class GameRoom
         this.name = room;
         this.fnEndGame = fnEndGame;
         this.reconnectionCounts = {};
+        this.socialMedia = false;
+    }
+
+    getAllowSocialMedia()
+    {
+        return this.socialMedia;
+    }
+
+    setAllowSocialMedia(bAllow)
+    {
+        this.socialMedia = bAllow === true;
     }
 
     getConnectionCount(userid)
@@ -203,6 +214,19 @@ class GameRoom
                 _player.socket = null;
             }
         }
+    }
+
+    getFinalGameScore()
+    {
+        let finalScore = {
+            score : this.game.getFinalScore().score,
+            players : { }
+        };
+
+        for (let userid in this.players)
+            finalScore.players[userid] = this.players[userid].getName();
+
+        return finalScore;
     }
 
     endGame()

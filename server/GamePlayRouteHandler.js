@@ -189,6 +189,12 @@ class GamePlayRouteHandler
         ClearCookies.clearCookies(res);
     }
 
+    clearSocialMediaCookies(res)
+    {        
+        res.clearCookie('socialMedia');
+        res.clearCookie('socialMediaPers');    
+    }
+
     validateDeck(jDeck)
     {
         /**
@@ -208,6 +214,8 @@ class GamePlayRouteHandler
 
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
+            const shareMessage = jData.share === true;
+            const shareByName = shareMessage && jData.shareName === true;
 
             /**
              * assert the username is alphanumeric only
@@ -229,6 +237,10 @@ class GamePlayRouteHandler
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
+
+            res.cookie('socialMedia', shareMessage, jSecure);
+            res.cookie('socialMediaPers', shareByName, jSecure);
+
             this.createExpireResponse(res, 'text/plain').redirect("/play/" + req.params.room + "/lobby");
         }
         catch (e) 
@@ -253,6 +265,8 @@ class GamePlayRouteHandler
 
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
+            const shareMessage = jData.share;
+            const shareByName = shareMessage && jData.shareName;
 
             /**
              * assert the username is alphanumeric only
@@ -275,19 +289,22 @@ class GamePlayRouteHandler
 
             /** add player to lobby */
             const lNow = this.m_pServerInstance.roomManager.addToLobby(room, userId, displayname, jDeck, this.isArda(), this.isSinglePlayer());
-
             if (lNow === -1)
             {
                 this.createExpireResponse(res).redirect("/");
                 return;
             }
-            
+
             /** proceed to lobby */
             const jSecure = { httpOnly: true, secure: true };
             res.cookie('room', room, jSecure);
             res.cookie('username', displayname, jSecure);
             res.cookie('userId', userId, jSecure);
             res.cookie('joined', lNow, jSecure);
+
+            res.cookie('socialMedia', shareMessage, jSecure);
+            res.cookie('socialMediaPers', shareByName, jSecure);
+
             this.createExpireResponse(res, 'text/plain').redirect(this.contextPlay + req.params.room);
         }
         catch (e) 
@@ -301,8 +318,10 @@ class GamePlayRouteHandler
     {
         this.clearCookies(res);
         
-        if (!UTILS.isAlphaNumeric(req.params.room) || !this.m_pServerInstance.roomManager.roomExists(req.params.room))
+        if (!UTILS.isAlphaNumeric(req.params.room))
             res.redirect("/error");
+        else if (!this.m_pServerInstance.roomManager.roomExists(req.params.room))
+            res.redirect("/error/nosuchroom");
         else
             this.createExpireResponse(res, 'text/html').send(this.pageWatch).status(200);
     }
@@ -441,6 +460,13 @@ class GamePlayRouteHandler
         {
             /* Force close all existing other sessions of this player */
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
+
+            req._doShare = req.cookies.socialMedia === "true";
+            req._doShareName = req.cookies.socialMediaPers === "true";
+
+            this.clearSocialMediaCookies(res);
+            console.log("cleared");
+    
             this.m_pServerInstance.roomManager.updateDice(room, req.cookies.userId, dice);
             this.createExpireResponse(res, "text/html").send(this.m_pServerInstance.roomManager.loadGamePage(room, this.sanatiseCookieValue(req.cookies.userId), this.sanatiseCookieValue(req.cookies.username), lTimeJoined, dice)).status(200);
 
@@ -448,14 +474,25 @@ class GamePlayRouteHandler
         }
     }
 
-    onAfterPlayAtTableSuccess(req, _res)
+    onAfterPlayAtTableSuccess(req, res)
     {
+        if (this.isSinglePlayer() || !req._doShare)
+            return;
+
         /* enforece lowercase room, is always alphanumeric */
         const room = req.params.room.toLocaleLowerCase();
-        if (this.m_pServerInstance.roomManager.roomExists(room) && this.m_pServerInstance.roomManager.countPlayersInRoom(room)===1)
+        if (!this.m_pServerInstance.roomManager.roomExists(room))
+            return;
+
+        const name = req._doShareName ? this.sanatiseCookieValue(req.cookies.username) : "";
+        if (this.m_pServerInstance.roomManager.countPlayersInRoom(room) === 1)
         {
-            console.log("FIRST PLAYER");
+            this.m_pServerInstance.roomManager.setAllowSocialMediaShare(room, true);            
+            this.m_pServerInstance.eventManager.trigger("game-created", room, this.isArda(), name);
         }
+        else if (this.m_pServerInstance.roomManager.getAllowSocialMediaShare(room))
+            this.m_pServerInstance.eventManager.trigger("game-joined", room, this.isArda(), name);
+
     }
 
     /**

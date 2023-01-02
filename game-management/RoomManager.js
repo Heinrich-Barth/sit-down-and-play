@@ -493,6 +493,10 @@ class RoomManager {
 
         let pRoom = this._rooms[room];
 
+        const scores = pRoom.getFinalGameScore();
+        if (scores !== undefined && pRoom.getAllowSocialMedia())
+            this._eventManager.trigger("game-finished", room, scores);
+
         pRoom.sendMessage("Game", "has ended.");
         pRoom.destroy();
 
@@ -579,6 +583,19 @@ class RoomManager {
     roomExists(room)
     {
         return room !== undefined && room !== "" && this._rooms[room] !== undefined;
+    }
+
+    setAllowSocialMediaShare(room, bAllow)
+    {
+        if (room !== undefined && room !== "" && this._rooms[room] !== undefined)
+            this._rooms[room].setAllowSocialMedia(bAllow);
+    }
+
+    getAllowSocialMediaShare(room)
+    {
+        return room !== undefined && room !== "" 
+            && this._rooms[room] !== undefined
+            && this._rooms[room].getAllowSocialMedia();
     }
 
     /**
