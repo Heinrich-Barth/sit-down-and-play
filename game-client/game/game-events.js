@@ -76,7 +76,7 @@ class GameEvents
 
     autoFlip()
     {
-        const codes = ["Kesä (NW)", "Talvi (NW)"];
+        const codes = ["kesä (nw)", "talvi (nw)"];
         this.forEachCardIn(this.getCardsInStagingArea(), function(card) 
         {
             for (let code of codes)
@@ -141,7 +141,7 @@ class GameEvents
      */
     onBoardRestored()
     {
-        if (document.getElementById("player_companies").querySelectorAll('div[data-card-code="Pallando [H] (TW)"]').length > 0)
+        if (document.getElementById("player_companies").querySelectorAll('div[data-card-code="pallando [h] (tw)"]').length > 0)
         {
             this.pallandoInPlay = true;
             this.pallandoIsMine = true;
@@ -149,7 +149,7 @@ class GameEvents
         }
         else 
         {
-            const list = document.getElementById("opponent_table").querySelectorAll('div[data-card-code="Pallando [H] (TW)"]');
+            const list = document.getElementById("opponent_table").querySelectorAll('div[data-card-code="pallando [h] (tw)"]');
             if (list.length > 0)
             {
                 this.pallandoInPlay = true;
@@ -234,14 +234,14 @@ class GameEvents
 
     setupEvents()
     {
-        this.registerEventCode("Pallando [H] (TW)", this.onEventPallando.bind(this));
+        this.registerEventCode("pallando [h] (tw)", this.onEventPallando.bind(this));
     }
 
     onEventPallando(isMe, type, data)
     {
         if (GameEvents.Type_Leave === type)
         {
-            const list = document.querySelectorAll('div[data-card-code="Pallando [H] (TW)"]');
+            const list = document.querySelectorAll('div[data-card-code="pallando [h] (tw)"]');
             this.pallandoInPlay = list !== null && list.length > 0;
             if (!this.pallandoInPlay)
             {
