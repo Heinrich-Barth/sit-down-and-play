@@ -55,6 +55,9 @@ body {
         }
     }
 
+    textarea {
+        line-height: 1em;
+    }
 }
 
 .linklist {
@@ -170,7 +173,7 @@ body {
         flex: 1 30%;
         padding: 10px;
         margin-left: 5px;
-        font-size: 0.8em;
+        font-size: 1em;
 
         .fa:before {
             padding-right: 5px;
@@ -209,7 +212,6 @@ body {
             display: inline-block;
             height: 16px;
             width: 16px;
-            background-size: 16px 16px;
             background-position: 0 1px !important;
             background-size: 16px 16px !important;
         }
@@ -227,10 +229,29 @@ body {
         }
 
 
-        .card_of_deck_construct:hover {
-            background-color: rgba(255,255,255,0.1);
-            cursor: pointer;
+        .card_of_deck_construct{
+
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+
+            &:hover {
+                background-color: rgba(255,255,255,0.1);
+                cursor: pointer;
+            }
+
+            .action {
+                min-width: 90px;
+            }
+            .count_deck_entry{
+                min-width: 20px;
+                text-align: center;
+            }
+            .card_deck_title{
+                text-transform: capitalize;
+            }
         }
+        
     }
 
     .list_left {
@@ -249,7 +270,6 @@ body {
 
         .actions[data-count="0"] 
         {
-            background: rgba(0,0,0,0.4);
             left: 0 !important;
             top: 0 !important;
             width: 100% !important;
@@ -362,6 +382,13 @@ body {
     }
 }
 
+@media only screen and (min-width: 2000px) {
+
+    .deck-builder .decklist {
+        font-size: 1.5em;
+    }
+}
+
 @media only screen and (min-width: 1500px) {
 
     .category .image {
@@ -374,7 +401,6 @@ body {
         flex: 250px !important;
     }
 }
-
 
 @media only screen and (max-width: $md-max) {
 

@@ -1,8 +1,3 @@
-/* Extra small devices (phones, 600px and down) */
-/* Small devices (portrait tablets and large phones, 600px and up) */
-/* Medium devices (landscape tablets, 768px and up) */
-/* Large devices (laptops/desktops, 992px and up) */
-/* Extra large devices (large laptops and desktops, 1200px and up) */
 html {
   height: 100%;
   width: 100%;
@@ -171,6 +166,9 @@ body h4 {
 .deckbuilding .filters select {
   display: inline-block;
 }
+.deckbuilding textarea {
+  line-height: 1em;
+}
 
 .linklist ul {
   display: inline;
@@ -266,7 +264,7 @@ body h4 {
   flex: 1 30%;
   padding: 10px;
   margin-left: 5px;
-  font-size: 0.8em;
+  font-size: 1em;
 }
 .deck-builder .decklist .fa:before {
   padding-right: 5px;
@@ -299,7 +297,6 @@ body h4 {
   display: inline-block;
   height: 16px;
   width: 16px;
-  background-size: 16px 16px;
   background-position: 0 1px !important;
   background-size: 16px 16px !important;
 }
@@ -315,9 +312,24 @@ body h4 {
   color: #fff;
   font-size: 15px;
 }
+.deck-builder .decklist .card_of_deck_construct {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
 .deck-builder .decklist .card_of_deck_construct:hover {
   background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
+}
+.deck-builder .decklist .card_of_deck_construct .action {
+  min-width: 90px;
+}
+.deck-builder .decklist .card_of_deck_construct .count_deck_entry {
+  min-width: 20px;
+  text-align: center;
+}
+.deck-builder .decklist .card_of_deck_construct .card_deck_title {
+  text-transform: capitalize;
 }
 .deck-builder .list_left {
   flex: 3 70%;
@@ -330,7 +342,6 @@ body h4 {
   margin-top: 3em;
 }
 .deck-builder .category .actions[data-count="0"] {
-  background: rgba(0, 0, 0, 0.4);
   left: 0 !important;
   top: 0 !important;
   width: 100% !important;
@@ -432,6 +443,11 @@ body h4 {
   transform: translateY(-50%);
 }
 
+@media only screen and (min-width: 2000px) {
+  .deck-builder .decklist {
+    font-size: 1.5em;
+  }
+}
 @media only screen and (min-width: 1500px) {
   .category .image {
     margin-right: 5px;
