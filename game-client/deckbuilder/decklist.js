@@ -77,20 +77,6 @@ const DeckList =
                 <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
                 <textarea id="notes" placeholder="Deck notes (optional)"></textarea>
             </div>
-        </div>
-
-        <div id="deckentry-tpl" class="hidden">
-            <div id="IDID_id" class="dflex card_of_deck_construct" data-index="{index}">
-                <span class="action"  data-is-deck="{data-is-deck}">
-                    <a href="#" class="deck_add icon_add" title="increase">
-                        <img src="/media/assets/images/icon-transparent.png" alt="add">
-                    </a>
-                    <a href="#" class="deck_rem icon_remove" title="decrease">
-                        <img src="/media/assets/images/icon-transparent.png" alt="decrease">
-                    </a>
-                </span>
-                <span class="title card_deck_title" title="copy to clipboard">{title}</span>&nbsp;(<span class="count count_deck_entry">1</span>)
-            </div>
         </div>`;
 
         const divButton = document.createElement("button");
@@ -216,7 +202,7 @@ const DeckList =
                 continue;
             
             ViewCards.config.vsDeckContainerIds.push({ "id" : "hazards_" + index, "type" : _val, "resource":false});
-            html += '<div id="hazards_'+ index + '" class="d_container deck_part hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
+            html += '<div id="hazards_'+ index + '" class="d_container deck_part deck-group hidden"><h4>'+ _val + ' (<span class="count_type">0</span>)</h4><div class="result mt5"></div></div>';
         }
 
         {
@@ -466,7 +452,7 @@ const DeckList =
             <a href="#" class="deck_move_play decklist-action-move" data-target="play" title="Move to playdeck"></a>
             <a href="#" class="deck_move_sideboard decklist-action-move" data-target="sideboard" title="Move to sideboard"></a>
         </span>
-        <span class="title card_deck_title">${pCard.code}</span>&nbsp;(<span class="count count_deck_entry">1</span>)`;
+        <span class="count count_deck_entry">1</span>&nbsp;<span class="title card_deck_title">${pCard.code}</span>`;
         return div;
     },
     
@@ -721,8 +707,6 @@ const DeckList =
         let target = elem.querySelector(".count_type_col");
         if (target !== null)
             target.innerText = count;
-
-        //
     },
 
     recountAll : function()
@@ -782,3 +766,5 @@ const DeckList =
 document.body.addEventListener("meccg-deckbuilder-preparedecklist", DeckList.prepareDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-add-to-decklist", DeckList.onAddToDeckList, false);
 document.body.addEventListener("meccg-deckbuilder-update-summary", DeckList.calculateAndUpdateDeckCounters, false);
+
+document.body.addEventListener("meccg-deck-load-complete", DeckList.recountAll.bind(DeckList));
