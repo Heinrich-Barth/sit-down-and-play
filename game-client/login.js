@@ -47,9 +47,6 @@ const getCategoryCount = function(jDeck)
 
 const addDeckNotes = function(text)
 {
-    if (text === undefined)
-        text = "";
-
     const pNotes = document.getElementById("notes");
     if (pNotes === null)
         return;
@@ -57,16 +54,32 @@ const addDeckNotes = function(text)
     while (pNotes.firstChild) 
         pNotes.removeChild(pNotes.firstChild);
 
-    if (text !== "")
+    if (text === undefined || text === "")
+        return;
+
+    const h2 = document.createElement("h2");
+    h2.innerText = "Deck notes";
+    pNotes.appendChild(h2);
+
+    for (let _line of text.trim().split("\n"))
     {
-        const h2 = document.createElement("h2");
-        h2.innerText = "Deck notes";
-    
-        const p = document.createElement("p");
-        p.innerText = text;
-    
-        pNotes.appendChild(h2);
-        pNotes.appendChild(p);
+        const line = _line.trim();
+        if (line === "")
+            continue;
+
+        if (line.startsWith("="))
+        {
+            const p = document.createElement("h3");
+            p.innerText = line.substring(1).trim();
+            if (p.innerText !== "")
+                pNotes.appendChild(p);
+        }
+        else
+        {
+            const p = document.createElement("p");
+            p.innerText = line;
+            pNotes.appendChild(p);
+        }
     }
 };
 
@@ -292,6 +305,8 @@ const onChallengeDeckChosen = function(e)
     document.getElementById("toggle_isstandard").click();
 
     document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_jDecks[nArray].decks[sKey] }));
+
+    setTimeout(() => CalculateDeckCategory.calculateAll(), 500);
 }
 
 const stripHashFromUrl = function()
@@ -350,11 +365,17 @@ const onPerformLogin = function()
         return false;
     }
 
-    document.getElementById("form").querySelector("textarea").value = JSON.stringify(
-    {
+    const share = document.getElementById("shareonsocialmedia_message");
+    const shareName = document.getElementById("shareonsocialmedia_personalised");
+
+    const bodyData = {
         name: sName,
+        share: share !== null && share.checked,
+        shareName: shareName !== null && shareName.checked,
         deck: jDeck
-    });
+    }
+
+    document.getElementById("form").querySelector("textarea").value = JSON.stringify(bodyData);
 
     const gameType = getGameType();
     const sUrlTarget = getTargetUrl(sUrl, gameType);
@@ -455,6 +476,118 @@ const onProcessDeckCheckResult = function(codes)
     document.body.classList.remove("isLoggingIn");
 };
 
+/**
+ * Calculates number of cards of type (resource, character, etc.)
+ */
+const CalculateDeckCategory = 
+{
+    calculate : function(e)
+    {
+        this.calculateList(e.target);
+    },
+
+    calculateList : function(elem)
+    {
+        if (elem === null)
+            return;
+
+        const id = elem.getAttribute("data-id");
+        if (id === null || id === "")
+            return;
+    
+        const h3 = document.getElementById(id);
+        if (h3 === null)
+            return;
+    
+        const label = this.stripCount(h3.innerText);
+        const size = this.countList(elem.value.trim());
+
+        h3.innerText = label + " (" + size + ")";
+    },
+
+    calculateById : function(id)
+    {
+        this.calculateList(document.getElementById(id));
+    },
+
+    calculateAll : function()
+    {
+        this.calculateById("resources");
+        this.calculateById("hazards");
+        this.calculateById("sideboard");
+        this.calculateById("characters");
+        this.calculateById("pool");
+    },
+
+    countList : function(text)
+    {
+        let size = 0;
+
+        for (let line of text.split("\n"))
+            size += this.getCount(line.trim());
+
+        return size;
+    },
+
+    getCount : function(line)
+    {
+        if (line === null || line === "")
+            return 0;
+
+        try
+        {
+            const pos = line.indexOf(" ")
+            const val = pos < 1 ? "" : line.substring(0, pos).trim();
+
+            if (val !== "")
+                return parseInt(val);
+        }
+        catch (errIgnore)
+        {
+
+        }
+
+        return 0;
+    },
+
+    stripCount : function(label)
+    {
+        const nPos = label.indexOf(" (");
+        if (nPos === -1)
+            return label;
+        else
+            return label.substring(0, nPos).trim();
+    },
+
+    initTextareaOnClick:function(elemid)
+    {
+        const elem = document.getElementById(elemid);
+        if (elem === null || elem.parentElement === null || elem.parentElement.parentElement === null)
+            return;
+
+        const pParent = elem.parentElement.parentElement;
+        const h3 = pParent.querySelector("h3");
+        if (h3 !== null)
+        {
+            h3.setAttribute("id", "label-" + elemid);
+            elem.setAttribute("data-id", "label-" + elemid);
+            elem.onchange = CalculateDeckCategory.calculate.bind(CalculateDeckCategory);
+        }
+    },
+
+    init : function()
+    {
+        this.initTextareaOnClick("resources");
+        this.initTextareaOnClick("hazards");
+        this.initTextareaOnClick("sideboard");
+        this.initTextareaOnClick("characters");
+        this.initTextareaOnClick("pool");
+    }
+};
+
+
+
+
 const onCheckCardCodes = function()
 {
     if (!validateUserName())
@@ -547,8 +680,9 @@ const loadSampleUserName = function()
         }
     }
 
-    document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "login" })); /** update the deck list view */
+    CalculateDeckCategory.init();
 
+    document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "login" })); /** update the deck list view */
 })();
 
 document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);
