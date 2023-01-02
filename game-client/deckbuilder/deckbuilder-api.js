@@ -141,6 +141,8 @@ const DeckbuilderApi =
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Some cards are missing. Check description field at the end." }));
 
         document.getElementById("notes").value = DeckbuilderApi.createNotesText(sNotes, vsMissing);
+        document.body.dispatchEvent(new CustomEvent("meccg-deck-load-complete"));
+        document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-update-summary"));
     },
 
     isEmptyArray : function(vsMissing)
@@ -323,13 +325,13 @@ let g_bKeyIsCtrl = false;
 document.addEventListener('keyup', () => g_bKeyIsCtrl = false);
 document.addEventListener('keydown', function(e)
 {
-    if (e.keyCode == 17) 
+    if (e.key === "Control") 
     {
         e.preventDefault();
         g_bKeyIsCtrl = true;
     }
 
-	if (e.keyCode == 83 && g_bKeyIsCtrl)
+	if (e.key === "s" && g_bKeyIsCtrl)
     {
         g_bKeyIsCtrl = false;
         e.preventDefault();
