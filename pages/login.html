@@ -27,15 +27,18 @@
                 <div class="fields-join">
                     <input type="text" class="w50" name="user" id="user" placeholder="Who are you to the others?" value="{DISPLAYNAME}"
                         maxlength="20" placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
-
                     <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Join Game</button>
 
                 </div>
                 <p class="arda-text">
-                        Choose a game type:
-                        <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label>
-                        <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label>
-                        <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                    Choose a game type:
+                    <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label>
+                    <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label>
+                    <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                </p>
+                <p class="arda-text">
+                    <input type="checkbox" name="shareonsocialmedia_message" value="true" id="shareonsocialmedia_message" checked/><label for="shareonsocialmedia_message">Share game spectator link on Discord (anonymous message)</label><br>
+                    <input type="checkbox" name="shareonsocialmedia_personalised" value="true" id="shareonsocialmedia_personalised" checked/><label for="shareonsocialmedia_personalised">Include my player name in Discord message (this will reveal your display name)</label><br>
                 </p>
 
                 <div class="fields hidden" id="invalid-cards-info">
