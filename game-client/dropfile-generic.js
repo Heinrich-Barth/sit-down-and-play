@@ -16,10 +16,18 @@ const DropZone = {
         if (file === undefined)
             return;
 
-        const reader = new FileReader();
-        reader.onerror = () => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot read given file." }));
-        reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
-        reader.readAsText(file);
+        try
+        {
+            const reader = new FileReader();
+            reader.onerror = () => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot read given file." }));
+            reader.onload = (event) => DropZone.onFileRead(event.target.result, file.name);
+            reader.readAsText(file);
+        }
+        catch(err)
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot read given file." }));   
+            console.error(err);
+        }
     },
 
     onFileRead : function(sText, file)
