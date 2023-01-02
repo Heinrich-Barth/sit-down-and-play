@@ -878,6 +878,15 @@ const GameCompanies = {
         DomUtils.removeAllChildNodes(pSites.querySelector(".site-regions"));
     },
 
+    onArriveAtOrigin: function (pSites)
+    {
+        if (pSites !== null)
+        {
+            DomUtils.removeAllChildNodes(pSites.querySelector(".site-target"));
+            DomUtils.removeAllChildNodes(pSites.querySelector(".site-regions"));
+        }
+    },
+
     onEnterSitePhase: function (sCurrent, bIsMe)
     {
         if (bIsMe)
@@ -898,6 +907,18 @@ const GameCompanies = {
             const pCompany= document.getElementById("company_" + sCompanyId);
             if (pCompany !== null)
                 GameCompanies.onArriveAtTarget(pCompany.querySelector(".sites"));
+        }
+        
+        document.body.dispatchEvent(new CustomEvent("meccg-highlight", { "detail": sCompanyId }));
+    },
+
+    onCompanyReturnsToOrigin : function (sCompanyId, bReduceSites)
+    {
+        if (typeof bReduceSites === "undefined" || bReduceSites)
+        {
+            const pCompany= document.getElementById("company_" + sCompanyId);
+            if (pCompany !== null)
+                GameCompanies.onArriveAtOrigin(pCompany.querySelector(".sites"));
         }
         
         document.body.dispatchEvent(new CustomEvent("meccg-highlight", { "detail": sCompanyId }));
