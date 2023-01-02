@@ -78,6 +78,16 @@
         }
     }
 
+    .card-list-number {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: #ff0;
+        color: #000;
+        border-radius: 4px;
+        padding: 0.3em;
+    }
+
     a,
     a:hover
     {

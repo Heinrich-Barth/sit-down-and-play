@@ -45,7 +45,7 @@ class ViewCardListContainer {
         ViewCardListContainer.scrollToTop(container.querySelector(".container-data"));
     }
 
-    static createCardContainer(code, uuid, type, bShowCardPreview) 
+    static createCardContainer(code, uuid, type, bShowCardPreview, cardNumber) 
     {
         let _img = ViewCardListContainer.CardList.getImage(code);
         let sCode = ViewCardListContainer.CardList.getSafeCode(code);
@@ -72,6 +72,15 @@ class ViewCardListContainer {
                 <a href="#" class="icon playdeck" data-move-to="playdeck" data-shuffle="false" title="Move to top of playdeck">&nbsp;</a>
                 <a href="#" class="icon onoffer" data-move-to="offer" data-shuffle="false" title="Reveal to opponent">&nbsp;</a>
             </div>`;
+
+        if (cardNumber !== undefined && cardNumber > 0)
+        {
+            const data = document.createElement("span");
+            data.setAttribute("class", "card-list-number");
+            data.innerText = cardNumber;
+            elem.appendChild(data);
+        } 
+    
         return elem;
     }
 
@@ -132,9 +141,13 @@ class ViewCardListContainer {
         if (typeof bRevealPreview === "undefined")
             bRevealPreview = true;
 
+        let count = 0;
         const elem = document.createDocumentFragment();
         for (let card of vsList)
-            elem.appendChild(ViewCardListContainer.createCardContainer(card.code, card.uuid, card.type, bRevealPreview));
+        {
+            count++;
+            elem.appendChild(ViewCardListContainer.createCardContainer(card.code, card.uuid, card.type, bRevealPreview, count));
+        }
 
         return elem;
     }

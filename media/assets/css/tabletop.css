@@ -1,8 +1,3 @@
-/* Extra small devices (phones, 600px and down) */
-/* Small devices (portrait tablets and large phones, 600px and up) */
-/* Medium devices (landscape tablets, 768px and up) */
-/* Large devices (laptops/desktops, 992px and up) */
-/* Extra large devices (large laptops and desktops, 1200px and up) */
 html {
   height: 100%;
   width: 100%;
@@ -543,6 +538,15 @@ img.card-icon {
   border-radius: 5px;
   background-position-y: 0 !important;
   background-color: rgba(0, 0, 0, 0.6) !important;
+}
+.view-card-list-container .card-list-number {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #ff0;
+  color: #000;
+  border-radius: 4px;
+  padding: 0.3em;
 }
 .view-card-list-container a,
 .view-card-list-container a:hover {
