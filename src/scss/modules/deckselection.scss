@@ -8,9 +8,11 @@ body {
 
 h1 {
     text-align: center;
+    padding-top: 2em;
 }
 h2 {
     font-size: 1.2em;
+    padding-top: 1.5em;
 }
 
 .ǵame-join-screen .content .inner-content {
@@ -113,12 +115,6 @@ h2 {
     }
 }
 
-h1 {
-    padding-top: 2em;
-}
-h2 {
-    padding-top: 1.5em;
-}
 
 .converter h2,
 h3 {
@@ -190,6 +186,10 @@ h3 {
 
     details{
         max-width: 99% !important;
+    }
+
+    .label-after {
+        display: block;
     }
 }
 
