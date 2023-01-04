@@ -1,0 +1,19 @@
+{
+    "name": "Sit Down and Play MECCG",
+    "short_name": "SitPlayMeccg",
+    "description": "Play MECCG",
+    "start_url": "/play",
+    "scope": "/",
+    "id": "/play",
+    "display": "minimal-ui",
+    "background_color": "#000",
+    "theme_color": "#000",
+    "orientation": "portrait-primary",
+    "icons": [
+      {
+        "src": "/media/assets/favicon.png",
+        "type": "image/png",
+        "sizes": "100x100"
+      }
+    ]
+  }
