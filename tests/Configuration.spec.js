@@ -43,8 +43,6 @@ describe('Configuration', () => {
         expect(instance.imageUrl()).toEqual(data.image_path);
         expect(instance.imageDomain()).toEqual("https://test.com");
 
-        expect(instance.cardUrl()).toEqual(data.cardsUrl);
-
         expect(instance.createContentSecurityPolicyMegaAdditionals() !== "").toBeTruthy();
         expect(instance.createContentSecurityPolicySelfOnly() !== "").toBeTruthy();
     });

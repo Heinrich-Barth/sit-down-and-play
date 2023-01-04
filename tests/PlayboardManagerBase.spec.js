@@ -3,9 +3,9 @@ const PlayboardManagerBase = require("../game-management/PlayboardManagerBase");
 
 
 const pInstance = new PlayboardManagerBase({
-    trigger : function(_sId, _obj)
+    trigger : function(sId, obj)
     {
-    /* not needed */
+
     }
 });
 
@@ -16,7 +16,7 @@ describe('Test Default Value', () => {
 
         let _val = false;
 
-        const ppInstance = new PlayboardManagerBase({
+        const pInstance = new PlayboardManagerBase({
             trigger : function(sId, obj)
             {
                 expect(sId).toEqual("setup-new-game");
@@ -25,7 +25,7 @@ describe('Test Default Value', () => {
             }
         });
 
-        ppInstance.triggerEventSetupNewGame();
+        pInstance.triggerEventSetupNewGame();
         expect(_val).toEqual(true);
     });
 

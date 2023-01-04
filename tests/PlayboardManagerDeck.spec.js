@@ -72,7 +72,7 @@ class PlayboardManagerDeckTestImplThisDeck extends PlayboardManagerDeck
 {
     constructor(_dat)
     {
-        super({}, [], { trigger : function() { /* not needed */} }, gameCardProvider);
+        super({}, [], { trigger : function(sId, obj) {} }, gameCardProvider);
 
         this._dat = _dat;
     }
@@ -87,13 +87,13 @@ class PlayboardManagerDeckTestImpl extends PlayboardManagerDeck
 {
     constructor(_deck)
     {
-        super(_deck, [], { trigger : function() {/* not needed */} }, gameCardProvider);
+        super(_deck, [], { trigger : function(sId, obj) {} }, gameCardProvider);
     }
 }
 
 const gameCardProvider =  {
 
-    getCardType: function(_code)
+    getCardType: function(code)
     {
         return "character";
     }
@@ -157,7 +157,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readyCard(_uuid)
+            readyCard(uuid)
             {
                 isReady = true;
             }
@@ -166,7 +166,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 return !this.readyCard(uuid);
             }
-        }
+        };
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
 
@@ -188,7 +188,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 return uuid ? true : false;
             }
-        }
+        };
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
@@ -204,7 +204,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readySite(_uuid)
+            readySite(uuid)
             {
                 ready++;
             }
@@ -213,7 +213,7 @@ describe('PlayboardManagerDeck', () => {
             {
                 tapped++;
             }
-        }
+        };
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
@@ -232,11 +232,11 @@ describe('PlayboardManagerDeck', () => {
         
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            siteIsTapped(_playerId, code)
+            siteIsTapped(playerId, code)
             {
                 return code;
             }
-        }
+        };
 
         let pInstance = new PlayboardManagerDeckTestImplThisDeck(new DeckManagerTestI());
         
@@ -252,7 +252,7 @@ describe('PlayboardManagerDeck', () => {
         let count = 0;
 
         let pDeck = new DeckManagerTestStaticDeck({
-            shuffle(_playerId, _code)
+            shuffle(playerId, code)
             {
                 count++;
             }
@@ -289,7 +289,7 @@ describe('PlayboardManagerDeck', () => {
 
         class DeckManagerTestI extends DeckManagerTestStaticDeck
         {
-            readyCard(_uuid)
+            readyCard(uuid)
             {
                 s0++;
             }
