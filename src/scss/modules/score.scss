@@ -147,6 +147,17 @@
             right: 50%;
             transform: translate(50%, -50%);
             font-size: 1.1em;
+
+            .return-to-lobby a{
+                display: block !important;
+                text-transform: uppercase;
+                color: #ff0;
+                font-size: 0.8em;
+
+                &:hover {
+                    color: #ffa500;
+                }
+            }
         }
 
         .menu-overlay {
@@ -173,7 +184,6 @@
 
 .scoring-sheet .button,
 .scoring-card .button {
-    background-color: #98c593;
     border: 0;
     border-radius: 3.5em;
     color: #ffffff;
@@ -198,12 +208,12 @@
 
     .view-card-list-container {
         max-height: 500px;
-        width: 545px;
-        max-width: 50%;
+        width: 67%;
         overflow: auto;
         left: 5%;
-        top: 5%;
+        top: 5px;
         transform: none;
+        bottom: auto;
     }
 
     .container-title-bar-title {

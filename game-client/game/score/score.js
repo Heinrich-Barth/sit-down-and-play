@@ -409,12 +409,32 @@ const SCORING = {
 
     removeUpdateFunctionality()
     {
-        document.getElementById("scoring-sheet").classList.add("final-score");
+        const elem = document.getElementById("scoring-sheet");
+        if (elem === null)
+            return;
+
+        elem.classList.add("final-score");
         DomUtils.remove(document.getElementById("view-score-sheet-card-list"));
 
-        const overlay = document.getElementById("scoring-sheet").querySelector(".menu-overlay");
+        const overlay = elem.querySelector(".menu-overlay");
         overlay.classList.remove("hidden");
         overlay.onclick = () => { return false; };
+
+        const table = elem.querySelector(".view-score-container");
+        if (table === null)
+            return;
+
+        const p = document.createElement("p");
+        p.classList.add("center")
+        p.classList.add("return-to-lobby")
+        
+        const a = document.createElement("a");
+        a.setAttribute("href", "/");
+        a.setAttribute("title", "Leave game and return to lobby");
+        a.innerText = "Return to lobby."
+
+        p.appendChild(a);
+        table.appendChild(p);
     },
     
     showScoreSheetCards : function(listCards)
