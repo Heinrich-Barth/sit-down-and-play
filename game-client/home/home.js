@@ -114,8 +114,6 @@ const onResult = function(data)
     showContainer("active_games");
     hideContainer("no_games");
     loadSampleRooms(existing);
-
-    console.log("HALLO");
 };
 
 const isAlphaNumeric = function(sInput)
@@ -168,7 +166,13 @@ const fetchAndUpdateGames = function()
 
     document.getElementById("enter_room").onkeyup = function (e) 
     {
-        if (e.which === 13) 
+        let code = "";
+        if (e.key !== undefined)
+            code = e.key;
+        else if (e.keyIdentifier !== undefined)
+            code = e.keyIdentifier;
+
+        if (code === "Enter")
         {
             document.getElementById("start_game").dispatchEvent(new Event('click'));
             e.preventDefault();
