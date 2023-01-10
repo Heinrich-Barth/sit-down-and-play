@@ -168,6 +168,44 @@ class GamePreferences extends Preferences {
         return Preferences._getConfigValue("game_sfx") > 5;
     }
 
+    init()
+    {
+        super.init();
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "config-zoom blue-box " + this.getGameCss());
+
+        const icons = document.createElement("div");
+        icons.setAttribute("class", "icons cursor-pointer");
+        icons.setAttribute("data-level", "0");
+        icons.setAttribute("id", "zoom-level");
+        icons.setAttribute("title", "Toggle zoom level")
+        icons.innerHTML = '<i class="fa fa-search-plus" aria-hidden="true" title="Toogle zoom"></i>';
+
+        icons.onclick = this.toggleZoom.bind(this);
+        div.appendChild(icons);
+        document.body.appendChild(div);
+    }
+
+    toggleZoom()
+    {
+        const elem = document.getElementById("zoom-level");
+        if (elem === null)
+            return;
+
+        const level = parseInt(elem.getAttribute("data-level"));
+        let cssOld = level < 1 ? "" : "zoom-" + level;
+        let cssNew = level === 2 ? "" : "zoom-" + (level+1);
+
+        if (cssNew !== "")
+            document.body.classList.add(cssNew);
+
+        if (cssOld !== "")
+            document.body.classList.remove(cssOld);
+
+        const newZoom = level < 2 ? level + 1 : 0;
+        elem.setAttribute("data-level", newZoom);
+    }
 }
 
 const g_pGamesPreferences = new GamePreferences();

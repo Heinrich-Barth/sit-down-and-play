@@ -154,8 +154,6 @@ a {
 }
 
 img.card-icon {
-    width: 57px;
-    height: 80px;
     background: url("/data/backside") 0 0 no-repeat;
     background-size: contain;
 }
@@ -239,8 +237,10 @@ img.card-icon {
     .card-hand {
         display: inline-block;
         position: relative;
-        width: 60px;
-        min-height: 60px;
+    }
+
+    .card-draw {
+        width: 100%;
     }
 
     .hand-card-sizer {
@@ -329,7 +329,6 @@ img.card-icon {
         margin-left: 2px;
 
         img.card-icon {
-            height: 70px;
             width: auto;
         }
     }
@@ -362,9 +361,7 @@ img.card-icon {
         }
 
         .company-site-list {
-            height: 83px;
-            max-height: 83px;
-            min-width: 72px;
+            min-height: 80px;
             padding: 5px;
             border-bottom: 3px dashed black;
         }
@@ -403,126 +400,13 @@ img.card-icon {
 }
 
 @import "tabletop-dragging.scss";
+@import "tabletop_zoomlevels.scss";
 
 .company-character-reosurces,
 .company-character-reosurces .card,
 .company-character-host {
     position: relative;
     text-align: left;
-}
-
-.company-character-reosurces {
-    margin-top: -60px;
-    min-height: 84px;
-
-    .card {
-        margin-top: -60px;
-        z-index: 101;
-        max-height: 80px;
-        display: flex;
-
-        &:nth-child(1) {
-            transform: translateX(15px);
-        }
-
-        &:nth-child(2) {
-            transform: translateX(30px);
-        }
-
-        &:nth-child(3) {
-            transform: translateX(45px);
-        }
-
-        &:nth-child(4) {
-            transform: translateX(60px);
-        }
-
-        &:nth-child(5) {
-            transform: translateX(75px);
-        }
-
-        &:nth-child(6) {
-            transform: translateX(90px);
-        }
-
-        &:nth-child(7) {
-            transform: translateX(105px);
-        }
-
-        &:nth-child(8) {
-            transform: translateX(130px);
-        }
-
-        &:nth-child(9) {
-            transform: translateX(145px);
-        }
-
-        &:nth-child(10) {
-            transform: translateX(160px);
-        }
-
-        &:nth-child(10) {
-            transform: translateX(175px);
-        }
-
-        &:nth-child(11) {
-            transform: translateX(190px);
-        }
-
-        &:nth-child(12) {
-            transform: translateX(205px);
-        }
-    }
-}
-
-.company-character-reosurces {
-    &[data-stack-size="1"] {
-        width: 72px
-    }
-
-    &[data-stack-size="2"] {
-        width: 87px
-    }
-
-    &[data-stack-size="3"] {
-        width: 102px
-    }
-
-    &[data-stack-size="4"] {
-        width: 117px
-    }
-
-    &[data-stack-size="5"] {
-        width: 132px
-    }
-
-    &[data-stack-size="6"] {
-        width: 147px
-    }
-
-    &[data-stack-size="7"] {
-        width: 162px
-    }
-
-    &[data-stack-size="8"] {
-        width: 177px
-    }
-
-    &[data-stack-size="9"] {
-        width: 192px
-    }
-
-    &[data-stack-size="10"] {
-        width: 207px
-    }
-
-    &[data-stack-size="11"] {
-        width: 222px
-    }
-
-    &[data-stack-size="12"] {
-        width: 237px
-    }
 }
 
 .site-regions .card,

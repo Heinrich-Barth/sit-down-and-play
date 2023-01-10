@@ -14,9 +14,11 @@
 .view-card-list-container 
 {
     position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 15%;
+    top: 15%;
+    right: 15%;
+    bottom: 15%;
+    overflow-y: auto;
     padding: 15px;
     z-index: 1001;
 
@@ -40,14 +42,6 @@
     img.card-icon {
         width: auto;
         height: 150px;
-    }
-    
-    .container-data
-    {
-        overflow-y: auto;
-        max-width: 100%;
-        min-height: 104px;
-        max-height: 510px;
     }
     
     .card-hand {
@@ -146,6 +140,7 @@
         }
     }
 
+    /*
     &.view-victory {
         position: relative;
         left: 0;
@@ -153,6 +148,7 @@
         transform: none;
         background: rgba(0,0,0,0.9);
     }
+    */
 }
 
 

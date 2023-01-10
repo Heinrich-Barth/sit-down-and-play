@@ -325,15 +325,16 @@ const MeccgApi =
             player_access_token_once : MeccgApi.getOneTimeAccessToken()
         });
     },
+
+    forceEndGame : function()
+    {
+        MeccgApi.expectDisconnect();
+        MeccgApi.send("/game/finalscore", {});
+    },
     
     queryEndGame : function()
     {
-        new Question("fa-sign-out").onOk(function() {
-
-            MeccgApi.expectDisconnect();
-            MeccgApi.send("/game/finalscore", {});
-
-        }).show("Do you want to end this game?", "Let's see the final scorings.", "End this game");
+        new Question("fa-sign-out").onOk(MeccgApi.forceEndGame).show("Do you want to end this game?", "Let's see the final scorings.", "End this game");
     },
 
     disconnectSocket : function()
@@ -350,6 +351,7 @@ const MeccgApi =
 };
 
 document.body.addEventListener("meccg-query-end-game", MeccgApi.queryEndGame.bind(MeccgApi), false);
+document.body.addEventListener("meccg-foce-end-game", MeccgApi.forceEndGame.bind(MeccgApi), false);
 document.body.addEventListener("meccg-api-init", () => {
     MeccgPlayers.onDocumentReady();
     MeccgApi.onDocumentReady();

@@ -1,0 +1,155 @@
+
+.zoom-1,
+.zoom-2 {
+
+    .company-character-reosurces {
+        margin-top: -90px;
+
+        .card
+        {
+            margin-top: -95px;
+        }
+    }
+}
+
+.zoom-1 {
+
+    .company-site-list,
+    img.card-icon {
+        height: 130px;
+    }
+}
+
+.zoom-2 {
+
+    .company-site-list,
+    img.card-icon {
+        height: 150px;
+    }
+}
+
+img.card-icon {
+    height: 80px;
+}
+
+.company-character-reosurces {
+    margin-top: -50px;
+    min-height: 84px;
+    display: flex;
+    flex-direction: column;
+
+    .card {
+        margin-top: -50px;
+        z-index: 101;
+
+        &:nth-child(1) {
+            transform: translateX(15px) translateY(0px);
+            margin-top: 0;
+        }
+
+        &:nth-child(2) {
+            transform: translateX(30px);
+        }
+
+        &:nth-child(3) {
+            transform: translateX(45px);
+        }
+
+        &:nth-child(4) {
+            transform: translateX(60px);
+        }
+
+        &:nth-child(5) {
+            transform: translateX(75px);
+        }
+
+        &:nth-child(6) {
+            transform: translateX(90px);
+        }
+
+        &:nth-child(7) {
+            transform: translateX(105px);
+        }
+
+        &:nth-child(8) {
+            transform: translateX(130px);
+        }
+
+        &:nth-child(9) {
+            transform: translateX(145px);
+        }
+
+        &:nth-child(10) {
+            transform: translateX(160px);
+        }
+
+        &:nth-child(11) {
+            transform: translateX(175px);
+        }
+
+        &:nth-child(12) {
+            transform: translateX(190px);
+        }
+
+        &:nth-child(13) {
+            transform: translateX(205px);
+        }
+    }
+
+    // this is the size of the stacked cards and the contianer width
+    &[data-stack-size="1"] {
+        width: 72px
+    }
+
+    &[data-stack-size="2"] {
+        width: 87px
+    }
+
+    &[data-stack-size="3"] {
+        width: 102px
+    }
+
+    &[data-stack-size="4"] {
+        width: 117px
+    }
+
+    &[data-stack-size="5"] {
+        width: 132px
+    }
+
+    &[data-stack-size="6"] {
+        width: 147px
+    }
+
+    &[data-stack-size="7"] {
+        width: 162px
+    }
+
+    &[data-stack-size="8"] {
+        width: 177px
+    }
+
+    &[data-stack-size="9"] {
+        width: 192px
+    }
+
+    &[data-stack-size="10"] {
+        width: 207px
+    }
+
+    &[data-stack-size="11"] {
+        width: 222px
+    }
+
+    &[data-stack-size="12"] {
+        width: 237px
+    }
+}
+
+.config-zoom {
+    position: absolute;
+    top: 100px !important;
+    color: #fff;
+    padding: 7px;
+
+}
