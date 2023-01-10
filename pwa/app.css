@@ -1,0 +1,36 @@
+body {
+    background-color: #000;
+    font-size: 15px;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.progress-value {
+    animation: load 3s normal infinite;
+    border-radius: 100px;
+    background: #fff;
+    height: 30px;
+    width: 10%;
+}
+
+@keyframes load {
+    0% {
+    margin-left: 0
+    }
+
+    50% {
+    margin-left: 100%;
+    }
+
+    100% {
+    margin-left: 0;
+    }
+}

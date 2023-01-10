@@ -1,8 +1,8 @@
 {
-    "name": "Sit Down and Play MECCG",
+    "name": "Sit Down and Play PWA",
     "short_name": "SitPlayMeccg",
-    "description": "Play MECCG",
-    "start_url": "/play",
+    "description": "Sit Down and Play",
+    "start_url": "/pwa/app.html",
     "scope": "/",
     "id": "/play",
     "display": "minimal-ui",
@@ -11,9 +11,14 @@
     "orientation": "portrait-primary",
     "icons": [
       {
-        "src": "/media/assets/favicon.png",
+        "src": "/pwa/icon-192.png",
         "type": "image/png",
-        "sizes": "100x100"
+        "sizes": "192x192"
+      },
+      {
+        "src": "/pwa/icon-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
       }
     ]
   }

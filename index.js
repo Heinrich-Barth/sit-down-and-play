@@ -162,6 +162,7 @@ const cspAllowRemoteImages = function(sPath)
            sPath.startsWith("/singleplayer") || 
            sPath.startsWith("/deckbuilder") || 
            sPath.startsWith("/cards") || 
+           sPath.startsWith("/pwa") || 
            sPath.startsWith("/map/"); 
 }
 
@@ -351,10 +352,15 @@ SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname 
 SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-region.jpg", SERVER.caching.headerData.jpeg));
 SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-site.jpg", SERVER.caching.headerData.jpeg));
 
+require("./pwa")(SERVER, g_pExpress, g_pAuthentication);
+
+SERVER.instance.use("/serviceWorker.js", g_pExpress.static(__dirname + "/serviceWorker.js"));
+
 /**
  * Get active games
  */
 SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.getActiveGames()).status(200));
+SERVER.instance.get("/data/games/:room", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getActiveGame(req.params.room)).status(200));
 
 /**
  * Get the status of a given player (access denied, waiting, addmitted)
@@ -468,7 +474,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
@@ -520,18 +526,12 @@ SERVER.instance.use(function(err, _req, res, _next)
         console.error(err);
         
     res.status(500);
-    res.format({
-      html: () => res.sendFile(__dirname + "/pages/error-500.html"),
-      json: () => res.json({ error: "Something went wrong" }),
-      default: () => res.type('txt').send("Something went wrong")
-    });
+    res.sendFile(__dirname + "/pages/error-500.html");
 });
 
 SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVER.onListenSetupSocketIo);
-
 {
     const seconds = SERVER.configuration.getRequestTimeout();
-    console.log("Request timeout is " + seconds + "s");
     SERVER.instanceListener.setTimeout(1000 * seconds);
 }
 
@@ -543,7 +543,13 @@ SERVER.instanceListener.on('clientError', (err, socket) =>
 
 console.log("Server started at port " + SERVER.configuration.port());
 
-process.on('beforeExit', code => {console.log(`Process will exit with code: ${code}`); })
+process.on('beforeExit', code => {
+    setTimeout(() => {
+        console.log(`Process will exit with code: ${code}`)
+        process.exit(code)
+    }, 100)
+})
+  
 process.on('exit', code => console.log(`Process exited with code: ${code}`));
 process.on('uncaughtException', err => console.error(err));
 process.on('unhandledRejection', (err, promise) => console.warn('Unhandled rejection at ', promise, `reason: ${err.message}`));
