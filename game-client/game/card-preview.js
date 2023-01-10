@@ -2,6 +2,11 @@
 const CardPreview = { };
 
 CardPreview.isVisitor = false;
+CardPreview.enableIdleCheck = false;
+CardPreview.lastActive = Date.now();
+CardPreview.allowIdleMax = 1000 * 60 * 15;
+CardPreview.idleForceShutdown = null;
+CardPreview.idleCountdownActive = false;
 
 CardPreview.getTargetContainer = function(bLeft, bTop)
 {
@@ -9,6 +14,36 @@ CardPreview.getTargetContainer = function(bLeft, bTop)
         return bTop ? document.getElementById("preview_left") : document.getElementById("preview_left_bottom");
     else
         return bTop ? document.getElementById("preview_right") : document.getElementById("preview_right_bottom");
+}
+
+CardPreview.updateActivity = function()
+{
+    if (CardPreview.enableIdleCheck)
+    {
+        CardPreview.lastActive = Date.now();
+        if (CardPreview.idleForceShutdown !== null)
+        {
+            clearTimeout(CardPreview.idleForceShutdown);
+            CardPreview.idleForceShutdown = null;
+            CardPreview.idleCountdownActive = false;
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Game is active again." }));    
+        }
+    }
+}
+
+CardPreview.checkIdle = function()
+{
+    const lMillisDif = Date.now() - CardPreview.lastActive;
+    if (lMillisDif < CardPreview.allowIdleMax)
+        return;
+    
+    if (CardPreview.idleForceShutdown === null)
+    {
+        CardPreview.idleCountdownActive = true;
+        CardPreview.idleForceShutdown = setTimeout( () => document.body.dispatchEvent(new CustomEvent("meccg-foce-end-game", { })), 1000 * 60 * 5);
+    }
+
+    document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "You have been idle for too long. Please interact with a card." }));    
 }
 
 CardPreview.addHover = function(id, bRight, bTop)
@@ -24,7 +59,7 @@ CardPreview.getElementPositionIsLeft = function(elem)
     if (elem === null)
         return null;
 
-    const elemLeft = elem.getBoundingClientRect().x - window.pageXOffset;
+    const elemLeft = elem.getBoundingClientRect().x - window.scrollX;
     const windowHalf = window.innerWidth / 2;
     return elemLeft < windowHalf;
 }
@@ -51,6 +86,8 @@ CardPreview.show = function(img, bLeft, bTop)
 
         const pImage = document.createElement("img");
         pImage.setAttribute("src", img);
+        pImage.setAttribute("crossorigin", "anonymous");
+
         elem.appendChild(pImage);
         elem.classList.remove("hidden");
     }
@@ -63,6 +100,7 @@ CardPreview.hide = function(bLeft, bTop)
     {
         elem.classList.add("hidden");
         DomUtils.removeAllChildNodes(elem);
+        CardPreview.updateActivity();
     }
 };
 
@@ -224,6 +262,13 @@ CardPreview.onDocumentReady = function()
     CardPreview._initView("preview_right_bottom");
 
     CardPreview._isReady = true;
+
+    if (g_sLobbyToken !== "" && document.body.getAttribute("data-is-game") === "true")
+    {
+        CardPreview.enableIdleCheck = true;
+        setInterval(CardPreview.checkIdle, 1000 * 60);
+    }
 }
+
 
 document.body.addEventListener("meccg-init-ready", CardPreview.onDocumentReady, false);
