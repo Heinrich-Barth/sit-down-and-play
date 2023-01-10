@@ -1,31 +1,34 @@
 
-document.body.addEventListener("keyup", function(ev)
+if (document.body.getAttribute("data-is-watcher") !== "true")
 {
-    let code = "";
-    if (ev.key !== undefined)
-        code = ev.key;
-    else if (ev.keyIdentifier !== undefined)
-        code = ev.keyIdentifier;
-
-    switch("" + code)
+    document.body.addEventListener("keyup", function(ev)
     {
-        /* ESC */
-        case "Escape":
-            MapWindow.close();
-            break;
+        let code = "";
+        if (ev.key !== undefined)
+            code = ev.key;
+        else if (ev.keyIdentifier !== undefined)
+            code = ev.keyIdentifier;
 
-        /* R */
-        case "r":
-            document.getElementById("playercard_hand").querySelector(".card-dice").dispatchEvent(new Event("click"));
-            break;
+        switch("" + code)
+        {
+            /* ESC */
+            case "Escape":
+                MapWindow.close();
+                break;
 
-        /* D */
-        case "d":
-            document.getElementById("draw_card").click();
-            break;
+            /* R */
+            case "r":
+                document.getElementById("playercard_hand").querySelector(".card-dice").dispatchEvent(new Event("click"));
+                break;
 
-        default:
-            break;
-    }
+            /* D */
+            case "d":
+                document.getElementById("draw_card").click();
+                break;
 
-}, false);
+            default:
+                break;
+        }
+
+    }, false);
+}

@@ -115,7 +115,13 @@ class MapViewRegionsFilterable {
 
     onKeyPress(e)
     {
-        if (e.which === 13)
+        let code = "";
+        if (e.key !== undefined)
+            code = e.key;
+        else if (e.keyIdentifier !== undefined)
+            code = e.keyIdentifier;
+
+        if (code === "Enter")
         {
             e.preventDefault();
             this.onSearchByTitle();

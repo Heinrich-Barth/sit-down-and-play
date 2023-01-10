@@ -120,14 +120,20 @@ const fetchTappedSites = function () {
 };
 
 function onKeyUp(ev) {
-    switch (ev.which) {
+    let code = "";
+    if (ev.key !== undefined)
+        code = ev.key;
+    else if (ev.keyIdentifier !== undefined)
+        code = e.keyIdentifier;
+
+    switch (code) {
         /* ESC */
-        case 27:
+        case "Escape":
             parent.postMessage({ type: "cancel" }, "*")
             break;
 
         /* ENTER */
-        case 13:
+        case "Enter":
             document.getElementById("movement_accept").dispatchEvent(new Event('click'));
             break;
 
