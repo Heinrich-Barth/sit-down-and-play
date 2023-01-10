@@ -399,6 +399,22 @@ const getTargetUrl = function(sUrl, gameType)
     return sReplace === "" ? sUrl : sUrl.replace("/play/", "/" + sReplace + "/");
 };
 
+const getRoomName = function()
+{
+    let sUrl = stripHashFromUrl();
+    let nPos = sUrl.indexOf("/login")
+    
+    if (nPos === -1)
+        return "";
+
+    sUrl = sUrl.substring(0, nPos);
+    nPos = sUrl.lastIndexOf("/");
+    if (nPos === -1)
+        return "";
+    else
+        return sUrl.substring(nPos+1);
+}
+
 const getGameType = function()
 {
     const gameTypes = document.getElementsByName("gameType");
@@ -668,6 +684,19 @@ const loadSampleUserName = function()
         console.log(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
     });
+
+    fetch("/data/games/" + getRoomName()).then((response) => response.json().then(data => {
+        if (data.exists === true)
+        {
+            const button = document.getElementById("host");
+            if (button !== null)
+                button.innerHTML = button.innerHTML.replace("Create ", "Join ");
+
+            const text = document.getElementById("game-type");
+            if (text !== null)
+                text.classList.add("hidden");
+        }
+    }));
 
     const forms = document.getElementsByTagName("form");
     const len = forms === null ? 0 : forms.length;
