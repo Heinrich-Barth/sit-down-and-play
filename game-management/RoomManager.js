@@ -172,6 +172,17 @@ class RoomManager {
         return this.filterPlayerList(room, true);
     }
 
+    getActiveGame(room)
+    {
+        if (room === undefined || room === null || room === "" || this._rooms[room] === undefined)
+            return { exists: false };
+
+        return {
+            exists : true,
+            players : this._rooms[room].getPlayers().length
+        }
+    }
+
     getActiveGames()
     {
         let room, userid, pRoom;
@@ -358,18 +369,6 @@ class RoomManager {
             delete pRoom.visitors[userId];
     }
 
-    inviteWaiting(room, userId) 
-    {
-        if (this._rooms[room] === undefined)
-            return;
-
-        const pRoom = this._rooms[room];
-        if (pRoom.players[userId] !== undefined)
-            pRoom.players[userId].setWaiting(false);
-        else if (pRoom.visitors[userId] !== undefined)
-            pRoom.visitors[userId].setWaiting(false);
-    }
-
     /**
      * Remove a player from the game
      * 
@@ -501,6 +500,8 @@ class RoomManager {
         pRoom.destroy();
 
         delete this._rooms[room];
+
+        this._eventManager.trigger("game-remove", room);
         console.log("Game " + room + " has ended.");
     }
 
@@ -611,6 +612,17 @@ class RoomManager {
         return this._rooms[room] !== undefined && this._rooms[room].getLobbyToken() === token;
     }
 
+    updateAccess(room, type, allow)
+    {
+        if (room !== "" && this._rooms[room] !== undefined)
+            this._rooms[room].updateAccess(type, allow);
+    }
+
+    grantAccess(room, isPlayer)
+    {
+        return room !== "" && this._rooms[room] !== undefined && this._rooms[room].grantAccess(isPlayer);
+    }
+
     addSpectator (room, userId, displayname) 
     {
         const pRoom = this._rooms[room];
@@ -620,6 +632,12 @@ class RoomManager {
         const lNow = Date.now();
         pRoom.addSpectator(userId, displayname, lNow);
         return lNow;
+    }
+
+    isSinglePlayer(room)
+    {
+        const pRoom = this.getRoom(room);
+        return pRoom !== null && pRoom.getGame().isSinglePlayer() ;
     }
 
     /**

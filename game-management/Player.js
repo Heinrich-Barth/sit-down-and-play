@@ -7,7 +7,7 @@ class Player
         this.name = displayname;
         this.deck = jDeck;
         this.admin = isAdmin;
-        this.waiting = !isAdmin;
+        this.waiting = false;
         this.timestamp = timeAdded;
         this.joined = false;
         this.socket = null;
