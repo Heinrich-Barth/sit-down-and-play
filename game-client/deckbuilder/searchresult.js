@@ -98,6 +98,7 @@ const SearchResult = {
                     _image.setAttribute("title", cardCode);
                     _image.setAttribute("class", "preview");
                     _image.setAttribute("decoding", "async");
+                    _image.setAttribute("crossorigin", "anonymous");
 
                     const _tmp = document.createElement("div");
                     _tmp.setAttribute("class", "image_overlay");
@@ -455,6 +456,7 @@ const SearchResult = {
         img.setAttribute("src", "/data/card-not-found-generic");
         img.setAttribute("data-src", "/data/card-not-found-generic");
         img.setAttribute("decoding", "async");
+        img.setAttribute("crossorigin", "anonymous");
 
         div.appendChild(img);
         

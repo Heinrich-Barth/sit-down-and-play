@@ -67,6 +67,7 @@ class DiscardPileAtTable
         let img = document.createElement("img");
         img.setAttribute("id", this.imgPrefix + playerId);
         img.setAttribute("src", "/data/backside");
+        img.setAttribute("crossorigin", "anonymous");
         img.setAttribute("class","card-icon discardpile-card-icon");
         img.setAttribute("data-image-backside", "/data/backside");
 

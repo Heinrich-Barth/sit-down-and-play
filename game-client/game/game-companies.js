@@ -164,6 +164,7 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
     pImage.setAttribute("data-img-image", img);
     pImage.setAttribute("data-image-path", "");
     pImage.setAttribute("data-image-backside", "/data/backside");
+    pImage.setAttribute("crossorigin", "anonymous");
     div.appendChild(pImage);
     return div;
 }
@@ -210,6 +211,7 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
     pImage.setAttribute("data-image-backside", _backside);
     pImage.setAttribute("data-image-path", "");
     pImage.setAttribute("decoding", "async");
+    pImage.setAttribute("crossorigin", "anonymous");
     pImage.setAttribute("data-uuid", card.uuid);
     pImage.setAttribute("data-img-image", GameCompanies.CardList.getImage(card.code));
 

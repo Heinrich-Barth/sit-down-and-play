@@ -75,6 +75,7 @@ class MapViewUnderdeeps extends MapView {
         const sCss = isHidden === true ? "hidden" : "";
         
         const img = document.createElement("img");
+        img.setAttribute("crossorigin", "anonymous");
         img.setAttribute("decoding", "async");
         if (isTapped !== true)
             img.setAttribute("class", "site-image " + sCss);

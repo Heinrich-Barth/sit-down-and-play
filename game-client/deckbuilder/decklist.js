@@ -605,10 +605,10 @@ const DeckList =
                 return;
            
             const _elem = document.getElementById("deck_card_view");
-            _elem.innerHTML = '<img decoding="async" src="' + getImageUrlByCode(pCard.code) + '">';
+            _elem.innerHTML = '<img decoding="async" crossorigin="anonymous" src="' + getImageUrlByCode(pCard.code) + '">';
             _elem.classList.remove("hidden");
         };
-        
+
         elem.onmouseout = function()
         {
             const _elem = document.getElementById("deck_card_view");

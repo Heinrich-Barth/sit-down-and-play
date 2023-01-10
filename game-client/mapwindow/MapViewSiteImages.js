@@ -137,6 +137,8 @@
         
         const img = document.createElement("img");
         img.setAttribute("decoding", "async");
+        img.setAttribute("crossorigin", "anonymous");
+
         if (isTapped !== true)
             img.setAttribute("class", "site-image");
         else

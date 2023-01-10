@@ -13,7 +13,7 @@ let Arda = {
         const div = document.createElement("div");
         div.setAttribute("class", "card-hand");
         div.setAttribute("id", "arda-hand-card-" + _uuid);
-        div.innerHTML = `<img decoding="async" src="${_img}" data-id="${_code}" class="card-icon">`;
+        div.innerHTML = `<img crossorigin="anonymous" decoding="async" src="${_img}" data-id="${_code}" class="card-icon">`;
 
         const divHover = document.createElement("div");
         divHover.setAttribute("class", "arda-actions");
