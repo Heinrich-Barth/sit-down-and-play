@@ -25,6 +25,16 @@ class Authenticator {
     getLoginPageData() {
         return "";
     }
+
+    signInFromPWA()
+    {
+        /** do nothing */
+    }
+
+    isSignedInPWA()
+    {
+        return false;
+    }
 }
 
 module.exports = Authenticator;

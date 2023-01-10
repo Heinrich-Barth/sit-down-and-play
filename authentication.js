@@ -66,5 +66,16 @@ module.exports = {
             next();
         else 
             res.status(403).send(pInstance.getLoginPageData());
+    },
+
+    signInFromPWA : function(_req, res, next)
+    {
+        pInstance.signInFromPWA(res);
+        next();
+    },
+
+    isSignedInPWA : function(req)
+    {
+        return pInstance.isSignedInPWA(req);
     }
 };
