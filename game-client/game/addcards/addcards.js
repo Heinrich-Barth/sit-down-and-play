@@ -89,7 +89,7 @@ const AddCardsInGame = {
 
     onAdd : function()
     {
-        let sText = document.getElementById("add-cards-wrapper").querySelector("textarea").value;
+        let sText = document.getElementById("add-cards-wrapper").querySelector("textarea").value.toLowerCase();
         if (sText === undefined || sText.trim() === "")
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Please add cards to the list." }));
