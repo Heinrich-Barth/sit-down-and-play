@@ -15,7 +15,7 @@ setTimeout(() => {
     div.appendChild(elem);
 
     const divParent = document.createElement("div");
-    divParent.setAttribute("class", "help-wrapper blue-box cursor-pointer");
+    divParent.setAttribute("class", "wrapper-topleft help-wrapper blue-box cursor-pointer");
     divParent.appendChild(div);
     divParent.onclick = () => window.open("/help", "_blank");
     

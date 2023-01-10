@@ -25,6 +25,21 @@ class GameRoom
         this.fnEndGame = fnEndGame;
         this.reconnectionCounts = {};
         this.socialMedia = false;
+        this.allowAccessPlayer = true;
+        this.allowAccessVisitor = true;
+    }
+
+    updateAccess(type, allow)
+    {
+        if (type === "visitor")
+            this.allowAccessVisitor = allow === true;
+        else if (type === "player")
+            this.allowAccessPlayer = allow === true;
+    }
+
+    grantAccess(isPlayer)
+    {
+        return isPlayer ? this.allowAccessPlayer : this.allowAccessVisitor;
     }
 
     getAllowSocialMedia()
@@ -166,10 +181,8 @@ class GameRoom
     {
         if (userId === undefined || userId === "")
             return null;
-        else if (this.players[userId] !== undefined)
-            return !this.players[userId].waiting
-        else if (this.visitors[userId] !== undefined)
-            return !this.visitors[userId].waiting;
+        else if (this.players[userId] !== undefined || this.visitors[userId] !== undefined)
+            return true;
         else
             return null;
     }
