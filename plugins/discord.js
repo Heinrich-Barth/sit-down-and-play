@@ -9,6 +9,59 @@ class Discord
     {
         this.hookUrl = HOOK_URL;
         this.platformUrl = PLATFORM_URL;
+        this.roomMessages = { };
+    }
+
+    createRoomEntry(room)
+    {
+        if (this.roomMessages[room] === undefined)
+        {
+            this.roomMessages[room] = {
+                id : "",
+                created : Date.now(),
+                message: ""
+            }
+        }
+    }
+
+    updateRoomMessageId(room, id)
+    {
+        if (this.roomMessages[room] !== undefined)
+            this.roomMessages[room].id = id;
+    }
+
+    updateRoomMessage(room, message)
+    {
+        if (this.roomMessages[room] === undefined)
+            return message;
+
+        let summary = message;
+
+        if (this.roomMessages[room] !== undefined)
+            summary = (this.roomMessages[room].message + " " + message).trim();
+
+        this.roomMessages[room].message = summary;
+        return summary;
+    }
+
+    saveDiscordMessageId(room, data)
+    {
+        try
+        {
+
+            if (data !== "")
+            {
+                const id = JSON.parse(data).id;
+                if (id !== undefined)
+                    this.updateRoomMessageId(room, id);
+            }
+        }
+        catch (err)
+        {
+            console.warn(err.message);
+        }
+
+        return "";
     }
 
     createMessageArda(room, name, isCreated, urlWatch, urlJoin)
@@ -21,9 +74,9 @@ class Discord
                 return `${name} just started new ARDA game (${room}). Drop by and watch at ${urlWatch} or join at ${urlJoin}`;
         }
         else if (name === "")
-            return `Another player joined the ARDA game at ${room}. Drop by and watch at ${urlWatch} or join at ${urlJoin}`;
+            return `Another player joined.`;
         else 
-            return `${name} joined joined the ARDA game at ${room}. Drop by and watch at ${urlWatch} or join at ${urlJoin}`;
+            return `${name} joined.`;
     }
 
     creeateMessageStandard(room, name, isCreated, urlWatch, urlJoin)
@@ -36,9 +89,9 @@ class Discord
                 return `${name} started a new game (${room}). Drop by and watch at ${urlWatch}`;
         }
         else if (name === "")
-            return `Another player joined the game ${room}. Drop by and watch ${urlWatch}`;
+            return ` Another player joined.`;
         else 
-            return `${name} joined the game at ${room}. Drop by and watch at ${urlWatch}`;
+            return ` ${name} joined.`;
     }
 
     createUrlWatch(room, isArda, platformUrl)
@@ -65,26 +118,70 @@ class Discord
             return this.creeateMessageStandard(room, name, isCreated, urlWatch, urlJoin)
     }
 
-    postNotification(hookUrl, message)
+    updateMessage(room, hookUrl, message)
     {
-        if (hookUrl === undefined || hookUrl === "" || message === "")
+        if (hookUrl === undefined || hookUrl === "" || message === "" || this.roomMessages[room] === undefined || this.roomMessages[room].id === undefined || this.roomMessages[room].id === "")
             return;
+            
+        try 
+        {
+            const req = https.request(this.getPostOptions(room, hookUrl)).on("error", (err) => console.warn(err.message));
+            req.write(JSON.stringify({
+                content: message
+            }));
+            req.end();
+        }
+        catch (err)
+        {
+            console.warn(err.message);
+        }
+    }
 
+    getPostOptions(room, hookUrl)
+    {
         const options = {
             hostname: 'discord.com',
             port: 443,
-            path: hookUrl,
+            path: hookUrl + "?wait=true",
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             }
         };
 
+        if (this.roomMessages[room] !== undefined && this.roomMessages[room].id !== "")
+        {
+            options.method = "PATCH";
+            options.path = hookUrl + "/messages/" + this.roomMessages[room].id;
+        }
+
+        return options;
+    }
+
+    postNotification(room, hookUrl, message, processResponse)
+    {
+        if (hookUrl === undefined || hookUrl === "" || message === "")
+            return;
+
+        this.createRoomEntry(room);
+        const prevMessage = this.updateRoomMessage(room, message);
+
         try 
         {
-            const req = https.request(options).on("error", (err) => console.warn(err.message));
+            const pThis = this;
+            const thisRoom = room;
+            const req = https.request(this.getPostOptions(room, hookUrl), function(res)
+            {
+                if (processResponse)
+                {
+                    let body = '';
+                    res.on('data', (chunk) => body += chunk);
+                    res.on('end', ()  => pThis.saveDiscordMessageId(thisRoom, body));    
+                }
+
+            }).on("error", (err) => console.warn(err.message));
             req.write(JSON.stringify({
-                content: message
+                content: prevMessage
             }));
             req.end();
         }
@@ -97,59 +194,80 @@ class Discord
     sendDiscordNotificationGame(room, isArda, name, isCreated)
     {
         if (room !== undefined && room !== "")
-            this.postNotification(this.hookUrl, this.createDiscordMessage(room, isArda, name, isCreated));
+            this.postNotification(room, this.hookUrl, this.createDiscordMessage(room, isArda, name, isCreated), isCreated);
+    }
+
+    compareScores( a, b ) 
+    {
+        if ( a.total > b.total )
+          return -1;
+        else if ( a.total < b.total )
+          return 1;
+        else
+            return 0;
+      }
+
+    sortScores(score, players)
+    {
+        if (score === undefined || players === undefined)
+            return [];
+
+        let list = [];
+
+        for (let id of Object.keys(score))
+        {
+            let _name = players[id];
+            if (_name === undefined || _name === "")
+                _name = "A player";
+
+            const val = this.calculateFinalScore(_name, score[id]);
+            list.push(val);
+        }
+
+        if (list.length > 1)
+            list.sort(this.compareScores);
+
+        return list;
     }
 
     createScoreMessage(room, finalScore)
     {
         if (room === undefined || room === "" || finalScore === undefined)
             return "";
+        else if (finalScore.score === undefined || finalScore.players === undefined || Object.keys(finalScore.players).length < 1)
+            return "The game " + room + " has ended.";
 
-        if (finalScore.score === undefined || finalScore.players === undefined || Object.keys(finalScore.players).length < 2)
-            return "";
+        const list = this.sortScores(finalScore.score, finalScore.players);
+        const winner = list.shift();
 
-        let list = [];
-        let winner = {
-            points: 0,
-            name: ""
-        }
+        return this.createScoredMessageResult(room, winner, list);
+    }
 
-        for (let id of Object.keys(finalScore.score))
+    createScoredMessageResult(room, winner, others)
+    {
+        if (winner.total === 0 || others.length === 0)
+            return "The game " + room + " has ended.";
+
+        let message = winner.name + " has won the game " + room + " scoring " + winner.total + " points (" + winner.details + ")";
+        for (let line of others)
         {
-            const _name = finalScore.players[id];
-            const val = this.calculateFinalScore(_name, finalScore.score[id]);
-
-            if (val.total > winner.points)
-            {
-                winner.points = val.total;
-                winner.name = _name !== undefined ? _name : "Another player";
-            }
-
-            list.push(val);
+            message += ",\n" + line.name + " scored " + line.total + " points";
+            if (line.total > 0)
+                message += " (" + line.details + ")";
         }
 
-        if (winner.name === "" || winner.points === 0)
-            return "";
-
-        let message = "";
-        for (let line of list)
-        {
-            if (winner.name === line.name)
-                message = line.name + " has won the game " + room + " scoring " + line.total + " points (" + line.details + ")";
-        }
-
-        for (let line of list)
-        {
-            if (winner.name !== line.name)
-                message += ",\n" + line.name + " scored " + line.total + " points (" + line.details + ")";
-        }
-
-        return message.trim();
+        return message.trim() + ".";
     }
 
     sendDiscordNotificationFinished(room, finalScore)
     {
-        this.postNotification(this.hookUrl, this.createScoreMessage(room, finalScore));
+        this.updateMessage(room, this.hookUrl, this.createScoreMessage(room, finalScore));
+    }
+
+    removeGame(room)
+    {
+        if (this.roomMessages[room] !== undefined)
+            delete this.roomMessages[room];
     }
 
     calculateFinalScore(name, score)
@@ -196,6 +314,7 @@ class Discord
             pEventManager.addEvent("game-created", this.sendDiscordMessageCreated.bind(this));
             pEventManager.addEvent("game-joined", this.sendDiscordMessageJoin.bind(this));
             pEventManager.addEvent("game-finished", this.sendDiscordNotificationFinished.bind(this));
+            pEventManager.addEvent("game-remove", this.removeGame.bind(this));
         }
     }
 }
