@@ -28,6 +28,29 @@ const GameBuilder = {
         document.body.addEventListener("meccg-disconnected", GameBuilder.onDisconnected.bind(GameBuilder));
         
         GameBuilder.initRestEndpoints();
+        GameBuilder.initAdditionals();
+    },
+
+    updateSpecatorCounter: function()
+    {
+        fetch("/data/spectators/" + g_sRoom).then((response) =>
+        {
+            if (response.status === 200)
+                response.json().then((data) => document.getElementById("game_spectators").innerText = data.count);
+
+        }).catch(console.error);  
+    },
+
+    initAdditionals : function()
+    {
+        if (GameBuilder._isVisitor === true || g_sRoom === undefined || g_sRoom === "")
+            return;
+
+        if (document.getElementById("game_spectators") !== null)
+        {
+            this.updateSpecatorCounter();
+            setInterval(GameBuilder.updateSpecatorCounter, GameBuilder._minuteInMillis); /* every minute */
+        }
     },
 
     isVisitor : function()
@@ -232,7 +255,7 @@ const GameBuilder = {
         const cardId = GameBuilder.Stagingarea.onAddCardToStagingArea(bIsMe, uuid, cardCode, type, state, revealed, turn, token, secondary);
         if (cardId === "")
             return false;
-        else if (bIsMe)
+        else 
             GameBuilder.HandCardsDraggable.initCardInStagingArea(cardId, "", type);
         
         return true;
@@ -353,13 +376,7 @@ const GameBuilder = {
 
         });
         
-        MeccgApi.addListener("/game/lobby/request", function()
-        {
-            if (GamePreferences.autoOpenLobby())
-                document.getElementById("lobby-wrapper").dispatchEvent(new Event('click'));
-            else
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "A player is in the lobby" }));
-        });
+        MeccgApi.addListener("/game/lobby/request", function() { /** deprecated */});
 
         MeccgApi.addListener("/game/dices/roll", function(bIsMe, jData)
         {
