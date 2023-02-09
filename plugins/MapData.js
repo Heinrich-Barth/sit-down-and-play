@@ -192,7 +192,7 @@ class MapData
                     jMapData[card.Region] = {
                         title: card.Region,
                         code: card.Region + " (" + card.set_code + ")",
-                        region_type: this.requireRegionType(null),
+                        region_type: this.requireRegionType(card),
                         dreamcard : card.dreamcard === true,
                         area: [],
                         sites: {}
@@ -214,33 +214,36 @@ class MapData
         if (val === undefined || val === null || val === "")
             return "";
     
-        switch(val)
+        switch(val.toLowerCase())
         {
-            case "Boarder-land":
-            case "Border-land":
+            case "boarder-land":
+            case "border-land":
             case "{b}":
                 return "bl";
-            case "Double Coastal Sea":
-            case "Triple Coastal Seas":
-            case "Coastal Sea":
+            case "double coastal sea":
+                return "cscs";
+            case "triple coastal seas":
+                return "cscscs";
+            case "coastal sea":
             case "{c}":
                 return "cs";
-            case "Dark-domain":
+            case "dark-domain":
             case "{d}":
                 return "dd";
-            case "Double Desert":
-            case "Desert":
+            case "double desert":
+            case "desert":
                 return "de";
-            case "Double Wilderness":
-            case "Wilderness":
+            case "double wilderness":
+                return "wiwi";
+            case "wilderness":
             case "{w}":
-                    return "wi";
-            case "Free-domain":
+                return "wi";
+            case "free-domain":
             case "{f}":
                 return "fd";
-            case "Jungle":
+            case "jungle":
                 return "ju";
-            case "Shadow-land":
+            case "shadow-land":
             case "{s}":
                 return "sl";
             default: 
@@ -310,6 +313,85 @@ class MapData
             console.log("\t- " + count + " sites available");
     }
 
+    replaceMapSiteCodesReplaceWithNew(jCards, region)
+    {            
+        for (let title in region.sites) 
+        {
+            for (let siteCardKey in region.sites[title]) 
+            {
+                switch (siteCardKey) 
+                {
+                    case "hero":
+                    case "minion":
+                    case "balrog":
+                    case "fallenwizard":
+                    case "fallenlord":
+                    case "lord":
+                    case "grey":
+                    case "dragonlord":
+                    case "warlord":
+                    case "elflord":
+                    case "atanilord":
+                    case "dwarflord":
+
+                        this.updateCard(region.sites[title][siteCardKey], jCards);
+                        break;
+
+                    case "has_core_sites":
+                        delete region.sites[title]["has_core_sites"];
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    isRemovableSiteKey(siteCardKey)
+    {
+        switch (siteCardKey) 
+        {
+            case "hero":
+            case "minion":
+            case "balrog":
+            case "fallenwizard":
+            case "fallenlord":
+            case "lord":
+            case "grey":
+            case "dragonlord":
+            case "warlord":
+            case "elflord":
+            case "atanilord":
+            case "dwarflord":
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    replaceMapSiteCodesRemoveOld(jMapData, jCards)
+    {
+        /* remove old sites */
+        let _region;
+        for (let key in jMapData) 
+        {
+            _region = jMapData[key];
+            for (let title in _region.sites) 
+            {
+                for (let siteCardKey in _region.sites[title]) 
+                {
+                    if (this.isRemovableSiteKey(siteCardKey) && this.haveToRemoveCard(_region.sites[title][siteCardKey], jCards))
+                        delete _region.sites[title][siteCardKey];
+                }
+            }
+
+            if (!this.haveToRemoveCard(_region.code, jCards)) 
+                delete jMapData[key];
+        }
+    }
+
     replaceMapSiteCodes(jMapData, jCards) 
     {
         if (typeof jMapData === "undefined" || typeof jCards === "undefined")
@@ -326,78 +408,10 @@ class MapData
             let _region = jMapData[key];
 
             this.updateCard(_region, jCards)
-            
-            for (let title in _region.sites) 
-            {
-                for (let siteCardKey in _region.sites[title]) 
-                {
-                    switch (siteCardKey) 
-                    {
-                        case "hero":
-                        case "minion":
-                        case "balrog":
-                        case "fallenwizard":
-                        case "fallenlord":
-                        case "lord":
-                        case "grey":
-                        case "dragonlord":
-                        case "warlord":
-                        case "elflord":
-                        case "atanilord":
-                        case "dwarflord":
-
-                            this.updateCard(_region.sites[title][siteCardKey], jCards);
-                            break;
-
-                        case "has_core_sites":
-                            delete _region.sites[title]["has_core_sites"];
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
+            this.replaceMapSiteCodesReplaceWithNew(jCards, _region);
         }
 
-        /* remove old sites */
-        for (let key in jMapData) 
-        {
-            let _region = jMapData[key];
-            for (let title in _region.sites) 
-            {
-                for (let siteCardKey in _region.sites[title]) 
-                {
-                    switch (siteCardKey) 
-                    {
-                        case "hero":
-                        case "minion":
-                        case "balrog":
-                        case "fallenwizard":
-                        case "fallenlord":
-                        case "lord":
-                        case "grey":
-                        case "dragonlord":
-                        case "warlord":
-                        case "elflord":
-                        case "atanilord":
-                        case "dwarflord":
-
-                            if (this.haveToRemoveCard(_region.sites[title][siteCardKey], jCards))
-                                delete _region.sites[title][siteCardKey];
-
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            if (!this.haveToRemoveCard(_region.code, jCards)) 
-                delete jMapData[key];
-        }
-
+        this.replaceMapSiteCodesRemoveOld(jMapData, jCards);
         return jMapData;
     }
 
