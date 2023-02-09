@@ -174,14 +174,6 @@ const DropFunctions = {
         
         DropFunctions.getApi().send("/game/card/move", {uuid: uuid, target: "discardpile", source: src, drawTop : false});
 
-        /** 
-         * usually, this would also have to be checked for every card that gets removed,
-         * however, the basic idea is really that you can see what has been discarded from the hand, so 
-         * this should suffice for now
-         */
-        if (GamePreferences.discardOpenly())
-            DropFunctions.getApi().send("/game/discardopenly", {uuid: uuid });
-
         return false;
     },
     
