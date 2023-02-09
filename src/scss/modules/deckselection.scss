@@ -193,3 +193,30 @@ h3 {
     }
 }
 
+#invalid-cards-info-result {
+    user-select: text;
+    cursor: auto;
+
+    p {
+        margin: 0;
+    }
+
+    h3 {
+        text-transform: uppercase;
+        margin-top: 5px;
+
+        &:first-of-type{
+            margin-top: 0;
+        }
+    }
+}
+
+a.link-replace-invalid-code {
+    margin-left: 5px;
+    padding: 0 5px;
+
+    &:hover
+    {
+        color: #ff0;
+    }
+}

@@ -210,6 +210,36 @@ const ViewCards =
         else
             return ViewCards.config.jsonData[index];
     },
+
+    isOfficialSet : function(sIs)
+    {
+        switch(sIs)
+        {
+            case "MEAS":
+            case "MEDM":
+            case "MEBA":
+            case "METD":
+            case "MELE":
+            case "MEWH":
+            case "METW":
+                return true;
+            default:
+                return false;
+        }
+    },
+
+    isValidSet : function(sShould, sIs)
+    {
+        if (sShould === "" || sIs === "" || sShould === sIs)
+            return true;
+
+        if (sShould === "_official" && ViewCards.isOfficialSet(sIs))
+            return true;
+        else if (sShould === "_unofficial" && !ViewCards.isOfficialSet(sIs))
+            return true;
+        else
+            return false;
+    },
     
     doSearch : function(sType, sAlign, sCategory, sSet, sTitle, sText)
     {
@@ -240,7 +270,7 @@ const ViewCards =
             _title = card.title;
             _text = card.text;
 
-            if (sSet !== "" && card.set_code !== sSet)
+            if (!ViewCards.isValidSet(sSet, card.set_code))
                 continue;
             
             if (!bAllowAllType && sType !== "" && _type.toString() !== sType)

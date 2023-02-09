@@ -55,6 +55,32 @@ const SearchBar = {
         let arrayList = Array.from(Object.entries(sortedList));
         arrayList.sort((a, b) => a[1].localeCompare(b[1]));
 
+        {
+            let option = document.createElement("option");
+            option.text = "-------"
+            option.value = "";
+            pSelectType.add(option);
+        }
+        {
+            let option = document.createElement("option");
+            option.text = "Official sets only"
+            option.value = "_official";
+            pSelectType.add(option);
+        }
+
+        {
+            let option = document.createElement("option");
+            option.text = "Unofficial sets only"
+            option.value = "_unofficial";
+            pSelectType.add(option);
+        }
+        {
+            let option = document.createElement("option");
+            option.text = "-------"
+            option.value = "";
+            pSelectType.add(option);
+        }
+
         for (let set of arrayList)
         {
             if (set[0] !== "" && set[1] !== "")

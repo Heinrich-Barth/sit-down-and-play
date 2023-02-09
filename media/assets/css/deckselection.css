@@ -128,10 +128,12 @@ body {
 
 h1 {
   text-align: center;
+  padding-top: 2em;
 }
 
 h2 {
   font-size: 1.2em;
+  padding-top: 1.5em;
 }
 
 .ǵame-join-screen .content .inner-content {
@@ -213,14 +215,6 @@ h2 {
   color: #ffa500;
 }
 
-h1 {
-  padding-top: 2em;
-}
-
-h2 {
-  padding-top: 1.5em;
-}
-
 .converter h2,
 h3 {
   font-size: 1em;
@@ -282,4 +276,29 @@ h3 {
   details {
     max-width: 99% !important;
   }
+  .label-after {
+    display: block;
+  }
+}
+#invalid-cards-info-result {
+  user-select: text;
+  cursor: auto;
+}
+#invalid-cards-info-result p {
+  margin: 0;
+}
+#invalid-cards-info-result h3 {
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+#invalid-cards-info-result h3:first-of-type {
+  margin-top: 0;
+}
+
+a.link-replace-invalid-code {
+  margin-left: 5px;
+  padding: 0 5px;
+}
+a.link-replace-invalid-code:hover {
+  color: #ff0;
 }

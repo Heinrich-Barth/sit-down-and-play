@@ -232,28 +232,26 @@ const SearchResult = {
             }
         }
 
-        const linklist = document.getElementById("linklist");
+        const targetList = document.createDocumentFragment();
         if (sHtmlEvent.hasChildNodes())
-            linklist.appendChild(sHtmlEvent);
+            targetList.appendChild(sHtmlEvent);
 
         if (sHtmlItem.hasChildNodes())
-            linklist.appendChild(sHtmlItem);
+            targetList.appendChild(sHtmlItem);
 
         if (sHtmlChars.hasChildNodes())
-            linklist.appendChild(sHtmlChars);
+            targetList.appendChild(sHtmlChars);
 
         if (sHtmlCreature.hasChildNodes())
-            linklist.appendChild(sHtmlCreature);
+            targetList.appendChild(sHtmlCreature);
 
         if (sHtmlOther.hasChildNodes())
-            linklist.appendChild(sHtmlOther);
+            targetList.appendChild(sHtmlOther);
 
-        if (linklist.childElementCount < 2)
-            DomUtils.empty(linklist);
-        
         let _tmp = document.createElement("div");
         _tmp.setAttribute("class", "clear");
-        linklist.appendChild(_tmp);
+        targetList.appendChild(_tmp);
+        document.getElementById("linklist").appendChild(targetList);        
     },
             
     updateCardResultListCount : function(index, count)
