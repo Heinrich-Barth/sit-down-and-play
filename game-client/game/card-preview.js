@@ -263,7 +263,7 @@ CardPreview.onDocumentReady = function()
 
     CardPreview._isReady = true;
 
-    if (g_sLobbyToken !== "" && document.body.getAttribute("data-is-game") === "true")
+    if (typeof g_sLobbyToken !== "undefined" && g_sLobbyToken !== "" && document.body.getAttribute("data-is-game") === "true")
     {
         CardPreview.enableIdleCheck = true;
         setInterval(CardPreview.checkIdle, 1000 * 60);
