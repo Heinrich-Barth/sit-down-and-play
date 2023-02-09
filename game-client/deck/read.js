@@ -168,7 +168,6 @@ const ReadDeck = {
     },
     toString(jDeck, title, notes)
     {
-        console.log(jDeck);
         let text = `#
 # GCCG v0.9.4 Middle-earth deck
 #
