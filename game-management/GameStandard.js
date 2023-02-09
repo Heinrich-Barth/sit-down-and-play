@@ -918,8 +918,27 @@ class GameStandard extends GamePlayers
 
     globalSaveGame(_userid, socket)
     {
-        this.replyToPlayer("/game/save", socket, this.save() );
+        const data = this.save();
+        if (data !== null)
+            this.replyToPlayer("/game/save", socket, data);
     }
+
+    save()
+    {
+        try
+        {
+            const data = super.save();
+            data.playboard.decks.cardMap = this.base64Encode(data.playboard.decks.cardMap)
+            return data;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+
+        return null;
+    }
+
 
     onDiscardOpenly(userid, _socket, data)
     {
@@ -1122,19 +1141,65 @@ class GameStandard extends GamePlayers
         return success;
     }
 
+    base64Encode(data)
+    {
+        const bufferObj = Buffer.from(JSON.stringify(data), "utf8");
+        return bufferObj.toString("base64");
+    }
 
-    globalRestoreGame(userid, _socket, data)
+    base64Decode(base64string)
+    {
+        try
+        {
+            let bufferObj = Buffer.from(base64string, "base64");
+            return JSON.parse(bufferObj.toString("utf8"));
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+        
+        return { };
+    }
+
+    restoreEncodedSavegame(data, userid)
+    {
+        try
+        {
+            if (typeof data.game.playboard.decks.cardMap === "string")
+                data.game.playboard.decks.cardMap = this.base64Decode(data.game.playboard.decks.cardMap);
+                
+            return true;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+
+        const message = "Could not decode saved game.";
+        this.publishChat(userid, " savegame is invalid");
+        this.publishChat(userid, message);
+        return false;
+    }
+
+    evaluateSavedGame(data, userid)
     {
         const pEval = new SaveGameEvaluation(data.assignments);
         data.game = pEval.evaluate(data.game, this.isArda());
-        if (data.game === null)
-        {
-            let message = pEval.getMessageString();
-            this.publishChat(userid, " savegame is invalid");
-            this.publishChat(userid, message);
-            
+        if (data.game !== null)
+            return true;
+
+        const message = pEval.getMessageString();
+        this.publishChat(userid, " savegame is invalid");
+        this.publishChat(userid, message);
+        return false;
+    }
+
+
+    globalRestoreGame(userid, _socket, data)
+    {
+        if (!this.restoreEncodedSavegame(data, userid) || !this.evaluateSavedGame(data, userid))
             return;
-        }
 
         let assignments = data.assignments; 
         if (!this.saveGameCheckPlayers(assignments))
