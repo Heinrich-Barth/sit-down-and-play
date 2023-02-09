@@ -326,6 +326,8 @@ SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback, (_re
  */
 SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
 
+/** Suggestions for code/name resolving */
+SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getNameCodeSuggestionMap()).status(200));
 
 require("./Personalisation")(SERVER, g_pExpress);
 
@@ -361,6 +363,7 @@ SERVER.instance.use("/serviceWorker.js", g_pExpress.static(__dirname + "/service
  */
 SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.getActiveGames()).status(200));
 SERVER.instance.get("/data/games/:room", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getActiveGame(req.params.room)).status(200));
+SERVER.instance.get("/data/spectators/:room", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getSpectators(req.params.room)).status(200));
 
 /**
  * Get the status of a given player (access denied, waiting, addmitted)
@@ -474,7 +477,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
@@ -512,11 +515,7 @@ SERVER.onIoConnection = function (socket)
 SERVER.instance.use(function(_req, res, _next) 
 {
     res.status(404);
-    res.format({
-      html: () => res.sendFile(__dirname + "/pages/error-404.html"),
-      json: () => res.json({ error: 'Not found' }),
-      default: () => res.type('txt').send('Not found')
-    });
+    res.sendFile(__dirname + "/pages/error-404.html");
 });
   
 /* 500 - Any server error */
@@ -524,7 +523,7 @@ SERVER.instance.use(function(err, _req, res, _next)
 {
     if (err)
         console.error(err);
-        
+
     res.status(500);
     res.sendFile(__dirname + "/pages/error-500.html");
 });
