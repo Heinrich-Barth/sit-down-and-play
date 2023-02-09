@@ -30,8 +30,9 @@ const Loading = {
         this.addAsset("/data/list/cards", "Cards loaded");
         this.addAsset("/data/list/images", "Images loaded");
         this.addAsset("/data/list/underdeeps", "Underdeeps loaded");
-        this.addAsset("/data/list/sites", "Sites loaded");
         this.addAsset("/data/list/map", "Map loaded");
+        this.addAsset("/data/list/sites", "Sites loaded");
+        this.addAsset("/media/assets/backgrounds/home.webp", "Background loaded");        
     },
 
     init : function()
