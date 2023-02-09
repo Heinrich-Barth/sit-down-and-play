@@ -111,6 +111,21 @@ class GameRoom
         return Object.keys(this.players).length;
     }
 
+    getVisitorCount()
+    {
+        return Object.keys(this.visitors).length;
+    }
+
+    getVisitorNames()
+    {
+        let list = [];
+
+        for (let id of Object.keys(this.visitors))
+            list.push(this.visitors[id].getName());
+
+        return list;
+    }
+
     isEmpty()
     {
         return this.getPlayerCount() === 0;
@@ -153,6 +168,9 @@ class GameRoom
         for (let id in this.players)
             this.players[id].disconnect();
 
+        for (let id of Object.keys(this.visitors))
+            this.visitors[id].disconnect();
+
         this.players = {};
         this.visitors = {};
     }
@@ -185,6 +203,19 @@ class GameRoom
             return true;
         else
             return null;
+    }
+
+    removeVisitor(userid)
+    {
+        const elem = this.visitors[userid];
+        if (elem !== undefined)
+        {
+            elem.disconnect();
+            delete this.visitors[userid];
+            return true;
+        }
+        else
+            return false;
     }
 
     addPlayer(userid, displayname, jDeck, isAdmin, timeAdded)
