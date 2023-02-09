@@ -45,14 +45,6 @@ class GamePreferences extends Preferences {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
     }
 
-    _toggleCardPreview(isActive)
-    {
-        if (isActive)
-            document.body.classList.add("large-preview");
-        else
-            document.body.classList.remove("large-preview");
-    }
-
     _volumeChange(val)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-sfx-test", { "detail": parseInt(val) }));
@@ -99,60 +91,55 @@ class GamePreferences extends Preferences {
         return true;
     }
 
-    static discardOpenly()
-    {
-        return !Preferences._getConfigValue("discard_facedown");
-    }
-
     static offerBlindly()
     {
         return !Preferences._getConfigValue("viewpile_open");
     }
 
-    static  autoOpenLobby()
-    {
-        return Preferences._getConfigValue("game_show_lobby");
-    }
-
     getEntries()
     {
-        this.createSection("General");
-        this.createEntry0("viewpile_open");
-        this.createEntry0("discard_facedown");
-        this.createEntry0("show_chat");
-
+        const bWatcher = GamePreferences.isWatching();
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
-        this.createEntry0("game_dices");
+
+        if (!bWatcher)
+            this.createEntry0("game_dices");
+
         this.createEntry0("game_sfx");
-        this.createEntry0("large_preview");
+
+        if (bWatcher)
+            return;
 
         this.createSection("Game");
+        this.createEntry0("game_addcards");       
         this.createEntry0("game_save");
         this.createEntry0("game_load");
-        this.createEntry0("game_show_lobby");       
-        this.createEntry0("game_addcards");       
         this.createEntry0("leave_game");
 
         this.createSection("Images");
         this.createEntry0("images_errata_dc");
+
+        this.createSection("General");
+        this.createEntry0("viewpile_open");
+        this.createEntry0("show_chat");
+    }
+
+    static isWatching()
+    {
+        return document.body.getAttribute("data-is-watcher") === "true";
     }
 
     addConfiguration()
     {
         this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
-        this.addConfigToggle("discard_facedown", "Discard cards face down", true);
         this.addConfigToggle("images_errata_dc", "Use CoE Errata", true);
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
-        this.addConfigSlider("game_sfx", "Sound effects volume", 20, "fa-volume-up", this._volumeChange.bind(this));
-        this.addConfigToggle("large_preview", "Large card preview", true, this._toggleCardPreview.bind(this));
+        this.addConfigSlider("game_sfx", "Sound volume", 20, "fa-volume-up", this._volumeChange.bind(this));
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
-        this.addConfigToggle("game_show_lobby", "Open Lobby whenever someone enters", true);
-        
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
@@ -160,7 +147,12 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
 
-        this._toggleCardPreview(true);
+        this._toggleCardPreview();
+    }
+
+    _toggleCardPreview()
+    {
+        document.body.classList.add("large-preview");
     }
 
     allowSfx()
