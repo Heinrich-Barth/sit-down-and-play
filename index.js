@@ -511,6 +511,15 @@ SERVER.onIoConnection = function (socket)
     socket.on('reconnect', () => SERVER.roomManager.onReconnected(socket.userid, socket.room));
 };
 
+/** Map tiles not found - send black tile */
+SERVER.instance.use(function(req, res, next) 
+{
+    if (req.path.startsWith("/media/maps/"))
+        res.sendFile(__dirname + '/media/map-tile.jpg');
+    else
+        next();
+});
+
 let g_sPage404 = "";
 let g_sPage500 = "";
 
