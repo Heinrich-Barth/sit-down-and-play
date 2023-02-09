@@ -360,8 +360,6 @@ a:hover {
 }
 
 img.card-icon {
-  width: 57px;
-  height: 80px;
   background: url("/data/backside") 0 0 no-repeat;
   background-size: contain;
 }
@@ -441,8 +439,9 @@ img.card-icon {
 .card-hands .card-hand {
   display: inline-block;
   position: relative;
-  width: 60px;
-  min-height: 60px;
+}
+.card-hands .card-draw {
+  width: 100%;
 }
 .card-hands .hand-card-sizer {
   padding: 5px 10px;
@@ -489,11 +488,22 @@ img.card-icon {
 
 .view-card-list-container {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: 15%;
+  top: 15%;
+  right: 15%;
+  bottom: 15%;
+  overflow-y: auto;
   padding: 15px;
   z-index: 1001;
+  /*
+  &.view-victory {
+      position: relative;
+      left: 0;
+      top: 0;
+      transform: none;
+      background: rgba(0,0,0,0.9);
+  }
+  */
 }
 .view-card-list-container .container-title-bar {
   padding-bottom: 10px;
@@ -511,12 +521,6 @@ img.card-icon {
 .view-card-list-container img.card-icon {
   width: auto;
   height: 150px;
-}
-.view-card-list-container .container-data {
-  overflow-y: auto;
-  max-width: 100%;
-  min-height: 104px;
-  max-height: 510px;
 }
 .view-card-list-container .card-hand {
   float: left;
@@ -590,13 +594,6 @@ img.card-icon {
 .view-card-list-container.view-outofplay .view-card-list-actions {
   display: none !important;
 }
-.view-card-list-container.view-victory {
-  position: relative;
-  left: 0;
-  top: 0;
-  transform: none;
-  background: rgba(0, 0, 0, 0.9);
-}
 
 #view-score-sheet-card-list .container-data {
   padding: 10px;
@@ -645,7 +642,6 @@ img.card-icon {
   margin-left: 2px;
 }
 .staging-area .card img.card-icon {
-  height: 70px;
   width: auto;
 }
 
@@ -671,9 +667,7 @@ img.card-icon {
   border-radius: 10px;
 }
 .companies .company .company-site-list {
-  height: 83px;
-  max-height: 83px;
-  min-width: 72px;
+  min-height: 80px;
   padding: 5px;
   border-bottom: 3px dashed black;
 }
@@ -744,25 +738,42 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
   opacity: 0.7;
 }
 
-.company-character-reosurces,
-.company-character-reosurces .card,
-.company-character-host {
-  position: relative;
-  text-align: left;
+.zoom-1 .company-character-reosurces,
+.zoom-2 .company-character-reosurces {
+  margin-top: -90px;
+}
+.zoom-1 .company-character-reosurces .card,
+.zoom-2 .company-character-reosurces .card {
+  margin-top: -95px;
+}
+
+.zoom-1 .company-site-list,
+.zoom-1 img.card-icon {
+  height: 130px;
+}
+
+.zoom-2 .company-site-list,
+.zoom-2 img.card-icon {
+  height: 150px;
+}
+
+img.card-icon {
+  height: 80px;
 }
 
 .company-character-reosurces {
-  margin-top: -60px;
+  margin-top: -50px;
   min-height: 84px;
+  display: flex;
+  flex-direction: column;
 }
 .company-character-reosurces .card {
-  margin-top: -60px;
+  margin-top: -50px;
   z-index: 101;
-  max-height: 80px;
-  display: flex;
 }
 .company-character-reosurces .card:nth-child(1) {
-  transform: translateX(15px);
+  transform: translateX(15px) translateY(0px);
+  margin-top: 0;
 }
 .company-character-reosurces .card:nth-child(2) {
   transform: translateX(30px);
@@ -791,16 +802,15 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
 .company-character-reosurces .card:nth-child(10) {
   transform: translateX(160px);
 }
-.company-character-reosurces .card:nth-child(10) {
+.company-character-reosurces .card:nth-child(11) {
   transform: translateX(175px);
 }
-.company-character-reosurces .card:nth-child(11) {
+.company-character-reosurces .card:nth-child(12) {
   transform: translateX(190px);
 }
-.company-character-reosurces .card:nth-child(12) {
+.company-character-reosurces .card:nth-child(13) {
   transform: translateX(205px);
 }
-
 .company-character-reosurces[data-stack-size="1"] {
   width: 72px;
 }
@@ -836,6 +846,20 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
 }
 .company-character-reosurces[data-stack-size="12"] {
   width: 237px;
+}
+
+.config-zoom {
+  position: absolute;
+  top: 100px !important;
+  color: #fff;
+  padding: 7px;
+}
+
+.company-character-reosurces,
+.company-character-reosurces .card,
+.company-character-host {
+  position: relative;
+  text-align: left;
 }
 
 .site-regions .card,
