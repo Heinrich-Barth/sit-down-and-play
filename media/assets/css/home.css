@@ -206,6 +206,29 @@ body, p {
   color: #ffa500;
 }
 
+.game-list-counter {
+  height: 5px;
+  background-color: rgba(255, 165, 0, 0.8);
+  width: 1%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.game-list-counter.line-countdown-10s {
+  animation: gamelist-line-to-refresh 10s infinite forwards;
+}
+.game-list-counter.line-countdown-60s {
+  animation: gamelist-line-to-refresh 60s infinite forwards;
+}
+
+@keyframes gamelist-line-to-refresh {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
 /* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (max-width: 767.98px) {
   input,
