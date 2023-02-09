@@ -13,7 +13,8 @@ const assets = [
   "/data/list/images",
   "/data/list/underdeeps",
   "/data/list/sites",
-  "/data/list/map"
+  "/data/list/map",
+  "/media/assets/backgrounds/home.webp"
 ]
 
 /**

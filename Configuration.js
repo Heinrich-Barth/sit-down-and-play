@@ -264,12 +264,16 @@ class Configuration {
                 "media-src": "'self'",
                 "script-src": "'self' 'nonce-START'",
                 "frame-src": "'self'",
+                "manifest-src": "'self'",
                 "img-src": "'self' data: " + this.imageDomain(),
                 "report-uri": "/csp-violation"
             };
 
             jEntries["img-src"] += " " + this.getCspImageValue();
             jEntries["img-src"] = jEntries["img-src"].trim();
+
+            jEntries["connect-src"] += " " + this.getCspImageValue();
+            jEntries["connect-src"] = jEntries["connect-src"].trim();
 
             this._csp_header = this.joinMap(jEntries);                
         }
@@ -289,6 +293,7 @@ class Configuration {
                 "media-src": "'self'",
                 "style-src": "'self'",
                 "img-src": "'self'",
+                "manifest-src": "'self'",
                 "report-uri": "/csp-violation"
             };
             
