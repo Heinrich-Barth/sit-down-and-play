@@ -1,3 +1,4 @@
+const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
 
 const getRemovableKeysArray = function()
 {
@@ -23,6 +24,7 @@ class CardRepository {
         this._CardRepository = {};
         this._types = { };
         this._agentList = [];
+        this._nameCodeAlternatives = {};
     }
 
     getCards()
@@ -300,6 +302,14 @@ class CardRepository {
         return 0;
     }
 
+    createCardNameCodeSuggestionsList()
+    {
+        const res = new CardNameCodeSuggestions().create(this._raw);
+        if (res)
+            this._nameCodeAlternatives = res;
+
+        return Object.keys(this._nameCodeAlternatives).length;
+    }
 
     setup(_raw)
     {
@@ -317,6 +327,7 @@ class CardRepository {
         this.createTypes();
         this.prepareArda();
         this.createAgentList();
+        this.createCardNameCodeSuggestionsList();
 
         console.log("\t- " + this._raw.length + " cards available in total.");
         return this._raw;
@@ -369,21 +380,25 @@ class CardRepository {
         if (card === null || card.Secondary === undefined || card.Secondary === "")
             return data;
 
+        const secondary = card.Secondary.toLowerCase();
+        const cardTyoe = card.type.toLowerCase();
+
         data.points = card.MPs === undefined ? 0 : card.MPs;
-        if (card.Secondary.indexOf("Creature") !== -1)
+
+        if (cardTyoe === "hazard")
             data.type = "kill";
-        else if (card.Secondary === "Character")
+        else if (secondary === "character")
         {
             data.type = "character";
             data.points = 0;
         }
-        else if (card.Secondary === "Ally")
+        else if (secondary === "ally")
             data.type = "ally";
-        else if (card.Secondary === "Faction")
+        else if (secondary === "faction")
             data.type = "faction";
-        else if (card.type === "Resource")
+        else if (cardTyoe === "resource")
         {
-            if (card.Secondary.endsWith("item") || card.Secondary.endsWith("Item"))
+            if (secondary.endsWith("item"))
                 data.type = "item";
             else 
                 data.type = "misc";
@@ -471,6 +486,11 @@ class CardRepository {
     onCardsReceived(body)
     {
         this.setup(JSON.parse(body));
+    }
+
+    getNameCodeSuggestionMap()
+    {
+        return this._nameCodeAlternatives;
     }
 }
 
