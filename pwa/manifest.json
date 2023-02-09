@@ -1,7 +1,7 @@
 {
-    "name": "Sit Down and Play PWA",
+    "name": "Sit Down and Play MECCG",
     "short_name": "SitPlayMeccg",
-    "description": "Sit Down and Play",
+    "description": "Play MECCG",
     "start_url": "/pwa/app.html",
     "scope": "/",
     "id": "/play",
