@@ -183,6 +183,18 @@ class RoomManager {
         }
     }
 
+    getSpectators(room)
+    {
+        if (room === undefined || room === null || room === "" || this._rooms[room] === undefined)
+            return { count: 0, names: [] };
+
+        const list = this._rooms[room].getVisitorNames();
+        return {
+            count: list.length,
+            names:  list
+        };
+    }
+
     getActiveGames()
     {
         let room, userid, pRoom;
@@ -292,17 +304,8 @@ class RoomManager {
         this._sendConnectivity(userid, room, false);
     }
 
-    /**
-     * Kick all players that are disconnected from the game
-     * @param {String} room 
-     * @returns 
-     */
-    kickDisconnected(room)
+    kickDisconnectedPlayers(pRoom)
     {
-        let pRoom = this.getRoom(room);
-        if (pRoom === null)
-            return false;
-
         let keys = [];
         let players = pRoom.getPlayers();
         for (let key in players) 
@@ -313,6 +316,45 @@ class RoomManager {
 
         for (let _key of keys)
             this.kickPlayer(pRoom, _key);
+    }
+
+    kickDisconnectedSpectators(pRoom)
+    {
+        let list = [];
+        let spectators = pRoom.getVisitors();
+
+        for (let id in spectators) 
+        {
+            const _player = spectators[id];
+            if (!_player.isConnected()) 
+            {
+                list.push({
+                    id: id,
+                    name: _player.getName(),
+                });
+            }
+        }
+
+        for (let spectator of list)
+        {
+            if (pRoom.removeVisitor(spectator.id))
+                console.log("Specator " + spectator.name + " removed from game.");
+        }
+    }
+
+    /**
+     * Kick all players that are disconnected from the game
+     * @param {String} room 
+     * @returns 
+     */
+    kickDisconnected(room)
+    {
+        const pRoom = this.getRoom(room);
+        if (pRoom === null)
+            return false;
+
+        this.kickDisconnectedPlayers(pRoom);
+        this.kickDisconnectedSpectators(pRoom);
 
         if (this._rooms[room].isEmpty())
         {
@@ -339,7 +381,11 @@ class RoomManager {
         {
             /** remove all players that are not connected anymore */
             if (pThis.kickDisconnected(room))
+            {
+                /** make sure to remove game from events */
+                pThis._eventManager.trigger("game-remove", room);
                 console.log("Game room " + room + " is empty and was destroyed.");
+            }
 
         }, 2000 * 60);
     }
@@ -428,25 +474,17 @@ class RoomManager {
 
             /* draw this player's board and restore the game table */
             pRoom.reply("/game/rejoin/immediately", socket, pRoom.getGame().getCurrentBoard(userid));
-
-            /* notify other players */
             if (isPlayer)
-                pRoom.sendMessage(userid, " joined the game.");
-            else
-                pRoom.sendMessage(userid, " joined as spectator.");
-
-                /* add indicator */
-            if (isPlayer)
+            {
                 pRoom.publish("/game/player/indicator", "", { userid: userid, connected: true });
-
-            /** additional game data *
-            pRoom.reply("/game/data/all", socket, pRoom.getGame().getPlayboardDataObject());
-            */
-           
-            if (isPlayer)
+                pRoom.sendMessage(userid, " joined the game.");
                 console.log("User " + pPlayer.getName() + " rejoined the game " + room);
+            }
             else
+            {
+                pRoom.sendMessage(userid, pPlayer.getName() + " joined as spectator.");
                 console.log("Spectator " + pPlayer.getName() + " rejoined the game " + room);
+            }
 
             return true;
         }
@@ -491,9 +529,9 @@ class RoomManager {
             return;
 
         let pRoom = this._rooms[room];
-
+        const bAllowSocial = pRoom.getAllowSocialMedia();
         const scores = pRoom.getFinalGameScore();
-        if (scores !== undefined && pRoom.getAllowSocialMedia())
+        if (scores !== undefined && bAllowSocial)
             this._eventManager.trigger("game-finished", room, scores);
 
         pRoom.sendMessage("Game", "has ended.");
@@ -527,7 +565,7 @@ class RoomManager {
     {
         let pPlayer = pRoom.players[userid];
         if (pPlayer === undefined)
-            return;
+            return false;
 
         console.log(pPlayer.getName() + " removed from game.");
 
@@ -535,6 +573,7 @@ class RoomManager {
 
         delete pRoom.players[userid];
         pRoom.getGame().removePlayer(userid);
+        return true;
     }
 
     verifyApiKey(room, roomKey)
