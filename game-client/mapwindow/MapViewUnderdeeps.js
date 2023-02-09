@@ -71,7 +71,10 @@ class MapViewUnderdeeps extends MapView {
 
     createImage(code, isTapped, isHidden)
     {
-        const sUrl = this.getImage(code);
+        let sUrl = this.getImage(code);
+        if (sUrl === "")
+            sUrl = "/data/backside";
+
         const sCss = isHidden === true ? "hidden" : "";
         
         const img = document.createElement("img");
@@ -211,6 +214,16 @@ class MapViewUnderdeeps extends MapView {
             elem.onclick = this.onClickAccept.bind(this);
     }
 
+    clonseListSorted(list)
+    {
+        let result = [];
+        for (let elem of list)
+            result.push(elem);
+
+        result.sort();
+        return result;
+    }
+
     populateSites(startingCode)
     {
         this.codeStart = startingCode;
@@ -221,7 +234,7 @@ class MapViewUnderdeeps extends MapView {
         this.showStartSite(startingCode);
         this.addCancelClick();
 
-        const list = this.getAdjacentSites(startingCode);
+        const list = this.clonseListSorted(this.getAdjacentSites(startingCode));
         if (list.length === 0)
         {
             this.appendCaption(elem, "No adjacent sites available.");
