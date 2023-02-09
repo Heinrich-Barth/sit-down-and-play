@@ -19,15 +19,35 @@ class Discord
             this.roomMessages[room] = {
                 id : "",
                 created : Date.now(),
-                message: ""
+                message: "",
+                players: []
             }
+
+            return true;
         }
+        else
+            return false;
     }
 
     updateRoomMessageId(room, id)
     {
         if (this.roomMessages[room] !== undefined)
             this.roomMessages[room].id = id;
+    }
+
+    updateRoomPlayerList(room, name)
+    {
+        if (this.roomMessages[room] === undefined || name === "")
+            return false;
+
+        name = name.toLowerCase();
+        if (!this.roomMessages[room].players.includes(name))
+        {
+            this.roomMessages[room].players.push(name);
+            return true;
+        }
+
+        return false;
     }
 
     updateRoomMessage(room, message)
@@ -121,7 +141,7 @@ class Discord
     updateMessage(room, hookUrl, message)
     {
         if (hookUrl === undefined || hookUrl === "" || message === "" || this.roomMessages[room] === undefined || this.roomMessages[room].id === undefined || this.roomMessages[room].id === "")
-            return;
+            return false;
             
         try 
         {
@@ -130,11 +150,13 @@ class Discord
                 content: message
             }));
             req.end();
+            return true;
         }
         catch (err)
         {
             console.warn(err.message);
         }
+        return false;
     }
 
     getPostOptions(room, hookUrl)
@@ -194,7 +216,13 @@ class Discord
     sendDiscordNotificationGame(room, isArda, name, isCreated)
     {
         if (room !== undefined && room !== "")
+        {
+            if (isCreated)
+                this.updateRoomMessage(room, "");
+
             this.postNotification(room, this.hookUrl, this.createDiscordMessage(room, isArda, name, isCreated), isCreated);
+            this.updateRoomPlayerList(room, name);
+        }
     }
 
     compareScores( a, b ) 
@@ -232,23 +260,20 @@ class Discord
 
     createScoreMessage(room, finalScore)
     {
-        if (room === undefined || room === "" || finalScore === undefined)
+        if (room === undefined || room === "" || finalScore === undefined || finalScore.score === undefined || finalScore.players === undefined || Object.keys(finalScore.players).length < 1)
             return "";
-        else if (finalScore.score === undefined || finalScore.players === undefined || Object.keys(finalScore.players).length < 1)
-            return "The game " + room + " has ended.";
 
         const list = this.sortScores(finalScore.score, finalScore.players);
         const winner = list.shift();
-
         return this.createScoredMessageResult(room, winner, list);
     }
 
     createScoredMessageResult(room, winner, others)
     {
         if (winner.total === 0 || others.length === 0)
-            return "The game " + room + " has ended.";
+            return "";
 
-        let message = winner.name + " has won the game " + room + " scoring " + winner.total + " points (" + winner.details + ")";
+        let message = winner.name + " won the game " + room + " scoring " + winner.total + " points (" + winner.details + ")";
         for (let line of others)
         {
             message += ",\n" + line.name + " scored " + line.total + " points";
@@ -261,13 +286,38 @@ class Discord
 
     sendDiscordNotificationFinished(room, finalScore)
     {
-        this.updateMessage(room, this.hookUrl, this.createScoreMessage(room, finalScore));
+        if (this.updateMessage(room, this.hookUrl, this.createScoreMessage(room, finalScore)))
+            this.removeGameEntry(room);
     }
 
-    removeGame(room)
+    removeGameEntry(room)
     {
-        if (this.roomMessages[room] !== undefined)
+        if (typeof this.roomMessages[room] !== "undefined")
             delete this.roomMessages[room];
+    }
+
+    getEndGameMessage(room)
+    {
+        const players = this.listRoomPlayers(room);
+        if (players !== "")
+            return `The game of ${players} (${room}) has ended.`;
+        else
+            return `The game ${room} has ended.`;
+    }
+
+    sendDiscordGameEnded(room)
+    {
+        const message = this.getEndGameMessage(room);
+        this.updateMessage(room, this.hookUrl, message);
+        this.removeGameEntry(room);
+    }
+
+    listRoomPlayers(room)
+    {
+        if (typeof this.roomMessages[room] === "undefined")
+            return "";
+        else
+            return this.roomMessages[room].players.join(", ");
     }
 
     calculateFinalScore(name, score)
@@ -294,11 +344,11 @@ class Discord
             total: total,
             details: message
         } 
-    }
-    
+    }    
 
     sendDiscordMessageCreated(room, isArda, name)
     {
+        this.removeGameEntry(room);
         this.sendDiscordNotificationGame(room, isArda, name, true);
     }
 
@@ -314,7 +364,7 @@ class Discord
             pEventManager.addEvent("game-created", this.sendDiscordMessageCreated.bind(this));
             pEventManager.addEvent("game-joined", this.sendDiscordMessageJoin.bind(this));
             pEventManager.addEvent("game-finished", this.sendDiscordNotificationFinished.bind(this));
-            pEventManager.addEvent("game-remove", this.removeGame.bind(this));
+            pEventManager.addEvent("game-remove", this.sendDiscordGameEnded.bind(this));
         }
     }
 }
