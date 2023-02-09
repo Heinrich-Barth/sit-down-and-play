@@ -477,7 +477,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
@@ -511,11 +511,29 @@ SERVER.onIoConnection = function (socket)
     socket.on('reconnect', () => SERVER.roomManager.onReconnected(socket.userid, socket.room));
 };
 
+let g_sPage404 = "";
+let g_sPage500 = "";
+
 /** 404 - not found */
 SERVER.instance.use(function(_req, res, _next) 
 {
     res.status(404);
-    res.sendFile(__dirname + "/pages/error-404.html");
+
+    if (g_sPage404 !== "")
+    {
+        res.send(g_sPage404);
+        return;
+    }
+
+    fs.readFile(__dirname + "/pages/error-404.html", 'utf-8', (err, data) => 
+    {
+        if (err) 
+            g_sPage404 = ""
+        else
+            g_sPage404 = data;
+
+        res.send(g_sPage404);
+    });    
 });
   
 /* 500 - Any server error */
@@ -525,7 +543,22 @@ SERVER.instance.use(function(err, _req, res, _next)
         console.error(err);
 
     res.status(500);
-    res.sendFile(__dirname + "/pages/error-500.html");
+
+    if (g_sPage500 !== "")
+    {
+        res.send(g_sPage500);
+        return;
+    }
+
+    fs.readFile(__dirname + "/pages/error-500.html", 'utf-8', (err, data) => 
+    {
+        if (err) 
+            g_sPage500 = "";
+        else
+            g_sPage500 = data;
+
+        res.send(g_sPage500);
+    });    
 });
 
 SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVER.onListenSetupSocketIo);
