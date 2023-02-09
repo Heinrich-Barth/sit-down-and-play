@@ -88,7 +88,7 @@ class DeckCommons {
             const key = this.removeQuotes(_key);
             for (let i = 0; i < count && nSize < MAX_CARDS_PER_DECK; i++)
             {
-                _entry = this.createCardEntry(key, this.isAgent(key, listAgents), _cardMap, gameCardProvider);
+                _entry = this.createCardEntry(key, this.isAgent(key, listAgents), gameCardProvider);
                 if (_entry === null)
                 {
                     console.log("Cannot add card " + key + " to deck.");
@@ -306,11 +306,10 @@ class DeckCommons {
      * 
      * @param {String} code 
      * @param {Boolean} isAgent 
-     * @param {Object} _cardMap 
      * @param {Object} gameCardProvider 
      * @returns 
      */
-    createCardEntry(code, isAgent, _cardMap, gameCardProvider)
+    createCardEntry(code, isAgent, gameCardProvider)
     {
         if (typeof code === "undefined")
         {
