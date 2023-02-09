@@ -72,8 +72,19 @@ const showErrorLoading = function (err)
     document.getElementById("map_view_layer_loading").innerHTML = `<p>${error}</p>`;
 };
 
-const fetchMap = function (tappedSites) {
-    fetch("/data/list/underdeeps").then((response) => {
+const getCurrentDate = function()
+{
+    const sVal = new Date().toISOString();
+    const nPos = sVal.indexOf("T");
+    if (nPos === -1)
+        return "" + Date.now();
+    else
+        return sVal.substring(0, nPos);
+}
+
+const fetchMap = function (tappedSites) 
+{
+    fetch("/data/list/underdeeps?t=" + getCurrentDate()).then((response) => {
         if (response.status === 200)
             response.json().then((map) => MapInstanceRendererUd.onInit(map, tappedSites));
         else
