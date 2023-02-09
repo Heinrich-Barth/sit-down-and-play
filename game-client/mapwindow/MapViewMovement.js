@@ -104,24 +104,25 @@ class MapViewMovement extends MapViewMovementSelection {
         let len;
 
         let _region = jRegion.title;
-        if (this.jMap[_region] !== undefined)
-        {
-            for (let _siteKey in this.jMap[_region].sites)
-            {
-                if (sCode.indexOf(_siteKey) !== 0)
-                    continue;
+        if (this.jMap[_region] === undefined)
+            return null;
 
-                _site = this.jMap[_region].sites[_siteKey];
-                _keys = Object.keys(_site);
-                len = _keys.length;
-                for (let i = 0; i < len; i++)
-                {
-                    _key = _keys[i];
-                    if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
-                        return _site[_key];
-                }
+        for (let _siteKey in this.jMap[_region].sites)
+        {
+            if (sCode.indexOf(_siteKey) !== 0)
+                continue;
+
+            _site = this.jMap[_region].sites[_siteKey];
+            _keys = Object.keys(_site);
+            len = _keys.length;
+            for (let i = 0; i < len; i++)
+            {
+                _key = _keys[i];
+                if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
+                    return _site[_key];
             }
         }
+
         
         return null;
     }
