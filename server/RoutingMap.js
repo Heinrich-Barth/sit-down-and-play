@@ -33,7 +33,7 @@ const pCookiePreferences = new MapCookiePreferences();
 pCookiePreferences.addPreference("hero", true);
 pCookiePreferences.addPreference("minion", true);
 pCookiePreferences.addPreference("fallenwizard", true);
-pCookiePreferences.addPreference("balrog", false);
+pCookiePreferences.addPreference("balrog", true);
 pCookiePreferences.addPreference("elf", true);
 pCookiePreferences.addPreference("dwarf", true);
 pCookiePreferences.addPreference("lord", true);
@@ -58,8 +58,8 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     /**
      * Provide the map data with all regions and sites for the map windows
      */
-    SERVER.instance.get("/data/list/map", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
-    SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
+    SERVER.instance.get("/data/list/map", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
+    SERVER.instance.get("/data/list/underdeeps", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
 
     SERVER.instance.get("/data/preferences/map", SERVER.caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/map", (req, res) =>  { 
