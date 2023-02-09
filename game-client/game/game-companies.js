@@ -86,13 +86,13 @@ const getCardStateCss = function(nState)
  * creat cCharacter div
  * @param {JSON} jsonCard 
  * @param {String} id 
- * @returns DOM element or NULL
+ * @returns DOM element or empty fragment
  */
 const createCharacterHtml = function(jsonCard, id)
 {
     const uuid = jsonCard.uuid;
     if (uuid === "" || id === "")
-        return null;
+        return document.createDocumentFragment();
 
     const div = document.createElement("div");
     div.setAttribute("class", "company-character pos-rel fl character-is-company-host");
@@ -202,7 +202,7 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
  function createNewCard(card)
  {
      if (card.uuid === "")
-         return "";
+         return document.createDocumentFragment();
 
     const _backside = GameCompanies.CardList.getFlipSide(card.code);
     let pImage = document.createElement("img");
@@ -223,7 +223,7 @@ function createLocationCard(code, img, bIsPlayer, sTitle)
          pImage.setAttribute("data-owner", bIsMyCard);
      }
          
-     pImage.setAttribute("data-revealed", card.revealed === true ? "true" : "false");
+     pImage.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
 
      let pDiv = document.createElement("div");
      pDiv.setAttribute("class", "card " + getCardStateCss(card.state));
