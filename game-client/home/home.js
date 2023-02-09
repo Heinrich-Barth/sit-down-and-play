@@ -127,9 +127,26 @@ const showFetchError = function(err)
     document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
 };
 
+let g_nCountFechGames = 0;
+
 const fetchAndUpdateGames = function()
 {
+    g_nCountFechGames++;
     fetch("/data/games").then((response) => response.json().then(onResult)).catch(showFetchError);
+
+    if (g_nCountFechGames === 60)
+    {
+        clearInterval(g_fetchGamesInterval);
+        g_fetchGamesInterval = setInterval(fetchAndUpdateGames, 60 * 1000);
+        g_nCountFechGames = 0;
+
+        const elem = document.getElementById("game-list-counter");
+        if (elem !== null)
+        {
+            elem.classList.remove("line-countdown-10s");
+            elem.classList.add("line-countdown-60s");
+        }
+    }
 };
 
 (function()
@@ -180,10 +197,11 @@ const fetchAndUpdateGames = function()
         }
     }
 
-
     document.getElementById("enter_room").focus();
 
     fetchAndUpdateGames();
 })();
 
-setInterval(fetchAndUpdateGames, 10 * 1000);
+let g_fetchGamesInterval = setInterval(fetchAndUpdateGames, 10 * 1000);
+
+
