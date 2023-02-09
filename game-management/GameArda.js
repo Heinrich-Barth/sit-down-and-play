@@ -431,18 +431,18 @@ class GameArda extends GameStandard
 
     onGetHandMinorItems(userid)
     {
-        const listMinor = this.getCardList(this.getDeckManager().getCards().handMinorItems(userid));
-        this.publishToPlayers("/game/arda/hand/minor", userid, {list: listMinor});
+        const pAdminDeck = this.getDeckManager().getAdminDeck();
+        if (pAdminDeck === null)
+            return;
 
         const listMP = this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(userid));
         this.publishToPlayers("/game/arda/hand/marshallingpoints", userid, {list: listMP});
 
-        const pAdminDeck = this.getDeckManager().getAdminDeck();
-        if (pAdminDeck !== null)
-        {
-            const listChars = this.getCardList(pAdminDeck.getHandCharacters());
-            this.publishToPlayers("/game/arda/hand/characters", userid, {list: listChars});
-        }
+        const listMinor = this.getCardList(pAdminDeck.getHandMinorItems());
+        this.publishToPlayers("/game/arda/hand/minor", userid, {list: listMinor});
+
+        const listChars = this.getCardList(pAdminDeck.getHandCharacters());
+        this.publishToPlayers("/game/arda/hand/characters", userid, {list: listChars});
     }
 
     onMoveArdaHandCard(userid, socket, obj)
