@@ -43,7 +43,6 @@
 
                 <div class="fields hidden" id="invalid-cards-info">
                     <h2>Invalid Codes found</h2>
-                    <p>The following cards could not be found: </p>
                     <div id="invalid-cards-info-result"></div>
                 </div>
 
@@ -52,28 +51,7 @@
                         <div class="deck-list-entries"></div>
                     </div>
 
-                    <div class="deck-fields">
-                        <h2>Deck Details</h2>
-                        <div class="fields">
-                            <h3>Resources</h3>
-                            <div class="field"><textarea id="resources" class="card-type" title="Paste Resources here" placeholder="Paste Resources here"></textarea></div>
-                        </div>
-                        <div class="fields">
-                            <h3>Hazards</h3>
-                            <div class="field"><textarea id="hazards" class="card-type" title="Paste Hazards here" placeholder="Paste Hazards here"></textarea></div>
-                        </div>
-                        <div class="fields">
-                            <h3>Sideboard</h3>
-                            <div class="field"><textarea id="sideboard" class="card-type" title="Paste Sideboard here" placeholder="Paste Sideboard here"></textarea></div>
-                        </div>
-                        <div class="fields">
-                            <h3>Characters</h3>
-                            <div class="field"><textarea id="characters" class="card-type" title="Paste Characters here" placeholder="Paste Characters here"></textarea></div>
-                        </div>
-                        <div class="fields">
-                            <h3>Pool</h3>
-                            <div class="field"><textarea id="pool" class="card-type" title="Paste Pool here" placeholder="Paste Pool here"></textarea></div>
-                        </div>
+                    <div class="deck-fields" id="deck-text-fields">
                         <div class="fields">&nbsp;</div>
                         <div id="notes" class="deck-notes"></div>
                         <p class="cookie_notice">You can also <span class="text-yellow"><i class="fa fa-bullseye" aria-hidden="true"></i> <b>drop</b></span> your deck file here to load it.</p>
@@ -87,12 +65,13 @@
         </div>
     </div>
     
-    <script src="/media/client/notification/notification.js"></script>
     <script src="/media/client/game/libraries.js"></script>
-    <script src="/media/client/dropfile-generic.js"></script>
-    <script src="/media/client/deck/read.js"></script>
-    <script src="/media/client/login.js"></script>
-    <script src="/media/client/navigation/navigation.js"></script>
+    <script src="/media/client/decktextfields/index.js"></script>
+    <script defer src="/media/client/notification/notification.js"></script>
+    <script defer src="/media/client/dropfile-generic.js"></script>
+    <script defer src="/media/client/deck/read.js"></script>
+    <script defer src="/media/client/login.js"></script>
+    <script defer src="/media/client/navigation/navigation.js"></script>
 </body>
 
 </html>

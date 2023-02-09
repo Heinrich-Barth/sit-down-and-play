@@ -1,3 +1,4 @@
+const g_pNameCodeMap = { };
 
 const populateField = function(jDeck, sId, bClear)
 {
@@ -601,19 +602,13 @@ const CalculateDeckCategory =
     }
 };
 
-
-
-
 const onCheckCardCodes = function()
 {
     if (!validateUserName())
         return;
 
-    if (document.getElementById("invalid-cards-info") !== null)
-    {
-        DomUtils.removeAllChildNodes(document.getElementById("invalid-cards-info-result"));
-        document.getElementById("invalid-cards-info").classList.add("hidden");
-    }
+    if (g_pDeckTextFields.onCheckNameCodeSuggestions())
+        return;
 
     const vsCards = getCardCodeList();
     if (vsCards.length === 0)
@@ -663,7 +658,11 @@ const loadSampleUserName = function()
     }));
 };
 
+const g_pDeckTextFields = new DeckTextFields();
+
 (function () {
+
+    g_pDeckTextFields.insert("deck-text-fields", "Deck Details", "w50");
 
 
     const sUserName = document.getElementById("user").value;

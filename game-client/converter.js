@@ -185,13 +185,14 @@ const onProcessDeckCheckResult = function(codes)
     document.getElementById("invalid-cards-info").classList.remove("hidden");
 };
 
+
+
+
+
 const onCheckCardCodes = function()
 {
-    if (document.getElementById("invalid-cards-info") !== null)
-    {
-        DomUtils.removeAllChildNodes(document.getElementById("invalid-cards-info-result"));
-        document.getElementById("invalid-cards-info").classList.add("hidden");
-    }
+    if (g_pDeckTextFields.onCheckNameCodeSuggestions())
+        return;
  
     const vsCards = getCardCodeList();
     if (vsCards.length === 0)
@@ -222,8 +223,10 @@ const onCheckCardCodes = function()
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
     });   
 };
- 
+
+const g_pDeckTextFields = new DeckTextFields();
 (function()
 {
+    g_pDeckTextFields.insert("deck-text-fields", "");
     document.getElementById("host").onclick = onCheckCardCodes;
 })();

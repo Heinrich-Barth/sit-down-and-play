@@ -6,7 +6,7 @@
     <title>Sit down and join a game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta name="robots" content="noindex, nofollow">
-    
+
     <link rel="icon" type="image/png" href="/media/assets/favicon.png">
     <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="/media/assets/css/deckselection.css" />
@@ -16,69 +16,39 @@
 <body class="navigation-full-width converter" data-navigation-type="open">
     <div class="content" id="login">
         <div class="inner-content">
-        <div class="join-game on-drag-hide" id="login">
+            <div class="join-game on-drag-hide" id="login">
 
-        <h1>Convert your Deck</h1>
+                <h1>Convert your Deck</h1>
 
-        <form method="post" action="#">
-            
-            <div class="fields hidden" id="invalid-cards-info">
-                <h2>Invalid Codes found</h2>
-                <p>The following cards could not be found: </p>
-                <div id="invalid-cards-info-result"></div>
-            </div>
-            
-            
-            <div class="fields">
-                <div class="deck-fields w50">
-                    <div class="fields">
-                        <h2>Resources</h2>
-                        <div class="field"><textarea id="resources" class="card-type" title="Paste Resources here" placeholder="Paste Resources here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <h2>Hazards</h2>
-                        <div class="field"><textarea id="hazards" class="card-type" title="Paste Hazards here" placeholder="Paste Hazards here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <h2>Sideboard</h2>
-                        <div class="field"><textarea id="sideboard" class="card-type" title="Paste Sideboard here" placeholder="Paste Sideboard here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <h2>Characters</h2>
-                        <div class="field"><textarea id="characters" class="card-type" title="Paste Characters here" placeholder="Paste Characters here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <h2>Pool</h2>
-                        <div class="field"><textarea id="pool" class="card-type" title="Paste Pool here" placeholder="Paste Pool here"></textarea></div>
-                    </div>
-                    <div class="fields">
-                        <div class="field">
+                <form method="post" action="#">
+                    <div class="fields" id="deck-text-fields">
+                        <div class="deck-fields">
+                            <div class="fields">
+                                <h2>Deck Nots (optional)</h2>
+                                <div class="field"><textarea id="notes" title="Your deck notes go here"
+                                        placeholder="Your deck notes go here"></textarea></div>
+                            </div>
                         </div>
+                        <div class="clear"></div>
+                        <input type="text" id="deckname" placeholder="Your deck name" value="">
+                        <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle"
+                                aria-hidden="true"></i> Convert Deck</button>
                     </div>
-                </div>   
-                <div class="deck-fields">
-                    <div class="fields">
-                        <h2>Deck Nots (optional)</h2>
-                        <div class="field"><textarea id="notes" title="Your deck notes go here" placeholder="Your deck notes go here"></textarea></div>
-                    </div>
-                </div>   
-                <div class="clear"></div>
-                <input type="text" id="deckname" placeholder="Your deck name" value="">
-                <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle" aria-hidden="true"></i> Convert Deck</button>
+                    <div class="clear"></div>
+                </form>
+                <form method="post" action="#" class="hidden" id="form">
+                    <textarea name="data"></textarea>
+                </form>
             </div>
-            <div class="clear"></div>
-        </form>
-        <form method="post" action="#" class="hidden" id="form">
-            <textarea name="data"></textarea>
-        </form>
+        </div>
     </div>
-</div></div>
-    <script src="/media/client/notification/notification.js"></script>
     <script src="/media/client/game/libraries.js"></script>
     <script src="/media/client/deck/read.js"></script>
-    <script src="/media/client/converter.js"></script>
-    <script src="/media/client/saveas.js"></script>
-    <script src="/media/client/navigation/navigation.js"></script>
+    <script src="/media/client/decktextfields/index.js"></script>
+    <script defer src="/media/client/notification/notification.js"></script>
+    <script defer src="/media/client/converter.js"></script>
+    <script defer src="/media/client/saveas.js"></script>
+    <script defer src="/media/client/navigation/navigation.js"></script>
 </body>
 
 </html>
