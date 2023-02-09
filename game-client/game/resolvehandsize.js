@@ -36,7 +36,7 @@ class ResolveHandSizeFirst
         return document.getElementById(this.idContainer) !== null && document.getElementById(this.idSize) !== null;
     }
 
-    getAllowed = function()
+    getAllowed()
     {
         try
         {
@@ -172,7 +172,7 @@ class ResolveHandSizeContainer
         if (handContent === null)
             return;
 
-        const _handSizer = handContent === null ? null : handContent.querySelector(".hand-card-sizer")
+        const _handSizer = handContent.querySelector(".hand-card-sizer");
         const _sizerId = ResolveHandSizeContainer.create(_handSizer, "Always ask to resolve to", 8, "cards.");
         if (_sizerId !== "")
             ResolveHandSizeFirst.create("playercard_hand_container", _sizerId, "cards");
