@@ -421,19 +421,19 @@ const SCORING = {
         overlay.onclick = () => { return false; };
 
         const table = elem.querySelector(".view-score-container");
-        if (table === null)
+        if (table === null || table.querySelector(".return-to-lobby") !== null)
             return;
 
-        const p = document.createElement("p");
-        p.classList.add("center")
-        p.classList.add("return-to-lobby")
-        
         const a = document.createElement("a");
         a.setAttribute("href", "/");
         a.setAttribute("title", "Leave game and return to lobby");
         a.innerText = "Return to lobby."
 
+        const p = document.createElement("p");
         p.appendChild(a);
+        p.classList.add("center");
+        p.classList.add("return-to-lobby");
+
         table.appendChild(p);
     },
     

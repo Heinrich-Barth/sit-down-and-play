@@ -18,8 +18,7 @@
   z-index: 101;
 }
 .scoring-card img {
-  max-width: 300px;
-  max-height: 300px;
+  width: 300px;
   margin: 0 20px;
 }
 .scoring-card .view-score-container h2 {
