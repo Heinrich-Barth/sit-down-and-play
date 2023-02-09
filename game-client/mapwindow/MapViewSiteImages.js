@@ -21,8 +21,6 @@
     createEntry(jEntry, isSite, region, siteSitle)
     {
         this._temp.push({ 
-            set_code : jEntry["set_code"], 
-            image : jEntry["image"], 
             code: jEntry["code"], 
             site: isSite === true, 
             region: region,
@@ -198,11 +196,21 @@
 
     pollCardResultList()
     {
-        if (this._temp === null)
+        if (this._temp === null || this._temp.length === 0)
             return [];
     
+        /** first element is always the region */
+        const _region = this._temp[0].site === false ? this._temp.shift() : null;
         const _res = this._temp;
+
         this._temp = null;
+          
+        _res.sort((a, b) => a.code < b.code ? -1 : 1);
+
+        /** add region if available */
+        if (_region !== null)
+            _res.unshift(_region);
+
         return _res;
     }
 

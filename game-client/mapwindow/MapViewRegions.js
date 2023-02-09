@@ -119,9 +119,12 @@ class MapViewRegions extends MapView {
 
         this.MARKER.regions.bl = new LeafIcon({iconUrl: "/media/maps/marker/region-border.png"});
         this.MARKER.regions.cs = new LeafIcon({iconUrl: "/media/maps/marker/region-coast.png"});
+        this.MARKER.regions.cscs = new LeafIcon({iconUrl: "/media/maps/marker/region-coast-coast.png"});
+        this.MARKER.regions.cscscs = new LeafIcon({iconUrl: "/media/maps/marker/region-coast-coast-coast.png"});
         this.MARKER.regions.dd = new LeafIcon({iconUrl: "/media/maps/marker/region-dark.png"});
         this.MARKER.regions.de = new LeafIcon({iconUrl: "/media/maps/marker/region-sunland.png"});
         this.MARKER.regions.wi = new LeafIcon({iconUrl: "/media/maps/marker/region-wilder.png"});
+        this.MARKER.regions.wiwi = new LeafIcon({iconUrl: "/media/maps/marker/region-wilder-wilder.png"});
         this.MARKER.regions.fd = new LeafIcon({iconUrl: "/media/maps/marker/region-free.png"});
         this.MARKER.regions.ju = new LeafIcon({iconUrl: "/media/maps/marker/region-sunland.png"});
         this.MARKER.regions.sl = new LeafIcon({iconUrl: "/media/maps/marker/region-shadow.png"});
