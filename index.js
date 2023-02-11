@@ -515,7 +515,7 @@ SERVER.onIoConnection = function (socket)
 SERVER.instance.use(function(req, res, next) 
 {
     if (req.path.startsWith("/media/maps/"))
-        res.sendFile(__dirname + '/media/map-tile.jpg');
+        res.redirect("/media/map-black-tile");
     else
         next();
 });
