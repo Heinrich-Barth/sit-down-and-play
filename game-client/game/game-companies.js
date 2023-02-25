@@ -5,22 +5,20 @@ const createCompanyHtml = function(companyId, id)
     div.setAttribute("class", "company tableCell hiddenVisibility nonEmptyContainer");
     div.setAttribute("id", id);
     div.setAttribute("data-company-id", companyId);
-    div.innerHTML = `<div class="company-site-list pos-rel">
-                    <div class="location-icon-image fa fa-code-fork location-underdeep location-select-ud hiddenToOpponent" title="Organise underdeep movement"></div>
-                    <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise region movement"></div>
-                    <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement"></div>
-                    <div class="sites">
-                        <div class="site-container site-current fl"></div>
-                        <div class="site-container site-regions fl"></div>
-                        <div class="site-container site-target fl"></div>
-                        <div class="site-container site-onguard fl"></div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <div class="company-characters-add fl"></div>
-                <div class="company-characters fl"></div>
-                <div class="clear"></div>`;
+    div.innerHTML = `
+        <div class="company-site-list pos-rel">
+            <div class="location-icon-image fa fa-code-fork location-underdeep location-select-ud hiddenToOpponent" title="Organise underdeep movement"></div>
+            <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise region movement"></div>
+            <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement"></div>
+            <div class="sites">
+                <div class="site-container site-current"></div>
+                <div class="site-container site-regions"></div>
+                <div class="site-container site-target"></div>
+                <div class="site-container site-onguard"></div>
+            </div>
+        </div>
+        <div class="company-characters-add"></div>
+        <div class="company-characters"></div>`.trim();
     return div;
 }
 
@@ -37,7 +35,7 @@ const createOpponentContainer = function(sHexPlayerCode, playerId)
 
     /* create new container for opponent */
     const div = document.createElement("div");
-    div.setAttribute("class", "col90 companies center-text");
+    div.setAttribute("class", "col90 companies");
     div.setAttribute("id", "companies_opponent_" + sHexPlayerCode);
     div.setAttribute("data-player", sHexPlayerCode);
     div.innerHTML = `<div class="company tableCell emptyContainer create-new-company hiddenToOpponent" id="create_new_company_opponent_${sHexPlayerCode}">
@@ -101,20 +99,11 @@ const createCharacterHtml = function(jsonCard, id)
 
     let pCharacterContainer = document.createElement("div");
     pCharacterContainer.setAttribute("class", "company-character-container pad10 pos-rel");
-
-    {
-        let pCharDiv = document.createElement("div");
-        pCharDiv.setAttribute("class", "company-character-host");
-        pCharDiv.appendChild(createNewCard(jsonCard));
-        pCharacterContainer.appendChild(pCharDiv);
-    }
-
-    {
-        let pCharDiv = document.createElement("div");
-        pCharDiv.setAttribute("class", "company-character-reosurces company-character-reosurces-empty");
-        pCharacterContainer.appendChild(pCharDiv);
-    }
     
+    const pCharDiv = document.createElement("div");
+    pCharDiv.setAttribute("class", "company-character-host company-character-reosurces");
+    pCharDiv.appendChild(createNewCard(jsonCard));
+    pCharacterContainer.appendChild(pCharDiv);
 
     const pTemp = document.createElement("div");
     pTemp.setAttribute("class", "company-character-influenced");
@@ -302,15 +291,20 @@ const GameCompanies = {
                 return 0;
 
             for (let elem of vsList)
-                pContainer.appendChild(createNewCard(elem));
+                pContainer.prepend(createNewCard(elem));
 
             return vsList.length;
         },
 
         addInfluenced: function (vsList, pContainer)
         {
-            if (vsList.length === 0 || pContainer === null)
+            if (vsList.length === 0)
                 return 0;
+            else if (pContainer === null)
+            {
+                console.warn("Cannot find influenced character container");
+                return 0;
+            }
 
             for (let elem of vsList)
                 GameCompanies.character.add(elem, pContainer, false, false);
@@ -339,13 +333,9 @@ const GameCompanies = {
             nAdded += this.addResources(jsonCharacter.resources, pContainerResources);
             nAdded += this.addResources(jsonCharacter.hazards, pContainerResources);
 
-            if (nAdded === 0)
-                pContainerResources.classList.add("hosts_nothing");
-            else
-                pContainerResources.classList.remove("hosts_nothing");
-
             pContainerResources.setAttribute("data-stack-size", nAdded);
 
+            console.log(pCharacter);
             this.addInfluenced(jsonCharacter.influenced, pCharacter.querySelector(".company-character-influenced"));
             
             ArrayList(pCharacter).find("img.card-icon").each(function (img)
