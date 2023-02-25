@@ -25,7 +25,7 @@ class ChatBox {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/game/chat/chat.css");
+        styleSheet.setAttribute("href", "/media/client/game/chat/chat.css?t=" + Date.now());
         document.head.appendChild(styleSheet);
 
         const div = document.createElement("div");

@@ -9,7 +9,7 @@ const Lobby = {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/game/lobby/lobby.css");
+        styleSheet.setAttribute("href", "/media/client/game/lobby/lobby.css?t=" + Date.now());
         document.head.appendChild(styleSheet);
     },
 

@@ -12,7 +12,7 @@ class DiscardPileAtTable
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/game/discardpile/discardpile.css");
+        styleSheet.setAttribute("href", "/media/client/game/discardpile/discardpile.css?t=" + Date.now());
         document.head.appendChild(styleSheet);
     }
 
@@ -24,7 +24,6 @@ class DiscardPileAtTable
 
         const elem = document.createElement("div");
         elem.classList.add("discardpiles");
-        elem.classList.add("fr");
         if (!DiscardPileAtTable.isWatching())
             elem.classList.add("hide");
 

@@ -622,6 +622,6 @@ function createScoringApp(_CardList)
     const styleSheet = document.createElement("link")
     styleSheet.setAttribute("rel", "stylesheet");
     styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/media/client/game/score/score.css");
+    styleSheet.setAttribute("href", "/media/client/game/score/score.css?t=" + Date.now());
     document.head.appendChild(styleSheet);
 })();

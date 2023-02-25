@@ -66,7 +66,7 @@ class HighlightElement {
     const styleSheet = document.createElement("link")
     styleSheet.setAttribute("rel", "stylesheet");
     styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/media/client/game/highlight/highlight.css");
+    styleSheet.setAttribute("href", "/media/client/game/highlight/highlight.css?t=" + Date.now());
     document.head.appendChild(styleSheet);
 })();
 

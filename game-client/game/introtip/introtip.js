@@ -49,7 +49,7 @@ setTimeout(() => {
         const link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
         link.setAttribute("type", "text/css");
-        link.setAttribute("href", "/media/client/game/introtip/introtip.css");
+        link.setAttribute("href", "/media/client/game/introtip/introtip.css?t=" + Date.now());
         
         document.head.appendChild(link);
     }

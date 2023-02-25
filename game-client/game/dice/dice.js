@@ -121,7 +121,7 @@ class DiceContainer {
     const styleSheet = document.createElement("link")
     styleSheet.setAttribute("rel", "stylesheet");
     styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/media/client/game/dice/dice.css");
+    styleSheet.setAttribute("href", "/media/client/game/dice/dice.css?t=" + Date.now());
     document.head.appendChild(styleSheet);
 })();
 

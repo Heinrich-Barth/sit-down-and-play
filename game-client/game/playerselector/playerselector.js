@@ -167,6 +167,6 @@ class PlayerSelector
     const styleSheet = document.createElement("link")
     styleSheet.setAttribute("rel", "stylesheet");
     styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/media/client/game/playerselector/playerselector.css");
+    styleSheet.setAttribute("href", "/media/client/game/playerselector/playerselector.css?t=" + Date.now());
     document.head.appendChild(styleSheet);
 })();
