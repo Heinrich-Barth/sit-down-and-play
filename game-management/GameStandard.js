@@ -330,7 +330,11 @@ class GameStandard extends GamePlayers
         else if (nState === 180)
             message = "wounds ";
 
-        this.publishChat(userid, message + data.code);
+        const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
+        if (card !== null && card.revealed === true)
+            this.publishChat(userid, message + data.code);
+        else 
+            this.publishChat(userid, message + "a card");
     }
 
     onGameStateGlow(userid, _socket, data)
