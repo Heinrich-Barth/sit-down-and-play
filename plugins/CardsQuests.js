@@ -28,8 +28,8 @@ exports.identifyQuests = function(jsonCards)
         if (card.Race !== undefined && card.Race.startsWith("Quest-Side-"))
         {
             list[card.code] = "";
-            images_to_code[card.ImageName] = card.code;
-            code_to_images[card.code] = card.ImageName;
+            images_to_code[card.ImageName.replace(".webp", ".jpg")] = card.code;
+            code_to_images[card.code] = card.ImageName.replace(".webp", ".jpg");
         }
     }   
 
