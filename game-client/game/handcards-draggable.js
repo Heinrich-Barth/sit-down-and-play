@@ -126,6 +126,11 @@ class DropableAreas {
     { 
         return DropableAreas.get("icon_hand"); 
     }
+
+    static handContent()
+    {
+        return DropableAreas.get("playercard-hand-content");
+    }
     
     static victory() 
     { 
@@ -926,6 +931,14 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
     });
     
     jQuery(DropableAreas.hand()).droppable(
+    {
+        tolerance: "pointer",
+        classes: HandCardsDraggable.droppableParams,
+        accept: HandCardsDraggable.droppableAccept,
+        drop: DropFunctions.dropOnHand
+    });
+
+    jQuery(DropableAreas.handContent()).droppable(
     {
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
