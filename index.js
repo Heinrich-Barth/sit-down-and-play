@@ -28,11 +28,21 @@ let SERVER = {
         cache : {
 
             cacheDate : new Date(Date.now() + (8640000 * 1000)).toUTCString(),
+            cacheDate6hrs : new Date(Date.now() + (21600 * 1000)).toUTCString(),
 
             jsonCallback : function(_req, res, next)
             {
                 res.header("Cache-Control", "public, max-age=8640000");
                 res.header("Expires", SERVER.caching.cache.cacheDate);
+                res.header('Content-Type', "application/json");
+                
+                next();
+            },
+
+            jsonCallback6hrs : function(_req, res, next)
+            {
+                res.header("Cache-Control", "public, max-age=21600");
+                res.header("Expires", SERVER.caching.cache.cacheDate6hrs);
                 res.header('Content-Type', "application/json");
                 
                 next();
@@ -319,12 +329,12 @@ if (SERVER.configuration.useLocalImages())
 /**
  * Show list of available images. 
  */
-SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getImageList()).status(200));
+SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getImageList()).status(200));
 
 /**
  * Show list of available sites
  */
-SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
+SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
 
 /** Suggestions for code/name resolving */
 SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getNameCodeSuggestionMap()).status(200));
@@ -344,7 +354,7 @@ SERVER.instance.get("/data/marshallingpoints", SERVER.caching.expires.jsonCallba
 /**
  * Provide the cards
  */
-SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback, (_req, res) => res.send(SERVER.cards.getCards()).status(200));
+SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getCards()).status(200));
 
 SERVER.instance.get("/data/list/filters", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getFilters()).status(200));
 
