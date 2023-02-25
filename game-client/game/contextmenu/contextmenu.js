@@ -198,10 +198,6 @@ const ContextMenu = {
 
             if (e.target === null)
                 return false;
-                
-            let code = ContextMenu._getCardCode(e.target);
-            if (code === "")
-                code = ContextMenu.getAttribute(e.target, "data-card-code");
 
             let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
             if (uuid === "")
@@ -589,7 +585,7 @@ const ContextMenu = {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/game/contextmenu/contextmenu.css");
+        styleSheet.setAttribute("href", "/media/client/game/contextmenu/contextmenu.css?t=" + Date.now());
         document.head.appendChild(styleSheet);
     },
 
