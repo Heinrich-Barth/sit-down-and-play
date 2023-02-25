@@ -32,13 +32,28 @@
 .game-watch-only .area-opponent 
 {
     max-height: 90%;
+    display: block;
 }
+
+.game-watch-only .staging-area
+{
+    width: 100%;
+}
+
+.game-watch-only .visitor-hand-view
+{
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
 
 .game-watch-only .staging-area,
 .game-watch-only .companies,
-.game-watch-only .visitor-hand-view
+.game-watch-only .visitor-hand-view,
+.game-watch-only .table .row,
+.game-watch-only .area-opponent 
 {
-    flex: 1 100%;
+    display: block !important;
 }
 
 .game-watch-only div#opponent_table .company,
@@ -94,6 +109,19 @@
 .game-watch-only .staging-area .fr { float: left; }
 .game-watch-only .visitor-hand-view .card-hand
 {
-    display: inline;
+    display: inline-block;
     margin-right: 1px;
+}
+
+.game-watch-only .visitor-hand-view::before {
+    content: 'Hand Cards';
+    display: block;
+    text-align: center;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 5px;
+    color: #ff0;
+    text-transform: uppercase;
+    font-size: 0.7em;
+    padding: 5px 2px;
+    z-index: 901;
 }

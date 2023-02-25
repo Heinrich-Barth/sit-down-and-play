@@ -3,7 +3,6 @@
 .zoom-2 {
 
     .company-character-reosurces {
-        margin-top: -90px;
 
         .card
         {
@@ -33,65 +32,68 @@ img.card-icon {
 }
 
 .company-character-reosurces {
-    margin-top: -50px;
     min-height: 84px;
     display: flex;
     flex-direction: column;
 
     .card {
-        margin-top: -50px;
+        margin-top: -60px;
         z-index: 101;
 
         &:nth-child(1) {
-            transform: translateX(15px) translateY(0px);
+            transform: translateX(0px) translateY(0px);
             margin-top: 0;
         }
 
         &:nth-child(2) {
-            transform: translateX(30px);
+            transform: translateX(15px);
         }
 
         &:nth-child(3) {
-            transform: translateX(45px);
+            transform: translateX(30px);
         }
 
         &:nth-child(4) {
-            transform: translateX(60px);
+            transform: translateX(45px);
         }
 
         &:nth-child(5) {
-            transform: translateX(75px);
+            transform: translateX(60px);
         }
 
         &:nth-child(6) {
-            transform: translateX(90px);
+            transform: translateX(75px);
         }
 
         &:nth-child(7) {
-            transform: translateX(105px);
+            transform: translateX(90px);
         }
 
         &:nth-child(8) {
-            transform: translateX(130px);
+            transform: translateX(105px);
         }
 
         &:nth-child(9) {
-            transform: translateX(145px);
+            transform: translateX(130px);
         }
 
         &:nth-child(10) {
-            transform: translateX(160px);
+            transform: translateX(145px);
         }
 
         &:nth-child(11) {
-            transform: translateX(175px);
+            transform: translateX(160px);
         }
 
         &:nth-child(12) {
-            transform: translateX(190px);
+            transform: translateX(175px);
         }
 
         &:nth-child(13) {
+            transform: translateX(190px);
+        }
+
+        &:nth-child(14) {
             transform: translateX(205px);
         }
     }

@@ -119,12 +119,10 @@ a {
 .table {
     position: relative;
     width: 100%;
-
-    &.full-height {
-        height: 100%;
-    }
+    height: 100%;
 
     .area {
+        display: table;
         width: 100%;
     }
 
@@ -151,11 +149,32 @@ a {
             display: none !important;
         }
     }
+
+    .row {
+        display: table-row;
+        margin: 0 50px;
+        height: 100%;
+
+        div.card { display: inline-block; }
+    }
+
+    .companies {
+        display: table-cell;
+        vertical-align: top;
+        position: relative;
+    }
+
+    .tableCell { 
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: top;
+    }
 }
 
 img.card-icon {
     background: url("/data/backside") 0 0 no-repeat;
     background-size: contain;
+    border-radius: 5%;
 }
 
 .clear {
@@ -202,7 +221,6 @@ img.card-icon {
     font-size: 11px;
 }
 
-.rot90,
 .state_tapped img,
 .state_tapped_fixed img,
 .tapped {
@@ -313,19 +331,23 @@ img.card-icon {
 
 /* COMPANY AREA */
 .staging-area {
-    flex: 1 20%;
     position: relative;
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 50px;
+    width: 25%;
 
     .staging-area-drop {
         display: none;
     }
 
     &.staging-area-opponent {
-        padding-top: 20px;
+        padding: 20px 50px 0 0;
+        text-align: right;
     }
 
     .card {
-        float: left;
+        display: inline-block;
         margin-left: 2px;
 
         img.card-icon {
@@ -344,6 +366,20 @@ img.card-icon {
         width: 300px;
         height: 100px;
         border: 2px dashed transparent;
+    }
+
+    .sites {
+
+        .site-regions,
+        .site-target
+        {
+            margin-left: -30px;
+        }
+
+        .site-container {
+            position: relative;
+            display: inline-block;
+        }
     }
 
     .company {
@@ -395,9 +431,6 @@ img.card-icon {
 }
 
 
-.row {
-    padding: 0 10px 0 50px;
-}
 
 @import "tabletop-dragging.scss";
 @import "tabletop_zoomlevels.scss";
