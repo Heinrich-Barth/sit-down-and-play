@@ -151,6 +151,8 @@ class RegionMapPreferences extends Preferences {
                 return this.isTrue(this.hero);
             case "minion":
                 return this.isTrue(this.minion);
+            case "dual":
+                return this.isTrue(this.hero) || this.isTrue(this.minion);
             case "fallenwizard":
                 return this.isTrue(this.fallenwizard);
             case "balrog":
