@@ -129,10 +129,6 @@ a {
     .area-player {
         position: relative;
         min-height: 30%;
-
-        .card-bar {
-            bottom: 0;
-        }
     }
 
     .area-opponent {
@@ -194,9 +190,7 @@ img.card-icon {
 .card-bar {
     position: fixed;
     z-index: 100;
-    width: 40px;
     bottom: 5px;
-    height: 320px;
 
     a {
         text-align: center;
@@ -243,7 +237,7 @@ img.card-icon {
 
 .card-hands {
     position: fixed;
-    left: 50px;
+    left: 55px;
     bottom: 5px;
     z-index: 400;
     padding: 5px;

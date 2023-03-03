@@ -455,6 +455,8 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "Stores " + card.code);
             if (nDiscarded > 0)
                 this.publishChat(userid, "... and discarded " + nDiscarded + " card(s)");
+
+            this.publishToPlayers("/game/event/score", userid, {owner: card.owner, code: card.code });
         } 
         else
             this.publishChat(userid, "Could not store " + card.code);
@@ -556,6 +558,11 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target);
 
         this.onRedrawCompany(userid, result.affectedCompanyUuid);
+
+        if (obj.target === "outofplay")
+            this.publishToPlayers("/game/event/outofplay", userid, {code: card.code });
+        else if (obj.target  === "discardpile")
+            this.replyToPlayer("/game/event/discard", socket, {code: card.code, owner: card.owner});
     }
 
     onCardToken(userid, _socket, data)

@@ -96,6 +96,11 @@ const MeccgPlayers = {
         MeccgApi.addListener("/game/set-player-names", this.setPlayerNames.bind(this));
         MeccgApi.addListener("/game/player/add", this.addPlayer.bind(this));
         MeccgApi.addListener("/game/chat/message", this.onChatMessage.bind(this));
+    },
+
+    isMyCard : function(owner)
+    {
+        return owner && MeccgPlayers.myId === owner;
     }
 };
 

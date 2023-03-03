@@ -7,19 +7,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <meta name="robots" content="noindex">
         <meta name="theme-color" content="#000000"/>
-        <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=230225" />
-        <link rel="stylesheet" href="/media/assets/css/bootstrap.css?version=230225" />
-        <link rel="stylesheet" href="/media/assets/css/backgrounds.css?version=230225" />
-        <link rel="stylesheet" href="/media/assets/css/leaflet.css?version=230225" />
-        <link rel="stylesheet" href="/media/assets/css/game-preferences.css?version=230225" />
+        <link rel="stylesheet" href="/media/assets/css/tabletop.css?version=230203" />
+        <link rel="stylesheet" href="/media/assets/css/bootstrap.css?version=230203" />
+        <link rel="stylesheet" href="/media/assets/css/backgrounds.css?version=230203" />
+        <link rel="stylesheet" href="/media/assets/css/leaflet.css?version=230203" />
+        <link rel="stylesheet" href="/media/assets/css/game-preferences.css?version=230203" />
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="/media/assets/css/ingame-draggable-tips.css?version=230225" />
-        <link rel="stylesheet" href="/media/assets/css/game-tokens.css?version=230225" />
-        <link rel="stylesheet" href="/media/personalisation/personalisation.css?version=230225" />
+        <link rel="stylesheet" href="/media/assets/css/ingame-draggable-tips.css?version=230203" />
+        <link rel="stylesheet" href="/media/assets/css/game-tokens.css?version=230203" />
+        <link rel="stylesheet" href="/media/personalisation/personalisation.css?version=230203" />
         
         <script src="/media/client/httpsonly.js"></script>
-        <script src="/media/assets/js/jquery.min.js?version=230225"></script>
-        <script src="/media/assets/js/jquery-ui.min.js?version=230225"></script>
+        <script src="/media/assets/js/jquery.min.js?version=230203"></script>
+        <script src="/media/assets/js/jquery-ui.min.js?version=230203"></script>
         <script src="/media/assets/js/jquery-ui.touch-punch.min.js"></script>
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
         <base target="_self">
@@ -41,20 +41,45 @@
                 </div>
             </div>
 
-            <div class="card-bar card-bar-shared blue-box">
+            <div class="card-bar card-bar-shared">
                 <div class="icons">
-                    <a id="shared_victories" class="icon fa fa-university" title="Look at opponent's scored cards."></a>
-                    <a id="shared_outofplay" class="icon fa fa fa-trash-o" title="View cards which are out of play"></a>
+                    <a id="shared_victories" class="icon icon-shared icon-shared-victory" title="Look at opponent's Marshalling Point Pile.">
+                        <img src="/data/backside" alt="stored cards" id="icon-preview-shared-scored">
+                        <i class="fa fa-university"></i>
+                    </a>
+                    <a id="shared_outofplay" class="icon icon-shared icon-shared-out" title="View cards which are out of play">
+                        <img src="/data/backside" alt="out-of-play cards" id="icon-preview-shared-outofplay">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
                 </div>
             </div>
 
-            <div class="card-bar card-bar-play blue-box">
+            <div class="card-bar card-bar-play">
                 <div class="icons" id="card_counter">
-                    <a id="icon_bar_victory" class="icon victory" title="Look at victory pile. Right click to edit score sheet"><span class="size">0</span></a>
-                    <a id="icon_hand" class="icon hand act context-cursor" title="Look at hand cards. Right click to reveal cards to opponent"><span class="size">0</span></a>
-                    <a id="icon_bar_playdeck" class="icon playdeck context-cursor" title="Look at remaining playdeck. Right click to shuffle"><span class="size">0</span></a>
-                    <a id="icon_bar_discardpile" class="icon discardpile" title="Look at discard pile"><span class="size">0</span></a>
-                    <a id="icon_bar_sideboard" class="icon sideboard " title="Look at sideboard"><span class="size">0</span></a>
+                    <a id="icon_bar_victory" class="icon victory icon-tooltip icon-tooltip-mps" title="Look at victory pile. Right click to edit score sheet">
+                        <img src="/data/backside" alt="out-of-play cards" id="icon-preview-scored">
+                        <i class="fa fa-diamond"></i>
+                        <span class="size">0</span>
+                    </a>
+                    <a id="icon_bar_playdeck" class="icon playdeck icon-tooltip icon-tooltip-playdeck context-cursor" title="Look at remaining playdeck. Right click to shuffle">
+                        <img src="/data/backside" alt="out-of-play cards">
+                        <span class="size">0</span>
+                    </a>
+                    <a id="icon_bar_discardpile" class="icon icon-tooltip discardpile icon-tooltip-discard" title="Look at discard pile">
+                        <img src="/data/backside" alt="out-of-play cards" id="icon-preview-discard">
+                        <i class="fa fa-inbox"></i>
+                        <span class="size">0</span>
+                    </a>
+                    <a id="icon_bar_sideboard" class="icon icon-tooltip sideboard icon-tooltip-sideboard" title="Look at sideboard">
+                        <img src="/data/backside" alt="out-of-play cards">
+                        <i class="fa fa-th"></i>
+                        <span class="size">0</span>
+                    </a>
+                    <a id="icon_hand" class="icon act context-cursor icon-tooltip icon-tooltip-hand hand"  title="Look at hand cards. Right click to reveal cards to opponent">
+                        <img src="/data/backside" alt="out-of-play cards">
+                        <i class="hand"></i>
+                        <span class="size">0</span>
+                    </a>
                 </div>
             </div>
 
@@ -142,49 +167,49 @@
         </script>
 
         <script src="/media/client/socket.io.min.js"></script>
-        <script src="/media/client/question/question.js?version=230225"></script>
-        <script src="/media/client/game/libraries.js?version=230225"></script>
-        <script src="/media/client/game/PageRefreshInfo.js?version=230225"></script>
-        <script src="/media/client/game/meccg-api.js?version=230225"></script>
-        <script src="/media/client/game/dice/dice.js?version=230225"></script>
+        <script src="/media/client/question/question.js?version=230203"></script>
+        <script src="/media/client/game/libraries.js?version=230203"></script>
+        <script src="/media/client/game/PageRefreshInfo.js?version=230203"></script>
+        <script src="/media/client/game/meccg-api.js?version=230203"></script>
+        <script src="/media/client/game/dice/dice.js?version=230203"></script>
         <script src="/media/client/game/discardpile/discardpile.js"></script>
-        <script src="/media/client/game/game-events.js?version=230225"></script>
-        <script src="/media/client/game/PreferenceChoise.js?version=230225"></script>
-        <script src="/media/client/game/BackgroundChooser.js?version=230225"></script>
-        <script src="/media/client/game/added-cards-monitor.js?version=230225"></script>
-        <script src="/media/client/preferences.js?version=230225"></script>
-        <script src="/media/client/notification/notification.js?version=230225"></script>
-        <script src="/media/client/game/cardlist.js?version=230225"></script>
-        <script src="/media/client/game/score/score.js?version=230225"></script>
-        <script src="/media/client/game/playerselector/playerselector.js?version=230225"></script>
-        <script src="/media/client/game/contextmenu/contextmenu.js?version=230225"></script>
-        <script src="/media/client/game/game-staging-area.js?version=230225"></script>
-        <script src="/media/client/game/game-companies.js?version=230225"></script>
-        <script src="/media/client/game/card-preview.js?version=230225"></script>
-        <script src="/media/client/game/game-taskbarcards.js?version=230225"></script>
-        <script src="/media/client/game/handcards-draggable.js?version=230225"></script>
-        <script src="/media/client/game/gamebuilder.js?version=230225"></script>
-        <script src="/media/client/game/game-tabletop.js?version=230225"></script>
-        <script src="/media/client/game/resolvehandsize.js?version=230225"></script>
-        <script src="/media/client/game/arda/exchangebox.js?version=230225"></script>
-        <script src="/media/client/game/arda/game-arda.js?version=230225"></script>
-        <script src="/media/client/game/savedgame.js?version=230225"></script>
-        <script src="/media/client/game/watch/watch.js?version=230225"></script>
-        <script src="/media/client/onready.js?version=230225"></script>
+        <script src="/media/client/game/game-events.js?version=230203"></script>
+        <script src="/media/client/game/PreferenceChoise.js?version=230203"></script>
+        <script src="/media/client/game/BackgroundChooser.js?version=230203"></script>
+        <script src="/media/client/game/added-cards-monitor.js?version=230203"></script>
+        <script src="/media/client/preferences.js?version=230203"></script>
+        <script src="/media/client/notification/notification.js?version=230203"></script>
+        <script src="/media/client/game/cardlist.js?version=230203"></script>
+        <script src="/media/client/game/score/score.js?version=230203"></script>
+        <script src="/media/client/game/playerselector/playerselector.js?version=230203"></script>
+        <script src="/media/client/game/contextmenu/contextmenu.js?version=230203"></script>
+        <script src="/media/client/game/game-staging-area.js?version=230203"></script>
+        <script src="/media/client/game/game-companies.js?version=230203"></script>
+        <script src="/media/client/game/card-preview.js?version=230203"></script>
+        <script src="/media/client/game/game-taskbarcards.js?version=230203"></script>
+        <script src="/media/client/game/handcards-draggable.js?version=230203"></script>
+        <script src="/media/client/game/gamebuilder.js?version=230203"></script>
+        <script src="/media/client/game/game-tabletop.js?version=230203"></script>
+        <script src="/media/client/game/resolvehandsize.js?version=230203"></script>
+        <script src="/media/client/game/arda/exchangebox.js?version=230203"></script>
+        <script src="/media/client/game/arda/game-arda.js?version=230203"></script>
+        <script src="/media/client/game/savedgame.js?version=230203"></script>
+        <script src="/media/client/game/watch/watch.js?version=230203"></script>
+        <script src="/media/client/onready.js?version=230203"></script>
 
-        <script defer src="/media/client/game/map/map.js?version=230225"></script>
-        <script defer src="/media/client/game/introtip/introtip.js?version=230225"></script>
-        <script defer src="/media/client/game/lobby/lobby.js?version=230225"></script>
-        <script defer src="/media/client/game/chat/chat.js?version=230225"></script>
-        <script defer src="/media/client/game/preferences-game.js?version=230225"></script>
-        <script defer src="/media/client/game/highlight/highlight.js?version=230225"></script>
-        <script defer src="/media/client/game/DiceChooser.js?version=230225"></script>
-        <script defer src="/media/client/game/addcards/addcards.js?version=230225"></script>
-        <script defer src="/media/client/game/dicestats.js?version=230225"></script>
-        <script defer src="/media/client/game/shortcuts.js?version=230225"></script>
-        <script defer src="/media/client/saveas.js?version=230225"></script>
-        <script defer src="/media/client/ping.js?version=230225"></script>
-        <script defer src="/media/client/game/sfx/sfx.js?version=230225"></script>
+        <script defer src="/media/client/game/map/map.js?version=230203"></script>
+        <script defer src="/media/client/game/introtip/introtip.js?version=230203"></script>
+        <script defer src="/media/client/game/lobby/lobby.js?version=230203"></script>
+        <script defer src="/media/client/game/chat/chat.js?version=230203"></script>
+        <script defer src="/media/client/game/preferences-game.js?version=230203"></script>
+        <script defer src="/media/client/game/highlight/highlight.js?version=230203"></script>
+        <script defer src="/media/client/game/DiceChooser.js?version=230203"></script>
+        <script defer src="/media/client/game/addcards/addcards.js?version=230203"></script>
+        <script defer src="/media/client/game/dicestats.js?version=230203"></script>
+        <script defer src="/media/client/game/shortcuts.js?version=230203"></script>
+        <script defer src="/media/client/saveas.js?version=230203"></script>
+        <script defer src="/media/client/ping.js?version=230203"></script>
+        <script defer src="/media/client/game/sfx/sfx.js?version=230203"></script>
 
     </body>
 </html>

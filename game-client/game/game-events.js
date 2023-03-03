@@ -162,6 +162,37 @@ class GameEvents
         this.markNonPermanentEvents();
     }
 
+    onScoreCard(e)
+    {
+        if (e.detail && e.detail !== "")
+            this.updateCardPreview("icon-preview-scored", e.detai);
+    }
+
+    onScoredShared(_bIsMe, data)
+    {
+        this.updateCardPreview("icon-preview-shared-scored", data.code);
+        if (MeccgPlayers.isMyCard(data.owner))
+            this.updateCardPreview("icon-preview-scored", data.code);
+    }
+
+    onDiscard(_bIsMe, data)
+    {
+        if (MeccgPlayers.isMyCard(data.owner))
+            this.updateCardPreview("icon-preview-discard", data.code);
+    }
+
+    onOutOfPlay(_bIsMe, data)
+    {
+        this.updateCardPreview("icon-preview-shared-outofplay", data.code);
+    }
+
+    updateCardPreview(imageId, code)
+    {
+        const img = document.getElementById(imageId);
+        if (img !== null)
+            img.setAttribute("src", g_Game.CardList.getImage(code));
+    }
+
     /**
      * 
      * @param {Boolean} bIsMe 
@@ -187,20 +218,21 @@ class GameEvents
                 this.triggerGenericEvent("discard", _d);
         }
 
-
-        if ((this.pallandoInPlay || this.isWatcher) &&
-            (data.target === "discard" || data.target === "discardpile"))
+        if (data.target === "discard" || data.target === "discardpile")
         {
-            const card = data.list[data.list.length-1];
-            if (card.owner !== this.pallandoOwner || this.isWatcher)
+            if (this.pallandoInPlay || this.isWatcher)
             {
-                document.body.dispatchEvent(new CustomEvent("meccg-discardpile-add", { "detail": {
-                    code: card.code,
-                    owner: card.owner
-                }}));
+                const card = data.list[data.list.length-1];
+                if (card.owner !== this.pallandoOwner || this.isWatcher)
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-discardpile-add", { "detail": {
+                        code: card.code,
+                        owner: card.owner
+                    }}));
+                }
             }
         }
-    }
+     }
 
     registerEventCode(code, callback)
     {
@@ -263,6 +295,12 @@ GameEvents.INSTANCE.setupEvents();
 
 MeccgApi.addListener("/game/event/fromHand", GameEvents.INSTANCE.onPlayFromHand.bind(GameEvents.INSTANCE));
 MeccgApi.addListener("/game/event/cardmoved", GameEvents.INSTANCE.onMoveToPile.bind(GameEvents.INSTANCE));
+MeccgApi.addListener("/game/event/score", GameEvents.INSTANCE.onScoredShared.bind(GameEvents.INSTANCE));
+MeccgApi.addListener("/game/event/outofplay", GameEvents.INSTANCE.onOutOfPlay.bind(GameEvents.INSTANCE));
+MeccgApi.addListener("/game/event/discard", GameEvents.INSTANCE.onDiscard.bind(GameEvents.INSTANCE));
+
 
 document.body.addEventListener("meccg-api-connected", GameEvents.INSTANCE.onBoardRestored.bind(GameEvents.INSTANCE), false);
 document.body.addEventListener("meccg-event-phase", GameEvents.INSTANCE.onProgressToPhase.bind(GameEvents.INSTANCE), false);
+document.body.addEventListener("meccg-score-card", GameEvents.INSTANCE.onScoreCard.bind(GameEvents.INSTANCE), false);
+document.body.addEventListener("meccg-event-outofplay", GameEvents.INSTANCE.onOutOfPlay.bind(GameEvents.INSTANCE), false);

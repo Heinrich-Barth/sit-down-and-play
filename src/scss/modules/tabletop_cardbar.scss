@@ -2,26 +2,117 @@
 {
     &.card-bar-shared{
         top: 40%;
-        height: 100px;
         transform: translateY(-50%);
         position: absolute;
+        max-height: 150px;
 
         .icon {
-            font-size: 25px;
-            padding: 5px 0;
+            font-size: 0.8em;
+            padding: 2px 0;
             height: auto;
+            width: auto;
         }
+    }
+
+    &.card-bar-play {
+
+        a {
+            background: none !important;
+        }
+        .icon {
+            font-size: 0.8em;
+            padding: 2px 0;
+            height: auto;
+            width: auto;
+
+            &:hover{
+                filter: sepia(100%) brightness(150%);
+            }
+        }
+
+        span {
+            position: absolute;
+            right: 2px;
+            bottom: 2px;
+        }
+
+        i {
+            position: absolute;
+            left: 5px;
+            bottom: 5px;
+            height: 20px;
+            width: 20px;
+            background-size: contain;        
+        }
+    }
+
+    a.icon {
+        display: block;
+        position: relative;
+
+        i {
+            right: 5px;
+            bottom: 5px;
+            position: absolute;
+        }
+    }
+
+    .icon-tooltip::after,
+    .icon-shared::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50px;
+        opacity: 0.9;
+        background-color: #000;
+        color: #ff0; 
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+    } 
+    
+    .icon-shared-out::after {
+        content: 'Out';
+    }
+
+    .icon-shared-victory::after {
+        content: 'MPs';
+    }
+
+    .icon-tooltip-mps::after {
+        content: 'MPs';
+    }
+
+    .icon-tooltip-playdeck::after {
+        content: 'Deck';
+    }
+
+    .icon-tooltip-discard::after {
+        content: 'Discard';
+    }
+
+    .icon-tooltip-sideboard::after {
+        content: 'Sideboard';
+        font-size: 0.78em;
+    }
+
+    .icon-tooltip-hand::after {
+        content: 'Hand';
     }
 
     .icon
     {
-        height: 50px;
+        max-height: 70px;
         color: white;
         font-size: 12px;
     
         span.count
         {
             padding-left: 2px;
+        }
+
+        img {
+            max-height: 70px;
+            border-radius: 5%;
         }
     }
     
