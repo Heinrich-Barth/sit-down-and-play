@@ -1,4 +1,5 @@
 const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
+const CardRepositoryUnderdeeps = require("./CardRepositoryUnderdeeps")
 
 const getRemovableKeysArray = function()
 {
@@ -105,10 +106,46 @@ class CardRepository {
             this._CardRepository[card.code] = card;
     }
 
+    buildFlipCardsMap()
+    {
+        const questsB = { };
+        const quests = { };
+
+        for (let card of this._raw)
+        {
+            if (card["flip-title"] !== card.normalizedtitle)
+                questsB[card["flip-title"]] = card.code;
+        }
+
+        for (let card of this._raw)
+        {
+            if (questsB[card.normalizedtitle] !== undefined)
+            {
+                const cardCodeA = card.code;
+                const cardCodeB = questsB[card.normalizedtitle];
+                quests[cardCodeA] = cardCodeB;
+                quests[cardCodeB] = cardCodeA;
+            }
+            else if (card.Race === "Quest" && card.normalizedtitle === card["flip-title"])
+            {
+                quests[card.code] = card.code;
+            }
+        }
+
+        return quests;
+    }
+
     identifyQuests()
     {
-        for (let card of this._raw) 
-            card.isQuest = card.Race !== undefined && card.Race.startsWith("Quest-Side-");
+        let nCount = 0;
+        for (let card of this._raw)
+        {
+            card.isQuest = card.Race && card.Race.toLowerCase().startsWith("quest") ? true : false;
+            if (card.isQuest)
+                nCount++;
+        }
+        
+        console.info("\t- Quests: " + nCount);
     }
 
     identifyInLieuItems()
@@ -311,6 +348,11 @@ class CardRepository {
         return Object.keys(this._nameCodeAlternatives).length;
     }
 
+    identifyUnderdeeps()
+    {
+        new CardRepositoryUnderdeeps().create(this._raw);
+    }
+
     setup(_raw)
     {
         console.log("Setting up card data.");
@@ -318,6 +360,8 @@ class CardRepository {
         this._raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
         this.codesLowercase();
+        this.identifyQuests();
+        this.identifyUnderdeeps();
         this.integrityCheck();
         this.sort();
         this.addIndices();
@@ -452,7 +496,6 @@ class CardRepository {
 
     postProcessCardList()
     {
-        this.identifyQuests();
         this.identifyInLieuItems();
         this.removeUnusedFields();
         this.removeFlavourText();
@@ -483,9 +526,23 @@ class CardRepository {
         return this._agentList;
     }
 
+    onProcessCardData()
+    {
+        /** overwrite */
+    }
+
     onCardsReceived(body)
     {
-        this.setup(JSON.parse(body));
+        
+        try 
+        {
+            this.setup(JSON.parse(body));
+            this.onProcessCardData();
+        } 
+        catch (error) 
+        {
+            console.error(error);
+        }
     }
 
     getNameCodeSuggestionMap()

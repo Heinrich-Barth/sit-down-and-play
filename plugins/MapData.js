@@ -13,7 +13,7 @@ const isDwarflord = (card) => isAlignment(card, "Dwarf-lord");
 const isHero = (card) => isAlignment(card, "Hero") || isAlignment(card, "Dual");
 const isMinion = (card) => isAlignment(card, "Minion") || isAlignment(card, "Dual");
 const isBalrog = (card) => isAlignment(card, "Balrog");
-const isUnderdeep = (card) => card.text !== "" && card.text.indexOf("Adjacent Site") === 0;
+const isUnderdeep = (card) => card.isUnderdeep;
 
 const SiteAlignments = {
     list : null,

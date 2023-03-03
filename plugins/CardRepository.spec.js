@@ -14,7 +14,7 @@ describe('CardRepository', () => {
     {
         const instance = new CardRepository();
         const result = instance.removeUnwantedCardRepository(cards);
-        expect(result.length).toEqual(4336);
+        expect(result.length).toEqual(4340);
     });
 
 });

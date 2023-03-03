@@ -4,6 +4,7 @@ const CardsMeta = require("./CreateCardsMeta");
 const CardRepository = require("./CardRepository");
 const DeckValidator = require("./DeckValidator");
 const ImageList = require("./ImageList");
+const VerifyImages = require("./VerifyImages");
 
 class CardDataProvider extends CardRepository {
    
@@ -19,22 +20,14 @@ class CardDataProvider extends CardRepository {
         this.cardsMap = {};
     }
 
-    onCardsReceived(body)
+    onProcessCardData()
     {
-        try 
-        {
-            super.onCardsReceived(body);
-
-            this.pImageList.create(this.getCards(), this.imageUrl);
-            this.cardsMap = require("./CardsMap")(this.getCards(), this.mapPos, this.pImageList.getImageList());
-            this.filters = new CardsMeta(this.getCards());
-            
-            this.postProcessCardList();
-        } 
-        catch (error) 
-        {
-            console.error(error.message);
-        }
+        this.pImageList.create(this.getCards(), this.imageUrl);
+        this.cardsMap = require("./CardsMap")(this.getCards(), this.mapPos, this.pImageList.getImageList());
+        this.filters = new CardsMeta(this.getCards());
+        this.postProcessCardList();
+        
+        VerifyImages.validateImages(this.pImageList.getImageList());
     }
 
     getFilters()
