@@ -335,7 +335,6 @@ const GameCompanies = {
 
             pContainerResources.setAttribute("data-stack-size", nAdded);
 
-            console.log(pCharacter);
             this.addInfluenced(jsonCharacter.influenced, pCharacter.querySelector(".company-character-influenced"));
             
             ArrayList(pCharacter).find("img.card-icon").each(function (img)
