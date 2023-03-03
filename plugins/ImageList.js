@@ -53,12 +53,43 @@ class ImageList {
         return list;
     }
 
+    identifyQuestImages(cards)
+    {
+        const questsB = { };
+        const quests = { };
+
+        for (let card of cards)
+        {
+            const flipTitle = card["flip-title"].replace(" 2", "").replace(" A", "").replace(" 1", "").replace(" B", "");
+            if (flipTitle!== card.normalizedtitle)
+            {
+                questsB[flipTitle] = card.code;
+                questsB[flipTitle + card.alignment] = card.code;
+            }
+        }
+
+        for (let card of cards)
+        {
+            const alignTitle = card.normalizedtitle + card.alignment;
+            if (questsB[alignTitle] !== undefined)
+            {
+                const cardCodeA = card.code;
+                const cardCodeB = questsB[alignTitle];
+                quests[cardCodeA] = cardCodeB;
+                quests[cardCodeB] = cardCodeA;
+            }
+        }
+
+        console.log("\t- Flipped cards available: " + Object.keys(quests).length);
+        return quests;
+    }
+
     create(jsonCards, imageUrl)
     {
         if (imageUrl !== undefined)
         {
             this.g_ImageList = this.createImageList(jsonCards, ImageList.removeEndingSlash(imageUrl));
-            this.g_QuestList = require("./CardsQuests").identifyQuests(jsonCards);
+            this.g_QuestList = this.identifyQuestImages(jsonCards);
         }
     }
 
