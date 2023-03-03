@@ -59,8 +59,8 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     /**
      * Provide the map data with all regions and sites for the map windows
      */
-    SERVER.instance.get("/data/list/map", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
-    SERVER.instance.get("/data/list/underdeeps", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
+    SERVER.instance.get("/data/list/map", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
+    SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
 
     SERVER.instance.get("/data/preferences/map", SERVER.caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
     SERVER.instance.post("/data/preferences/map", (req, res) =>  { 
