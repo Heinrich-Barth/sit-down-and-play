@@ -1,13 +1,4 @@
 
-.row {
-    display: flex;
-
-    flex-flow: row wrap;
-
-    justify-content: space-around;
-    padding: 0 50px;
-    height: 100%;
-}
 
 .hide {
     display: none;
@@ -26,7 +17,7 @@
 .col90 {
     flex: 1 80%; 
 }
-.tableCell { display: inline-block; }
+
 .center-text { text-align: center;}
 .hidden { display: none !important; }
 .hiddenVisibility { visibility: hidden !important; }

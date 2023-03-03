@@ -17,6 +17,8 @@
 .config-wrapper-map {
     top: 70px;
     left: 10px;
+    width: auto;
+    height: auto;
     z-index: 501;
     background: rgb(39,56,76);
 }

@@ -223,6 +223,7 @@ body h4 {
   max-height: 100%;
   background: url(/data/backside) 0 0 no-repeat;
   background-size: contain;
+  border-radius: 5%;
 }
 
 #notifications {

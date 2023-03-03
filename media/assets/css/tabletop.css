@@ -99,22 +99,95 @@ a:hover {
 
 .card-bar.card-bar-shared {
   top: 40%;
-  height: 100px;
   transform: translateY(-50%);
   position: absolute;
+  max-height: 150px;
 }
 .card-bar.card-bar-shared .icon {
-  font-size: 25px;
-  padding: 5px 0;
+  font-size: 0.8em;
+  padding: 2px 0;
   height: auto;
+  width: auto;
+}
+.card-bar.card-bar-play a {
+  background: none !important;
+}
+.card-bar.card-bar-play .icon {
+  font-size: 0.8em;
+  padding: 2px 0;
+  height: auto;
+  width: auto;
+}
+.card-bar.card-bar-play .icon:hover {
+  filter: sepia(100%) brightness(150%);
+}
+.card-bar.card-bar-play span {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+}
+.card-bar.card-bar-play i {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  height: 20px;
+  width: 20px;
+  background-size: contain;
+}
+.card-bar a.icon {
+  display: block;
+  position: relative;
+}
+.card-bar a.icon i {
+  right: 5px;
+  bottom: 5px;
+  position: absolute;
+}
+.card-bar .icon-tooltip::after,
+.card-bar .icon-shared::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  opacity: 0.9;
+  background-color: #000;
+  color: #ff0;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+.card-bar .icon-shared-out::after {
+  content: "Out";
+}
+.card-bar .icon-shared-victory::after {
+  content: "MPs";
+}
+.card-bar .icon-tooltip-mps::after {
+  content: "MPs";
+}
+.card-bar .icon-tooltip-playdeck::after {
+  content: "Deck";
+}
+.card-bar .icon-tooltip-discard::after {
+  content: "Discard";
+}
+.card-bar .icon-tooltip-sideboard::after {
+  content: "Sideboard";
+  font-size: 0.78em;
+}
+.card-bar .icon-tooltip-hand::after {
+  content: "Hand";
 }
 .card-bar .icon {
-  height: 50px;
+  max-height: 70px;
   color: white;
   font-size: 12px;
 }
 .card-bar .icon span.count {
   padding-left: 2px;
+}
+.card-bar .icon img {
+  max-height: 70px;
+  border-radius: 5%;
 }
 .card-bar .icons a.backside {
   background: url("/data/backside") 0 0 no-repeat;
@@ -165,7 +238,6 @@ a:hover {
 .icons a:hover {
   display: inline-block;
   cursor: pointer;
-  margin-top: 5px;
   background-size: 32px 32px !important;
 }
 .icons a {
@@ -220,63 +292,63 @@ a:hover {
   background: url("/media/assets/images/icons/longevent-hover.png") 0 0 no-repeat;
 }
 .icons .sideboard {
-  background: url("/media/assets/images/icons/icon-sideboard.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-sideboard.png") 0 0 no-repeat;
 }
 .icons .sideboard.act, .icons .sideboard:hover {
-  background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-sideboard-hover.png") 0 0 no-repeat;
 }
 .icons .sideboard.ui-droppable-active {
-  background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-sideboard-dragtarget.png") 0 0 no-repeat;
 }
 .icons .onoffer {
-  background: url("/media/assets/images/icons/icon-offer.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-offer.png") 0 0 no-repeat;
 }
 .icons .onoffer.act, .icons .onoffer:hover {
-  background: url("/media/assets/images/icons/icon-offer-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-offer-hover.png") 0 0 no-repeat;
 }
 .icons .victory {
-  background: url("/media/assets/images/icons/icon-crown.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-crown.png") 0 0 no-repeat;
 }
 .icons .victory.act, .icons .victory:hover {
-  background: url("/media/assets/images/icons/icon-crown-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-crown-hover.png") 0 0 no-repeat;
 }
 .icons .hand {
-  background: url("/media/assets/images/icons/icon-hand.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-hand.png") 0 0 no-repeat;
 }
 .icons .hand.act, .icons .hand:hover {
-  background: url("/media/assets/images/icons/icon-hand-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-hand-hover.png") 0 0 no-repeat;
 }
 .icons .hand.ui-droppable-active {
-  background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-hand-dragtarget.png") 0 0 no-repeat;
 }
 .icons .playdeck {
-  background: url("/media/assets/images/icons/icon-playdeck.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-playdeck.png") 0 0 no-repeat;
 }
 .icons .playdeck.act, .icons .playdeck:hover {
-  background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-playdeck-hover.png") 0 0 no-repeat;
 }
 .icons .playdeck.ui-droppable-active {
-  background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-playdeck-dragtarget.png") 0 0 no-repeat;
 }
 .icons .playdeck-shuffle {
-  background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-playdeck-shuffle.png") 0 0 no-repeat;
 }
 .icons .playdeck-shuffle.act, .icons .playdeck-shuffle:hover {
-  background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-playdeck-shuffle-hover.png") 0 0 no-repeat;
 }
 .icons .discardpile.ui-droppable-active {
-  background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-discardpile-dragtarget.png") 0 0 no-repeat;
 }
 
 #playercard_hand_container a.discardpile:hover,
 .icons a.discardpile.act,
 .icons a.discardpile:hover {
-  background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-discardpile-hover.png") 0 0 no-repeat;
 }
 
 #playercard_hand_container a.discardpile,
 .icons a.discardpile {
-  background: url("/media/assets/images/icons/icon-discardpile.png") 0 12px no-repeat;
+  background: url("/media/assets/images/icons/icon-discardpile.png") 0 0 no-repeat;
 }
 
 .player_selector i {
@@ -332,19 +404,15 @@ a:hover {
 .table {
   position: relative;
   width: 100%;
-}
-.table.full-height {
   height: 100%;
 }
 .table .area {
+  display: table;
   width: 100%;
 }
 .table .area-player {
   position: relative;
   min-height: 30%;
-}
-.table .area-player .card-bar {
-  bottom: 0;
 }
 .table .area-opponent {
   margin-bottom: 20px;
@@ -358,10 +426,29 @@ a:hover {
 .table .area-opponent .company-characters-add {
   display: none !important;
 }
+.table .row {
+  display: table-row;
+  margin: 0 50px;
+  height: 100%;
+}
+.table .row div.card {
+  display: inline-block;
+}
+.table .companies {
+  display: table-cell;
+  vertical-align: top;
+  position: relative;
+}
+.table .tableCell {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: top;
+}
 
 img.card-icon {
   background: url("/data/backside") 0 0 no-repeat;
   background-size: contain;
+  border-radius: 5%;
 }
 
 .clear {
@@ -380,9 +467,7 @@ img.card-icon {
 .card-bar {
   position: fixed;
   z-index: 100;
-  width: 40px;
   bottom: 5px;
-  height: 320px;
 }
 .card-bar a {
   text-align: center;
@@ -404,7 +489,6 @@ img.card-icon {
   font-size: 11px;
 }
 
-.rot90,
 .state_tapped img,
 .state_tapped_fixed img,
 .tapped {
@@ -427,7 +511,7 @@ img.card-icon {
 
 .card-hands {
   position: fixed;
-  left: 50px;
+  left: 55px;
   bottom: 5px;
   z-index: 400;
   padding: 5px;
@@ -495,15 +579,6 @@ img.card-icon {
   overflow-y: auto;
   padding: 15px;
   z-index: 1001;
-  /*
-  &.view-victory {
-      position: relative;
-      left: 0;
-      top: 0;
-      transform: none;
-      background: rgba(0,0,0,0.9);
-  }
-  */
 }
 .view-card-list-container .container-title-bar {
   padding-bottom: 10px;
@@ -628,17 +703,21 @@ img.card-icon {
 
 /* COMPANY AREA */
 .staging-area {
-  flex: 1 20%;
   position: relative;
+  display: table-cell;
+  vertical-align: top;
+  padding-left: 50px;
+  width: 25%;
 }
 .staging-area .staging-area-drop {
   display: none;
 }
 .staging-area.staging-area-opponent {
-  padding-top: 20px;
+  padding: 20px 50px 0 0;
+  text-align: right;
 }
 .staging-area .card {
-  float: left;
+  display: inline-block;
   margin-left: 2px;
 }
 .staging-area .card img.card-icon {
@@ -653,6 +732,14 @@ img.card-icon {
   width: 300px;
   height: 100px;
   border: 2px dashed transparent;
+}
+.companies .sites .site-regions,
+.companies .sites .site-target {
+  margin-left: -30px;
+}
+.companies .sites .site-container {
+  position: relative;
+  display: inline-block;
 }
 .companies .company {
   margin-right: 20px;
@@ -694,10 +781,6 @@ img.card-icon {
   visibility: hidden;
 }
 
-.row {
-  padding: 0 10px 0 50px;
-}
-
 body.on-drag-event-generic .area-player .company-character-host {
   z-index: 900;
 }
@@ -723,7 +806,7 @@ body.on-drag-event-character .area-player .company-character-influenced .company
 body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
   display: block;
   position: absolute;
-  left: 0;
+  left: 70px;
   right: 0;
   top: 0;
   height: 200px;
@@ -738,10 +821,6 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
   opacity: 0.7;
 }
 
-.zoom-1 .company-character-reosurces,
-.zoom-2 .company-character-reosurces {
-  margin-top: -90px;
-}
 .zoom-1 .company-character-reosurces .card,
 .zoom-2 .company-character-reosurces .card {
   margin-top: -95px;
@@ -762,53 +841,55 @@ img.card-icon {
 }
 
 .company-character-reosurces {
-  margin-top: -50px;
   min-height: 84px;
   display: flex;
   flex-direction: column;
 }
 .company-character-reosurces .card {
-  margin-top: -50px;
+  margin-top: -60px;
   z-index: 101;
 }
 .company-character-reosurces .card:nth-child(1) {
-  transform: translateX(15px) translateY(0px);
+  transform: translateX(0px) translateY(0px);
   margin-top: 0;
 }
 .company-character-reosurces .card:nth-child(2) {
-  transform: translateX(30px);
+  transform: translateX(15px);
 }
 .company-character-reosurces .card:nth-child(3) {
-  transform: translateX(45px);
+  transform: translateX(30px);
 }
 .company-character-reosurces .card:nth-child(4) {
-  transform: translateX(60px);
+  transform: translateX(45px);
 }
 .company-character-reosurces .card:nth-child(5) {
-  transform: translateX(75px);
+  transform: translateX(60px);
 }
 .company-character-reosurces .card:nth-child(6) {
-  transform: translateX(90px);
+  transform: translateX(75px);
 }
 .company-character-reosurces .card:nth-child(7) {
-  transform: translateX(105px);
+  transform: translateX(90px);
 }
 .company-character-reosurces .card:nth-child(8) {
-  transform: translateX(130px);
+  transform: translateX(105px);
 }
 .company-character-reosurces .card:nth-child(9) {
-  transform: translateX(145px);
+  transform: translateX(130px);
 }
 .company-character-reosurces .card:nth-child(10) {
-  transform: translateX(160px);
+  transform: translateX(145px);
 }
 .company-character-reosurces .card:nth-child(11) {
-  transform: translateX(175px);
+  transform: translateX(160px);
 }
 .company-character-reosurces .card:nth-child(12) {
-  transform: translateX(190px);
+  transform: translateX(175px);
 }
 .company-character-reosurces .card:nth-child(13) {
+  transform: translateX(190px);
+}
+.company-character-reosurces .card:nth-child(14) {
   transform: translateX(205px);
 }
 .company-character-reosurces[data-stack-size="1"] {
