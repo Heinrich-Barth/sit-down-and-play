@@ -83,7 +83,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * 
          * The page forwards to a login page which will create all cookies.
          */
-        this.getServerInstance().instance.get(this.contextPlay + ":room/login", 
+        this.getServerInstance().instance.get(this.contextPlay + ":room/login",
+            this.redirectToGameIfMember.bind(this),
             this.gameJoinSupported.bind(this), 
             this.onLogin.bind(this)
         );
@@ -200,6 +201,14 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * Validate Deck first
          */
         return this.getServerInstance().cards.validateDeck(jDeck);
+    }
+
+    redirectToGameIfMember(req, res, next)
+    {
+        if (this.userIsAlreadyInGame(req))
+            this.createExpireResponse(res, 'text/plain').redirect(this.contextPlay + req.room);
+        else
+            next();
     }
 
     onWatchSupported(req, res, next)

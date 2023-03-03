@@ -34,6 +34,11 @@ class GamePlayRouteHandlerUtil
             next();
     }
 
+    userIsAlreadyInGame(req)
+    {
+        return this.validateCookies(req);
+    }
+
     onVerifyGameRoomParam(req, res, next)
     {
         const room = req.params === undefined || req.params.room === undefined ? "" : req.params.room.toLocaleLowerCase();
