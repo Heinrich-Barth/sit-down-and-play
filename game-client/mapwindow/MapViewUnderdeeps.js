@@ -10,6 +10,7 @@ class MapViewUnderdeeps extends MapView {
 
         this.sites = data.sites;
         this.images = data.images;
+        this.alignments = data.alignments;
         this.codeStart = "";
         this.pCurrentObserver = null;
         this.targetSite = "";
@@ -214,14 +215,45 @@ class MapViewUnderdeeps extends MapView {
             elem.onclick = this.onClickAccept.bind(this);
     }
 
-    clonseListSorted(list)
+    createResultListAlignments(list, limits)
     {
         let result = [];
         for (let elem of list)
-            result.push(elem);
+        {
+            if (this.alignmentMatch(elem, limits))
+                result.push(elem);
+        }
 
         result.sort();
         return result;
+    }
+
+
+    getAdditionalAlignKeys()
+    { 
+        return ["fallenwizard", "fallenlord", "lord", "grey", "dragonlord", "warlord", "elflord", "atanilord", "dwarflord"]; 
+    }
+
+    createSearchLimitations()
+    {
+        const keys = this.getAdditionalAlignKeys();
+        const showAlignment = 
+        {
+            "hero": g_pRegionMapPreferences.showSite("hero"),
+            "minion": g_pRegionMapPreferences.showSite("minion"),
+            "balrog":  g_pRegionMapPreferences.showSite("balrog")
+        }
+
+        for(let key of keys)
+            showAlignment[key] = g_pRegionMapPreferences.showSite(key);
+
+        return showAlignment;
+    }
+
+    alignmentMatch(code, limits)
+    {
+        const align = this.alignments[code];
+        return align === undefined || limits[align.toLowerCase()];
     }
 
     populateSites(startingCode)
@@ -234,7 +266,8 @@ class MapViewUnderdeeps extends MapView {
         this.showStartSite(startingCode);
         this.addCancelClick();
 
-        const list = this.clonseListSorted(this.getAdjacentSites(startingCode));
+        const limits = this.createSearchLimitations();
+        const list = this.createResultListAlignments(this.getAdjacentSites(startingCode), limits);
         if (list.length === 0)
         {
             this.appendCaption(elem, "No adjacent sites available.");
@@ -254,12 +287,12 @@ class MapViewUnderdeeps extends MapView {
         helpCont.setAttribute("id", "allsites");
 
         let imageKeys = Object.keys(this.images);
-        this.appendCaption(helpCont, "All other sites (" + (imageKeys.length - list.length) + ")");
+        this.appendCaption(helpCont, "All other sites");
 
         let added = false;
         for (let code of imageKeys)
         {
-            if (!list.includes(code))
+            if (this.alignmentMatch(code, limits) && !list.includes(code))
             {
                 added = true;
                 helpCont.appendChild(this.createImage(code, false, true));
@@ -274,5 +307,4 @@ class MapViewUnderdeeps extends MapView {
             
         ArrayList(elem).find("img").each((_e) => CardPreview.initMapViewCard(_e));
     }
-
 }
