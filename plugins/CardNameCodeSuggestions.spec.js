@@ -14,7 +14,7 @@ describe('CardNameCodeSuggestions', () => {
     {
         const instance = new CardNameCodeSuggestions();
         const result = instance.create(cards);
-        expect(Object.keys(result).length).toEqual(3818);
+        expect(Object.keys(result).length).toEqual(3823);
 
         const list = result["gandalf"];
         expect(list.length).toEqual(2);
