@@ -113,7 +113,7 @@ const fetchMap = function (tappedSites) {
         else
             throw new Error("Could not load map");
     })
-        .catch((err) => showErrorLoading(err));
+    .catch((err) => showErrorLoading(err));
 };
 
 const fetchTappedSites = function () {
@@ -126,7 +126,7 @@ const fetchTappedSites = function () {
         else
             throw new Error("Could not load tapped sites");
     })
-        .catch((err) => showErrorLoading(err));
+    .catch((err) => showErrorLoading(err));
 };
 
 function onKeyUp(ev) {
