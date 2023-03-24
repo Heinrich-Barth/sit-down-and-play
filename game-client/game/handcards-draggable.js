@@ -194,7 +194,7 @@ const DropFunctions = {
         
         DropFunctions.getApi().send("/game/card/store", { uuid: uuid });
 
-        if (code !== undefined && code !== "")
+        if (typeof code === "string" && code !== "")
             document.body.dispatchEvent(new CustomEvent("meccg-score-card", { "detail": code }));
             
         return false;
@@ -372,13 +372,18 @@ const HandCardsDraggable = {
         if (sites === null)
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Cannot find companies' sites." }));
-            return;
         }
-
-        if (sites.querySelector(".site-target img") === null)
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please organize movement first." }));
-        else
+        else if (sites.querySelector(".site-target img") !== null)
+        {
             HandCardsDraggable.getApi().send("/game/company/location/reveal", {companyUuid: companyUuid});
+            HandCardsDraggable.getApi().send("/game/company/markcurrently", {uuid: companyUuid});
+        }
+        else if (sites.querySelector(".site-current img") !== null)
+        {
+            HandCardsDraggable.getApi().send("/game/company/markcurrently", {uuid: companyUuid});
+        }
+        else
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please organize movement first." }));
     },
     
     /**
