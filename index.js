@@ -5,6 +5,9 @@
 const fs = require('fs');
 const Configiration = require("./Configuration");
 
+if (!fs.existsSync("./logs"))
+    fs.mkdirSync("./logs");
+
 let SERVER = {
 
     configuration: new Configiration(__dirname + "/data/config.json"),
@@ -317,6 +320,8 @@ SERVER.shutdown = function ()
  */
 SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
 
+require("./game-logs")(SERVER.instance, g_pExpress);
+
 /* All media can be used with static routes */
 SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.caching.headerData.generic));
 SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.caching.headerData.generic));
@@ -354,7 +359,7 @@ SERVER.instance.get("/data/marshallingpoints", SERVER.caching.expires.jsonCallba
 /**
  * Provide the cards
  */
-SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getCards()).status(200));
+SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getCardsDeckbuilder()).status(200));
 
 SERVER.instance.get("/data/list/filters", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getFilters()).status(200));
 
@@ -487,7 +492,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 
@@ -502,7 +507,7 @@ SERVER.onIoConnection = function (socket)
      * 1. interrupted and connection will be reestablished after some time
      * 2. user has left entirely
      */
-    socket.on("disconnect", () => 
+    socket.on("disconnect", (reason) => 
     {
         if (!socket.auth) 
         {
@@ -510,7 +515,10 @@ SERVER.onIoConnection = function (socket)
         }
         else 
         {
-            console.log(socket.username + " (" + socket.id + ") disconnected from game " + socket.room);
+            if (reason)
+                console.info(socket.username + " (" + socket.id + ") disconnected from game " + socket.room + ". Reason was: " + reason);
+            else
+                console.info(socket.username + " (" + socket.id + ") disconnected from game " + socket.room);
 
             SERVER.roomManager.onDisconnected(socket.userid, socket.room);
             SERVER.roomManager.checkGameContinuence(socket.room);
