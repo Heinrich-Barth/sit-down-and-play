@@ -242,6 +242,8 @@ const MeccgApi =
         MeccgApi.isConnected = true;
         MeccgApi.initSocketPaths();
         MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
+
+        document.body.dispatchEvent(new CustomEvent("meccg-api-ready", { "detail": true }));
     },
 
     setupSocketConnection()
@@ -268,14 +270,22 @@ const MeccgApi =
 
         this._socket.on('/authenticate/success', MeccgApi.onAuthenticationSuccess.bind(MeccgApi));
         this._socket.on('/disconnect/shutdown', MeccgApi.expectShutdown);
-        this._socket.on('disconnect', () => 
+        this._socket.on('disconnect', (reason) => 
         {
             if (MeccgApi._ignoreDisconnection)
                 MeccgApi.disconnectSocket();
             else
             {
-                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost." }));
-                MeccgApi._disconnectInfo.show();
+                if (reason)
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost: " + reason }));
+                    MeccgApi._disconnectInfo.show(reason);   
+                }
+                else
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost." }));
+                    MeccgApi._disconnectInfo.show("");    
+                }
             }
 
             MeccgApi.onDisconnected();
@@ -302,8 +312,39 @@ const MeccgApi =
    
         this.emitRegisterToServer();
 
+        if (this.getConnectionCount() === 0)
+            this.clearLocalStorage();
+
         if (g_sLobbyToken === "")
             document.body.dispatchEvent(new CustomEvent("meccg-clear-ping"));
+    },
+
+    clearLocalStorage: function()
+    {
+        try
+        {
+            localStorage.removeItem("meccg_map_settings");
+        }
+        catch (errIgnore)
+        {
+
+        }
+    },
+
+    getConnectionCount: function()
+    {
+        try
+        {
+            const val = document.body.getAttribute("data-connected-count");
+            if (val !== null && val !== "")
+                return parseInt(val);
+        }
+        catch (err)
+        {
+            console.error(err);            
+        }
+
+        return 0;
     },
 
     /**
