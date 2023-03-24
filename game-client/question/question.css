@@ -43,6 +43,16 @@
     padding-left: 140px;
     min-height: 110px;
 }
+
+.question-question .question-question-reason
+{
+    display: block;
+    font-size: 2em;
+}
+
+.question-hide-cancel {
+    display: none !important;
+}
 .question-icon {
     padding-left: 12px;
     padding-top: 12px;

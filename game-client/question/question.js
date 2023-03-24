@@ -6,6 +6,7 @@ class Question {
         this.callbackOk = null;
         this.css = "";
         this.icon = icon === undefined || icon === "" ? "fa-question-circle" : icon;
+        this._addCancel = true;
     }
 
     static removeNode(node)
@@ -39,15 +40,16 @@ class Question {
         div.setAttribute("id", "question_box");
         div.setAttribute("data-game", "");
 
+        const cancelCss = this._addCancel ? "" : "question-hide-cancel";
         const innerDiv = document.createElement("div");
-        innerDiv.setAttribute("class", "blue-box question-game");
+        innerDiv.setAttribute("class", "blue-box question-game ");
         innerDiv.innerHTML = `<div class="fa ${this.icon} question-icon"></div>
                               <div class="question-question">
                                 <h3>${title}</h3><p class="bold">${message}</p>
                               </div>
                               <div class="question-answers">
                                 <input type="button" name="deck" id="q_ok" class="w100" value="${labelOk}" />
-                                <input type="button" name="deck" id="q_cancel" class="w100 cancel" value="Cancel" />
+                                <input type="button" name="deck" id="q_cancel" class="w100 cancel ${cancelCss}" value="Cancel" />
                               </div>`;
 
         if (this.css !== "")
@@ -76,6 +78,11 @@ class Question {
     isVisible()
     {
         return document.getElementById("question_box") !== null;
+    }
+
+    hideCancel()
+    {
+        this._addCancel = false;
     }
 
     show(sTitle, sInfo, sLabelOk)
