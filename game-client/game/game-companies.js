@@ -9,13 +9,14 @@ const createCompanyHtml = function(companyId, id)
         <div class="company-site-list pos-rel">
             <div class="location-icon-image fa fa-code-fork location-underdeep location-select-ud hiddenToOpponent" title="Organise underdeep movement"></div>
             <div class="location-icon-image fa fa-map-signs location-icon location-select hiddenToOpponent" title="Organise region movement"></div>
-            <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement"></div>
+            <div class="location-icon-image fa fa-eye location-reveal hide hiddenToOpponent" title="Reveal movement / mark as current company in movement hazard phase"></div>
             <div class="sites">
                 <div class="site-container site-current"></div>
                 <div class="site-container site-regions"></div>
                 <div class="site-container site-target"></div>
                 <div class="site-container site-onguard"></div>
             </div>
+            <div class="company-site-list-border"></div>
         </div>
         <div class="company-characters-add"></div>
         <div class="company-characters"></div>`.trim();
@@ -135,28 +136,6 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
     return document.getElementById(id);
 }
 
-function createLocationCard(code, img, bIsPlayer, sTitle)
-{
-    let sOwner = bIsPlayer ? "" : "other";
-    const div = document.createElement("div");
-    div.setAttribute("class", "card padR5 fl");
-    div.setAttribute("draggable", "false");
-    div.setAttribute("data-card-code", code);
-    
-    if (sTitle !== undefined && sTitle !== "")
-        div.setAttribute("title", sTitle);
-
-    const pImage = document.createElement("img");
-    pImage.setAttribute("src", "/data/backside-region");
-    pImage.setAttribute("data-owner", sOwner);
-    pImage.setAttribute("class", "card-icon");
-    pImage.setAttribute("data-img-image", img);
-    pImage.setAttribute("data-image-path", "");
-    pImage.setAttribute("data-image-backside", "/data/backside");
-    pImage.setAttribute("crossorigin", "anonymous");
-    div.appendChild(pImage);
-    return div;
-}
 
 /**
  * Insert a new character container
@@ -239,16 +218,16 @@ const GameCompanies = {
     CardPreview : null,
     HandCardsDraggable : null,
     PlayerSelector : new PlayerSelector(),
+    pGameCompanyLocation : null,
 
     CARDID_PREFIX : "ingamecard_",
-    TITLE_SITE_DEST: "Destination site. Drop hazards to play onguard or to the site or DOUBLECLICK to let arrive",
-    TITLE_SITE_ORIGIN : "Site of origin/current site",
-
+    
     initCompanyManager : function(_CardList, _CardPreview, _HandCardsDraggable)
     {
         GameCompanies.CardList = _CardList;
         GameCompanies.CardPreview = _CardPreview;
         GameCompanies.HandCardsDraggable = _HandCardsDraggable;
+        GameCompanies.pGameCompanyLocation = new GameCompanyLocation(GameCompanies, _CardList, _CardPreview, GameCompanies.CARDID_PREFIX);
         return GameCompanies;
     },
 
@@ -389,60 +368,9 @@ const GameCompanies = {
      */
     onAttachCardToCompanySites : function(companyId, cardList, bAllowContextMenu)
     {
-        if (cardList.length === 0)
-            return;
-
-        const companyElement = document.getElementById("company_" + companyId);
-        if (companyElement === null)
-        {
-            console.warn("Cannot find company " + companyId);
-            return;
-        }
-
-        let jOnGuardContainer = companyElement.querySelector(".site-onguard");
-        if (jOnGuardContainer === null)
-        {
-            console.warn("Cannot find on-guard site of company " + companyId);
-            return;
-        }
-
-        const isPlayersCompany = this.isPlayersCompany(companyElement);
-        const pCheckForCardsPlayed = new CheckForCardsPlayed("ingamecard_");
-        pCheckForCardsPlayed.loadBefore(jOnGuardContainer);
-
-        const len = cardList.length;
-        for (let i = 0; i < len; i++)
-            this.onAttachCardToCompanySitesElement(jOnGuardContainer, cardList[i], bAllowContextMenu, isPlayersCompany);
-
-        pCheckForCardsPlayed.loadAfter(jOnGuardContainer);
-        pCheckForCardsPlayed.mark();
+        this.pGameCompanyLocation.onAttachCardToCompanySites(companyId, cardList, bAllowContextMenu)
     },
-    
-    onAttachCardToCompanySitesElement : function(pOnGuardContainer, card, bAllowContextMenu, isPlayersCompany)
-    {
-        pOnGuardContainer.appendChild(createNewCard(card));
         
-        let pCard = document.getElementById(GameCompanies.CARDID_PREFIX + card.uuid);
-        if (pCard === null)
-        {
-            console.warn("Cannot find card #" + GameCompanies.CARDID_PREFIX + card.uuid);
-            return;
-        }
-
-        if (isPlayersCompany)
-            GameCompanies.CardPreview.init(pCard, true, true);
-        else
-            GameCompanies.CardPreview.initOnGuard(pCard, true, false);
-
-        GameCompanies.initSingleCardEvent(pCard, true);
-        
-        if (bAllowContextMenu)
-            document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: GameCompanies.CARDID_PREFIX + card.uuid, type: "onguard" }} ));
-        
-        if (card.revealed || typeof card.revealed === "undefined")
-            GameCompanies.revealCard(pCard.querySelector("img"));
-    },
-    
     tapSite : function(playerId, code, bIsTapped)
     {
         function getTargetContainer(isMe, playerCode)
@@ -567,7 +495,6 @@ const GameCompanies = {
         ArrayList(elemList).find("div.card").each((_e) => document.body.dispatchEvent(new CustomEvent('meccg-context-generic', { detail: { id: _e.getAttribute("id"), type: "generic" }} )));
         elemContainer.classList.remove("hiddenVisibility");
 
-        
         this.highlightNewCardsAtTable(elemContainer, pCheckForCardsPlayed);
         return true;
     },
@@ -602,15 +529,26 @@ const GameCompanies = {
 
     revealLocations: function (company)
     {
-        const companyElem = document.getElementById("company_" + company);
-        if (companyElem === null)
-            return;
+        this.pGameCompanyLocation.revealMovement(company);
+    },
 
-        const jSiteContaienr = companyElem.querySelector(".sites");
-        ArrayList(jSiteContaienr).find(".site-current .card-icon").each(GameCompanies.revealCard);
-        ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(GameCompanies.revealCard);
-        ArrayList(jSiteContaienr).find(".site-target .card-icon").each(GameCompanies.revealCard);
-        ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
+    onCompanyMarkCurrently : function(company)
+    {
+        this.removeCompanyMarking();
+
+        const currentCompany = document.getElementById("company_" + company);
+        if (currentCompany !== null)
+        {
+            currentCompany.classList.add("company-mark-current");
+            ArrayList(currentCompany).find(".location-reveal").each((e) => e.classList.add("hide"));
+        }
+    },
+
+    removeCompanyMarking : function()
+    {
+        const list = document.getElementsByClassName("company");
+        for (let elem of list)
+                elem.classList.remove("company-mark-current");
     },
 
     isPlayersCompany : function(pCompany)
@@ -643,181 +581,10 @@ const GameCompanies = {
 
     drawLocations: function (company, start, regions, target, isRevealed, attached, current_tapped, target_tapped, revealStartSite)
     {
-        let code, img;
-        if (revealStartSite === undefined)
-            revealStartSite = true;
-
-        const companyElem = document.getElementById("company_" + company);
-        if (companyElem === null)
-            return;
-
-        const bIsPlayer = this.isPlayersCompany(companyElem);
-        const isAgent = this.detectIsAgentCompany(companyElem);
-
-        ArrayList(companyElem.querySelectorAll(".site-container")).each(DomUtils.removeAllChildNodes);
-
-        if (start === undefined)
-            start = "";
-
-        if (target === undefined)
-            target = "";
-
-        if (regions === undefined)
-            regions = [];
-
-        if (isRevealed === undefined)
-            isRevealed = false;
-
-        if (!isRevealed && isAgent)
-            revealStartSite = false;
-
-        if (start !== "")
-        {
-            code = GameCompanies.CardList.getSafeCode(start);
-            img = GameCompanies.CardList.getImageSite(start);
-            companyElem.querySelector(".site-current").appendChild(createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_ORIGIN));
-
-            if (revealStartSite)
-                ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-image-path") + _img.getAttribute("data-img-image")));
-            
-            if (current_tapped)
-                ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
-            
-            if (bIsPlayer)
-                document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: true, code: code }} ));
-        }
-
-        if (target !== "")
-        {
-            code = GameCompanies.CardList.getSafeCode(target);
-            img = GameCompanies.CardList.getImageSite(target);
-
-
-            const pContainerTarget = companyElem.querySelector(".site-target");
-            DomUtils.removeAllChildNodes(pContainerTarget);
-            pContainerTarget.appendChild(createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_DEST));
-            
-            if (!bIsPlayer)
-                document.body.dispatchEvent(new CustomEvent('meccg-context-site-arrive', { detail: { id: "company_" + company, company: company, code: code }} ));
-            else
-                document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: false, code: code }} ));
-            
-            if (target_tapped)
-                ArrayList(pContainerTarget).find(".card").each((e) => e.classList.add("state_tapped"));
-
-            ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.remove("hide"));
-        }
-        else
-            ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
-
-
-        if (attached.length > 0)
-            this.onAttachCardToCompanySites(company, attached, true);
-
-        const pContainerReg = companyElem.querySelector(".site-regions");
-        DomUtils.removeAllChildNodes(pContainerReg);
-
-        for (let _reg of regions)
-        {
-            code = GameCompanies.CardList.getSafeCode(_reg);
-            img = GameCompanies.CardList.getImageRegion(_reg);
-            pContainerReg.appendChild(createLocationCard(code, img, bIsPlayer, "Region moved through. Drop hazard creates here"));
-        }
-
-        if (target !== "" && isRevealed)
-            this.revealLocations(company);
-
-        if (!bIsPlayer)
-        {
-            this.allowOnGuard(company, companyElem.querySelector(".site-current"), false);
-            this.allowOnGuardRegion(company, companyElem.querySelector(".site-regions"), true);
-            this.allowOnGuard(company, companyElem.querySelector(".site-target"), false);
-        }
-
-        ArrayList(companyElem).find(".site-container").each(function(elem)
-        {
-            const _isOnGuard = elem.classList.contains("site-onguard");
-
-            const list = elem.querySelectorAll("div");
-            const len = list === null ? 0 : list.length;
-
-            for (let i = 0; i < len; i++)
-            {
-                if ((bIsPlayer && !_isOnGuard) || (!bIsPlayer && _isOnGuard))
-                    GameCompanies.CardPreview.initOnGuard(list[i], true, bIsPlayer);
-                else
-                    GameCompanies.CardPreview.init(list[i], true, bIsPlayer);
-            }
-        });
+        this.pGameCompanyLocation.drawLocations(company, start, regions, target, isRevealed, attached, current_tapped, target_tapped, revealStartSite);
     },
 
-    onDropOnGuard: function (companyUuid, pCard, bRevealOnDrop)
-    {
-        if (pCard.getAttribute("data-location") === "hand")
-        {
-            const uuid = pCard.getAttribute("data-uuid");
-            DomUtils.removeNode(pCard);
-            MeccgApi.send("/game/company/location/attach", {uuid: uuid, companyUuid: companyUuid, reveal: bRevealOnDrop});
-        }
-
-        return false;
-    },
     
-    /**
-     * 
-     * @param {String} companyUuid
-     * @param {Object} pSiteTarget
-     * @param {boolean} bAutoReveal
-     * @return {void}
-     */
-    allowOnGuard: function (companyUuid, pSiteTarget, bAutoReveal)
-    {
-        const sCompanyUuid = companyUuid;
-        const bRevealOnDrop = bAutoReveal;
-        
-        jQuery(pSiteTarget).droppable(
-        {
-            tolerance: "pointer",
-            classes: {"ui-droppable-hover": "on-drag-over", addClasses: false},
-            accept: function (elem)
-            {
-                return elem.attr("data-location") === "hand";
-            },
-            drop: function (_event, ui)
-            {
-                GameCompanies.onDropOnGuard(sCompanyUuid, ui.draggable[0], bRevealOnDrop);
-                return false;
-            }
-        });
-    },
-    /**
-     * 
-     * @param {String} companyUuid
-     * @param {Object} pSiteTarget
-     * @param {boolean} bAutoReveal
-     * @return {void}
-     */
-    allowOnGuardRegion: function (companyUuid, pSiteTarget, bAutoReveal)
-    {
-        const sCompanyUuid = companyUuid;
-        const bRevealOnDrop = bAutoReveal;
-
-        jQuery(pSiteTarget).droppable(
-        {
-            tolerance: "pointer",
-            classes: {"ui-droppable-hover": "on-drag-over", addClasses: false},
-            accept: function (elem)
-            {
-                return elem.attr("data-location") === "hand" && elem.attr("data-card-type") === "hazard";
-            },
-            drop: function (_event, ui)
-            {
-                GameCompanies.onDropOnGuard(sCompanyUuid, ui.draggable[0], bRevealOnDrop);
-                return false;
-            }
-        });
-    },
-
     onEnterStartPhase: function ()
     {
         document.querySelector(".taskbar .startphase").classList.add("act");
@@ -854,65 +621,27 @@ const GameCompanies = {
         /** not needed here */
     },
 
-    onArriveAtTarget: function (pSites)
-    {
-        const pTarget = pSites.querySelector(".site-target div");
-        if (pTarget === null)
-            return;
-
-        const pCurrent = pSites.querySelector(".site-current");
-        DomUtils.removeAllChildNodes(pCurrent);
-
-        pTarget.setAttribute("title", GameCompanies.TITLE_SITE_ORIGIN);
-
-        pCurrent.appendChild(pTarget);
-        DomUtils.removeAllChildNodes(pSites.querySelector(".site-regions"));
-    },
-
-    onArriveAtOrigin: function (pSites)
-    {
-        if (pSites !== null)
-        {
-            DomUtils.removeAllChildNodes(pSites.querySelector(".site-target"));
-            DomUtils.removeAllChildNodes(pSites.querySelector(".site-regions"));
-        }
-    },
-
     onEnterSitePhase: function (sCurrent, bIsMe)
     {
         if (bIsMe)
-            ArrayList(document.getElementById("player_companies")).find(".company-site-list .sites").each(GameCompanies.onArriveAtTarget);
+            ArrayList(document.getElementById("player_companies")).find(".company-site-list .sites").each(this.pGameCompanyLocation.onArriveAtTarget);
         else
         {
             const sHex = this.player2Hex(sCurrent);
             const pOpponent = document.getElementById("companies_opponent_" + sHex);
             if (pOpponent !== null)
-                GameCompanies.onArriveAtTarget(pOpponent.querySelector(".sites"));
+                this.pGameCompanyLocation.onArriveAtTarget(pOpponent.querySelector(".sites"));
         }
     },
     
     onCompanyArrivesAtDestination: function (sCompanyId, bReduceSites)
     {
-        if (typeof bReduceSites === "undefined" || bReduceSites)
-        {
-            const pCompany= document.getElementById("company_" + sCompanyId);
-            if (pCompany !== null)
-                GameCompanies.onArriveAtTarget(pCompany.querySelector(".sites"));
-        }
-        
-        document.body.dispatchEvent(new CustomEvent("meccg-highlight", { "detail": sCompanyId }));
+        this.pGameCompanyLocation.onCompanyArrivesAtDestination(sCompanyId, bReduceSites);
     },
 
     onCompanyReturnsToOrigin : function (sCompanyId, bReduceSites)
     {
-        if (typeof bReduceSites === "undefined" || bReduceSites)
-        {
-            const pCompany= document.getElementById("company_" + sCompanyId);
-            if (pCompany !== null)
-                GameCompanies.onArriveAtOrigin(pCompany.querySelector(".sites"));
-        }
-        
-        document.body.dispatchEvent(new CustomEvent("meccg-highlight", { "detail": sCompanyId }));
+        this.pGameCompanyLocation.onCompanyReturnsToOrigin(sCompanyId, bReduceSites);
     },
 
     onMenuActionClear: function (elem)
