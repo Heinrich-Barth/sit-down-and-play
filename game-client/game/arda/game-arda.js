@@ -126,6 +126,11 @@ let Arda = {
         MeccgApi.send("/game/arda/hands", { });
     },
 
+    getRegularHand()
+    {
+        MeccgApi.send("/game/card/hand", { });
+    },
+
     insertArdaSetupContainer : function()
     {
         if (document.getElementById("arda-setup-container") !== null)

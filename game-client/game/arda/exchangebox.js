@@ -188,7 +188,9 @@ class ArdaExchangeBox {
         ul.setAttribute("id", "trade-offering");
         _temp.appendChild(ul);
 
-        for (let card of listCards)
+        for (let card of listCards.mp)
+            ul.appendChild(this.createCardContainer(card.code, card.uuid, false, first, second));
+        for (let card of listCards.hand)
             ul.appendChild(this.createCardContainer(card.code, card.uuid, false, first, second));
 
         _element = document.createElement("button");
@@ -331,6 +333,7 @@ class ArdaExchangeBox {
         {
             this.showSuccess("Trade completed");
             Arda.getOpeningHands();
+            Arda.getRegularHand();
         }
     }
 
@@ -397,7 +400,7 @@ class ArdaExchangeBox {
         else if (num === 2)
             listCards = jData.cards.second;
         
-        if (listCards !== null && listCards.length > 0)
+        if (listCards !== null && listCards.mp.length + listCards.hand.length > 0)
             this.createTradingOverlay(listCards, jData.first, jData.second);
     }
 

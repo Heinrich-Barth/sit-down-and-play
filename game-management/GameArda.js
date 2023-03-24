@@ -18,6 +18,11 @@ class GameArda extends GameStandard
     {
         return true;
     }
+
+    publishChat(userid, message)
+    {
+        super.publishChat(userid, message, false);
+    }
     
     assignOpeningChars7()
     {
@@ -40,10 +45,6 @@ class GameArda extends GameStandard
             if (uuid2 !== "")
                 this.drawSingleCard(userid);
         }
-
-        let pAdminDeck = this.getDeckManager().getAdminDeck();
-        if (pAdminDeck !== null)
-            pAdminDeck.mergeCharacterListsOnce();
     }
 
     assignOpeningChars(nCount)
@@ -70,6 +71,7 @@ class GameArda extends GameStandard
         let pAdminDeck = this.getDeckManager().getAdminDeck();
         if (pAdminDeck !== null)
         {
+            pAdminDeck.mergeCharacterListsOnce();
             pAdminDeck.addSpecialCharacers();
             pAdminDeck.shuffleCharacterDeck();
         }
@@ -93,14 +95,32 @@ class GameArda extends GameStandard
         }
     }
 
+    getRessourceOnly(list)
+    {
+        let result = [];
+        for (let card of list)
+        {
+            if (card.type !== "hazard")
+                result.push(card);
+        }
+
+        return result;
+    }
+
     onTradeStart(userid, _socket, obj)
     {
         const data = {
             first: obj.first,
             second: obj.second,
             cards: {
-                first: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.first)),
-                second: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.second))
+                first: { 
+                    mp: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.first)),
+                    hand: this.getRessourceOnly(this.getCardList(this.getDeckManager().getCards().hand(obj.first)))
+                },
+                second: {
+                    mp: this.getCardList(this.getDeckManager().getCards().handMarshallingPoints(obj.second)),
+                    hand: this.getRessourceOnly(this.getCardList(this.getDeckManager().getCards().hand(obj.second)))
+                }
             }
         }
 
@@ -163,15 +183,14 @@ class GameArda extends GameStandard
         this.publishChat(userid, "completed a card trade.");
     }
 
-    onTradePerformMoveToDeck(traderIds, traderCounts, obj)
+    onTradePerformMoveToDeck(traderIds, obj)
     {
         const pAdminDeck = this.getDeckManager().getAdminDeck();
         if (pAdminDeck === null || traderIds.length !== 2)
-            return false;
-
-        let _moved = false;
-
+            return [];
+        
         /** move all trading cards to playdeck to simply draw again */
+        const result = [];
         for (let _id of traderIds)
         {
             const deck = this.getDeckManager().getPlayerDeck(_id);
@@ -182,44 +201,63 @@ class GameArda extends GameStandard
             }
 
             /** the opposite trader draws equal to the number of cards this current player removes from his hand */
-            let _oppositeTraderId = traderIds[0] === _id ? traderIds[1] : traderIds[0];
-            traderCounts[_oppositeTraderId] = obj.cards[_id].length;
+            const _oppositeTraderId = traderIds[0] === _id ? traderIds[1] : traderIds[0];
+            const _tadeData = {
+                id: _oppositeTraderId,
+                mp: 0,
+                hand: 0
+            };
 
             for (let _cardUuid of obj.cards[_id])
             {
                 if (deck.pop().fromHandMps(_cardUuid))
                 {
                     pAdminDeck.push().toPlaydeck(_cardUuid);
-                    _moved = true;
+                    _tadeData.mp++;
+                }
+                else if (deck.pop().fromHand(_cardUuid))
+                {
+                    pAdminDeck.push().toPlaydeck(_cardUuid);
+                    _tadeData.hand++;
                 }
             }
+
+            if (_tadeData.mp > 0 || _tadeData.hand > 0)
+                result.push(_tadeData);
         }
 
-        return _moved;
+        if (result.length > 1)
+            result.reverse();
+            
+        return result;
     }
 
     onTradePerform(userid, _socket, obj)
     {
         /** trading did not work */
-        const traderIds = Object.keys(obj.cards);
-        const traderCounts = { };
-
-        if (!this.onTradePerformMoveToDeck(traderIds, traderCounts, obj))
+        const moved = this.onTradePerformMoveToDeck(Object.keys(obj.cards), obj);
+        if (moved.length === 0)
         {
             this.onTradeCancel(userid, null, obj);
             return;
         }
 
         /** now each player draws cards again based on the number of discarded cards of the other player */
-        for (let _id of traderIds)
+        for (let trader of moved)
         {
             /** only draw, the update will be sent later from each player on success signal */
-            const deck = this.getDeckManager().getPlayerDeck(_id);
-            if (deck !== null && traderCounts[_id] !== undefined)
+            const deck = this.getDeckManager().getPlayerDeck(trader.id);
+            if (deck === null)
             {
-                for (let i = 0; i < traderCounts[_id]; i++)
-                    deck.drawCardMarshallingPoints();
+                console.warn("Could not obtain trader deck #" + _id);
+                continue;
             }
+            
+            for (let i = 0; i < trader.mp; i++)
+                deck.drawCardMarshallingPoints();
+
+            for (let i = 0; i < trader.hand; i++)
+                deck.draw();
         }
 
         this.onTradeSuccess(userid, obj);
@@ -245,6 +283,7 @@ class GameArda extends GameStandard
             this.clearPlayerHand();
 
             deck.recycleCharacter();
+            deck.shuffle();
             this.publishChat(userid, "recycled all characters");
             this.reycled.characters = true;
         }
