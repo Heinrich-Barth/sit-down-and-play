@@ -1,11 +1,9 @@
 
-.player_selector { padding: 5px; }
+.player_selector { padding: 5px; display: inline-block; height: 20px;  }
 .player_selector span.game_time { font-size: 0.8em; }
-.player_selector { display: inline-block; }
-.player_selector { height: 20px;  }
 .player-selector-box .player-view { padding-left: 0; display: none; }
-.player-selector-box { position: fixed; top: 0px; left: 0px; min-width: 100px; padding: 5px; color: white; z-index: 400; }
-.player-selector-box a { display: inline-block;min-width: 10px; color: white; padding-right: 10px; }
+.player-selector-box { position: fixed; top: 0px; left: 0px; min-width: 100px; color: #fff; z-index: 400; }
+.player-selector-box a { display: inline-block;min-width: 10px; color: #fff; }
 .player-selector-box a.cur { color: #ffa500; }
 .player-selector-box a.cur .player-view { display: inline-block; }
 .player-selector-box a.act { font-weight: bold;
@@ -13,7 +11,7 @@
     font-style: italic;
     border-radius: 3px;
  }
-.player-selector-box span { min-width: 20px; min-height: 20px; display: inline-block; border-radius: 5px 40px 5px; }
+.player-selector-box span { min-width: 5px; min-height: auto; display: inline-block; border-radius: 5px; }
 .player-selector-box span:before { padding-right: 5px; }
 .player-selector-box span.indicator-green { background: #BADA55; }
 .player-selector-box span.indicator-red { background: #d94f4f;   }
