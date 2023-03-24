@@ -171,7 +171,9 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          this.getServerInstance().instance.get(this.contextPlay + ":room", 
             this.onValidateGameCookies.bind(this), 
             this.onPlayAtTable.bind(this), 
-            this.onAfterPlayAtTableSuccess.bind(this),
+            this.onAfterPlayAtTableSuccessSocial.bind(this),
+            this.onAfterPlayAtTableSuccessCreate.bind(this),
+            this.onAfterPlayAtTableSuccessJoin.bind(this)
         );
     }
 
@@ -227,8 +229,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
-            const shareMessage = jData.share === true;
-            const shareByName = shareMessage && jData.shareName === true;
+            const shareMessage = typeof jData.share === "string" ? jData.share : "";
 
             /**
              * assert the username is alphanumeric only
@@ -251,7 +252,6 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             res.cookie('room', room, jSecure);
             res.cookie('joined', lNow, jSecure);
             res.cookie('socialMedia', shareMessage, jSecure);
-            res.cookie('socialMediaPers', shareByName, jSecure);
 
             next();
         }
@@ -306,8 +306,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             const room = req.room;
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
-            const shareMessage = jData.share;
-            const shareByName = shareMessage && jData.shareName;
+            const shareMessage = typeof jData.share === "string" ? jData.share : "";
 
             /**
              * assert the username is alphanumeric only
@@ -341,7 +340,6 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             res.cookie('room', room, jSecure);
             res.cookie('joined', lNow, jSecure);
             res.cookie('socialMedia', shareMessage, jSecure);
-            res.cookie('socialMediaPers', shareByName, jSecure);
 
             next();
         }
@@ -514,8 +512,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             /* Force close all existing other sessions of this player */
             res.cookie('joined', lTimeJoined, { httpOnly: true, secure: true });
 
-            req._doShare = req.cookies.socialMedia === "true";
-            req._doShareName = req.cookies.socialMediaPers === "true";
+            req._doShare = typeof req.cookies.socialMedia === "string" ? req.cookies.socialMedia : "";
 
             this.clearSocialMediaCookies(res);
     
@@ -526,25 +523,47 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
     }
 
-    onAfterPlayAtTableSuccess(req, res)
+    onAfterPlayAtTableSuccessJoin(req, _res)
+    {
+        this.getServerInstance().eventManager.trigger("game-joined", req._roomName, this.isArda(), req._socialName);
+    }
+
+    onAfterPlayAtTableSuccessSocial(req, _res, next)
     {
         if (this.isSinglePlayer() || !req._doShare)
             return;
-
+        
         /* enforece lowercase room, is always alphanumeric */
         const room = req.params.room.toLocaleLowerCase();
         if (!this.getServerInstance().roomManager.roomExists(room))
             return;
 
-        const name = req._doShareName ? this.sanatiseCookieValue(req.cookies.username) : "";
-        if (this.getServerInstance().roomManager.countPlayersInRoom(room) === 1)
-        {
-            this.getServerInstance().roomManager.setAllowSocialMediaShare(room, true);            
-            this.getServerInstance().eventManager.trigger("game-created", room, this.isArda(), name);
-        }
-        else if (this.getServerInstance().roomManager.getAllowSocialMediaShare(room))
-            this.getServerInstance().eventManager.trigger("game-joined", room, this.isArda(), name);
+        const roomCount = this.getServerInstance().roomManager.countPlayersInRoom(room); 
+        const noSharing = req._doShare !== "openchallenge" && req._doShare !== "visitor";
 
+        let proceedNext = !noSharing;
+        if (roomCount === 1)
+            this.getServerInstance().roomManager.setAllowSocialMediaShare(room, !noSharing);
+        else 
+            proceedNext = this.getServerInstance().roomManager.getAllowSocialMediaShare(room) && !noSharing;
+
+        if (proceedNext)
+        {
+            req._roomCount = roomCount;
+            req._roomName = room;
+            req._socialName = this.sanatiseCookieValue(req.cookies.username);
+            next();    
+        }
+    }
+    
+    onAfterPlayAtTableSuccessCreate(req, _res, next)
+    {
+        if (req._roomCount !== 1)
+            next();
+        else if (req._doShare === "openchallenge")
+            this.getServerInstance().eventManager.trigger("game-created-openchallenge", req._roomName, this.isArda(), req._socialName);
+        else
+            this.getServerInstance().eventManager.trigger("game-created", req._roomName, this.isArda(), req._socialName);
     }
 
 }

@@ -19,7 +19,6 @@ class GamePlayRouteHandlerUtil
     clearSocialMediaCookies(res)
     {        
         res.clearCookie('socialMedia');
-        res.clearCookie('socialMediaPers');    
     }
 
     onValidateGameCookies(req, res, next)
