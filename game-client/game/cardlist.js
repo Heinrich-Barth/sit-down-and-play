@@ -21,16 +21,15 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     const pThat = this;
     if (Object.keys(this._list).length === 0)
     {
-        fetch("/data/list/images").then((response) => 
+        fetch("/data/list/images")
+        .then((response) => response.json())
+        .then((cards) => 
         {
-            response.json().then((cards) => 
-            {
-                pThat._list = cards.images;
-                if (cards.fliped !== undefined)
-                    pThat._fliped = cards.fliped;
+            pThat._list = cards.images;
+            if (cards.fliped !== undefined)
+                pThat._fliped = cards.fliped;
 
-                pThat._isReady = true;
-            });
+            pThat._isReady = true;
         })
         .catch(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch image list." })));
     }
