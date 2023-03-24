@@ -165,7 +165,7 @@ class GameEvents
     onScoreCard(e)
     {
         if (e.detail && e.detail !== "")
-            this.updateCardPreview("icon-preview-scored", e.detai);
+            this.updateCardPreview("icon-preview-scored", e.detail);
     }
 
     onScoredShared(_bIsMe, data)
