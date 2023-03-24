@@ -32,21 +32,17 @@
 #config-panel {
     overflow: auto;
     position: fixed;
-    padding: 20px;
-    left: 50%;
+    padding: 10px;
+    left: 15%;
     padding-left: 20px;
-    transform: translateX(-50%);
-    max-height: 60%;
-    max-width: 600px;
-    
+    max-height: 70%;
+    width: 70%;
 }
 
 #dices-panel-content
 {
     top: 20%;
-    left: 50%;
     text-align: center;
-    max-width: 530px;
 }
 #dices-panel-content p { color: #fff; }
 
