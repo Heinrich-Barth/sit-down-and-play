@@ -1,4 +1,5 @@
 const GameRoom = require("./GameRoom");
+const DeckChecksum = require("./DeckChecksum");
 
 /**
  * Create a new room if necessary
@@ -177,9 +178,13 @@ class RoomManager {
         if (room === undefined || room === null || room === "" || this._rooms[room] === undefined)
             return { exists: false };
 
+        const pRoom = this._rooms[room];
         return {
             exists : true,
-            players : this._rooms[room].getPlayers().length
+            players : pRoom.getPlayers().length,
+            share: pRoom.getAllowSocialMedia(),
+            allowPlayers: pRoom.canJoinPlayer(),
+            allowSpectator: pRoom.canJoinVisitor()
         }
     }
 
@@ -380,10 +385,11 @@ class RoomManager {
         setTimeout(function ()
         {
             /** remove all players that are not connected anymore */
+            const fileLog = pThis.getGameLog(room);
             if (pThis.kickDisconnected(room))
             {
                 /** make sure to remove game from events */
-                pThis._eventManager.trigger("game-remove", room);
+                pThis._eventManager.trigger("game-remove", room, fileLog);
                 console.log("Game room " + room + " is empty and was destroyed.");
             }
 
@@ -478,12 +484,12 @@ class RoomManager {
             {
                 pRoom.publish("/game/player/indicator", "", { userid: userid, connected: true });
                 pRoom.sendMessage(userid, " joined the game.");
-                console.log("User " + pPlayer.getName() + " rejoined the game " + room);
+                console.info("User " + pPlayer.getName() + " rejoined the game " + room);
             }
             else
             {
                 pRoom.sendMessage(userid, pPlayer.getName() + " joined as spectator.");
-                console.log("Spectator " + pPlayer.getName() + " rejoined the game " + room);
+                console.info("Spectator " + pPlayer.getName() + " rejoined the game " + room);
             }
 
             return true;
@@ -522,6 +528,12 @@ class RoomManager {
         if (typeof userid !== "undefined" && typeof room !== "undefined" && this._rooms[room] !== undefined)
             this._rooms[room].sendMessage(userid, "has left the game.");
     }
+
+    getGameLog(room)
+    {
+        const pRoom = this.getRoom(room);
+        return pRoom === null ? "" : pRoom.getGameLog();
+    }
     
     endGame(room)
     {
@@ -531,16 +543,19 @@ class RoomManager {
         let pRoom = this._rooms[room];
         const bAllowSocial = pRoom.getAllowSocialMedia();
         const scores = pRoom.getFinalGameScore();
-        if (scores !== undefined && bAllowSocial)
-            this._eventManager.trigger("game-finished", room, scores);
 
         pRoom.sendMessage("Game", "has ended.");
-        pRoom.destroy();
+        pRoom.destroy(scores);
+
+        const logfile = pRoom.getGameLog();
 
         delete this._rooms[room];
 
-        this._eventManager.trigger("game-remove", room);
-        console.log("Game " + room + " has ended.");
+        if (scores !== undefined && bAllowSocial)
+            this._eventManager.trigger("game-finished", room, scores);
+
+        this._eventManager.trigger("game-remove", room, logfile);
+        console.info("Game " + room + " has ended.");
     }
 
     /**
@@ -700,8 +715,10 @@ class RoomManager {
         if (pRoom.getGame().isArda() && !isSinglePlayer)
             this._eventManager.trigger("arda-prepare-deck", this.gameCardProvider, jDeck, isFirst);
 
+        const deckChecksum = DeckChecksum.calculateChecksum(jDeck);
+
         const lNow = Date.now();
-        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow);
+        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow, deckChecksum);
 
         /** timer to check for abandoned games */
         this.checkGameContinuence(room);
