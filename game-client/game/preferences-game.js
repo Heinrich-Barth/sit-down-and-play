@@ -1,19 +1,12 @@
 
 class GamePreferences extends Preferences {
 
-    constructor()
-    {
-        super();
-    }
-
-    static URL = "/data/preferences/game";
-
     getGameCss()
     {
         return "config-wrapper-game";
     }
 
-    static _replaceBackground(sNew)
+    setBackgroundImage(sNew)
     {
         if (sNew === undefined || sNew === "" || document.body.classList.contains(sNew))
             return false;
@@ -30,11 +23,6 @@ class GamePreferences extends Preferences {
         return true;
     }
 
-    getCookieUpdateUrl()
-    {
-        return GamePreferences.URL;
-    }
-
     _dices()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-dice-chooser"));
@@ -43,6 +31,34 @@ class GamePreferences extends Preferences {
     _chat(isActive)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
+    }
+
+    _togglePaddingBottom(isActive)
+    {
+        const table = document.querySelector(".area-player");
+        if (table === null)
+            return;
+
+        if (isActive && !table.classList.contains("table-padding-bottom"))
+            table.classList.add("table-padding-bottom");
+        else if (!isActive && table.classList.contains("table-padding-bottom"))
+            table.classList.remove("table-padding-bottom");
+    }
+
+    _backgroundDarkness(isActive)
+    {
+        const list = document.getElementsByClassName("table");
+        if (list ===  null || list.length < 1)
+            return;
+
+        const elem = list[0];
+        if (isActive)
+        {
+            if (!elem.classList.contains("table-dark"))
+                elem.classList.add("table-dark");
+        }
+        else if (elem.classList.contains("table-dark"))
+            elem.classList.remove("table-dark");
     }
 
     _volumeChange(val)
@@ -101,6 +117,7 @@ class GamePreferences extends Preferences {
         const bWatcher = GamePreferences.isWatching();
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
+        this.createEntry0("bg_shawod");
 
         if (!bWatcher)
             this.createEntry0("game_dices");
@@ -122,6 +139,7 @@ class GamePreferences extends Preferences {
         this.createSection("General");
         this.createEntry0("viewpile_open");
         this.createEntry0("show_chat");
+        this.createEntry0("use_padding_bottom");
     }
 
     static isWatching()
@@ -137,6 +155,7 @@ class GamePreferences extends Preferences {
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
         this.addConfigSlider("game_sfx", "Sound volume", 20, "fa-volume-up", this._volumeChange.bind(this));
+        this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
 
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
@@ -146,7 +165,7 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
-
+        this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", false, this._togglePaddingBottom)
         this._toggleCardPreview();
     }
 
@@ -177,6 +196,16 @@ class GamePreferences extends Preferences {
         icons.onclick = this.toggleZoom.bind(this);
         div.appendChild(icons);
         document.body.appendChild(div);
+
+        if (this.data.background !== undefined)
+            this.setBackgroundImage(this.data.background);
+
+    }
+
+    initDices()
+    {
+        if (typeof this.data.dices === "string")
+            MeccgApi.send("/game/dices/set", { type: this.data.dices });
     }
 
     toggleZoom()
@@ -203,9 +232,4 @@ class GamePreferences extends Preferences {
 const g_pGamesPreferences = new GamePreferences();
 g_pGamesPreferences.init();
 
-
-(function() { 
-    
-    fetch(GamePreferences.URL).then((response) => response.json().then((data) => GamePreferences._replaceBackground(data.background)));
-
-})();
+document.body.addEventListener("meccg-api-ready", g_pGamesPreferences.initDices.bind(g_pGamesPreferences), false);

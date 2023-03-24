@@ -2,11 +2,6 @@
 
 class DiceChooser extends PreferenceChoise 
 {
-    getUpdateUrl()
-    {
-        return "/data/preferences/dice";
-    }
-
     getHeadline()
     {
         return "Choose Dices";
@@ -41,6 +36,5 @@ class DiceChooser extends PreferenceChoise
         MeccgApi.send("/game/dices/set", { type: elem });
     }
 }
-
 
 document.body.addEventListener("meccg-dice-chooser", () => new DiceChooser().init("/data/dices"), false);

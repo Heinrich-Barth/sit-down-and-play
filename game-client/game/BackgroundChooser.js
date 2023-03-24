@@ -3,11 +3,6 @@
 
 class BackgroundChooser extends PreferenceChoise 
 {
-    getUpdateUrl()
-    {
-        return "/data/preferences/game";
-    }
-
     getHeadline()
     {
         return "Choose Background";

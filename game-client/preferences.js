@@ -1,19 +1,57 @@
+class PreferencesStorable {
 
-class Preferences {
+    constructor()
+    {
+        this.data = this.loadData();
+    }
+
+    getLocalStorageKey()
+    {
+        return "meccg_data";
+    }
+
+    loadData()
+    {
+        try
+        {
+            const key = this.getLocalStorageKey();
+            const val = key === "" ? null : localStorage.getItem(key);
+            if (val !== null)
+                return JSON.parse(val);
+        }
+        catch (errIgnore)
+        { }
+
+        return { };
+    }
+
+    updateCookie(key, value)
+    {
+        this.data[key] = value;
+        const localKey = this.getLocalStorageKey();
+        if (localKey !== "")
+            localStorage.setItem(localKey, JSON.stringify(this.data));
+    }
+}
+
+class Preferences extends PreferencesStorable {
+
+    constructor()
+    {
+        super();
+
+        this._html = "";
+    }
 
     static _id = 0;
     static config = { };   
-    
+
     static Type = {
         TOGGLE : 1,
         CHECKBOX : 2,
         SLIDER: 3
     }
 
-    constructor()
-    {
-        this._html = "";
-    }
 
     static _emptyCallback()
     {
@@ -193,27 +231,7 @@ class Preferences {
     {
         return "";
     }
-
-    getCookieUpdateUrl()
-    {
-        return "";
-    }
-
-    updateCookie(name, value)
-    {
-        const options = {
-            method: 'POST',
-            body: JSON.stringify({ name: name, value: value }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
     
-        const sUrl = this.getCookieUpdateUrl();
-        if (sUrl !== undefined && sUrl !== null && sUrl !== "")
-            fetch(sUrl, options).then(() => { /** just update */}).catch(() => console.log("error"));
-    }
-
     init()
     {
         if (document.getElementById("config-panel") !== null)

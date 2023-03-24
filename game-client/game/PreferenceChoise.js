@@ -1,13 +1,8 @@
-class PreferenceChoise
+class PreferenceChoise extends PreferencesStorable
 {
     insertOption(elem)
     {
         throw new Error("please overwrite");
-    }
-
-    getUpdateUrl()
-    {
-        return "";
     }
 
     getHeadline()
@@ -38,23 +33,6 @@ class PreferenceChoise
         let elem = this.insertOption(folder);
         if (elem !== null)
             container.appendChild(elem);
-    }
-
-    updateCookie(name, value)
-    {
-        const url = this.getUpdateUrl();
-        if (url === "")
-            return;
-
-        const options = {
-            method: 'POST',
-            body: JSON.stringify({ name: name, value: value }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    
-        fetch(url, options).then(() => { /** just update */}).catch(() => console.log("error"));
     }
 
     static remove()
