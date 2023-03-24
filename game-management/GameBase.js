@@ -12,6 +12,32 @@ class GameBase {
         this.player_phase =  "start";
         this.started = null;
         this.bSingle = false;
+        this.created = Date.now();
+    }
+
+    globalRestoreGame(_userid, _socket, data)
+    {
+        if (typeof data.game.meta.gameduration === "undefined" || isNaN(data.game.meta.gameduration))
+            return;
+
+        try
+        {
+            this.created -= parseInt(data.game.meta.gameduration);
+        }
+        catch (err)
+        {
+            console.warn(err.message);
+        }
+    }            
+
+    getGameCreated()
+    {
+        return this.created;
+    }
+
+    getGameDuration()
+    {
+        return Date.now() - this.created;
     }
 
     restorePlayerPhase(phase, _turn, _current)
@@ -60,6 +86,7 @@ class GameBase {
             phase : this.player_phase,
             admin : this._adminUser,
             arda : this.isArda(),
+            gameduration: this.getGameDuration(),
             players : null
         };
         
@@ -173,10 +200,15 @@ class GameBase {
         this.apis.meccgApi.reply(path, socket, obj);
     }
 
-    publishChat(userid, message)
+    publishGameLogNextPlayer(message)
+    {
+        this.apis.chat.gameLogNextPlayer(message);
+    }
+
+    publishChat(userid, message, saveGameLog = false)
     {
         if (message !== "")
-            this.apis.chat.send(userid, message);
+            this.apis.chat.sendMessage(userid, message, saveGameLog);
     }
 
     publishToPlayers(route, userid, obj)
