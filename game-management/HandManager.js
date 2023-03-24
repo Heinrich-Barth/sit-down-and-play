@@ -10,12 +10,12 @@ class HandManager
     {
         if (typeof this.DECKS._deck[playerId] === "undefined")
         {
-            console.log("Cannod find deck of player #" + playerId);
+            console.warn("Cannod find deck of player #" + playerId);
             return [];
         }
         else if (typeof this.DECKS._deck[playerId][type] === "undefined")
         {
-            console.log("Cannod find " + type + " pile of player #" + playerId);
+            console.warn("Cannod find " + type + " pile of player #" + playerId);
             return [];
         }
         else 
@@ -28,7 +28,7 @@ class HandManager
     {
         if (typeof this.DECKS._deck[playerId] === "undefined")
         {
-            console.log("decksize: Cannod find deck of player #" + playerId);
+            console.warn("decksize: Cannod find deck of player #" + playerId);
             return null;
         }
         else
