@@ -52,7 +52,7 @@ class GamePlayers extends GameBase
             ids: this.players.ids,
             names: this.players.names,
             current : this.players.current,
-            turn: this.players.turn,
+            turn: this.players.turn
         }
 
         data.scoring = this.scoring.save();
@@ -185,7 +185,7 @@ class GamePlayers extends GameBase
             this.players.current--;
 
         /** all done. the player has left the game and we can now send the update */
-        console.log("Player kicked from index list: " + userId)
+        console.info("Player kicked from index list: " + userId)
         this.publishToPlayers("/game/player/remove", "", { userid: userId });
         return true;
     }

@@ -368,7 +368,8 @@ class DeckManager {
         if (uuid === "" || typeof this._cardMap[uuid] === "undefined")
         {
             if (uuid !== "_site")
-                console.log("Cannot find card by uuid " + uuid);
+                console.warn("Cannot find card by uuid " + uuid);
+                
             return null;
         }
         else
