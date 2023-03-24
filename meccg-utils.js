@@ -83,7 +83,7 @@ exports.createContentSecurityPolicyMegaAdditionals = function(csp_image_domain)
     const jEntries = {
         "default-src" : "'none'",
         "style-src": "'self'",
-        "connect-src": "'self'",
+        "connect-src": "'self' " + csp_image_domain,
         "font-src": "'self'",
         "script-src": "'self' 'nonce-START'",
         "frame-src": "'self'",
