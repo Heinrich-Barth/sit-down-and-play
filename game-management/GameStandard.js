@@ -59,6 +59,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/company/arrive", this.onGameCompanyArrives.bind(this));
         this.getMeccgApi().addListener("/game/company/returntoorigin", this.onGameCompanyReturnsToOrigin.bind(this));
         this.getMeccgApi().addListener("/game/company/highlight", this.onGameCompanyHighlight.bind(this));
+        this.getMeccgApi().addListener("/game/company/markcurrently", this.onGameCompanyMarkAsCurrent.bind(this));
         this.getMeccgApi().addListener("/game/company/location/set-location", this.onGameCompanyLocationSetLocation.bind(this));
         this.getMeccgApi().addListener("/game/company/location/reveal", this.onGameCompanyLocationReveal.bind(this));
         this.getMeccgApi().addListener("/game/company/location/attach", this.onGameCompanyLocationAttach.bind(this));
@@ -250,7 +251,7 @@ class GameStandard extends GamePlayers
         const userid = this.getCurrentPlayerId();
         const size = this.getPlayboardManager().Size(userid);
         if (size !== null)
-            this.publishChat(userid, " holds " + size.hand + " card(s)");
+            this.publishChat(userid, " holds " + size.hand + " card(s)", false);
     }
 
     startPoolPhase()
@@ -267,7 +268,7 @@ class GameStandard extends GamePlayers
 
         if (!this.getPlayboardManager().MoveCardToStagingArea(_uuid, userid, userid))
         {
-            this.publishChat(userid, "Cannot move card to staging area");
+            this.publishChat(userid, "Cannot move card to staging area", false);
             return false;
         }
 
@@ -287,7 +288,7 @@ class GameStandard extends GamePlayers
             secondary : card.secondary
         });
         this.updateHandCountersPlayer(userid);
-        this.publishChat(userid, "added " + card.code + " to staging area");
+        this.publishChat(userid, "added " + card.code + " to staging area", true);
     }
 
     onGameCardStateReveal(userid, _socket, data)
@@ -298,9 +299,9 @@ class GameStandard extends GamePlayers
         this.publishToPlayers("/game/card/reveal", userid, {uuid: uuid, reveal: rev});
 
         if (rev)
-            this.publishChat(userid, " reveals " + data.code);
+            this.publishChat(userid, " reveals " + data.code, true);
         else
-            this.publishChat(userid, " hides a card");
+            this.publishChat(userid, " hides a card", true);
     }
 
     onGameCardStateSet(userid, _socket, data)
@@ -332,15 +333,15 @@ class GameStandard extends GamePlayers
 
         const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
         if (card !== null && card.revealed === true)
-            this.publishChat(userid, message + data.code);
+            this.publishChat(userid, message + data.code, true);
         else 
-            this.publishChat(userid, message + "a card");
+            this.publishChat(userid, message + "a card", true);
     }
 
     onGameStateGlow(userid, _socket, data)
     {
         this.publishToPlayers("/game/card/state/glow", userid, data);
-        this.publishChat(userid, "marks/unmarks " + data.code);
+        this.publishChat(userid, "marks/unmarks " + data.code, false);
     }
 
     onCardDraw(userid, _socket, _obj)
@@ -352,9 +353,9 @@ class GameStandard extends GamePlayers
         this.updateHandCountersPlayer(userid);
 
         if (_list.length === 1)
-            this.publishChat(userid, "drew 1 card");
+            this.publishChat(userid, "drew 1 card", false);
         else if (_list.length > 1)
-            this.publishChat(userid, "drew " + _list.length + " cards");
+            this.publishChat(userid, "drew " + _list.length + " cards", false);
     }
 
     drawCardsFromPlaydeck(userid, nCards)
@@ -370,7 +371,7 @@ class GameStandard extends GamePlayers
         }
 
         this.updateHandCountersPlayer(userid);
-        this.publishChat(userid, "drew " + nCards + " card(s)");
+        this.publishChat(userid, "drew " + nCards + " card(s)", false);
     }
 
     onCardDrawSingle(userid, _socket, _obj)
@@ -381,7 +382,7 @@ class GameStandard extends GamePlayers
 
         this.updateHandCountersPlayer(userid);
         this.drawCard(userid, _card.uuid, _card.code, _card.type, 1);
-        this.publishChat(userid, "drew 1 card");
+        this.publishChat(userid, "drew 1 card", false);
     }
 
     onGetTopCardFromHand(userid, _socket, nCount)
@@ -393,7 +394,7 @@ class GameStandard extends GamePlayers
         for (let _card of _cards)
         {
             this.drawCard(userid, _card.uuid, _card.code, _card.type, nCount);
-            this.publishChat(userid, "drew 1 card");
+            this.publishChat(userid, "drew 1 card", false);
         }
 
         this.updateHandCountersPlayer(userid);
@@ -452,14 +453,14 @@ class GameStandard extends GamePlayers
             this.publishToPlayers("/game/card/remove", userid, list);
             this.updateHandCountersPlayerAll();
 
-            this.publishChat(userid, "Stores " + card.code);
+            this.publishChat(userid, "Stores " + card.code, true);
             if (nDiscarded > 0)
-                this.publishChat(userid, "... and discarded " + nDiscarded + " card(s)");
+                this.publishChat(userid, "... and discarded " + nDiscarded + " card(s)", true);
 
             this.publishToPlayers("/game/event/score", userid, {owner: card.owner, code: card.code });
         } 
         else
-            this.publishChat(userid, "Could not store " + card.code);
+            this.publishChat(userid, "Could not store " + card.code, false);
 
         /** update the company */
         this.onRedrawCompany(userid,affectedCompanyUuid);
@@ -553,9 +554,9 @@ class GameStandard extends GamePlayers
         this.publishToPlayers("/game/card/remove", userid, result.uuids);
 
         if (bShufflePlaydeck)
-            this.publishChat(userid, "Shuffled " + result.countMoved + " card(s) into playdeck");
+            this.publishChat(userid, "Shuffled " + result.countMoved + " card(s) into playdeck", true);
         else
-            this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target);
+            this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target, true);
 
         this.onRedrawCompany(userid, result.affectedCompanyUuid);
 
@@ -571,7 +572,7 @@ class GameStandard extends GamePlayers
         if (nCount != -1)
         {
             this.publishToPlayers("/game/card/token", userid, {uuid: data.uuid, count: nCount });
-            this.publishChat(userid, "updates token of " + data.code + " to " + nCount);
+            this.publishChat(userid, "updates token of " + data.code + " to " + nCount, true);
         }
     }
 
@@ -616,7 +617,7 @@ class GameStandard extends GamePlayers
             return false;
 
         this.updateHandCountersPlayer(card.owner);
-        this.publishChat(userid, "Discarded 1 card.");
+        this.publishChat(userid, "Discarded 1 card.", true);
         this.onRedrawCompany(userid, affectedCompanyUuid);
         return true;
     }
@@ -625,14 +626,14 @@ class GameStandard extends GamePlayers
     {
         this.replyToPlayer("/game/score/show", socket, this.getScoring().getScoreSheets());
         this.replyToPlayer("/game/score/show-pile", socket, this._getList(userid, "victory"));
-        this.publishChat(userid, " looks at score sheet");
+        this.publishChat(userid, " looks at score sheet", false);
     }
 
     scoreUpdate(userid, _socket, data)
     {
         const total = this.getScoring().updateScore(userid, data);
         if (total !== -1)
-            this.publishChat(userid, " updates score to a total of " + total + " point(s)");
+            this.publishChat(userid, " updates score to a total of " + total + " point(s)", true);
     }
 
     scoreAdd(userid, _socket, data)
@@ -640,7 +641,7 @@ class GameStandard extends GamePlayers
         const total = this.getScoring().update(userid, data.type, data.points);
         if (total !== -1)
         {
-            this.publishChat(userid, " updated " + data.type + " score by " + data.points + " point(s) to a total of " + total + " MPs.");
+            this.publishChat(userid, " updated " + data.type + " score by " + data.points + " point(s) to a total of " + total + " MPs.", true);
             this.publishToPlayers("/game/sfx", userid, { "type": "score" });
         }
     }
@@ -670,7 +671,7 @@ class GameStandard extends GamePlayers
 
         if (!this.getPlayboardManager().CharacterHostCard(company, character, uuid, bFromHand, userid))
         {
-            console.log("character cannot host card.");
+            console.info("character cannot host card.");
             return false;
         }
 
@@ -683,9 +684,9 @@ class GameStandard extends GamePlayers
         {
             const cardChar = this.getPlayboardManager().GetCardByUuid(character);
             if (cardChar === null || cardChar.revealed === false)
-                this.publishChat(userid, " character hosts a card");
+                this.publishChat(userid, " character hosts a card", true);
             else
-                this.publishChat(userid, cardChar.code + " hosts " + card.code);
+                this.publishChat(userid, cardChar.code + " hosts " + card.code, true);
         }
 
         return true;
@@ -712,7 +713,7 @@ class GameStandard extends GamePlayers
         const sWho = this.getCardCode(cardUuid, "Character") + " ";
         if (!this.getPlayboardManager().JoinCharacter(cardUuid, targetcharacter, targetCompany, userid))
         {
-            this.publishChat(userid, sWho + "cannot join under direct influence")
+            this.publishChat(userid, sWho + "cannot join under direct influence", false)
         }
         else
         {
@@ -725,7 +726,7 @@ class GameStandard extends GamePlayers
             }
 
             let sChar = this.getCharacterCode(targetcharacter, "a character");
-            this.publishChat(userid, sWho + "joined " + sChar + " under direct influence");
+            this.publishChat(userid, sWho + "joined " + sChar + " under direct influence", true);
         }
     }
 
@@ -740,7 +741,7 @@ class GameStandard extends GamePlayers
 
         if (!this.getPlayboardManager().JoinCompany(_uuid, _source, _companyId, userid))
         {
-            console.log("Character " + _uuid + " cannot join the company " + _companyId);
+            console.info("Character " + _uuid + " cannot join the company " + _companyId);
             return;
         }
 
@@ -763,7 +764,7 @@ class GameStandard extends GamePlayers
             else
                 sWho += " the company of " + sCompanyCharacter;
 
-            this.publishChat(userid, sWho);
+            this.publishChat(userid, sWho, true);
         }
     }
 
@@ -798,12 +799,12 @@ class GameStandard extends GamePlayers
         {
             let sCode = this.getCardCode(_uuid, "");
             if (sCode !== "")
-                this.publishChat(userid, sCode + " created a new company");
+                this.publishChat(userid, sCode + " created a new company", true);
             else
-                this.publishChat(userid, "New company created");
+                this.publishChat(userid, "New company created", true);
         }
         else
-            this.publishChat(userid, "A character created a new company");
+            this.publishChat(userid, "A character created a new company", true);
 
         return true;
     }
@@ -812,6 +813,12 @@ class GameStandard extends GamePlayers
     {
         if (userid !== undefined && userid !== "" && companyId !== undefined && companyId !== "")
             this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(companyId));
+    }
+
+    onGameCompanyMarkAsCurrent(userid, _socket, jData)
+    {
+        if (typeof jData.uuid === "string")
+            this.publishToPlayers("/game/company/markcurrently", userid, {uuid: jData.uuid});
     }
 
     onGameCompanyHighlight(userid, _socket, jData)
@@ -826,7 +833,7 @@ class GameStandard extends GamePlayers
 
             let sCompanyCharacter = this.getFirstCompanyCharacterCode(company, "");
             if (sCompanyCharacter !== "")
-                this.publishChat(userid, "marks company of " + sCompanyCharacter);
+                this.publishChat(userid, "marks company of " + sCompanyCharacter, false);
         }
     }
 
@@ -840,9 +847,9 @@ class GameStandard extends GamePlayers
 
         let sCompanyCharacter = this.getFirstCompanyCharacterCode(jData.company, "");
         if (sCompanyCharacter !== "")
-            this.publishChat(userid, "The company of " + sCompanyCharacter + " arrives");
+            this.publishChat(userid, "The company of " + sCompanyCharacter + " arrives", true);
         else
-            this.publishChat(userid, "The company arrives");
+            this.publishChat(userid, "The company arrives", true);
     }
 
     onGameCompanyReturnsToOrigin(userid, _socket, jData)
@@ -855,9 +862,9 @@ class GameStandard extends GamePlayers
 
         let sCompanyCharacter = this.getFirstCompanyCharacterCode(jData.company, "");
         if (sCompanyCharacter !== "")
-            this.publishChat(userid, "The company of " + sCompanyCharacter + " returns to site of origin");
+            this.publishChat(userid, "The company of " + sCompanyCharacter + " returns to site of origin", true);
         else
-            this.publishChat(userid, "The company returns to site of origin");
+            this.publishChat(userid, "The company returns to site of origin", true);
     }
 
     onGameCompanyLocationSetLocation(userid, _socket, obj)
@@ -877,7 +884,7 @@ class GameStandard extends GamePlayers
         };
         
         this.publishToPlayers("/game/player/draw/locations", userid, result);
-        this.publishChat(userid, " organises locations.");
+        this.publishChat(userid, " organises locations.", false);
     }
 
     onGameCompanyLocationAttach(userid, _socket, data)
@@ -889,13 +896,13 @@ class GameStandard extends GamePlayers
         const card = this.getPlayboardManager().PopCardFromHand(_uuid);
         if (card === null)
         {
-            this.publishChat(userid, "Cannot add foreign card to location threats");
+            this.publishChat(userid, "Cannot add foreign card to location threats", false);
             return;
         }
 
         if (!this.getPlayboardManager().AddHazardToCompanySite(_uuid, targetCompanyUuid))
         {
-            this.publishChat(userid, "cannot add hazard to company.");
+            this.publishChat(userid, "cannot add hazard to company.", false);
             return;
         }
 
@@ -915,16 +922,17 @@ class GameStandard extends GamePlayers
         this.updateHandCountersPlayer(userid);
 
         if (revealOnDrop)
-            this.publishChat(userid, " attached " + card.code + " to site/region");
+            this.publishChat(userid, " attached " + card.code + " to site/region", true);
         else
-            this.publishChat(userid, " played an on guard card");
+            this.publishChat(userid, " played an on guard card", true);
     }
 
     onGameCompanyLocationReveal(userid, _socket, data)
     {
         this.getPlayboardManager().RevealCompanyDestinationSite(data.companyUuid);
         this.publishToPlayers("/game/company/location/reveal", userid, {company: data.companyUuid});
-        this.publishChat(userid, " revealed locations.");
+        /** todo: send target location here */
+        this.publishChat(userid, " revealed locations.", true);
     }
 
     globalSaveGame(_userid, socket)
@@ -956,7 +964,7 @@ class GameStandard extends GamePlayers
         const card = this.getPlayboardManager().GetCardByUuid(data.uuid);
         if (card !== null)
         {
-            this.publishChat(userid, " discards " + card.code);
+            this.publishChat(userid, " discards " + card.code, true);
             this.publishToPlayers("/game/discardopenly", userid, {
                 code: card.code,
                 owner : card.owner,
@@ -975,7 +983,7 @@ class GameStandard extends GamePlayers
         pDices.saveRoll(userid, nRes);
 
         this.publishToPlayers("/game/dices/roll", userid, {first: n1, second: n2, total: nRes, user: userid, dice: dice });
-        this.publishChat(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")");
+        this.publishChat(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")", true);
     }
 
     setDices(userid, _socket, obj)
@@ -1016,7 +1024,8 @@ class GameStandard extends GamePlayers
 
             const lTime = this._timeTimer.pollElapsedMins();
 
-            this.publishChat(userid, " ends turn after " + lTime + "mins. Active player is " + this.getCurrentPlayerName());
+            this.publishChat(userid, " ends turn after " + lTime + "mins. Active player is " + this.getCurrentPlayerName(), true);
+            this.publishGameLogNextPlayer(this.getCurrentPlayerName() + " starts their turn.");
 
             this.sendCurrentHandSize();
             this.publishToPlayers("/game/set-turn", userid, { turn : nNewTurn })
@@ -1034,9 +1043,9 @@ class GameStandard extends GamePlayers
         this.sendCurrentPhase();
 
         if (nNewTurn !== nCurrentTurn)
-            this.publishChat(this.getCurrentPlayerId(), " starts turn no. " + nNewTurn);
+            this.publishChat(this.getCurrentPlayerId(), " starts turn no. " + nNewTurn, true);
         else
-            this.publishChat(this.getCurrentPlayerId(), " is now in " + sPhase + " phase");
+            this.publishChat(this.getCurrentPlayerId(), " is now in " + sPhase + " phase", true);
     }
 
     onCardImport(userid, _socket, data)
@@ -1050,14 +1059,14 @@ class GameStandard extends GamePlayers
         let count = this.addCardsToGameDuringGame(userid, data.cards);
         if (count < 1)
         {
-            this.publishChat(userid, "could not add new cards to sideboard");
+            this.publishChat(userid, "could not add new cards to sideboard", false);
             return;
         }
 
         if (count === 1)
-            this.publishChat(userid, "just added 1 card to their sideboard");
+            this.publishChat(userid, "just added 1 card to their sideboard", true);
         else
-            this.publishChat(userid, "just added " + count + " cards to their sideboard");
+            this.publishChat(userid, "just added " + count + " cards to their sideboard", true);
 
         this.updateHandCountersPlayer(userid);
 
@@ -1066,14 +1075,14 @@ class GameStandard extends GamePlayers
     viewReveal(userid, _socket, obj)
     {
         this.publishToPlayers("/game/view-cards/reveal/list", userid, {type: obj, list: this._getList(userid, obj) });
-        this.publishChat(userid, " offers to show cards in " + obj);
+        this.publishChat(userid, " offers to show cards in " + obj, false);
     }
 
     viewList(userid, _socket, obj)
     {
         const list = this._getList(userid, obj);
         this.publishToPlayers("/game/view-cards/list", userid, {type: obj, list: list});
-        this.publishChat(userid, " views cards in " + obj);
+        this.publishChat(userid, " views cards in " + obj, false);
     }
 
     viewCloseList(userid, _socket, obj)
@@ -1083,11 +1092,11 @@ class GameStandard extends GamePlayers
 
         if (!obj.offered)
         {
-            this.publishChat(userid, " closes card offering");
+            this.publishChat(userid, " closes card offering", false);
             this.publishToPlayers("/game/view-cards/list/close", userid, { });
         }
         else
-            this.publishChat(userid, " closes card offer");
+            this.publishChat(userid, " closes card offer", false);
     }
 
     viewShuffle(userid, _socket, obj)
@@ -1095,13 +1104,13 @@ class GameStandard extends GamePlayers
         if (obj.target === "playdeck")
         {
             this.getPlayboardManager().ShufflePlaydeck(userid);
-            this.publishChat(userid, " shuffles playdeck");
+            this.publishChat(userid, " shuffles playdeck", false);
             this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
         else if (obj.target === "discardpile")
         {
             this.getPlayboardManager().ShuffleDiscardpile(userid);
-            this.publishChat(userid, " shuffles discardpile");
+            this.publishChat(userid, " shuffles discardpile", false);
             this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
     }
@@ -1111,7 +1120,7 @@ class GameStandard extends GamePlayers
         let sUuid = obj.uuid;
         if (sUuid !== "")
         {
-            this.publishChat(userid, " shows a card");
+            this.publishChat(userid, " shows a card", false);
             this.publishToPlayers("/game/view-cards/reveal/reveal", userid, {uuid: sUuid});
         }
     }
@@ -1133,7 +1142,7 @@ class GameStandard extends GamePlayers
     {
         if (this.players.ids.length !== Object.keys(assignments).length)
         {
-            console.log("Player count missmatch");
+            console.warn("Player count missmatch");
             return false;
         }
         
@@ -1144,7 +1153,7 @@ class GameStandard extends GamePlayers
         {
             if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
             {
-                console.log("Expected player id is not part of this room: " + assignments[id]);
+                console.warn("Expected player id is not part of this room: " + assignments[id]);
                 success = false;
             }
         }
@@ -1187,9 +1196,7 @@ class GameStandard extends GamePlayers
             console.error(err);
         }
 
-        const message = "Could not decode saved game.";
-        this.publishChat(userid, " savegame is invalid");
-        this.publishChat(userid, message);
+        this.publishChat(userid, " savegame is invalid. Could not decode saved game.", false);
         return false;
     }
 
@@ -1200,9 +1207,7 @@ class GameStandard extends GamePlayers
         if (data.game !== null)
             return true;
 
-        const message = pEval.getMessageString();
-        this.publishChat(userid, " savegame is invalid");
-        this.publishChat(userid, message);
+        this.publishChat(userid, " savegame is invalid. " + pEval.getMessageString(), false);
         return false;
     }
 
@@ -1236,7 +1241,7 @@ class GameStandard extends GamePlayers
                 let newkey = assignments[key];
                 if (newkey === undefined)
                 {
-                    console.log("Cannot find owner " + key + " in siteMap");
+                    console.warn("Cannot find owner " + key + " in siteMap");
                     error = true;
                 }
                 else
@@ -1259,7 +1264,7 @@ class GameStandard extends GamePlayers
                 let newkey = assignments[key];
                 if (newkey === undefined)
                 {
-                    console.log("Cannot find owner " + key + " in deck");
+                    console.warn("Cannot find owner " + key + " in deck");
                     error = true;
                 }
                 else
@@ -1276,7 +1281,7 @@ class GameStandard extends GamePlayers
                 let newkey = assignments[key];
                 if (newkey === undefined)
                 {
-                    console.log("Cannot find owner " + key + " in stagingarea");
+                    console.warn("Cannot find owner " + key + " in stagingarea");
                     error = true;
                 }
                 else
@@ -1293,7 +1298,7 @@ class GameStandard extends GamePlayers
                 let newkey = assignments[key];
                 if (newkey === undefined)
                 {
-                    console.log("Cannot find owner " + key + " in scoring");
+                    console.warn("Cannot find owner " + key + " in scoring");
                     error = true;
                 }
                 else
@@ -1310,7 +1315,7 @@ class GameStandard extends GamePlayers
                 let newkey = assignments[playboard.companies[key].playerId];
                 if (newkey === undefined)
                 {
-                    console.log("Cannot find owner " + key + " in companies");
+                    console.warn("Cannot find owner " + key + " in companies");
                     error = true;
                 }
                 else
@@ -1322,12 +1327,14 @@ class GameStandard extends GamePlayers
             else if (!this.restore(playboard, data.game.scoring))
                 throw new Error("Cannot restore game playboard");
             
+            super.globalRestoreGame(userid, _socket, data);
+            
             this.restorePlayerPhase(data.game.meta.phase, data.game.meta.players.turn, data.game.meta.players.current)
             this.publishToPlayers("/game/restore", userid, { success : true });
         }
         catch (err)
         {
-            console.log(err);
+            console.error(err);
 
             if (this._fnEndGame !== null)
                 this._fnEndGame();
