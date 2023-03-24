@@ -18,12 +18,13 @@
         return code !== undefined && code !== "" && this.tapped[code] !== undefined;
     }
 
-    createEntry(jEntry, isSite, region, siteSitle)
+    createEntry(jEntry, isSite, region, siteSitle, setCode)
     {
         this._temp.push({ 
             code: jEntry["code"], 
             site: isSite === true, 
             region: region,
+            set_code: jEntry.set_code === undefined ? "" : jEntry.set_code,
             siteSitle : siteSitle === undefined ? "" : siteSitle,
             tapped : this.isSiteTapped(jEntry["code"])
         });
@@ -241,7 +242,7 @@
 
         if (typeof j.balrog !== "undefined" && showAlignment.balrog && (showDC || !j.balrog.dreamcard))
             this.createEntry(j.balrog, true, region, site);
-        
+
         const keys = MapViewSiteImages.getAdditionalAlignKeys();
         for(let key of keys)
         {
@@ -291,6 +292,9 @@
         
         const jTarget = document.getElementById("found_sites");
         for (let _card of res)
-            jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle, _card.tapped));
+        {
+            if (g_pRegionMapPreferences.showSiteSet(_card.set_code))
+                jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle, _card.tapped));
+        }
     }
 }
