@@ -1,0 +1,14 @@
+.game-list-history table
+{
+    display: inline-block;
+    width: 600px;
+
+}
+
+td.game-log-time {
+    width: 300px;
+} 
+
+td.game-log-name {
+    width: 300px;
+}
