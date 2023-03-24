@@ -45,7 +45,7 @@ class MapData
         this.mapData = {};
         this.images = {};
         this.mapRegions = {};
-        this.alignments = [];
+        this.sets = {};
     }
 
     haveToRemoveCard(jMapCard, jCards) 
@@ -65,6 +65,7 @@ class MapData
         this.images = {};
         this.mapRegions = {};
         this.alignments = [];
+        this.sets = {};
     }
 
     getPositionFileContent(positionFile)
@@ -99,7 +100,8 @@ class MapData
         return {
             map : this.mapData,
             mapregions : this.mapRegions,
-            alignments : this.alignments
+            alignments : this.alignments,
+            sets: this.sets
         };
     }
 
@@ -137,6 +139,7 @@ class MapData
     {
         return {
             code: jCard.code,
+            set_code : jCard.set_code,
         };
     }
 
@@ -167,12 +170,14 @@ class MapData
                 count++;
                 if (typeof jMapData[card.title] === "undefined")
                 {
+                    this.sets[card.set_code] = card.full_set;
                     added++;
                     jMapData[card.title] = {
                         title: card.title,
                         code: card.code,
                         region_type: this.requireRegionType(card),
                         dreamcard : card.dreamcard === true,
+                        set_code : card.set_code,
                         area: [],
                         sites: {}
                     };
@@ -186,14 +191,17 @@ class MapData
             if (card.type === "Site")
             {
                 count++;
+                this.sets[card.set_code] = card.full_set;
                 if (typeof jMapData[card.Region] === "undefined")
                 {
                     added++;
+                    this.sets[card.set_code] = card.full_set;
                     jMapData[card.Region] = {
                         title: card.Region,
                         code: card.Region + " (" + card.set_code + ")",
                         region_type: this.requireRegionType(card),
                         dreamcard : card.dreamcard === true,
+                        set_code : card.set_code,
                         area: [],
                         sites: {}
                     };
