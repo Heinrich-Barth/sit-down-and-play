@@ -349,6 +349,69 @@ const validateUserName = function()
     return "";
 };
 
+const insertSocialMedia = function(gameIsAlreadyCreated)
+{
+    const parent = document.querySelector(".arda-text");
+    if (parent === null || gameIsAlreadyCreated === undefined)
+        return;
+
+    const p = document.createElement("p");
+    p.setAttribute("class", "arda-text");
+
+    let parts = ["Share Game on Discord<br>"];
+    const loginType = document.body.getAttribute("data-login");
+
+    if (loginType === "login")
+    {
+        if (!gameIsAlreadyCreated)
+        {
+            parts.push(`
+            <input type="radio" id="toggle_social_open" value="openchallenge" name="socialmediatype">
+            <label for="toggle_social_open">Post <strong>as open challenge</strong> on Discord channel so anybody may join (this will reveal your display name)</label>
+            <span class="label-newline"></span>`);
+    
+            parts.push(`<input type="radio" checked="checked" id="toggle_social_visitor" value="visitor" name="socialmediatype">
+            <label for="toggle_social_visitor">Post game name and <strong>visitor link</strong> on Discord (this will reveal your display name)</label>
+            <span class="label-newline"></span>`);
+        }
+        else
+        {
+            parts.push(`
+            <input type="radio" checked="checked" id="toggle_social_visitor" value="visitor" name="socialmediatype">
+            <label for="toggle_social_visitor">Post <strong>you joining</strong> (incl. your display name) on Discord.</label>
+            <span class="label-newline"></span>`);
+        }
+    }
+    else
+    {
+        parts.push(`
+        <input type="radio" checked="checked" id="toggle_social_visitor" value="visitor" name="socialmediatype">
+        <label for="toggle_social_visitor">Post <strong>you joining</strong> (incl. your display name) on Discord.</label>
+        <span class="label-newline"></span>`);
+    }
+
+    parts.push(`
+    <input type="radio" id="toggle_social_none" value="none" name="socialmediatype">
+    <label for="toggle_social_none">Post <strong>nothing</strong> on Discord</label>`);
+
+    p.innerHTML = parts.join("");
+    parent.parentNode.insertBefore(p, parent.nextSibling);
+}
+
+const getSocialMediaAction = function()
+{
+    const shareOpenChallenge = document.getElementById("toggle_social_open");
+    const shareVisitor = document.getElementById("toggle_social_visitor");
+
+    if (shareOpenChallenge !== null && shareOpenChallenge.checked)
+        return "openchallenge";
+    else if (shareVisitor !== null && shareVisitor.checked)
+        return "visitor";
+    else
+        return "none";
+}
+
+
 const onPerformLogin = function()
 {
     let jDeck = createDeck();
@@ -366,13 +429,9 @@ const onPerformLogin = function()
         return false;
     }
 
-    const share = document.getElementById("shareonsocialmedia_message");
-    const shareName = document.getElementById("shareonsocialmedia_personalised");
-
     const bodyData = {
         name: sName,
-        share: share !== null && share.checked,
-        shareName: shareName !== null && shareName.checked,
+        share: getSocialMediaAction(),
         deck: jDeck
     }
 
@@ -694,7 +753,12 @@ const g_pDeckTextFields = new DeckTextFields();
             const text = document.getElementById("game-type");
             if (text !== null)
                 text.classList.add("hidden");
+
+            if (data.share === true)
+                insertSocialMedia(true);
         }
+        else 
+            insertSocialMedia(false);
     }));
 
     const forms = document.getElementsByTagName("form");

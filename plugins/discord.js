@@ -3,6 +3,9 @@ const https = require('https');
 const HOOK_URL = process.env.DISCORD === undefined ? "" : process.env.DISCORD;
 const PLATFORM_URL = process.env.PLATFORMURL === undefined ? "" : process.env.PLATFORMURL;
 
+const DISCORD_URL = "discord.com";
+const DISCORD_PORT = 443;
+
 class Discord 
 {
     constructor()
@@ -84,35 +87,48 @@ class Discord
         return "";
     }
 
-    createMessageArda(room, name, isCreated, urlWatch, urlJoin)
+    createMessageArda(room, name, isCreated, isOpenChallenge, urlWatch, urlJoin)
     {
-        if (isCreated)
-        {
-            if (name === "")
-                return `A new ARDA game (${room}) has just started. Drop by and watch at ${urlWatch} or join at ${urlJoin}`;
-            else
-                return `${name} just started new ARDA game (${room}). Drop by and watch at ${urlWatch} or join at ${urlJoin}`;
-        }
-        else if (name === "")
-            return `Another player joined.`;
-        else 
+        if (!isCreated)
             return `${name} joined.`;
+    
+        const res = [];
+
+        if (isOpenChallenge)
+            res.push("Open challenge!");
+
+        res.push(`${name} just started a new ARDA game (${room}).`);
+
+        if (isOpenChallenge)
+        {
+            res.push(`Drop by and watch at ${urlWatch} or join at ${urlJoin}`);
+            res.push(`If players are not on discord, they probably use the free https://meet.jit.si/${room} for communication.`);
+        }
+        else
+            res.push(`Drop by and watch at ${urlWatch}.`);
+        
+        return res.join(" ");
     }
 
-    creeateMessageStandard(room, name, isCreated, urlWatch, urlJoin)
+    creeateMessageStandard(room, name, isCreated, isOpenChallenge, urlWatch, urlJoin)
     {
-        if (isCreated)
-        {
-            if (name === "")
-                return `A new game ${room} has just started. Drop by and watch at ${urlWatch}`;
-            else
-                return `${name} started a new game (${room}). Drop by and watch at ${urlWatch}`;
+        if (!isCreated)
+            return `${name} joined.`;
+
+        const res = [];
+
+        if (isOpenChallenge)
+            res.push("Open challenge!");
+
+        res.push(`${name} just started a new game (${room}).`);
+
+        if (isOpenChallenge)
+            res.push(`Join the table at ${urlJoin} or drop by watch at ${urlWatch}`);
+        else
+            res.push(`Drop by and watch at ${urlWatch}`);
+        
+        return res.join(" ");
         }
-        else if (name === "")
-            return ` Another player joined.`;
-        else 
-            return ` ${name} joined.`;
-    }
 
     createUrlWatch(room, isArda, platformUrl)
     {
@@ -121,10 +137,10 @@ class Discord
 
     createUrlJoin(room, isArda, platformUrl)
     {
-        return isArda ? `${platformUrl}/arda/${room}` : "";
+        return isArda ? `${platformUrl}/arda/${room}` : `${platformUrl}/play/${room}`;
     }
 
-    createDiscordMessage(room, isArda, name, isCreated)
+    createDiscordMessage(room, isArda, name, isCreated, isOpenChallenge)
     {
         if (room === undefined || room === "")
             return "";
@@ -133,9 +149,9 @@ class Discord
         const urlJoin = this.createUrlJoin(room, isArda, this.platformUrl);
 
         if (isArda)
-            return this.createMessageArda(room, name, isCreated, urlWatch, urlJoin);
+            return this.createMessageArda(room, name, isCreated, isOpenChallenge, urlWatch, urlJoin);
         else 
-            return this.creeateMessageStandard(room, name, isCreated, urlWatch, urlJoin)
+            return this.creeateMessageStandard(room, name, isCreated, isOpenChallenge, urlWatch, urlJoin)
     }
 
     updateMessage(room, hookUrl, message)
@@ -162,8 +178,8 @@ class Discord
     getPostOptions(room, hookUrl)
     {
         const options = {
-            hostname: 'discord.com',
-            port: 443,
+            hostname: DISCORD_URL,
+            port: DISCORD_PORT,
             path: hookUrl + "?wait=true",
             method: 'POST',
             headers: {
@@ -180,14 +196,8 @@ class Discord
         return options;
     }
 
-    postNotification(room, hookUrl, message, processResponse)
+    doPost(room, hookUrl, prevMessage, processResponse)
     {
-        if (hookUrl === undefined || hookUrl === "" || message === "")
-            return;
-
-        this.createRoomEntry(room);
-        const prevMessage = this.updateRoomMessage(room, message);
-
         try 
         {
             const pThis = this;
@@ -213,14 +223,24 @@ class Discord
         }
     }
 
-    sendDiscordNotificationGame(room, isArda, name, isCreated)
+    postNotification(room, hookUrl, message, processResponse)
+    {
+        if (hookUrl === undefined || hookUrl === "" || message === "")
+            return;
+
+        this.createRoomEntry(room);
+        const prevMessage = this.updateRoomMessage(room, message);
+        this.doPost(room, hookUrl, prevMessage, processResponse);
+    }
+
+    sendDiscordNotificationGame(room, isArda, name, isCreated, isOpenChallenge)
     {
         if (room !== undefined && room !== "")
         {
             if (isCreated)
                 this.updateRoomMessage(room, "");
 
-            this.postNotification(room, this.hookUrl, this.createDiscordMessage(room, isArda, name, isCreated), isCreated);
+            this.postNotification(room, this.hookUrl, this.createDiscordMessage(room, isArda, name, isCreated, isOpenChallenge), isCreated);
             this.updateRoomPlayerList(room, name);
         }
     }
@@ -296,18 +316,28 @@ class Discord
             delete this.roomMessages[room];
     }
 
-    getEndGameMessage(room)
+    getLogfileMessage(gameLog)
     {
-        const players = this.listRoomPlayers(room);
-        if (players !== "")
-            return `The game of ${players} (${room}) has ended.`;
+        if (typeof gameLog !== "string" || gameLog === "")
+            return "";
         else
-            return `The game ${room} has ended.`;
+            return `You may check out the game log at ${this.platformUrl}/logs/${gameLog} for some limited time.`;
+        
     }
 
-    sendDiscordGameEnded(room)
+    getEndGameMessage(room, gameLog)
     {
-        const message = this.getEndGameMessage(room);
+        const players = this.listRoomPlayers(room);
+        const logMessage = this.getLogfileMessage(gameLog); 
+        if (players !== "")
+            return `The game of ${players} (${room}) has ended.\n${logMessage}`.trim();
+        else
+            return `The game ${room} has ended.\n${logMessage}`.trim();
+    }
+
+    sendDiscordGameEnded(room, gameLog)
+    {
+        const message = this.getEndGameMessage(room, gameLog);
         this.updateMessage(room, this.hookUrl, message);
         this.removeGameEntry(room);
     }
@@ -349,7 +379,13 @@ class Discord
     sendDiscordMessageCreated(room, isArda, name)
     {
         this.removeGameEntry(room);
-        this.sendDiscordNotificationGame(room, isArda, name, true);
+        this.sendDiscordNotificationGame(room, isArda, name, true, false);
+    }
+
+    sendDiscordMessageCreatedOpenChallange(room, isArda, name)
+    {
+        this.removeGameEntry(room);
+        this.sendDiscordNotificationGame(room, isArda, name, true, true);
     }
 
     sendDiscordMessageJoin(room, isArda, name)
@@ -362,6 +398,7 @@ class Discord
         if (this.hookUrl !== "" && this.platformUrl !== "")
         {
             pEventManager.addEvent("game-created", this.sendDiscordMessageCreated.bind(this));
+            pEventManager.addEvent("game-created-openchallenge", this.sendDiscordMessageCreatedOpenChallange.bind(this))
             pEventManager.addEvent("game-joined", this.sendDiscordMessageJoin.bind(this));
             pEventManager.addEvent("game-finished", this.sendDiscordNotificationFinished.bind(this));
             pEventManager.addEvent("game-remove", this.sendDiscordGameEnded.bind(this));

@@ -18,7 +18,7 @@
     <base target="_self">
 </head>
 
-<body class="navigation-full-width" data-navigation-type="open">
+<body class="navigation-full-width" data-navigation-type="open" data-login="login">
 
     <div class="content" id="login">
         <div class="inner-content">
@@ -36,11 +36,6 @@
                     <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label><span class="label-after"></span>
                     <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
                 </p>
-                <p class="arda-text">
-                    <input type="checkbox" name="shareonsocialmedia_message" value="true" id="shareonsocialmedia_message" checked/><label for="shareonsocialmedia_message">Share game spectator link on Discord (anonymous message)</label><br>
-                    <input type="checkbox" name="shareonsocialmedia_personalised" value="true" id="shareonsocialmedia_personalised" checked/><label for="shareonsocialmedia_personalised">Include my player name in Discord message (this will reveal your display name)</label><br>
-                </p>
-
                 <div class="fields hidden" id="invalid-cards-info">
                     <h2>Invalid Codes found</h2>
                     <div id="invalid-cards-info-result"></div>
@@ -65,13 +60,13 @@
         </div>
     </div>
     
-    <script src="/media/client/game/libraries.js"></script>
-    <script src="/media/client/decktextfields/index.js"></script>
-    <script defer src="/media/client/notification/notification.js"></script>
-    <script defer src="/media/client/dropfile-generic.js"></script>
-    <script defer src="/media/client/deck/read.js"></script>
-    <script defer src="/media/client/login.js"></script>
-    <script defer src="/media/client/navigation/navigation.js"></script>
+    <script src="/media/client/game/libraries.js?version=230205"></script>
+    <script src="/media/client/decktextfields/index.js?version=230205"></script>
+    <script defer src="/media/client/notification/notification.js?version=230205"></script>
+    <script defer src="/media/client/dropfile-generic.js?version=230205"></script>
+    <script defer src="/media/client/deck/read.js?version=230205"></script>
+    <script defer src="/media/client/login.js?version=20230305?version=230205"></script>
+    <script defer src="/media/client/navigation/navigation.js?version=230205"></script>
 </body>
 
 </html>

@@ -17,7 +17,7 @@
     <base target="_self">
 </head>
 
-<body class="ǵame-join-screen navigation-full-width">
+<body class="ǵame-join-screen navigation-full-width" data-login="arda">
 
     <div class="content" id="login">
         <div class="inner-content">
@@ -39,10 +39,6 @@
                             for="toggle_issingleplayer"><strong>Singleplayer</strong></label><span class="label-after"></span>
                         <input type="radio" checked="checked" id="toggle_isstandard" value="arda" name="gameType"><label
                             for="toggle_isstandard"><strong>Standard</strong></label>
-                    </p>
-                    <p class="arda-text">
-                        <input type="checkbox" name="shareonsocialmedia_message" value="true" id="shareonsocialmedia_message" checked/><label for="shareonsocialmedia_message">Share activity on Discord (anonymous message)</label><br>
-                        <input type="checkbox" name="shareonsocialmedia_personalised" value="true" id="shareonsocialmedia_personalised" checked/><label for="shareonsocialmedia_personalised">Include my player name in Discord message (this will reveal your display name)</label><br>
                     </p>
                     <p class="cookie_notice">By joining, you agree that this site sets <a href="/about"
                             target="_blank">cookies</a> necessary to play a game.</p>
@@ -84,12 +80,12 @@
         </div>
     </div>
 
-    <script src="/media/client/game/libraries.js"></script>
-    <script src="/media/client/decktextfields/index.js"></script>
-    <script defer src="/media/client/notification/notification.js"></script>
-    <script defer src="/media/client/deck/read.js"></script>
-    <script defer src="/media/client/login.js"></script>
-    <script defer src="/media/client/navigation/navigation.js"></script>
+    <script src="/media/client/game/libraries.js?version=230205"></script>
+    <script src="/media/client/decktextfields/index.js?version=230205"></script>
+    <script defer src="/media/client/notification/notification.js?version=230205"></script>
+    <script defer src="/media/client/deck/read.js?version=230205"></script>
+    <script defer src="/media/client/login.js?version=230205"></script>
+    <script defer src="/media/client/navigation/navigation.js?version=230205"></script>
 </body>
 
 </html>
