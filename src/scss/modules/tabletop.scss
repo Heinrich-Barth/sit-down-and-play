@@ -121,6 +121,10 @@ a {
     width: 100%;
     height: 100%;
 
+    &.table-dark {
+        background-color: rgba(0,0,0,0.2);
+    }
+
     .area {
         display: table;
         width: 100%;
@@ -129,6 +133,10 @@ a {
     .area-player {
         position: relative;
         min-height: 30%;
+
+        .table-padding-bottom {
+            padding-bottom: 200px;
+        }
     }
 
     .area-opponent {
@@ -144,6 +152,11 @@ a {
         .company-characters-add {
             display: none !important;
         }
+
+        .tableCell
+        {
+            vertical-align: bottom;
+        }
     }
 
     .row {
@@ -158,6 +171,7 @@ a {
         display: table-cell;
         vertical-align: top;
         position: relative;
+        text-align: center;
     }
 
     .tableCell { 
@@ -364,15 +378,13 @@ img.card-icon {
 
     .sites {
 
-        .site-regions,
-        .site-target
-        {
-            margin-left: -30px;
-        }
-
         .site-container {
             position: relative;
             display: inline-block;
+        }
+
+        .site-onguard {
+            margin-left: -30px;
         }
     }
 
@@ -394,6 +406,24 @@ img.card-icon {
             min-height: 80px;
             padding: 5px;
             border-bottom: 3px dashed black;
+        }
+        
+        .company-site-list-border {
+            position: absolute;
+            bottom: -3px;
+            left: 0px;
+            height: 3px;
+            width: 0px;
+            background: #ffa500;
+            display: none;
+        }
+
+        &.company-mark-current {
+            .company-site-list-border
+            {
+                display: inline-block;
+                animation: company-moving-line 5s 10 forwards;
+            }
         }
 
         .company-character {
@@ -424,6 +454,16 @@ img.card-icon {
     }
 }
 
+@keyframes company-moving-line {
+    from { 
+        width: 0%; 
+        opacity: 1;
+    }
+    to { 
+        width: 100%;
+        opacity: 0.6; 
+    }
+}
 
 
 @import "tabletop-dragging.scss";

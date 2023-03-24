@@ -406,6 +406,9 @@ a:hover {
   width: 100%;
   height: 100%;
 }
+.table.table-dark {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 .table .area {
   display: table;
   width: 100%;
@@ -413,6 +416,9 @@ a:hover {
 .table .area-player {
   position: relative;
   min-height: 30%;
+}
+.table .area-player .table-padding-bottom {
+  padding-bottom: 200px;
 }
 .table .area-opponent {
   margin-bottom: 20px;
@@ -426,6 +432,9 @@ a:hover {
 .table .area-opponent .company-characters-add {
   display: none !important;
 }
+.table .area-opponent .tableCell {
+  vertical-align: bottom;
+}
 .table .row {
   display: table-row;
   margin: 0 50px;
@@ -438,6 +447,7 @@ a:hover {
   display: table-cell;
   vertical-align: top;
   position: relative;
+  text-align: center;
 }
 .table .tableCell {
   display: inline-flex;
@@ -733,13 +743,12 @@ img.card-icon {
   height: 100px;
   border: 2px dashed transparent;
 }
-.companies .sites .site-regions,
-.companies .sites .site-target {
-  margin-left: -30px;
-}
 .companies .sites .site-container {
   position: relative;
   display: inline-block;
+}
+.companies .sites .site-onguard {
+  margin-left: -30px;
 }
 .companies .company {
   margin-right: 20px;
@@ -757,6 +766,19 @@ img.card-icon {
   min-height: 80px;
   padding: 5px;
   border-bottom: 3px dashed black;
+}
+.companies .company .company-site-list-border {
+  position: absolute;
+  bottom: -3px;
+  left: 0px;
+  height: 3px;
+  width: 0px;
+  background: #ffa500;
+  display: none;
+}
+.companies .company.company-mark-current .company-site-list-border {
+  display: inline-block;
+  animation: company-moving-line 5s 10 forwards;
 }
 .companies .company .company-character {
   border: 3px dashed transparent;
@@ -781,6 +803,16 @@ img.card-icon {
   visibility: hidden;
 }
 
+@keyframes company-moving-line {
+  from {
+    width: 0%;
+    opacity: 1;
+  }
+  to {
+    width: 100%;
+    opacity: 0.6;
+  }
+}
 body.on-drag-event-generic .area-player .company-character-host {
   z-index: 900;
 }
@@ -934,6 +966,7 @@ img.card-icon {
   top: 100px !important;
   color: #fff;
   padding: 7px;
+  display: none;
 }
 
 .company-character-reosurces,

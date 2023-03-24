@@ -65,6 +65,25 @@ body.on-drag-event-generic #card_counter a.playdeck:before { content: "To Playde
 body.on-drag-event-generic #card_counter a.discardpile:before { content: "Discard"; }
 body.on-drag-event-generic #card_counter a.sideboard:before { content: "To Sideboard"; }
 
+body.on-drag-event-generic #card_counter a.icon {
+    background: rgba(61, 65, 70, 0.82)
+}
+
+body.on-drag-event-generic #card_counter a.icon img {
+    visibility: hidden;
+}
+
+body.on-drag-event-generic #card_counter a.playdeck img {
+    visibility: visible;
+}
+
+
+body.on-drag-event-generic #card_counter a i {
+    height: 50px;
+    width: 40px;
+    font-size: 3em;
+}
+
 body.on-drag-event-generic #shared_outofplay:after { 
     content: "Remove card (cannt be undone)"; 
     font-size: 12px;
