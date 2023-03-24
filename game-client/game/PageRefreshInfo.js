@@ -43,6 +43,13 @@ class PageRefreshInfo extends TimedNotificationInfo
     constructor()
     {
         super("fa-exclamation-circle", "notification-line-countdown-10s");
+
+        this.reason = "";
+    }
+
+    hideCancel()
+    {
+        return true;
     }
 
     onForceRefresh()
@@ -56,10 +63,13 @@ class PageRefreshInfo extends TimedNotificationInfo
             this.onForceRefresh();
     }
 
-    show()
+    show(reason)
     {
-        this.question.onOk(this.onForceRefresh.bind(this));
+        if (typeof reason !== "undefined")
+            this.reason = reason;
 
+        this.question.onOk(this.onForceRefresh.bind(this));
+        this.question.hideCancel();
         if (super.show())
             setTimeout(this.onRefresh.bind(this), 1000 * 10);
     }
@@ -71,7 +81,10 @@ class PageRefreshInfo extends TimedNotificationInfo
 
     getText()
     {
-        return "It seems the connection to the server was lost.<br><br>This page will be reloaded in 10 seconds";
+        if (this.reason === "")
+            return "It seems the connection to the server was lost.<br><br>This page will be reloaded in 10 seconds";
+        else
+            return `Connection lost due to the reason<br><br><span class="question-question-reason">${this.reason}</span><br><br>This page will be reloaded in 10 seconds`;
     }
 
     getButtonText()
