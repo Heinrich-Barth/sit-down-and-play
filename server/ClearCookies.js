@@ -16,9 +16,6 @@ const clearCookies = function(req, res)
     if (req.cookies.userId !== undefined)
         res.clearCookie('userId');
 
-    if (req.cookies.socialMediaPers !== undefined)
-        res.clearCookie('socialMediaPers');
-
     return res;
 }
 
