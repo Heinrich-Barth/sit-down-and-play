@@ -160,11 +160,14 @@ body h4 {
 .deckbuilding .filters .field {
   padding: 0.5em;
   display: inline-block;
-  width: 15%;
+  max-width: 16%;
 }
 .deckbuilding .filters input,
 .deckbuilding .filters select {
   display: inline-block;
+}
+.deckbuilding .filters select {
+  padding: 0 1em !important;
 }
 .deckbuilding textarea {
   line-height: 1em;

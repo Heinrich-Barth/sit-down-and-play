@@ -55,6 +55,10 @@ h2 {
             user-select: none;
             color: $color-white;
         }
+
+        .label-newline {
+            display: block;
+        }
     }
 
     textarea {

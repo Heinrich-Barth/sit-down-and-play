@@ -13,6 +13,8 @@ const ViewCards =
         vsTypesAvatarChars : [],
         vsTypesResource : [],
         vsTypesHazard : [],
+        vsKeywords : [],
+        vsSkills : [],
         vsCodeIndices : { }
     },
 
@@ -83,7 +85,7 @@ const ViewCards =
         {
             if (_card["code"] === code)
             {
-                console.log("alternative found " + code + " in ");
+                console.warn("alternative found " + code + " in ");
                 return _card;
             }
         }
@@ -95,7 +97,7 @@ const ViewCards =
     {
         if (code === "")
         {
-            console.log("empty code.");
+            console.warn("empty code.");
             return null;
         }
 
@@ -103,14 +105,14 @@ const ViewCards =
         
         if (typeof ViewCards.config.vsCodeIndices[code] === "undefined")
         {
-            console.log("ViewCards.config.vsCodeIndices not set for " + code);
+            console.warn("ViewCards.config.vsCodeIndices not set for " + code);
             return null;
         }
 
         const index = ViewCards.config.vsCodeIndices[code];
         if (typeof ViewCards.config.jsonData[index] === "undefined")
         {
-            console.log("no card at index " + index + " for " + code);
+            console.warn("no card at index " + index + " for " + code);
             return null;
         }
 
@@ -138,6 +140,8 @@ const ViewCards =
         ViewCards.config.vsType = [];
         ViewCards.config.vsTypesHazard = [];
         ViewCards.config.vsTypesResource = [];
+        ViewCards.config.vsSkills = [];
+        ViewCards.config.vsKeywords = [];
         ViewCards.config.vsCodeIndices = json["code-indices"];
         ViewCards.config.vsSets = json["sets"];
         
@@ -152,6 +156,12 @@ const ViewCards =
 
         for (let _type in json["type"])
             ViewCards.config.vsCategory.push(_type);
+
+        for (let _align in json["skills"])
+            ViewCards.config.vsSkills.push(_align);
+
+        for (let _align in json["keywords"])
+            ViewCards.config.vsKeywords.push(_align);
 
         if (json["hazards"] !== undefined)
         {
@@ -194,7 +204,13 @@ const ViewCards =
     search : function(e)
     {
         const data = e.detail;
-        const res = ViewCards.doSearch(data.type, data.align, data.category, data.set, data.title, data.text);
+        const res = ViewCards.doSearch(data.type, 
+            data.align, 
+            data.category, 
+            data.set, 
+            data.title, 
+            data.keyword,
+            data.skill)
         document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-displayresult", { "detail": res }));
     },
     
@@ -241,19 +257,18 @@ const ViewCards =
             return false;
     },
     
-    doSearch : function(sType, sAlign, sCategory, sSet, sTitle, sText)
+    doSearch : function(sType, sAlign, sCategory, sSet, sTitle, keyword, skill)
     {
         sTitle = sTitle.toString().toLowerCase().trim();
-        sText = sText.toString().toLowerCase().trim();
 
-        if (sText.length < 3)
-            sText = "";
         if (sTitle.length < 3)
             sTitle = "";
             
         let bAllowAllCat = sCategory === "_allcategory";
         let bAllowAllAlign = sAlign === "_allalign";
         let bAllowAllType = sType === "_alltype";
+        const bAllowAllKeywords = keyword === "_all";
+        const bAllowAllSkills = skill === "_all";
         
         let vnIndicesCharacters = {};
         
@@ -281,13 +296,16 @@ const ViewCards =
             
             if (!bAllowAllAlign && sAlign !== "" && _align.toString() !== sAlign)
                 continue;
-            
-            if (sTitle !== "" && _title.toString().toLowerCase().indexOf(sTitle) === -1)
+
+            if (keyword !== "" && !bAllowAllKeywords && (card.keywords === null || !card.keywords.includes(keyword)))
                 continue;
 
-            if (sText !== "" && _text.toString().toLowerCase().indexOf(sText) === -1)
+            if (skill !== "" && !bAllowAllSkills && (card.skills === null || !card.skills.includes(skill)))
                 continue;
             
+            if (sTitle !== "" && _title.toString().toLowerCase().indexOf(sTitle) === -1 && _text.toString().toLowerCase().indexOf(sTitle) === -1)
+                continue;
+
             if (card.title === "Warlord AL" || card.title === "Wizard AL")
                 continue;
             
@@ -344,26 +362,80 @@ const ViewCards =
             type: ViewCards.config.vsType,
             align: ViewCards.config.vsAlign,
             category: ViewCards.config.vsCategory,
+            keywords: ViewCards.config.vsKeywords,
+            skills: ViewCards.config.vsSkills,
             sets : ViewCards.config.vsSets
         };
 
         document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-searchbar", { "detail": data }));
         document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-preparedecklist", { "detail": "" }));
+    },
+
+    initDeckbuilderCached : function()
+    {
+        this.onCardsError();
+    },
+
+    initDeckbuilder: function()
+    {
+        fetch("/data/list/cards")
+        .then((response) => response.json())
+        .then(this.onCardResult.bind(this))
+        .catch((err) => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Something went wrong. Error is : " + err.message })));
+    },
+
+    getCardsFromStorage : function()
+    {
+        try
+        {
+            const cachedCards = localStorage.getItem("meccg_deckbuilder");
+            if (cachedCards !== null)
+            {
+                const val = JSON.parse(cachedCards);
+                if (Array.isArray(val) && val.length > 0)
+                    return val;
+            }
+        }
+        catch(errIgnore)
+        {
+        }
+
+        return null;
+    },
+
+    storeCards : function(result)
+    {
+        if (typeof result !== "undefined")
+            localStorage.setItem("meccg_deckbuilder", JSON.stringify(result));
+    },
+
+    onCardResult : function(jsonCards, hideMessage)
+    {
+        if (jsonCards === null || !Array.isArray(jsonCards))
+            return;
+
+        const jMeta = new CreateCardsMeta(jsonCards);
+        this.initCards(jsonCards, [ ]);
+        this.initIndices(jMeta);
+        this.storeCards(jsonCards);
+
+        if (hideMessage !== true)
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Cards loaded" }));
+    },
+
+    onCardsError : function()
+    {        
+        const jsonCards = this.getCardsFromStorage();
+        if (jsonCards !== null)
+            this.onCardResult(jsonCards, true);
     }
 };
 
-(function()
-{
-    fetch("/data/list/cards").then((response) => 
-    {
-        response.json().then(function(jsonCards)
-        {
-            let jMeta = new CreateCardsMeta(jsonCards);
-            ViewCards.initCards(jsonCards, [ ]);
-            ViewCards.initIndices(jMeta);
-        });
-    });
-})();
+document.body.addEventListener("meccg-init-ready", () => {
+    ViewCards.initDeckbuilderCached();
+    setTimeout(() => ViewCards.initDeckbuilder(), 100);  
+}, false);
 
-document.body.addEventListener("meccg-deckbuilder-search", ViewCards.search, false);
-document.body.addEventListener("meccg-deckbuilder-viewdeck", ViewCards.searchDeck, false);
+
+document.body.addEventListener("meccg-deckbuilder-search", ViewCards.search.bind(ViewCards), false);
+document.body.addEventListener("meccg-deckbuilder-viewdeck", ViewCards.searchDeck.apply.bind(ViewCards), false);

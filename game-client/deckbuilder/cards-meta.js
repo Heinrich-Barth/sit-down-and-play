@@ -15,6 +15,8 @@ CreateCardsMeta.prototype._listHazardTypes = [ ];
 CreateCardsMeta.prototype._listNonHazardTypes = [ ];
 CreateCardsMeta.prototype._titleBasedIndices = { };
 CreateCardsMeta.prototype._listSets = [ ];
+CreateCardsMeta.prototype._listSkills = [ ];
+CreateCardsMeta.prototype._listKeywords = [ ];
 
    
 Quantities.prototype.add = function(sTitle, nQuantity)
@@ -136,6 +138,44 @@ CreateCardsMeta.prototype.addIndices = function (cards)
         card.index = (++index);
 };
 
+CreateCardsMeta.prototype.createUniqueList = function(cards, properts, target)
+{
+    let _list = [];
+    let _secondariesCards = {};
+
+    for (let card of cards) 
+    {
+        const arr = card[properts];
+        if (arr === null || arr.length === 0)
+            continue;
+
+        for (let _val of arr)
+        {
+            if (_secondariesCards[_val] === undefined)
+                _secondariesCards[_val] = [];
+
+            _secondariesCards[_val].push(card.index);
+            if (!_list.includes(_val))
+                _list.push(_val);
+        }
+    }
+
+    _list.sort();
+
+    for (let _secondary of _list)
+        target[_secondary] = _secondariesCards[_secondary];
+}
+
+
+CreateCardsMeta.prototype.updateSkills = function(cards)
+{
+    this.createUniqueList(cards, "skills", this._listSkills);
+}
+
+CreateCardsMeta.prototype.updateKeywords = function(cards)
+{
+    this.createUniqueList(cards, "keywords", this._listKeywords);
+}
 
 CreateCardsMeta.prototype.updateHazardOrResource = function (cards) 
 {
@@ -164,7 +204,8 @@ CreateCardsMeta.prototype.saveMeta = function ()
     meta["resources"] = this._listNonHazardTypes;
     meta["code-indices"] = this._titleBasedIndices;
     meta["sets"] = this._listSets;
-
+    meta["skills"] = this._listSkills;
+    meta["keywords"] = this._listKeywords;
     return meta;
 };
     
@@ -176,6 +217,8 @@ CreateCardsMeta.prototype.init = function (cards)
     this.updateAlign(cards);
     this.updateTypes(cards);
     this.updateHazardOrResource(cards);
+    this.updateSkills(cards);
+    this.updateKeywords(cards);
     this.createCardCodeList(cards);
     return this.saveMeta();
 };

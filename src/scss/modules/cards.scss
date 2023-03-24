@@ -46,13 +46,19 @@ body {
         .field {
             padding: 0.5em;
             display: inline-block;
-            width: 15%;
+            max-width: 16%;
         }
 
         input,
         select {
             display: inline-block;
         }
+
+        select {
+            padding: 0 1em !important;
+        }
+
+        
     }
 
     textarea {

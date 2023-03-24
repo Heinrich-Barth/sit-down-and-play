@@ -3,8 +3,8 @@ const SearchBar = {
     
     initFormFields : function()
     {
-        const vsOnChange = ["card_title", "card_text", "view_card_type", "view_card_align", "view_card_category", "view_card_set"];
-        const vsOnEnter = ["card_title", "card_text"];
+        const vsOnChange = ["card_title", "view_card_type", "view_card_align", "view_card_category", "view_card_set", "view_card_keyword", "view_card_skill"];
+        const vsOnEnter = ["card_title"];
         
         for (let _id of vsOnEnter)
         {
@@ -24,23 +24,30 @@ const SearchBar = {
         const data = {
             align : document.getElementById("view_card_align").value,
             category : document.getElementById("view_card_category").value,
-            text : document.getElementById("card_text").value,
+            text : document.getElementById("card_title").value,
             title : document.getElementById("card_title").value,
             type : document.getElementById("view_card_type").value,
-            set : document.getElementById("view_card_set").value
+            set : document.getElementById("view_card_set").value,
+            keyword : document.getElementById("view_card_keyword").value,
+            skill : document.getElementById("view_card_skill").value
         };
+
+        let res = "";
+        for (let key in data)
+            res += data[key];
         
-        if (data.type !== "" || data.align !== "" || data.title !== "" || data.text !== "" || data.category !== "" || data.set !== "")
+        if (res !== "")
             document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-search", { "detail": data }));
     },
 
     updateFormFields : function(e)
     {
         SearchBar.init();
-
         SearchBar.fillSelect("view_card_type", e.detail.type, "_alltype");
         SearchBar.fillSelect("view_card_align", e.detail.align, "_allalign");
         SearchBar.fillSelect("view_card_category", e.detail.category, "_allcategory");
+        SearchBar.fillSelect("view_card_keyword", e.detail.keywords, "_all");
+        SearchBar.fillSelect("view_card_skill", e.detail.skills, "_all");
         SearchBar.fillSelectSet("view_card_set", e.detail.sets);
         SearchBar.initFormFields();
     },
@@ -54,6 +61,17 @@ const SearchBar = {
         
         let arrayList = Array.from(Object.entries(sortedList));
         arrayList.sort((a, b) => a[1].localeCompare(b[1]));
+
+        this.clearOptionList(pSelectType);
+
+        let dataName = pSelectType.getAttribute("data-name");
+        if (dataName !== null && dataName !== "")
+        {
+            let option = document.createElement("option");
+            option.text = dataName;
+            option.value = "";
+            pSelectType.add(option);
+        }
 
         {
             let option = document.createElement("option");
@@ -91,7 +109,15 @@ const SearchBar = {
                 pSelectType.add(option);
             }
         }
-    },    
+    },
+
+    clearOptionList : function(pSelectType)
+    {
+        if (pSelectType === null || typeof pSelectType.options === "undefined")
+            return;
+
+        pSelectType.options.length = 0;
+    },
 
     fillSelect : function(sId, sortedList, sAllowAll)
     {
@@ -99,6 +125,17 @@ const SearchBar = {
             sortedList = [];
 
         const pSelectType = document.getElementById(sId);
+        this.clearOptionList(pSelectType);
+
+        let dataName = pSelectType.getAttribute("data-name");
+        if (dataName !== null && dataName !== "")
+        {
+            let option = document.createElement("option");
+            option.text = dataName;
+            option.value = "";
+            pSelectType.add(option);
+        }
+
         if (sAllowAll !== "")
         {
             let option = document.createElement("option");
@@ -130,27 +167,26 @@ const SearchBar = {
         elem.innerHTML = `
             <form method="post" action="#">
                 <div class="fields">
-                    <div class="field"><input type="text" name="card_title" id="card_title" placeholder="Search card title" /></div>
-                    <div class="field"><input type="text" name="card_text" id="card_text" placeholder="Search card text" /></div>
                     <div class="field">
-                        <select id="view_card_set">
-                            <option value="">Limit Set</option>
-                        </select>
+                        <input type="text" name="card_title" id="card_title" placeholder="Search text" />
                     </div>
                     <div class="field">
-                        <select id="view_card_type">
-                            <option value="">Limit Card Type</option>
-                        </select>
+                        <select id="view_card_set" data-name="Set"></select>
                     </div>
                     <div class="field">
-                        <select id="view_card_align">
-                            <option value="">Limit Alignment</option>
-                        </select>
+                        <select id="view_card_type" data-name="Card Type"></select>
                     </div>
                     <div class="field">
-                        <select id="view_card_category">
-                            <option value="">Limit Category</option>
-                        </select>
+                        <select id="view_card_align" data-name="Alignment"></select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_category" data-name="Category"></select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_keyword" data-name="Keyword"></select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_skill" data-name="Skill"></select>
                     </div>
                 </div>
             </form>`;
@@ -158,4 +194,4 @@ const SearchBar = {
     }
 };
 
-document.body.addEventListener("meccg-deckbuilder-searchbar", SearchBar.updateFormFields, false);
+document.body.addEventListener("meccg-deckbuilder-searchbar", SearchBar.updateFormFields.bind(SearchBar), false);

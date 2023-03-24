@@ -172,6 +172,9 @@ h2 {
   user-select: none;
   color: #fff;
 }
+.content .arda-text .label-newline {
+  display: block;
+}
 .content textarea {
   font-size: 1em;
   line-height: 1em;
