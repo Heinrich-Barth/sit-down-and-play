@@ -8,6 +8,7 @@ const GameAPI = require("./GameAPI");
 
 const GameStandard = require("./GameStandard");
 const GameArda = require("./GameArda");
+const USE_GAME_LOG = process.env.GAMELOGS === undefined || isNaN(process.env.GAMELOGS) ? 0 : parseInt(process.env.GAMELOGS);
 
 class GameRoom 
 {
@@ -15,10 +16,9 @@ class GameRoom
     {
         this.secret = UTILS.createSecret();
         this.lobbyToken = UTILS.createSecret();
-        this.created = Date.now();
         this.game = null;
         this.api = new GameAPI(io, room);
-        this.chat = new Chat(this.api, "/game/chat/message");
+        this.chat = new Chat(this.api, "/game/chat/message", room, USE_GAME_LOG === true);
         this.players = {};
         this.visitors = {};
         this.name = room;
@@ -29,12 +29,27 @@ class GameRoom
         this.allowAccessVisitor = true;
     }
 
+    getGameLog()
+    {
+        return this.chat.hasLogData() ? this.chat.getGameLogFile() : "";
+    }
+
     updateAccess(type, allow)
     {
         if (type === "visitor")
             this.allowAccessVisitor = allow === true;
         else if (type === "player")
             this.allowAccessPlayer = allow === true;
+    }
+
+    canJoinPlayer()
+    {
+        return this.allowAccessPlayer;
+    }
+
+    canJoinVisitor()
+    {
+        return this.allowAccessVisitor;
     }
 
     grantAccess(isPlayer)
@@ -68,7 +83,7 @@ class GameRoom
 
     getCreated()
     {
-        return this.created;
+        return this.game ===  null ? Date.now() : this.game.getGameCreated();
     }
 
     getLobbyToken()
@@ -163,7 +178,7 @@ class GameRoom
             return this.players[userid];
     }
 
-    destroy()
+    destroy(finalScores)
     {   
         for (let id in this.players)
             this.players[id].disconnect();
@@ -171,13 +186,18 @@ class GameRoom
         for (let id of Object.keys(this.visitors))
             this.visitors[id].disconnect();
 
+        this.chat.appendLogFinalScore(finalScores);
+        this.chat.saveGameLog();
+
         this.players = {};
         this.visitors = {};
     }
 
+
+
     sendMessage(userid, message)
     {
-        this.chat.sendMessage(userid, message.trim())
+        this.chat.sendMessage(userid, message.trim(), false)
     }
 
     reply(sPath, socket, data)
@@ -221,6 +241,7 @@ class GameRoom
     addPlayer(userid, displayname, jDeck, isAdmin, timeAdded)
     {
         this.players[userid] = new Player(displayname, jDeck, isAdmin, timeAdded);
+        this.chat.addPlayer(userid, displayname);
     }
 
     addSpectator(userid, displayname, timeAdded)
@@ -322,7 +343,7 @@ class GameRoom
             _player = this.players[userid];
             if (_player.isAdmin())
             {
-                console.log("send savegame to player");
+                console.info("send savegame to player");
                 this.game.publishToPlayers("/game/score/final-only", userid, this.game.getFinalScore());
                 this.game.publishToPlayers("/disconnect/shutdown", userid, {});
                 this.game.globalSaveGame(userid, _player.getSocket());
@@ -344,11 +365,11 @@ class GameRoom
     static newGame(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
     {
         if (isSinglePlayer)
-            console.log("Setting up single player game " + room);
+            console.info("Setting up single player game " + room);
         else if (isArda)
-            console.log("Setting up arda game " + room);
+            console.info("Setting up arda game " + room);
         else
-            console.log("Setting up game " + room);
+            console.info("Setting up game " + room);
 
         const pRoomInstance = new GameRoom(io, room, fnEndGame);
         pRoomInstance.createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
