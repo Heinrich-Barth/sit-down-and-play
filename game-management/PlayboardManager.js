@@ -73,14 +73,14 @@ class PlayboardManager extends PlayboardManagerCompanies
     {
         if (companyId === "" || !this.companyExists(companyId))
         {
-            console.log("Cannot find company by its id " + companyId + " (GetFullCompanyCharacter)");
+            console.warn("Cannot find company by its id " + companyId + " (GetFullCompanyCharacter)");
             return null;
         }
 
         const pCharacter = this.getCharacterByUuid(uuid);
         if (pCharacter === null)
         {
-            console.log("Character " + uuid + " does not exist.");
+            console.warn("Character " + uuid + " does not exist.");
             return null;
         }
 
@@ -114,7 +114,7 @@ class PlayboardManager extends PlayboardManagerCompanies
 
         if (!this.removeCardFromDeckOrCompany(jCard.owner, uuid))
         {
-            console.log("Could not remove card " + uuid + " from deck of company/staging area nor from location on guard lists");
+            console.info("Could not remove card " + uuid + " from deck of company/staging area nor from location on guard lists");
             return false
         } 
         else
