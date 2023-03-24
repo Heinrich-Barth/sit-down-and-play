@@ -21,16 +21,57 @@ class CardRepository {
 
     constructor()
     {
-        this._raw = { };
+        this._raw = [];
         this._CardRepository = {};
         this._types = { };
         this._agentList = [];
         this._nameCodeAlternatives = {};
+        this._cardsDeckbuilder = [];
     }
 
     getCards()
     {
         return this._raw;
+    }
+
+    getCardsDeckbuilder()
+    {
+        return this._cardsDeckbuilder;
+    }
+
+    createCardsDeckbuilder()
+    {
+        const assertString = function(val)
+        {
+            if (typeof val !== "string")
+                return "";
+            else
+                return val.trim();
+        }
+
+        this._cardsDeckbuilder = [];
+
+        let listStrings = ["set_code", "full_set", "Secondary", "alignment", "type",  "code", "uniqueness"]
+        let listOther = ["uniqueness", "skills", "keywords"];
+
+        for (let card of this._raw) 
+        {
+            let candidate = { };
+
+            const title = card.normalizedtitle + (card.title !== card.normalizedtitle ? " " + card.title : "");
+            const text = assertString(card.text);
+
+            candidate.title = title.toLowerCase();
+            candidate.text = text.toLowerCase();
+
+            for (let key of listStrings)
+                candidate[key] = assertString(card[key]);
+            for (let key of listOther)
+                candidate[key] = card[key];
+
+            this._cardsDeckbuilder.push(candidate);
+        }
+
     }
 
     getCardRepository()
@@ -287,7 +328,7 @@ class CardRepository {
                 delete card.mp;
             }
 
-            if (card.MPs === undefined)
+            if (card.MPs === undefined || typeof card.MPs === "number")
                 continue;
             else if (card.MPs === "" || card.normalizedtitle === "grim voiced and grim faced")
                 delete card.MPs;
@@ -311,7 +352,7 @@ class CardRepository {
                 delete card.mind;
             }
 
-            if (card.Mind === undefined)
+            if (card.Mind === undefined || typeof card.Mind === "number")
                 continue;
             else if (card.Mind === "")
                 delete card.Mind;
@@ -369,6 +410,7 @@ class CardRepository {
         this.updateMind();
 
         this.createTypes();
+        this.createCardsDeckbuilder();
         this.prepareArda();
         this.createAgentList();
         this.createCardNameCodeSuggestionsList();
