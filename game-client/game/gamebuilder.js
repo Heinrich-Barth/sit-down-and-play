@@ -347,7 +347,6 @@ const GameBuilder = {
             if (!bIsMe)
                 g_Game.TaskBarCards.onShowOnOfferReveal(jData.uuid);
         });
-        
         MeccgApi.addListener("/game/view-cards/reveal/remove", function(bIsMe, jData)
         {
             if (!bIsMe)
@@ -556,9 +555,7 @@ const GameBuilder = {
                     GameBuilder.CompanyManager.onEnterStartPhase(bIsMe);
                     break;
                 case "organisation":
-
                     GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
-
                     break;
                 case "movement":
                     GameBuilder.CompanyManager.onEnterMovementHazardPhase(bIsMe);
@@ -575,7 +572,7 @@ const GameBuilder = {
                     return false;
             }
 
-            
+            GameBuilder.CompanyManager.removeCompanyMarking();
             GameBuilder.CompanyManager.setCurrentPlayer(sCurrent, bIsMe);
 
             if (sPhase !== "start" && !GameBuilder._hiddenStartPhase)
@@ -605,6 +602,10 @@ const GameBuilder = {
         {
             GameBuilder.CompanyManager.onCompanyArrivesAtDestination(jData.company, true);
             GameBuilder.resolveHandNotification();
+        });
+        MeccgApi.addListener("/game/company/markcurrently", function(_bIsMe, jData)
+        {
+            GameBuilder.CompanyManager.onCompanyMarkCurrently(jData.uuid);
         });
         MeccgApi.addListener("/game/company/returntoorigin", function(_bIsMe, jData)
         {
