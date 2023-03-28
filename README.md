@@ -27,6 +27,7 @@ Here is a [step by step guide](README_setup.md) how to set everything up. Detail
 The project allows you to 
 
 * Play Games (Singleplayer, Multiplayer 2-10, Arda Format)
+* [Tournament Mode](README_tournamen.md)
 * Deckbuilder (gccg compatible format if card codes match)
 * Browse cards
 * Import a deck (copy&paste)
