@@ -80,7 +80,7 @@ class ScoringContainers {
 
         {
             const _temp = document.createElement("h2");
-            _temp.innerHTML = "Score Card";
+            _temp.innerText = "Score Card";
             jContainerData.appendChild(_temp);
         }
         
@@ -261,7 +261,7 @@ const SCORING = {
         if (!sheet.classList.contains("final-score"))
         {
             sheet.classList.add("hidden");
-            ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
+            ArrayList(sheet).find("span").each((_el) => _el.innerText = "0");
         }
     },
     
@@ -389,11 +389,11 @@ const SCORING = {
                 }
             }
 
-            document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerHTML = total;
+            document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerText = total;
         }
     },
     
-    _showScoreSheet : function(jData, bAllowUpdate)
+    _showScoreSheet : function(jData, bAllowUpdate, token)
     {
         if (typeof jData === "undefined")
             return;
@@ -402,12 +402,12 @@ const SCORING = {
         this.scoreSheetUpdateTyble(jData, jTable);
 
         if (!bAllowUpdate)
-            this.removeUpdateFunctionality();
+            this.removeUpdateFunctionality(token);
         
         document.getElementById("scoring-sheet").classList.remove("hidden");
     },
 
-    removeUpdateFunctionality()
+    removeUpdateFunctionality(token)
     {
         const elem = document.getElementById("scoring-sheet");
         if (elem === null)
@@ -435,6 +435,57 @@ const SCORING = {
         p.classList.add("return-to-lobby");
 
         table.appendChild(p);
+
+        if (token !== "")
+            table.appendChild(this.createTokenEntry(token));
+    },
+
+    createTokenEntry : function(token)
+    {
+        const a = document.createElement("a");
+        a.setAttribute("href", "#");
+        a.setAttribute("id", "result-token");
+        a.setAttribute("title", "Copy result token");
+        a.setAttribute("class", "fa fa-solid fa-copy result-token");
+        a.setAttribute("data-token", token);
+        a.onclick = this.copyToken.bind(this);
+        a.innerText = " Copy result to clipboard";
+
+        const pre = document.createElement("pre");
+        pre.setAttribute("class", "hide");
+        pre.setAttribute("id", "token-pre");
+        pre.innerHTML = token;
+
+        const p = document.createElement("p");
+        p.appendChild(a);
+        p.appendChild(pre);
+        p.classList.add("center");
+        p.classList.add("result-token");
+
+        return p;
+    },
+
+    copyToken : function()
+    {
+        try
+        {
+            const elem = document.getElementById("result-token");
+
+            navigator.clipboard.writeText(elem.getAttribute("data-token")).then(function() 
+            {
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Result token copied to clipboard." }));
+            }, 
+            function(_err) {
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy token to clipboard. Please copy manually." }));
+                document.getElementById("token-pre").classList.remove("hide");
+            });
+        }
+        catch (errIgnore)
+        {
+
+        }
+
+        return false;
     },
     
     showScoreSheetCards : function(listCards)
@@ -445,23 +496,23 @@ const SCORING = {
 
     showScoreSheet : function(jData)
     {
-        this._showScoreSheet(jData, true);
+        this._showScoreSheet(jData, true, "");
     },
     
-    showFinalScore : function(jData, stats)
+    showFinalScore : function(jData, stats, token)
     {
-        this._showScoreSheet(jData, false);        
+        this._showScoreSheet(jData, false, token);        
         document.body.dispatchEvent(new CustomEvent("meccg-dice-stats", { "detail": stats }));
     },
 
     showScoreSheetWatch : function(jData)
     {
-        this._showScoreSheet(jData, false); 
+        this._showScoreSheet(jData, false, ""); 
         document.getElementById("scoring-sheet").querySelector(".menu-overlay").onclick = function()
         {
             const sheet = document.getElementById("scoring-sheet");
             sheet.classList.add("hidden");
-            ArrayList(sheet).find("span").each((_el) => _el.innerHTML = "0");
+            ArrayList(sheet).find("span").each((_el) => _el.innerText = "0");
         }
     },
 
@@ -478,7 +529,7 @@ const SCORING = {
         const sheet = document.getElementById("scoring-sheet");
         ArrayList(sheet).find('td[data-player="self"]').each((elem) =>
         {
-            const nScore = parseInt(elem.querySelector("span").innerHTML);
+            const nScore = parseInt(elem.querySelector("span").innerText);
             const type = elem.parentNode.getAttribute("data-score-type");
             SCORING._updateStats(type, nScore);
         });
@@ -491,12 +542,12 @@ const SCORING = {
     {
         let bAdd = this.getAttribute("data-score-action") === "increase";
         let jSpan = this.parentNode.querySelector("span"); 
-        let nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
-        jSpan.innerHTML = nCount;
+        let nCount = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
+        jSpan.innerText = nCount;
         
         jSpan = document.getElementById("scoring-sheet").querySelector("th.score-total");
-        nCount = parseInt(jSpan.innerHTML) + (bAdd ? 1 : -1);
-        jSpan.innerHTML = nCount;
+        nCount = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
+        jSpan.innerText = nCount;
 
         e.preventDefault();
         e.stopPropagation();
@@ -533,20 +584,20 @@ const SCORING = {
         
         let th = document.createElement("th");
         th.setAttribute("data-player", sPlayerId);
-        th.innerHTML = sName;
+        th.innerText = sName;
         jTable.querySelector("thead tr").appendChild(th);
 
         ArrayList(jTable.querySelector("tbody")).find("tr").each(function(_tr)
         {
             const elem = document.createElement("td");
             elem.setAttribute("data-player", sPlayerId);
-            elem.innerHTML = "0";
+            elem.innerText = "0";
             _tr.appendChild(elem)
         });
 
         th = document.createElement("th");
         th.setAttribute("data-player", sPlayerId);
-        th.innerHTML = "0";
+        th.innerText = "0";
         jTable.querySelector("tfoot").querySelector("tr.score-total").appendChild(th);
     },
 };
@@ -610,9 +661,9 @@ function createScoringApp(_CardList)
             SCORING.showScoreSheetCards(jData);
         },
 
-        showFinalScore: function(score, stats)
+        showFinalScore: function(score, stats, token)
         {
-            SCORING.showFinalScore(score, stats);
+            SCORING.showFinalScore(score, stats, token);
         }
     };
 }

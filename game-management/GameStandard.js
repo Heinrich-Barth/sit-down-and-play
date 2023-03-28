@@ -1324,12 +1324,14 @@ class GameStandard extends GamePlayers
 
             if (error)
                 throw new Error("Could not update ownership");
-            else if (!this.restore(playboard, data.game.scoring))
+            else if (!this.restore(playboard, data.game.scoring, data.game.meta))
                 throw new Error("Cannot restore game playboard");
             
             super.globalRestoreGame(userid, _socket, data);
             
-            this.restorePlayerPhase(data.game.meta.phase, data.game.meta.players.turn, data.game.meta.players.current)
+            this.restorePlayerPhase(data.game.meta.phase, 
+                                    data.game.meta.players.turn, 
+                                    data.game.meta.players.current)
             this.publishToPlayers("/game/restore", userid, { success : true });
         }
         catch (err)

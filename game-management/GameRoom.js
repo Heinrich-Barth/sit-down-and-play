@@ -193,8 +193,6 @@ class GameRoom
         this.visitors = {};
     }
 
-
-
     sendMessage(userid, message)
     {
         this.chat.sendMessage(userid, message.trim(), false)

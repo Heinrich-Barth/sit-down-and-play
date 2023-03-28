@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 
+const CHECKSUM_SECRET = typeof process.env.SECRET_DECKCHECKSUM !== "undefined" ? process.env.SECRET_DECKCHECKSUM : "" + Date.now();
+
 const createDecklist = function(jDeck)
 {
     const targetList = [];
@@ -20,7 +22,7 @@ const createSectionList = function(jDeck, prefix, targetList)
 const createChecksum = function(input)
 {
     return crypto
-        .createHmac('sha256', 'a secret')
+        .createHmac('sha256', CHECKSUM_SECRET)
         .update(input, 'utf8')
         .digest('hex');
 }

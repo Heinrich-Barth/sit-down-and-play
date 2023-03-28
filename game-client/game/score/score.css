@@ -118,12 +118,14 @@
   transform: translate(50%, -50%);
   font-size: 1.1em;
 }
+.scoring-sheet.final-score .view-score-container .result-token a,
 .scoring-sheet.final-score .view-score-container .return-to-lobby a {
   display: block !important;
   text-transform: uppercase;
   color: #ff0;
   font-size: 0.8em;
 }
+.scoring-sheet.final-score .view-score-container .result-token a:hover,
 .scoring-sheet.final-score .view-score-container .return-to-lobby a:hover {
   color: #ffa500;
 }

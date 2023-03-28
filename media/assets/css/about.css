@@ -92,6 +92,19 @@ body {
 .content .inner-content {
   padding: 20em 5em 5em 5em;
 }
+.content .inner-content-inverted {
+  padding: 5em 5em 20em 5em;
+}
+.content .center-image-round {
+  text-align: center;
+}
+.content .center-image-round img {
+  border-radius: 10px;
+  border: 1px solid #fff;
+}
+.content .pad-top {
+  padding-top: 2em;
+}
 
 h1 {
   margin-top: 2em;
@@ -99,4 +112,58 @@ h1 {
 
 h2 {
   margin-top: 1.5em;
+}
+
+.button,
+button {
+  cursor: pointer;
+  text-align: center;
+}
+
+select,
+input {
+  border: solid 2px #e5e6e7;
+}
+
+textarea,
+.button,
+input,
+select,
+button {
+  border: 0;
+  display: inline-block;
+  height: 3.5em;
+  border-radius: 0.5em;
+  line-height: 3.5em;
+  outline: 0;
+  padding: 0 2em 0 2em;
+  text-decoration: none;
+  background-color: #fff;
+  width: 100%;
+  color: #39454b;
+}
+
+.button,
+button {
+  color: #fff;
+  background-color: #98c593;
+  overflow: hidden;
+  text-align: center;
+}
+.button:hover, .button:active,
+button:hover,
+button:active {
+  background-color: #a8cea4;
+}
+
+.tournament-result th {
+  text-align: left;
+  color: #ff0;
+  text-transform: uppercase;
+}
+.tournament-result table {
+  border-bottom: 1px solid #ffa500;
+}
+.tournament-result table:last-of-type {
+  border-bottom: 0;
 }

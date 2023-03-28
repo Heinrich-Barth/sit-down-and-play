@@ -1,5 +1,4 @@
 const GameRoom = require("./GameRoom");
-const DeckChecksum = require("./DeckChecksum");
 
 /**
  * Create a new room if necessary
@@ -626,7 +625,8 @@ class RoomManager {
         else if (bIsPlayer)
         {
             /* add player to game */
-            pRoom.getGame().joinGame(pRoom.players[userId].getName(), userId, pRoom.players[userId].getDeck());
+            const _player = pRoom.players[userId];
+            pRoom.getGame().joinGame(_player, userId);
             pRoom.getPlayer(userId).onJoin();
         }
         else
@@ -715,10 +715,8 @@ class RoomManager {
         if (pRoom.getGame().isArda() && !isSinglePlayer)
             this._eventManager.trigger("arda-prepare-deck", this.gameCardProvider, jDeck, isFirst);
 
-        const deckChecksum = DeckChecksum.calculateChecksum(jDeck);
-
         const lNow = Date.now();
-        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow, deckChecksum);
+        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow);
 
         /** timer to check for abandoned games */
         this.checkGameContinuence(room);

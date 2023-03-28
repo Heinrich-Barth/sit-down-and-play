@@ -636,13 +636,13 @@ const GameBuilder = {
         MeccgApi.addListener("/game/score/final", function(_bIsMe, jData)
         {
             MeccgApi.disconnect();                    
-            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats);
+            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
 
         MeccgApi.addListener("/game/score/final-only", function(_bIsMe, jData)
         {
-            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats);
+            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
         

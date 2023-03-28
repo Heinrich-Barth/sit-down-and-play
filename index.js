@@ -495,6 +495,7 @@ require("./server/RoutingRules").setup(SERVER, g_pExpress);
 //require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
+require("./server/RoutingTournament")(SERVER, g_pExpress);
 
 SERVER.onIoConnection = function (socket) 
 {

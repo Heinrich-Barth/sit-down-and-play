@@ -2,6 +2,7 @@ const Scores = require("./Scores");
 
 const GameBase = require("./GameBase");
 const PlayerDices = require("./PlayerDices");
+const ResultToken = require("./ResultToken");
 
 class GamePlayers extends GameBase
 {
@@ -15,8 +16,9 @@ class GamePlayers extends GameBase
             this_player: "",
             ids: [],
             names: {},
+            checksums: [],
             current: 0,
-            turn: 1
+            turn: 1,
         };
 
         this.scoring = new Scores(this.isArda());
@@ -33,13 +35,17 @@ class GamePlayers extends GameBase
         this.getPlayerDices().setDice(userid, dice);
     }
 
-    joinGame(playerName, playerId, cards)
+    joinGame(pPlayer, playerId)
     {
+        const playerName = pPlayer.getName();
+        const cards = pPlayer.getDeck();
+        const checksum = pPlayer.getDeckChecksum();
+
         if (cards === null || playerName === "" || playerId === "" || !this.setupNewGame())
             return false;
         else
         {
-            this.addOpponent(playerId, playerName);
+            this.addOpponent(playerId, playerName, checksum);
             return this.getPlayboardManager().AddDeck(playerId, cards);
         }
     }
@@ -52,9 +58,10 @@ class GamePlayers extends GameBase
             ids: this.players.ids,
             names: this.players.names,
             current : this.players.current,
-            turn: this.players.turn
+            turn: this.players.turn,
+            checksums: this.players.checksums
         }
-
+        
         data.scoring = this.scoring.save();
         return data;
     }
@@ -76,13 +83,15 @@ class GamePlayers extends GameBase
     {
         this.players.this_player = sId;
         this.players.this_player_name = sName;
-        this.addOpponent(sId, sName);
+        this.addOpponent(sId, sName, "");
     }
 
-    addOpponent(sId, sName)
+    addOpponent(sId, sName, checksum)
     {
         this.players.ids.push(sId);
         this.players.names[sId] = sName;
+        if (checksum !== "")
+            this.players.checksums.push(checksum);
         this.scoring.add(sId);
     }
 
@@ -113,12 +122,28 @@ class GamePlayers extends GameBase
         super.reset();
         this.players.this_player = "";
         this.players.ids = [];
+        this.players.checksums = [];
         this.players.current = 0;
         this.players.turn = 1;
         this.scoring.reset();
     }
-    restore(playboard, score)
+
+    restoreChecksums(meta)
     {
+        this.players.checksums = [];
+
+        if (typeof meta.players.checksums !== "undefined" && Array.isArray(meta.players.checksums))
+        {
+            for (let elem of meta.players.checksums)
+            {
+                if (elem !== "")
+                    this.players.checksums.push(elem);
+            }
+        }
+    }
+    restore(playboard, score, meta)
+    {
+        this.restoreChecksums(meta);
         return super.restore(playboard) && this.scoring.restore(score);
     }
     currentIsMe ()
@@ -202,10 +227,19 @@ class GamePlayers extends GameBase
 
     getFinalScore()
     {
-        return {
+        const data = {
             score: this.scoring.getScoreSheets(),
-            stats: this.playerDices.getStats()
-        };
+            stats: this.playerDices.getStats(),
+            duration: this.getGameDuration(),
+            turns: this.players.turn,
+            checksums: this.players.checksums,
+            players: this.players.names,
+            date: Date.now()
+        }
+
+        const token = ResultToken.create(data);
+        data.token = token;
+        return data;
     }
 
     sendPlayerList()

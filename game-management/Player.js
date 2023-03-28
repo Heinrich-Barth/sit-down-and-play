@@ -1,4 +1,4 @@
-
+const DeckChecksum = require("./DeckChecksum");
 
 class Player
 {
@@ -6,6 +6,7 @@ class Player
     {
         this.name = displayname;
         this.deck = jDeck;
+        this.deckChecksum = DeckChecksum.calculateChecksum(jDeck);
         this.admin = isAdmin;
         this.waiting = false;
         this.timestamp = timeAdded;
@@ -105,6 +106,11 @@ class Player
     getAccessToken()
     {
         return this.player_access_token_once;
+    }
+
+    getDeckChecksum()
+    {
+        return this.deckChecksum;
     }
 }
 
