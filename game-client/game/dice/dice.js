@@ -43,25 +43,37 @@ class DiceContainer {
 
     static createResultElement(id, sName, first, second, total, asset)
     {
-        let nFirst = parseInt(first);
-        let nSecond = parseInt(second);
-        let nTotal = parseInt(total);
-
-        const img1 = DiceContainer.getImage(asset, nFirst);
-        const img2 = DiceContainer.getImage(asset, nSecond);
+        const nFirst = parseInt(first);
+        const nSecond = parseInt(second);
 
         const htmlP = document.createElement("p");
-        htmlP.innerHTML = `<img class="dice-icon" src="/media/assets/images/icons/icon-dices.png"> <span class="who">${sName}</span> rolled a <span class="total big">${nTotal}</span><br>`;
+        const imgDice = document.createElement("img");
+        imgDice.setAttribute("class", "dice-icon");
+        imgDice.setAttribute("src", "/media/assets/images/icons/icon-dices.png");
+        htmlP.appendChild(imgDice);
 
-        let htmlImage1 = document.createElement("img");
-        htmlImage1.setAttribute("class", "dice-image");
-        htmlImage1.setAttribute("src", img1);
+        const spanWho = document.createElement("span");
+        spanWho.setAttribute("class", "who");
+        spanWho.innerText = sName;
+        htmlP.appendChild(spanWho);
+
+        htmlP.appendChild(document.createTextNode(" rolled a "));
         
-        let htmlImage2 = document.createElement("img");
-        htmlImage2.setAttribute("class", "dice-image");
-        htmlImage2.setAttribute("src", img2);
+        const spanTotal = document.createElement("span");
+        spanTotal.setAttribute("class", "total big");
+        spanTotal.innerText = nFirst + nSecond
+        htmlP.appendChild(spanTotal);
+        
+        htmlP.appendChild(document.createElement("br"));
 
+        const htmlImage1 = document.createElement("img");
+        htmlImage1.setAttribute("class", "dice-image");
+        htmlImage1.setAttribute("src", DiceContainer.getImage(asset, nFirst));
         htmlP.appendChild(htmlImage1);
+
+        const htmlImage2 = document.createElement("img");
+        htmlImage2.setAttribute("class", "dice-image");
+        htmlImage2.setAttribute("src", DiceContainer.getImage(asset, nSecond));
         htmlP.appendChild(htmlImage2);
 
         const divLine = document.createElement("div");
@@ -84,12 +96,10 @@ class DiceContainer {
             return dice;
     }
 
-    appendResult(id, bIsPlayer, userId, first, second, total, dice)
+    appendResult(id, name, first, second, total, dice)
     {
         const asset = this.getDiceAsset(dice);
-        const sName = bIsPlayer ? "You" : this.getPlayerName(userId);
-        document.getElementById("dice_roll").querySelector(".dice-result-list").prepend(DiceContainer.createResultElement(id, sName, first, second, total, asset));
-        return id;
+        return DiceContainer.createResultElement(id, name, first, second, total, asset);
     }
 
     static removeResult(id)
@@ -98,16 +108,63 @@ class DiceContainer {
         if (elem !== null)
             elem.parentNode.removeChild(elem);
     }
-
-    show(bIsPlayer, userId, first, second, total, dice)
+    
+    requirePlayerName(bIsPlayer, userId, code)
     {
-        const nId = this.appendResult(++DiceContainer._count, bIsPlayer, userId, first, second, total, dice);
+        if (code !== "")
+            return code;
+        else
+            return bIsPlayer ? "You" : this.getPlayerName(userId);
+    }
+
+    show(name, first, second, total, dice, uuid)
+    {
+        const pos = this.getPosition(uuid);
+        const nId = ++DiceContainer._count;
+
+        const elem = this.appendResult(nId, name, first, second, total, dice);
+        if (pos === null)
+        {
+            elem.onclick = () => DiceContainer.removeResult(nId);
+            document.getElementById("dice_roll").querySelector(".dice-result-list").prepend(elem);
+        }
+        else
+        {
+            elem.removeAttribute("id");
+            const div = document.createElement("div");
+            div.setAttribute("class", "character-dice-body");
+            div.setAttribute("id", nId);
+            div.setAttribute("title", "Click to close dice result");
+            div.style.left = pos.x + "px";
+            div.style.top = pos.y + "px";
+            div.appendChild(elem);
+            div.onclick = () => DiceContainer.removeResult(nId);
+            document.body.appendChild(div);
+        }
+        
         setTimeout(() => DiceContainer.removeResult(nId), DiceContainer._timeout); 
+    }
+
+    getPosition(uuid)
+    {
+        const elem = document.getElementById("ingamecard_" + uuid);
+        if (elem === null)
+            return null;
+        
+        const pos = elem.getBoundingClientRect();
+        return {
+            x: pos.left,
+            y: pos.top
+        };
     }
 
     static OnShow(e)
     {
-        new DiceContainer().show(e.detail.isme, e.detail.user, e.detail.first, e.detail.second, e.detail.total, e.detail.dice);
+        const detail = e.detail;
+        const instance = new DiceContainer();
+
+        const name = instance.requirePlayerName(detail.isme, detail.user, detail.code);
+        instance.show(name, detail.first, detail.second, detail.total, detail.dice, detail.uuid);
     }
 
     static OnPlayers(e)

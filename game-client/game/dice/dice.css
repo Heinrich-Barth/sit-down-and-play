@@ -7,7 +7,7 @@
     left: 50%;
     transform: translateX(-50%); }
 
-.dice-result-list .dice-content { 
+.dice-content { 
     position:  relative;
     text-align: center; 
     color: white; 
@@ -23,10 +23,10 @@
 .dice-content span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
 .dice-content span.dice-info { font-style: italic; }
 
-.dice-result-list img.dice-icon { filter: invert(100%); width: 30px; }
-.dice-result-list img.dice-image { margin-right: 10px; width: 32px; }
+.dice-content img.dice-icon { filter: invert(100%); width: 30px; }
+.dice-content img.dice-image { margin-right: 10px; width: 32px; }
 
-.dice-result-list .dice-line-countdown 
+.dice-content .dice-line-countdown 
 {   
     animation: dice-line 5s linear forwards;
     height: 2px;
@@ -35,6 +35,12 @@
     position: absolute;
     left: 0;
     bottom: 0;
+}
+
+.character-dice-body {
+    position: absolute;
+    z-index: 200;
+    cursor: pointer;
 }
 
 @keyframes dice-line {
