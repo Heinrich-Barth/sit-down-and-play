@@ -227,11 +227,9 @@ class TaskBarCards
             return false;
         };
         
-        document.querySelector(".card-dice").onclick = (e) => 
+        document.getElementById("playercard_hand").querySelector(".card-dice").onclick = (e) => 
         {
-            const val1 = DiceRoller.rollDice();
-            const val2 = DiceRoller.rollDice();
-            MeccgApi.send("/game/dices/roll", { r1: val1, r2: val2 });
+            TaskBarCards.rollDiceCharacter("", "");
             e.stopPropagation();
             return false;
         };
@@ -282,6 +280,19 @@ class TaskBarCards
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
             elem.onclick = TaskBarCards.OnTurnClick;
     }    
+
+    static rollDiceCharacter(uuid, code)
+    {
+        const val1 = DiceRoller.rollDice();
+        const val2 = DiceRoller.rollDice();
+        MeccgApi.send("/game/dices/roll", { 
+            r1: val1, 
+            r2: val2,
+            uuid : uuid,
+            code: code
+        });
+        return false;
+    }
 
     static OnClickContainerShuffle(e) 
     {
