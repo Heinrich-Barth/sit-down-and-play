@@ -164,8 +164,14 @@ const SearchBar = {
         const elem = document.createElement("div");
         elem.setAttribute("class", "pos-rel bgblue filters on-drag-hide");
         elem.setAttribute("id", "searchbar");
-        elem.innerHTML = `
-            <form method="post" action="#">
+
+        const form = document.createElement("form");
+        form.onsubmit = () => {
+            SearchBar.onTriggerSearch();
+            return false;
+        }
+        
+        form.innerHTML =  `
                 <div class="fields">
                     <div class="field">
                         <input type="text" name="card_title" id="card_title" placeholder="Search text" />
@@ -188,8 +194,8 @@ const SearchBar = {
                     <div class="field">
                         <select id="view_card_skill" data-name="Skill"></select>
                     </div>
-                </div>
-            </form>`;
+                </div>`;
+        elem.appendChild(form);
         document.body.prepend(elem);
     }
 };
