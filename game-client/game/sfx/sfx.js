@@ -15,8 +15,8 @@ class SoundEffects {
             "discard": "",
             "launch": "",
             "endgame": "",
-            "yourturn": ""
-
+            "yourturn": "",
+            "notify": ""
         };
         this.volume = 30;
         this.isReady = false;
