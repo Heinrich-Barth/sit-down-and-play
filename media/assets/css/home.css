@@ -212,7 +212,7 @@ body, p {
   width: 1%;
   position: absolute;
   left: 0;
-  bottom: 0;
+  top: 0;
 }
 .game-list-counter.line-countdown-10s {
   animation: gamelist-line-to-refresh 10s infinite forwards;
@@ -229,11 +229,15 @@ body, p {
     width: 100%;
   }
 }
-/* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (max-width: 767.98px) {
   input,
   button {
     width: 100% !important;
     margin-bottom: 2em;
+  }
+}
+@media (max-width: 600px) {
+  .content {
+    padding-top: 6em;
   }
 }

@@ -121,7 +121,7 @@ body, p
     width: 1%;
     position: absolute;
     left: 0;
-    bottom: 0;
+    top: 0;
 
     &.line-countdown-10s
     {
@@ -140,12 +140,18 @@ body, p
 }
 
 
-/* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (max-width: $md-max) 
 {
     input,
     button {
         width: 100% !important;
         margin-bottom: 2em;
+    }
+}
+
+@media (max-width: 600px) 
+{
+    .content {
+        padding-top: 6em;
     }
 }
