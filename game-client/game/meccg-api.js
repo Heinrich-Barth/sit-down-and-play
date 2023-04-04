@@ -286,6 +286,8 @@ const MeccgApi =
                     document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost." }));
                     MeccgApi._disconnectInfo.show("");    
                 }
+                
+                document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "notify" }));
             }
 
             MeccgApi.onDisconnected();
