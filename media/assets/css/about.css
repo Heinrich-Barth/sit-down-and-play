@@ -161,9 +161,15 @@ button:active {
   color: #ff0;
   text-transform: uppercase;
 }
+.tournament-result td {
+  padding-left: 10px;
+}
 .tournament-result table {
   border-bottom: 1px solid #ffa500;
 }
 .tournament-result table:last-of-type {
   border-bottom: 0;
+}
+.tournament-result .result-table-invalid th {
+  color: #e36666;
 }

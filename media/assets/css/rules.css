@@ -1,22 +1,69 @@
-
-h1 { font-size: 1.5em; text-align: center; margin-bottom: 10px; 
-    font-weight: 300;
-    text-decoration: none;
+h1 {
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 300;
+  text-decoration: none;
 }
 
-.rule-nav { position: fixed; left: 10px; width: 350px; line-height: 1.3em; }
-.rule-content { margin-left: 370px; }
+.rule-nav {
+  position: fixed;
+  left: 10px;
+  width: 300px;
+  line-height: 1.3em;
+}
+
+.rule-content {
+  margin-left: 230px;
+}
+.rule-content p img {
+  border-radius: 5px;
+  max-width: 100%;
+}
 
 h1, h2, h3, h4,
-a, a:active, a:visited { color: #ffa500; text-decoration: none; font-weight: normal; }
+a, a:active, a:visited {
+  color: #ffa500;
+  text-decoration: none;
+  font-weight: normal;
+}
 
-table.shortcuts { border-spacing: 0px; width: 100%; }
-.shortcuts tr th:first-child { width: 200px;}
-.shortcuts th { border-bottom: 1px solid  #ffa500;}
-.shortcuts td { padding-right: 10px; line-height: 1em; }
-.shortcuts pre { margin: 0.5em; }
-.shortcuts tbody tr:hover td { background-color: rgba(255,255,255,0.2);}
+table.shortcuts {
+  border-spacing: 0px;
+  width: 100%;
+}
+
+.shortcuts tr th:first-child {
+  width: 200px;
+}
+.shortcuts th {
+  border-bottom: 1px solid #ffa500;
+}
+.shortcuts td {
+  padding-right: 10px;
+  line-height: 1em;
+}
+.shortcuts pre {
+  margin: 0.5em;
+}
+.shortcuts tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.2);
+}
 
 .content .inner-content {
-    padding: 5em 2em 5em 5em;
+  padding: 5em 2em 5em 5em;
+}
+
+@media (max-width: 700px) {
+  .content {
+    padding-top: 6em;
+  }
+  .rule-nav {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+  .rule-content {
+    margin-left: 0;
+  }
 }

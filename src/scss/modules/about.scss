@@ -44,17 +44,21 @@ h2 {
 @import "forms.scss";
 
 .tournament-result {
+
     th {
         text-align: left;
         color: $color-yellow;
         text-transform: uppercase;
     }
 
+    td { padding-left: 10px; }
+
     table {
         border-bottom: 1px solid $color-orange;
         &:last-of-type {
             border-bottom: 0;
         }
-
     }
+
+    .result-table-invalid th { color: #e36666;}
 }
