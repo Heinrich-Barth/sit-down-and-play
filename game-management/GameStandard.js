@@ -982,8 +982,14 @@ class GameStandard extends GamePlayers
         const dice = pDices.getDice(userid);
         pDices.saveRoll(userid, nRes);
 
-        this.publishToPlayers("/game/dices/roll", userid, {first: n1, second: n2, total: nRes, user: userid, dice: dice });
-        this.publishChat(userid, " rolls " + nRes + " (" + n1 + ", " + n2 + ")", true);
+        const uuid = obj.uuid === undefined ? "" : obj.uuid;
+        const code = obj.code === undefined ? "" : obj.code;
+
+        this.publishToPlayers("/game/dices/roll", userid, {first: n1, second: n2, total: nRes, user: userid, dice: dice, uuid: uuid, code: code });
+        if (code === "")
+            this.publishChat(userid, ` rolls ${nRes} (${n1}, ${n2})`, true);
+        else
+            this.publishChat(userid, ` ${code} rolls ${nRes} (${n1}, ${n2})`, true);
     }
 
     setDices(userid, _socket, obj)
