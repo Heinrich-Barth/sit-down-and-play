@@ -385,7 +385,9 @@ const GameBuilder = {
                 first : jData.first,
                 second : jData.second,
                 total : jData.total,
-                dice : jData.dice
+                dice : jData.dice,
+                uuid: jData.uuid,
+                code: jData.code
             } }));
 
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "dice" }));
