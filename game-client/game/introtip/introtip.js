@@ -7,7 +7,7 @@ setTimeout(() => {
         return;
 
     const elem = document.createElement("i");
-    elem.setAttribute("class", "fa fa-question-circle");
+    elem.setAttribute("class", "fa fa-sign-out");
     elem.setAttribute("aria-hidden", "true");
 
     const div = document.createElement("div");
@@ -16,8 +16,9 @@ setTimeout(() => {
 
     const divParent = document.createElement("div");
     divParent.setAttribute("class", "wrapper-topleft help-wrapper blue-box cursor-pointer");
+    divParent.setAttribute("title", "End this game and show final scores (after final confirmation)");
+    divParent.onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-query-end-game", { }));;
     divParent.appendChild(div);
-    divParent.onclick = () => window.open("/help", "_blank");
     
     document.body.appendChild(divParent);
 }, 200);
