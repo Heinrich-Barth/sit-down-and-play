@@ -381,7 +381,12 @@ const ViewCards =
         fetch("/data/list/cards")
         .then((response) => response.json())
         .then(this.onCardResult.bind(this))
-        .catch((err) => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Something went wrong. Error is : " + err.message })));
+        .catch((err) => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Something went wrong. Error is : " + err.message })))
+        .finally(() => {
+            const elem = document.getElementById("loading-line-counter");
+            if (elem !== null)
+                elem.parentElement.removeChild(elem);
+        })
     },
 
     getCardsFromStorage : function()
@@ -431,9 +436,17 @@ const ViewCards =
     }
 };
 
+(function() {
+
+    const div = document.createElement("div");
+    div.setAttribute("class", "loading-line-counter");
+    div.setAttribute("id", "loading-line-counter");
+    document.body.appendChild(div);
+})();
+
 document.body.addEventListener("meccg-init-ready", () => {
     ViewCards.initDeckbuilderCached();
-    setTimeout(() => ViewCards.initDeckbuilder(), 100);  
+    setTimeout(() => ViewCards.initDeckbuilder(), 50);  
 }, false);
 
 

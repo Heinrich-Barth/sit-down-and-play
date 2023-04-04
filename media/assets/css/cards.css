@@ -485,6 +485,25 @@ body h4 {
     display: block;
   }
 }
+.loading-line-counter {
+  height: 5px;
+  background-color: rgba(255, 165, 0, 0.8);
+  width: 1%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  animation: loading-line-counter-refresh 3s infinite forwards;
+}
+
+@keyframes loading-line-counter-refresh {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
 @media only screen and (max-width: 575.98px) {
   .deckbuilding .filters .field {
     width: 100%;
