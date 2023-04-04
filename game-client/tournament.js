@@ -7,16 +7,39 @@ const exploreToken = function(input)
         return JSON.parse(atob(parts[1]));
 }
 
-const populateResult = function(token)
+const createPointAssignment = function(list)
 {
-    const date = new Date(token.date).toString();
-    const duration = Math.round((token.duration / 1000) / 60);
+    if (list.length !== 2)
+        return;
 
-    const table = document.createElement("table");
-    const tbody = document.createElement("tbody");
+    const a = list[0].score >= list[1].score ? list[0] : list[1];
+    const b = list[0].score >= list[1].score ? list[1] : list[0];
 
-    tbody.appendChild(createRow("Date", date));
-    tbody.appendChild(createRow("Game", duration + "min, " + token.turns + " turns"));
+    if (a.score === b.score)
+    {
+        a.points = 3;
+        b.points = 3;
+    }
+    else if (a.score >= b.score * 2)
+    {
+        a.points = 6;
+        b.points = 0;
+    }
+    else if (a.score >= Math.round(b.score * 1.5))
+    {
+        a.points = 5;
+        b.points = 1;
+    }
+    else
+    {
+        a.points = 4;
+        b.points = 2;
+    }
+}
+
+const getScoreList = function(token)
+{
+    const pointList = [];
 
     for (let key in token.score)
     {
@@ -26,8 +49,37 @@ const populateResult = function(token)
             count += score[_cat];
 
         const name = token.players[key];
-        tbody.appendChild(createRow(name, count + " points"));
+        pointList.push({
+            name: name,
+            score: count,
+            points: -1
+        });
     }
+
+    pointList.sort( (a, b) => b.score - a.score );
+    createPointAssignment(pointList);
+    return pointList;
+}
+
+const populateResult = function(token, isValid)
+{
+    const date = new Date(token.date).toUTCString();
+    const duration = Math.round((token.duration / 1000) / 60);
+
+    const table = document.createElement("table");
+    if (!isValid)
+        table.setAttribute("class", "result-table result-table-invalid");
+    else
+        table.setAttribute("class", "result-table");
+
+    const tbody = document.createElement("tbody");
+
+    tbody.appendChild(createRow((isValid ? "" : "INVALID ") + "Game", date));
+    tbody.appendChild(createRow("", duration + "min, " + token.turns + " turns"));
+
+    const pointList = getScoreList(token);
+    for (let _res of pointList)
+        tbody.appendChild(createScoreRow(_res.name, _res.points, _res.score));
 
     let _th = "Decks";
     for (let _check of token.checksums)
@@ -40,6 +92,15 @@ const populateResult = function(token)
 
     document.getElementById("result").prepend(table);
     document.getElementById("result").classList.remove("hide");
+}
+
+const createScoreRow = function(left, points, mps)
+{
+    let right = mps + " marshalling points";
+    if (points !== -1)
+        right = `${points} points (${mps} marshalling points)`;
+
+    return createRow(left, right);
 }
 
 const createRow = function(left, right)
@@ -68,8 +129,19 @@ const onPaste = function(event)
         document.getElementById("token").value = "";
         return false;
     } 
-    else
-        populateResult(data);
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            token: token
+        })
+    }
+
+    fetch("/tournament/validate", options)
+    .then((response) => populateResult(data, response.status === 204))
+    .catch((err) => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": err.message })) );
 }
 
 document.getElementById("token").onpaste = onPaste;
