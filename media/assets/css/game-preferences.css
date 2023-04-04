@@ -10,8 +10,8 @@
 
 .config-wrapper-game {
     z-index: 500;
-    left: 5px;
-    top: 40px;
+    left: 1px;
+    top: 35px;
 }
 
 .config-wrapper-map {
@@ -96,7 +96,7 @@
     margin-top: 10px;
 }
 .config-wrapper label { margin: 0; cursor: pointer;}
-.config-wrapper .preference:hover { color:#ffa500 };
+.config-wrapper .preference:hover { color:#ffa500; }
 
 .config-panel .switch {
 position: relative;
