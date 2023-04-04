@@ -42,6 +42,43 @@ const SavedGameManager =
 
     onRestoreGame : function(jGame)
     {
+        if (typeof jGame.check !== "string" || typeof jGame.game !== "string")
+        {
+            this.onRestoreGameJson(jGame);
+            return;
+        }
+
+        if (jGame.check === "" || jGame.game === "")
+            throw new Error("Invalid savegame properties.");
+
+        SavedGameManager.digestMessage(jGame.game).then((digestHex) => {
+            const options = {
+                method: 'POST',
+                body: JSON.stringify({ value: digestHex }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        
+            fetch("/data/hash", options)
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.value !== jGame.check)
+                    throw new Error("Invalid savegame signature");
+                else
+                    this.onRestoreGameJson(JSON.parse(atob(jGame.game)));
+            })
+            .catch((err) => {
+                console.error(err);
+                document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not restore game: " + err.message }));
+            });
+        });
+
+        
+    },
+
+    onRestoreGameJson : function(jGame)
+    {
         let pPlayersCurrent = MeccgPlayers.getPlayers();
         let pPlayersSaved = jGame.players;
         const sizeSaved = Object.keys(pPlayersSaved).length;
@@ -177,6 +214,15 @@ const SavedGameManager =
             window.location.reload();
     },
 
+    digestMessage: async function(message) 
+    {
+        /** this is a sample from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest  */
+        const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(message));
+        return Array.from(new Uint8Array(hashBuffer))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join(""); // convert bytes to hex string
+    },
+
     onSaveGame : function(jGame)
     {
         if (jGame === undefined || jGame === null)
@@ -190,12 +236,31 @@ const SavedGameManager =
                 arda : jGame.meta.arda,
                 data: jGame
             }
+            const base64 = btoa(JSON.stringify(gameData));
             const det = {
                 name : this.obtainSaveName(jGame),
-                data: gameData
+                data: {
+                    game: base64,
+                    check: ""
+                }
             };
-        
-            document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": det}));
+
+            SavedGameManager.digestMessage(base64).then((digestHex) => {
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify({ value: digestHex }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            
+                fetch("/data/hash", options)
+                .then((response) => response.json())
+                .then((response) => {
+                    det.data.check = response.value;
+                    document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": det}));
+                });
+            });
         }
         catch (err)
         {
