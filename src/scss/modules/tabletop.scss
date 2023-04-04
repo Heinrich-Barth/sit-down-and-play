@@ -43,7 +43,12 @@ a {
     }
 
     a {
-        margin: 5px 18px;
+        margin: 5px;
+
+        &:first-of-type {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
     }
 }
 
@@ -195,7 +200,6 @@ img.card-icon {
 .company-host,
 .company {
     padding-right: 20px;
-    min-width: 200px;
     height: 100%;
     min-width: 60px !important;
 }
@@ -319,6 +323,7 @@ img.card-icon {
     display: inline-block;
     margin-left: 60px;
     min-height: 83px;
+    margin-right: 5px;
 
     a.discardpile,
     a.discardpile:hover {
@@ -400,6 +405,21 @@ img.card-icon {
         .company-character:hover {
             background: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
+
+            .character-card-dice {
+                visibility: visible;
+            }
+        }
+
+        .character-card-dice {
+            position: absolute;
+            right: 0;
+            bottom: 2px;
+            width: 30px;
+            height: 20px;
+            background-size: contain;
+            cursor: pointer;
+            visibility: hidden;
         }
 
         .company-site-list {
@@ -584,7 +604,7 @@ div#opponent_table .company {
 
 .card-hands-sizer {
     display: inline;
-    margin-left: 20px;
+    margin-left: 10px;
 
     i {
         color: #ffa500;

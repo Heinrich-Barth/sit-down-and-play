@@ -103,7 +103,18 @@ const createCharacterHtml = function(jsonCard, id)
     
     const pCharDiv = document.createElement("div");
     pCharDiv.setAttribute("class", "company-character-host company-character-reosurces");
-    pCharDiv.appendChild(createNewCard(jsonCard));
+
+    const characterDiv = createNewCard(jsonCard);
+    
+    const iDice = document.createElement("i");
+    iDice.setAttribute("class", "character-card-dice card-dice");
+    iDice.setAttribute("data-code", jsonCard.code);
+    iDice.setAttribute("data-uuid", jsonCard.uuid);
+    iDice.setAttribute("title", "Click to roll dice for " + jsonCard.code);
+    iDice.onclick = rollCharacterDice;
+    characterDiv.appendChild(iDice);
+
+    pCharDiv.appendChild(characterDiv);
     pCharacterContainer.appendChild(pCharDiv);
 
     const pTemp = document.createElement("div");
@@ -113,7 +124,14 @@ const createCharacterHtml = function(jsonCard, id)
     div.appendChild(pTemp);      
     return div;
 };
- 
+
+function rollCharacterDice(e)
+{
+    const code = e.target.getAttribute("data-code");
+    const uuid = e.target.getAttribute("data-uuid");
+    TaskBarCards.rollDiceCharacter(uuid, code);
+}
+
 function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
 {
     const id = "company_" + companyId;
