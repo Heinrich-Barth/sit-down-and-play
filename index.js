@@ -4,6 +4,7 @@
  */
 const fs = require('fs');
 const Configiration = require("./Configuration");
+const ResultToken = require("./game-management/ResultToken");
 
 if (!fs.existsSync("./logs"))
     fs.mkdirSync("./logs");
@@ -420,6 +421,23 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, SERV
 });
 
 SERVER.instance.get("/data/samplerooms", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER._sampleRooms).status(200));
+SERVER.instance.post("/data/hash", g_pAuthentication.isSignedInPlay, (req, res) =>
+{
+    const data = req.body.value;
+    if (typeof data !== "string" || data === "")
+    {
+        res.status(500).send("");
+        return;
+    }
+    
+    const val = ResultToken.createHash(data);
+    if (val === "")
+        res.status(500).send("");
+    else
+        res.status(200).json({
+            value: val
+        });
+});
 
 
 if (SERVER.configuration.hasLocalImages())
