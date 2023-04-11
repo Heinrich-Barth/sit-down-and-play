@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sit down and read about...</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="/media/assets/css/about.css" />
+
+        <link rel="icon" type="image/png" href="/media/assets/favicon.png">
+        <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
+        <meta name="theme-color" content="#000000"/>
+        <meta name="robots" content="noindex, nofollow">
+        <base target="_self">
+    </head>
+    <body class="navigation-full-width" data-navigation-type="open">
+
+        <div class="content">
+            <div class="inner-content-inverted">
+                <h1>Tournament Information</h1>
+                <p>Tournament games require a mechamism to verify that each participant always plays with the identical deck.</p>
+                <p>A result token utilises stores the following pieces of information:<br>
+                    1. Date of Game<br>
+                    2. Duration and number of turns played<br>
+                    3. Player names and points scored (i.e. results)<br>
+                    4. Deck checksums
+                </p>
+
+                <h2>Check game result token</h2>
+                <p>
+                    <input type="text" placeholder="Copy result token here" id="token">
+                </p>
+
+                <div id="result" class="tournament-result hide"></div>
+
+                <h2 class="pad-top">Understanding the result token</h2>
+                <p>A result token utilises the <i>JSON Web Token</i> standard to store game information. The token is also signed by so the information cannot be changed.</p>
+                <p>The deck <strong>checmsum</strong> is a unique hash generated from the deck each player played with. Changing a deck in any form will automatically result in a different checksum. Thereby, the tournament organisers can verify that a deck is identical throughout the tournament.</p>
+
+                <p class="center-image-round">
+                    <img src="/media/assets/resulttoken-example.png" alt="sample result">
+                </p>
+
+                <h2 class="pad-top">How to obtain the result token</h2>
+                <p>Therefore, when you have finished your game, a special result token will be created that contains all relevant game data and also a signature which guarantees its authenticity.
+                    <br>You can copy the result token via the <strong>Copy result to clipboard</strong> function automatically. If this fails, the token will be displayed and you can copy it manually.</p>
+                <p class="center-image-round">
+                    <img src="/media/assets/resulttoken.png" title="Result token" alt="result token">
+                </p>
+ 
+            </div>
+        </div>
+    </body>
+    <script src="/media/client/navigation/navigation.js"></script>
+    <script src="/media/client/notification/notification.js?version=230323a"></script>
+    <script src="/media/client/tournament.js"></script>
+</html>
