@@ -4,6 +4,7 @@ class ImageList {
     constructor()
     {
         this.g_ImageList = {};
+        this.g_ImageListMap = {};
         this.g_QuestList = {};
         this.g_nCountErrataDC = 0;
         this.g_nCountErrataIC = 0;
@@ -21,22 +22,19 @@ class ImageList {
 
     newImage(card, imageUrl) 
     {
-        let isDCErratum = card.ImageNameErrataDC !== undefined && card.ImageNameErrataDC !== "";
-        let isICErratum = false;
+        const isDCErratum = card.ImageNameErrataDC !== undefined && card.ImageNameErrataDC !== "";
         
         if (isDCErratum)
             this.g_nCountErrataDC++;
 
-        if (isICErratum)
-            this.g_nCountErrataIC++;
-
-        return {
-            title: card.title,
-            image: ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl),
-            ImageNameErrataDC : isDCErratum ? ImageList.createImageUrl(card.ImageNameErrataDC, card.set_code.toUpperCase(), imageUrl) : "",
-            errata_ic : "",
-            set_code: card.set_code.toUpperCase()
+        const data = {
+            image: ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl)
         };
+
+        if (isDCErratum)
+            data.ImageNameErrataDC = ImageList.createImageUrl(card.ImageNameErrataDC, card.set_code.toUpperCase(), imageUrl);
+
+        return data;
     }
 
     createImageList(jsonCards, imageUrl) 
@@ -50,6 +48,18 @@ class ImageList {
         console.log("\t- IC errata images available: " + this.g_nCountErrataIC);
         console.log("\t- DC errata images available: " + this.g_nCountErrataDC);
 
+        return list;
+    }
+
+    createImageListMap(jsonCards, imageUrl) 
+    {
+        let list = {};
+
+        for (let card of jsonCards) 
+        {
+            if (card.type === "Site" || card.type === "Region")
+                list[card.code] = this.newImage(card, imageUrl);
+        }
         return list;
     }
 
@@ -89,8 +99,14 @@ class ImageList {
         if (imageUrl !== undefined)
         {
             this.g_ImageList = this.createImageList(jsonCards, ImageList.removeEndingSlash(imageUrl));
+            this.g_ImageListMap = this.createImageListMap(jsonCards, ImageList.removeEndingSlash(imageUrl));
             this.g_QuestList = this.identifyQuestImages(jsonCards);
         }
+    }
+
+    getImageListMap()
+    {
+        return this.g_ImageListMap;
     }
 
     getImageList()

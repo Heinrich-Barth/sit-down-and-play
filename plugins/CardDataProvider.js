@@ -115,7 +115,7 @@ class CardDataProvider extends CardRepository {
     getMapdata(_imageList)
     {
         const data = this.cardsMap.mapdata;
-        data.images = this.pImageList.getImageList();
+        data.images = this.pImageList.getImageListMap();
         return data;
     }
 
