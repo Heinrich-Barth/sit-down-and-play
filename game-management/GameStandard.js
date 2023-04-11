@@ -40,6 +40,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/stagingarea/add/card", this.onStagingAreaAddCard.bind(this));
 
         this.getMeccgApi().addListener("/game/save", this.globalSaveGame.bind(this));
+        this.getMeccgApi().addListener("/game/save/auto", this.globalSaveGameAuto.bind(this));
         this.getMeccgApi().addListener("/game/restore", this.globalRestoreGame.bind(this));
         
         this.getMeccgApi().addListener("/game/dices/roll", this.rollDices.bind(this));
@@ -933,6 +934,14 @@ class GameStandard extends GamePlayers
         this.publishToPlayers("/game/company/location/reveal", userid, {company: data.companyUuid});
         /** todo: send target location here */
         this.publishChat(userid, " revealed locations.", true);
+    }
+
+    globalSaveGameAuto(_userid, socket)
+    {
+        /** allow autosave in 2 player game */
+        const data = this.getCount() !== 2 ? null : this.save();
+        if (data !== null)
+            this.replyToPlayer("/game/save/auto", socket, data);
     }
 
     globalSaveGame(_userid, socket)
