@@ -407,6 +407,28 @@ const SCORING = {
         document.getElementById("scoring-sheet").classList.remove("hidden");
     },
 
+    _showShutdownNotice: function()
+    {
+        if (document.getElementById("disconnection-notice") !== null)
+            return;
+
+        const div = document.createElement("div");
+        div.setAttribute("id", "disconnection-notice");
+        div.setAttribute("class", "disconnection-notice");
+
+        const h2 = document.createElement("h2");
+        h2.innerText = "Automatic disconnect";
+
+        const p = document.createElement("p");
+        p.innerText = "The server rebooted automatically (scheduled).";
+
+        div.appendChild(h2);
+        div.appendChild(p);
+        
+        const elem = document.getElementById("scoring-sheet").querySelector(".view-score-container");
+        elem.prepend(div);
+    },
+
     removeUpdateFunctionality(token)
     {
         const elem = document.getElementById("scoring-sheet");
@@ -438,6 +460,31 @@ const SCORING = {
 
         if (token !== "")
             table.appendChild(this.createTokenEntry(token));
+
+        this.appendSavegameInfo(table);
+    },
+
+    appendSavegameInfo(table)
+    {
+        if (typeof SavedGameManager === "undefined" || !SavedGameManager.hasAutoSave())
+            return;
+
+        const a = document.createElement("a");
+        a.innerText = " Save last autosave to disk";
+        a.setAttribute("href", "#");
+        a.setAttribute("title", "Save last autosave to disk");
+        a.setAttribute("class", "fa fa-floppy-o");
+        a.onclick = () => {
+            document.body.dispatchEvent(new CustomEvent("meccg-game-save-auto-to-disk", { "detail": "Store." }));
+            return false;
+        }
+
+        const p = document.createElement("p");
+        p.appendChild(a);
+        p.classList.add("center");
+        p.classList.add("result-autosave");
+
+        table.appendChild(p);
     },
 
     createTokenEntry : function(token)
@@ -499,9 +546,12 @@ const SCORING = {
         this._showScoreSheet(jData, true, "");
     },
     
-    showFinalScore : function(jData, stats, token)
+    showFinalScore : function(jData, stats, token, automaticShutdown)
     {
         this._showScoreSheet(jData, false, token);        
+
+        if (automaticShutdown)
+            this._showShutdownNotice();
         document.body.dispatchEvent(new CustomEvent("meccg-dice-stats", { "detail": stats }));
     },
 
@@ -661,9 +711,9 @@ function createScoringApp(_CardList)
             SCORING.showScoreSheetCards(jData);
         },
 
-        showFinalScore: function(score, stats, token)
+        showFinalScore: function(score, stats, token, automaticShutdown)
         {
-            SCORING.showFinalScore(score, stats, token);
+            SCORING.showFinalScore(score, stats, token, automaticShutdown);
         }
     };
 }

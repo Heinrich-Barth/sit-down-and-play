@@ -553,11 +553,15 @@ const GameBuilder = {
                 case "start":
                     if (bIsMe)
                         document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "It is your turn now" }));
-
+                        
                     GameBuilder.CompanyManager.onEnterStartPhase(bIsMe);
                     break;
                 case "organisation":
                     GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
+                    
+                    if (bIsMe && g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
+                        MeccgApi.send("/game/save/auto", {});
+
                     break;
                 case "movement":
                     GameBuilder.CompanyManager.onEnterMovementHazardPhase(bIsMe);
@@ -638,13 +642,13 @@ const GameBuilder = {
         MeccgApi.addListener("/game/score/final", function(_bIsMe, jData)
         {
             MeccgApi.disconnect();                    
-            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token);
+            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token, false);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
 
         MeccgApi.addListener("/game/score/final-only", function(_bIsMe, jData)
         {
-            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token);
+            GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token, true);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
         });
         

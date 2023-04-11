@@ -2,6 +2,12 @@
 const SavedGameManager = 
 {
     _currentGame : null,
+    _autosave: null,
+
+    hasAutoSave()
+    {
+        return SavedGameManager._autosave !== null;
+    },
 
     onRestoreSavedGame : function()
     {
@@ -191,6 +197,14 @@ const SavedGameManager =
         MeccgApi.send("/game/save", {});
     },
 
+    onRequestSaveAuto : function()
+    {
+        if (SavedGameManager._autosave === null)
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "No autosave available." }));
+        else
+            document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": SavedGameManager._autosave}));
+    },
+
     obtainSaveName : function(jGame)
     {
         let name = "";
@@ -223,9 +237,31 @@ const SavedGameManager =
             .join(""); // convert bytes to hex string
     },
 
+    onSaveGameAuto : function(jGame)
+    {
+        this.doSaveGame(jGame, (data) => {
+            if (data !== null)
+            {
+                SavedGameManager._autosave = data;
+                document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+                    name : "System",
+                    message : "Created autosave."
+                }}));
+            }
+        });
+    },
+
     onSaveGame : function(jGame)
     {
-        if (jGame === undefined || jGame === null)
+        this.doSaveGame(jGame, (data) => {
+            if (data !== null)
+                document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": det}));
+        });
+    },
+
+    doSaveGame : function(jGame, callback)
+    {
+        if (jGame === undefined || jGame === null || Object.keys(jGame).length === 0)
             return;
 
         try
@@ -258,7 +294,7 @@ const SavedGameManager =
                 .then((response) => response.json())
                 .then((response) => {
                     det.data.check = response.value;
-                    document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": det}));
+                    callback(det);
                 });
             });
         }
@@ -266,12 +302,15 @@ const SavedGameManager =
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not save game." }));
             console.log(err);
+            callback(null);
         }
     }
 };
 
 MeccgApi.addListener("/game/save", (bIsMe, jData) => SavedGameManager.onSaveGame(jData));
+MeccgApi.addListener("/game/save/auto", (bIsMe, jData) => SavedGameManager.onSaveGameAuto(jData));
 MeccgApi.addListener("/game/restore", (bIsMe, jData) => SavedGameManager.onRestored(jData));
 
 document.body.addEventListener("meccg-game-save-request", SavedGameManager.onRequestSave, false);
+document.body.addEventListener("meccg-game-save-auto-to-disk", SavedGameManager.onRequestSaveAuto, false);
 document.body.addEventListener("meccg-game-restore-request", SavedGameManager.onRequestLoad, false);
