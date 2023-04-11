@@ -41,7 +41,7 @@ Here are some essential features of this project:
 * Intuitive gameplay via drag and drop.
 * All works *in-memory* (no persistence necessary).
 * No user identity management needed (database server is not needed).
-+ Strict CSP header policy
+* Strict CSP header policy
 * Import cards from GCCG or other 3rd party card data provider.
 
 Special information about *development* can be accessed in a dedicated [README_development.md](README_development.md).
