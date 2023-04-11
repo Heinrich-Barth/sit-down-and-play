@@ -23,6 +23,11 @@ class GamePreferences extends Preferences {
         return true;
     }
 
+    isAdmin()
+    {
+        return g_sLobbyToken !== "";
+    }
+
     _dices()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-dice-chooser"));
@@ -43,6 +48,14 @@ class GamePreferences extends Preferences {
             table.classList.add("table-padding-bottom");
         else if (!isActive && table.classList.contains("table-padding-bottom"))
             table.classList.remove("table-padding-bottom");
+    }
+
+    _autosave(isActive)
+    {
+        if (isActive)
+            document.body.setAttribute("data-autosave", "true");
+        else if (document.body.hasAttribute("data-autosave"))
+            document.body.removeAttribute("data-autosave");
     }
 
     _backgroundDarkness(isActive)
@@ -128,7 +141,9 @@ class GamePreferences extends Preferences {
             return;
 
         this.createSection("Game");
-        this.createEntry0("game_addcards");       
+        this.createEntry0("game_addcards");   
+        if (this.isAdmin())
+            this.createEntry0("game_autosave");
         this.createEntry0("game_save");
         this.createEntry0("game_load");
         this.createEntry0("leave_game");
@@ -161,6 +176,7 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
+        this.addConfigToggle("game_autosave", "Save game at first player's turn", true, this._autosave);
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
@@ -200,6 +216,7 @@ class GamePreferences extends Preferences {
         if (this.data.background !== undefined)
             this.setBackgroundImage(this.data.background);
 
+        this._autosave(true);
     }
 
     initDices()
