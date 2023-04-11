@@ -26,11 +26,12 @@ Here is a [step by step guide](README_setup.md) how to set everything up. Detail
 
 The project allows you to 
 
-* Play Games (Singleplayer, Multiplayer 2-10, Arda Format)
+* Play Games (Singleplayer, Multiplayer 2+, Arda Format)
+* Save/Restore games
 * [Tournament Mode](README_tournamen.md)
 * Deckbuilder (gccg compatible format if card codes match)
 * Browse cards
-* Import a deck (copy&paste)
+* Import decks (copy&paste, gccg and cardnum compatible)
 * Browse maps and edit position markers
 
 ### Plattform Architecture
@@ -351,17 +352,16 @@ Of cource, this project would not be possible without the work of others, and cr
 
 The following third-party libraries. Be aware of their respective licenses.
 
-* Node.JS - Socket.io 4.0.0 (MIT License)
-* Node.JS - Express 4.17.1 (MIT License)
-* Node.JS - Express cookie-parser 1.4.5 (MIT License)
-* jQuery 3.5.1 (MIT License)
+* Node.JS - Socket.io (MIT License)
+* Node.JS - Express (MIT License)
+* Node.JS - Express cookie-parser (MIT License)
+* jQuery 3.5.1 (MIT License), only used in connection to jQuery UI
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)
 * jQuery UI Touch Punch (MIT License)
 * leafletjs 1.7.1 (BSD 2-Clause "Simplified" License)
 
 ### HTML / CSS 
 
-* Some CSS is taken from https://html5up.net (MIT License)
 * The CSS colours and some design ideas were taken from https://github.com/mtgred/netrunner (MIT License)
 * Font Awesome Free, see https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 
