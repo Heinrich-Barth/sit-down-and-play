@@ -8,11 +8,12 @@ const getNavigationJson = function(_req, res)
 {
     let targetList = [];
     targetList.push(navigationEntry("/play", "Play a game", false));
-    targetList.push(navigationEntry("/tournament", "tournament", false));
+    targetList.push(navigationEntry("/tournament", "Tournament", false));
     targetList.push(navigationEntry("/deckbuilder", "Deckbuilder", false));
     targetList.push(navigationEntry("/converter", "Import Deck", false));
     targetList.push(navigationEntry("/map/regions", "Region Map", true));
     targetList.push(navigationEntry("/map/underdeeps", "Underdeeps Map", true));
+    targetList.push(navigationEntry("/help", "Learn to play", false));
     targetList.push(navigationEntry("/about", "About", false));
     res.send(targetList).status(200)
 };
