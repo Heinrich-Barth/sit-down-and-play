@@ -18,7 +18,10 @@ if (document.body.getAttribute("data-is-watcher") !== "true")
 
             /* R */
             case "r":
-                document.getElementById("playercard_hand").querySelector(".card-dice").dispatchEvent(new Event("click"));
+                if (CardPreview.currentCharacterId !== undefined && CardPreview.currentCharacterId !== "")
+                    document.getElementById(CardPreview.currentCharacterId).querySelector(".card-dice").dispatchEvent(new Event("click"));
+                else
+                    document.getElementById("playercard_hand").querySelector(".card-dice").dispatchEvent(new Event("click"));
                 break;
 
             /* D */

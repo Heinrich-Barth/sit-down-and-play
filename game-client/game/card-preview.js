@@ -7,6 +7,7 @@ CardPreview.lastActive = Date.now();
 CardPreview.allowIdleMax = 1000 * 60 * 15;
 CardPreview.idleForceShutdown = null;
 CardPreview.idleCountdownActive = false;
+CardPreview.currentCharacterId = "";
 
 CardPreview.getTargetContainer = function(bLeft, bTop)
 {
@@ -56,9 +57,6 @@ CardPreview.addHover = function(id, bRight, bTop)
 
 CardPreview.getElementPositionIsLeft = function(elem)
 {
-    if (elem === null)
-        return null;
-
     const elemLeft = elem.getBoundingClientRect().x - window.scrollX;
     const windowHalf = window.innerWidth / 2;
     return elemLeft < windowHalf;
@@ -80,21 +78,36 @@ CardPreview.show = function(img, bLeft, bTop)
         bTop = true;
 
     const elem = CardPreview.getTargetContainer(bLeft, bTop);
-    if (elem !== null)
-    {
-        DomUtils.removeAllChildNodes(elem);
+    if (elem === null)
+        return;
 
-        const pImage = document.createElement("img");
-        pImage.setAttribute("src", img);
-        pImage.setAttribute("crossorigin", "anonymous");
+    DomUtils.removeAllChildNodes(elem);
 
-        elem.appendChild(pImage);
-        elem.classList.remove("hidden");
-    }
+    const pImage = document.createElement("img");
+    pImage.setAttribute("src", img);
+    pImage.setAttribute("crossorigin", "anonymous");
+
+    elem.appendChild(pImage);
+    elem.classList.remove("hidden");
 };
+
+CardPreview.onHoverCharacter = function(img)
+{
+    CardPreview.currentCharacterId = "";
+    
+    const parent = img.parentElement;
+    if (parent === null || parent.getAttribute("data-card-type") !== "character")
+        return;
+
+    const id = parent.getAttribute("id");
+    if (id !== null)
+        CardPreview.currentCharacterId = id;
+}
 
 CardPreview.hide = function(bLeft, bTop)
 {
+    CardPreview.currentCharacterId = "";
+
     const elem = CardPreview.getTargetContainer(bLeft, bTop);
     if (elem !== null)
     {
@@ -118,29 +131,7 @@ CardPreview.initMapViewCard = function(elem)
     elem.onmouseout = () => CardPreview.hide(false, true);
 };
 
-CardPreview.isLeft = function(elem)
-{
-    return elem.getAttribute("data-view-left") === "true";
-};
-
-CardPreview.isTop = function(elem)
-{
-    return elem.getAttribute("data-view-top") === "true";
-};
-
-CardPreview.isShowAlways = function(elem)
-{
-    return elem.getAttribute("data-view-always") === "true";
-};
-
-CardPreview.setPosition = function(pThis, bLeft, bTop, bShowAlways)
-{
-    pThis.setAttribute("data-view-left", bLeft);
-    pThis.setAttribute("data-view-top", bTop);
-    pThis.setAttribute("data-view-always", bShowAlways);
-};
-
-CardPreview.initGeneric = function(cardDiv, bLeft, bTop, bShowAlways)
+CardPreview.initGeneric = function(cardDiv)
 {
     if (cardDiv === null)
         return;
@@ -150,21 +141,20 @@ CardPreview.initGeneric = function(cardDiv, bLeft, bTop, bShowAlways)
 
     for (let i  = 0; i < size; i++)
     {
-        let pThis = list[i];
-        CardPreview.setPosition(pThis, bLeft, bTop, bShowAlways);
+        const pThis = list[i];
         pThis.onmouseover = CardPreview._doHoverOnGuard;        
         pThis.onmouseout = CardPreview.hideAll;
     }
 };
 
-CardPreview.initOnGuard = function(cardDiv, bLeft, bTop)
+CardPreview.initOnGuard = function(cardDiv)
 {
-    CardPreview.initGeneric(cardDiv, bLeft, bTop, true);
+    CardPreview.initGeneric(cardDiv, true);
 };
 
-CardPreview.init = function(cardDiv, bLeft, bTop)
+CardPreview.init = function(cardDiv)
 {
-    CardPreview.initGeneric(cardDiv, bLeft, bTop, false);
+    CardPreview.initGeneric(cardDiv, false);
 };
 
 CardPreview._getImage = function(elem)
@@ -210,15 +200,11 @@ CardPreview.showImage = function(elem)
 
     if (elem !== null)
     {
-        let isLeft = CardPreview.getElementPositionIsLeft(elem);
-        if (isLeft === null)
-            isLeft = CardPreview.isLeft(elem);
-
-        CardPreview.show(CardPreview._getImage(elem), !isLeft, true); //CardPreview.isLeft(elem), CardPreview.isTop(elem));
+        const isLeft = CardPreview.getElementPositionIsLeft(elem);
+        CardPreview.show(CardPreview._getImage(elem), !isLeft, true);
+        CardPreview.onHoverCharacter(elem);
     }
 };
-
-
 
 CardPreview._initView = function(sId)
 {
