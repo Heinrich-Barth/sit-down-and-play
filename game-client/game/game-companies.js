@@ -500,9 +500,9 @@ const GameCompanies = {
         ArrayList(elemList).find(".card").each(function (div)
         {
             if (bIsMe)
-                GameCompanies.CardPreview.initOnGuard(div, true, bIsMe);
+                GameCompanies.CardPreview.initOnGuard(div);
             else
-                GameCompanies.CardPreview.init(div, true, bIsMe);
+                GameCompanies.CardPreview.init(div);
 
             GameCompanies.initSingleCardEvent(div, false);
         });

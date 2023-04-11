@@ -154,9 +154,9 @@ class GameCompanyLocation
         }
 
         if (isPlayersCompany)
-            this.CardPreview.init(pCard, true, true);
+            this.CardPreview.init(pCard);
         else
-            this.CardPreview.initOnGuard(pCard, true, false);
+            this.CardPreview.initOnGuard(pCard);
 
         this.pGameCompanies.initSingleCardEvent(pCard, true);
         
@@ -264,9 +264,9 @@ class GameCompanyLocation
             for (let i = 0; i < len; i++)
             {
                 if ((bIsPlayer && !_isOnGuard) || (!bIsPlayer && _isOnGuard))
-                    this.CardPreview.initOnGuard(list[i], true, bIsPlayer);
+                    this.CardPreview.initOnGuard(list[i]);
                 else
-                    this.CardPreview.init(list[i], true, bIsPlayer);
+                    this.CardPreview.init(list[i]);
             }
         });
     }
