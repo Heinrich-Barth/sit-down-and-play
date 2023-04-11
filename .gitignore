@@ -21,3 +21,6 @@ keepalive.js
 
 plugins/namelist.json
 data-local/
+
+plugins/authentication-file.js
+plugins/authentication-login.html
