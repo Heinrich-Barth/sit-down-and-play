@@ -98,8 +98,7 @@ a:hover {
 }
 
 .card-bar.card-bar-shared {
-  top: 40%;
-  transform: translateY(-50%);
+  top: 170px;
   position: absolute;
   max-height: 150px;
 }
@@ -213,6 +212,8 @@ a:hover {
 }
 .taskbar a {
   margin: 5px;
+  width: 20px;
+  height: 20px;
 }
 .taskbar a:first-of-type {
   margin-left: 10px;
@@ -242,7 +243,7 @@ a:hover {
 .icons a:hover {
   display: inline-block;
   cursor: pointer;
-  background-size: 32px 32px !important;
+  background-size: contain !important;
 }
 .icons a {
   border: 3px solid transparent;
@@ -642,7 +643,7 @@ img.card-icon {
 }
 .view-card-list-container a,
 .view-card-list-container a:hover {
-  background-size: 20px 20px !important;
+  background-size: contain !important;
 }
 .view-card-list-container.view-playdeck {
   cursor: default;
@@ -702,7 +703,7 @@ img.card-icon {
 }
 #playercard_hand_container a.discardpile,
 #playercard_hand_container a.discardpile:hover {
-  background-size: 20px 20px !important;
+  background-size: contain !important;
   background-position-x: 0px;
   background-position-y: 0px;
 }
@@ -771,7 +772,7 @@ img.card-icon {
 }
 .companies .company .character-card-dice {
   position: absolute;
-  right: 0;
+  left: 30px;
   bottom: 2px;
   width: 30px;
   height: 20px;
