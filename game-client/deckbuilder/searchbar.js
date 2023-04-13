@@ -17,6 +17,15 @@ const SearchBar = {
 
         for (let _id of vsOnChange)
             document.getElementById(_id).onchange = () => SearchBar.onTriggerSearch();
+
+        const dce = document.getElementById("view_card_dce");
+        if (dce !== null)
+        {
+            dce.onchange = () => {
+                g_pCardList.setUseImagesDC(document.getElementById("view_card_dce").value !== "false");
+                SearchBar.onTriggerSearch();
+            }
+        }
     },
 
     onTriggerSearch : function()
@@ -29,7 +38,8 @@ const SearchBar = {
             type : document.getElementById("view_card_type").value,
             set : document.getElementById("view_card_set").value,
             keyword : document.getElementById("view_card_keyword").value,
-            skill : document.getElementById("view_card_skill").value
+            skill : document.getElementById("view_card_skill").value,
+            dce: document.getElementById("view_card_dce").value === "true"
         };
 
         let res = "";
@@ -50,6 +60,9 @@ const SearchBar = {
         SearchBar.fillSelect("view_card_skill", e.detail.skills, "_all");
         SearchBar.fillSelectSet("view_card_set", e.detail.sets);
         SearchBar.initFormFields();
+
+        /** avoid loading time by postponing an auto search */
+        setTimeout(SearchBar.onTriggerSearch.bind(SearchBar), 100);
     },
 
     fillSelectSet : function(sId, sortedList)
@@ -193,6 +206,12 @@ const SearchBar = {
                     </div>
                     <div class="field">
                         <select id="view_card_skill" data-name="Skill"></select>
+                    </div>
+                    <div class="field">
+                        <select id="view_card_dce" data-name="dce">
+                        <option value="true">Show latest DC errata</option>
+                        <option value="false">Ignore all DC errata</option>
+                        </select>
                     </div>
                 </div>`;
         elem.appendChild(form);
