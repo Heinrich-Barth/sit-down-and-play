@@ -411,6 +411,12 @@ const getSocialMediaAction = function()
         return "none";
 }
 
+const isCheckedInput = function(id)
+{
+    const elem = document.getElementById(id);
+    return elem === null || elem.checked !== false;
+}
+
 
 const onPerformLogin = function()
 {
@@ -431,7 +437,9 @@ const onPerformLogin = function()
 
     const bodyData = {
         name: sName,
+        dce: isCheckedInput("toggle_allow_dce"),
         share: getSocialMediaAction(),
+        jitsi: isCheckedInput("toggle_jitsi"),
         deck: jDeck
     }
 
@@ -717,6 +725,47 @@ const loadSampleUserName = function()
     }));
 };
 
+const onChangeJitsiSelection = function(e)
+{
+    const isTrue = e.target.checked;
+    const elem = document.getElementById("jitsi_link")
+    if (elem == null)
+        return;
+
+    if (elem.classList.contains("hidden") && isTrue)
+        elem.classList.remove("hidden");
+    else if (!elem.classList.contains("hidden") && !isTrue)
+        elem.classList.add("hidden");
+}
+
+/**
+ * Sanitize and encode all HTML in a user-submitted string
+ * https://portswigger.net/web-security/cross-site-scripting/preventing
+ * @param  {String} str  The user-submitted string
+ * @return {String} str  The sanitized string
+ */
+const sanitizeString = function (str) 
+{
+	return str.replace(/[^\w. ]/gi, function (c) {
+		return '&#' + c.charCodeAt(0) + ';';
+	});
+};
+
+const initJitsiSelection = function()
+{
+    const link = document.getElementById("jitsi_link");
+    const jitsi = document.getElementById("toggle_jitsi");
+    const roomName = sanitizeString(getRoomName());
+    if (link === null || jitsi === null || roomName === "")
+        return;
+
+    const url = "https://meet.jit.si/" + roomName
+
+    jitsi.onchange = onChangeJitsiSelection;
+    link.setAttribute("href", url);
+    link.setAttribute("target", "_blank");
+}
+
 const g_pDeckTextFields = new DeckTextFields();
 
 (function () {
@@ -735,6 +784,8 @@ const g_pDeckTextFields = new DeckTextFields();
    
 
     document.getElementById("host").onclick = onCheckCardCodes;
+
+    initJitsiSelection();
 
     fetch("/data/decks").then((response) => response.json().then(onLoadDecks))
     .catch((err) => 

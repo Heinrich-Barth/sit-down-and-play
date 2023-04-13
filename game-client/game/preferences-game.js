@@ -162,10 +162,16 @@ class GamePreferences extends Preferences {
         return document.body.getAttribute("data-is-watcher") === "true";
     }
 
+    getUseDCByDefault()
+    {
+        return !document.body.hasAttribute("data-use-dce") || document.body.getAttribute("data-use-dce") !== "false";
+    }
+
     addConfiguration()
     {
+        
         this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
-        this.addConfigToggle("images_errata_dc", "Use CoE Errata", true);
+        this.addConfigToggle("images_errata_dc", "Use CoE Errata", this.getUseDCByDefault());
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        

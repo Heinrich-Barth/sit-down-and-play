@@ -27,6 +27,28 @@ class GameRoom
         this.socialMedia = false;
         this.allowAccessPlayer = true;
         this.allowAccessVisitor = true;
+        this.useDCEbyDefault = true;
+        this.jitsi = false;
+    }
+
+    setUseDCE(bUse)
+    {
+        this.useDCEbyDefault = bUse === true;
+    }
+
+    setUseJitsi(bUse)
+    {
+        this.jitsi = bUse;
+    }
+
+    useJitsi()
+    {
+        return this.jitsi;
+    }
+
+    useDCE()
+    {
+        return this.useDCEbyDefault === true;
     }
 
     getGameLog()
@@ -341,7 +363,6 @@ class GameRoom
             _player = this.players[userid];
             if (_player.isAdmin())
             {
-                console.info("send savegame to player");
                 this.game.publishToPlayers("/game/score/final-only", userid, this.game.getFinalScore());
                 this.game.publishToPlayers("/disconnect/shutdown", userid, {});
                 this.game.globalSaveGame(userid, _player.getSocket());

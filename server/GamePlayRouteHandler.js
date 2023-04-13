@@ -306,6 +306,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             const room = req.room;
             const jData = JSON.parse(req.body.data);
             const displayname = jData.name;
+            const useDCE = jData.dce === true;
+            const useJitsi = jData.jitsi === true;
             const shareMessage = typeof jData.share === "string" ? jData.share : "";
 
             /**
@@ -324,8 +326,15 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             /** Now, check if there already is a game for this Room */
             const userId = this.requireUserId(req);
 
+            const roomOptions = {
+                arda: this.isArda(),
+                singleplayer: this.isSinglePlayer(),
+                dce: useDCE,
+                jitsi:  useJitsi
+            };
+
             /** add player to lobby */
-            const lNow = this.getServerInstance().roomManager.addToLobby(room, userId, displayname, jDeck, this.isArda(), this.isSinglePlayer());
+            const lNow = this.getServerInstance().roomManager.addToLobby(room, userId, displayname, jDeck, roomOptions);
             if (lNow === -1)
             {
                 /** ghost game */

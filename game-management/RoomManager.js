@@ -58,12 +58,22 @@ class RoomManager {
             return null;
     }
 
-    _createRoom(room, isArda, isSinglePlayer, userId) 
+    _createRoom(room, userId, options) 
     {
+        const isArda = options.arda;
+        const isSinglePlayer = options.singleplayer;
+        const useDCE = options.dce;
+        const jitsi = options.jitsi;
+
         if (this._rooms[room] === undefined)
         {
             this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
             
+            if (!useDCE)
+                this._rooms[room].setUseDCE(false);
+            if (jitsi)
+                this._rooms[room].setUseJitsi(true);
+
             if (this.roomCountAll.length >= 10)
                 this.roomCountAll.shift();
 
@@ -215,6 +225,9 @@ class RoomManager {
                 arda : pRoom.getGame().isArda(),
                 created : new Date(pRoom.getCreated()).toUTCString(),
                 time: pRoom.getCreated(),
+                visitors: pRoom.canJoinVisitor(),
+                jitsi: pRoom.useJitsi(),
+                accessible: pRoom.canJoinPlayer(),
                 players : []
             }
 
@@ -701,18 +714,19 @@ class RoomManager {
      * @param {String} userId 
      * @param {String} displayname 
      * @param {JSON} jDeck 
+     * @param {JSON} roomOptions Room Options
      * @returns Timestamp when joined or -1 on error
      */
-    addToLobby(room, userId, displayname, jDeck, isArda, isSinglePlayer) 
+    addToLobby(room, userId, displayname, jDeck, roomOptions) 
     {
-        const pRoom = this._createRoom(room, isArda, isSinglePlayer, userId);
+        const pRoom = this._createRoom(room, userId, roomOptions);
         const isFirst = pRoom.isEmpty();
 
         /** a singleplayer game cannot have other players and a ghost game about to die should not allow new contestants */
         if (!isFirst && (pRoom.getGame().isSinglePlayer() || !this.gameIsActive(pRoom)))
             return -1;
 
-        if (pRoom.getGame().isArda() && !isSinglePlayer)
+        if (pRoom.getGame().isArda() && !roomOptions.singleplayer)
             this._eventManager.trigger("arda-prepare-deck", this.gameCardProvider, jDeck, isFirst);
 
         const lNow = Date.now();
@@ -774,10 +788,12 @@ class RoomManager {
         const isSinglePlayer = pRoom.getGame().isSinglePlayer() ? "true" : "false";
         const tplDice = dice === undefined || dice.indexOf(".") !== -1 ? "" : dice;
         const conCount = pRoom.getConnectionCount(userId);
+        const useDCE = pRoom.useDCE() ? "true" : "false";
 
         return this.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
+            .replace("{TPL_USE_DCE}", useDCE)
             .replace("{TPL_LOBBY_TOKEN}", sLobbyToken)
             .replace("{TPL_USER_ID}", userId)
             .replace("{TPL_DICE}", tplDice)
