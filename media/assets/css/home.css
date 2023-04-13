@@ -191,6 +191,13 @@ body, p {
 .game-list tr td:first-child {
   padding-right: 10px;
 }
+.game-list tr .game-link a {
+  display: inline-block;
+}
+.game-list tr .game-duration {
+  margin-left: 10px;
+  font-size: 0.85em;
+}
 .game-list tr .action {
   width: 100px;
 }

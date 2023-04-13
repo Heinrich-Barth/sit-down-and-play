@@ -38,6 +38,11 @@ const toNumberString = function(nValue)
 
 const addGameTypes = function(container, data, isArda, existing)
 {
+    /*
+    visitors: pRoom.canJoinVisitor(),
+    jitsi: pRoom.useJitsi(),
+    accessible: pRoom.canJoinPlayer(),
+     */
     for (let value of data)
     {
         if (isArda !== value.arda)
@@ -55,14 +60,36 @@ const addGameTypes = function(container, data, isArda, existing)
         else
             lMins = "now";
 
-        const since = (isArda ? "Arda, " : "") + "since " + lMins 
+        const since = (isArda ? "Arda, " : "") + "" + lMins 
         
         const _tr = document.createElement("tr");
-        _tr.innerHTML = `
-                        <td class="action"><a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a></td>
-                        <td class="action"><a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> join</a></td>
-                        <td class="name">${_room} (${since})</td>
-                        <td class="players">${_players}</td>`.trim();
+        const tdRoom = document.createElement("td");
+        _tr.appendChild(tdRoom);
+        tdRoom.setAttribute("class", "name game-link");
+        if (value.accessible)
+            tdRoom.innerHTML = `<a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> ${_room}</a> <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+        else
+            tdRoom.innerHTML = `${_room} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+
+        const tdJitsi = document.createElement("td");
+        _tr.appendChild(tdJitsi);
+        tdJitsi.setAttribute("class", "action");
+        if (value.jitsi)
+            tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone"> via Jitsi</a> `;
+        else
+            tdJitsi.innerHTML = `<span class="fa fa-microphone"> via Discord</span> `;
+
+        const tdWatch = document.createElement("td");
+        _tr.appendChild(tdWatch);
+        tdWatch.setAttribute("class", "action");
+        if (value.visitors)
+            tdWatch.innerHTML = `<a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a>`;
+
+        const tdPlayers = document.createElement("td");
+        _tr.appendChild(tdPlayers);
+        tdPlayers.setAttribute("class", "players");
+        tdPlayers.innerText = _players;
+
         container.appendChild(_tr);
         existing.push(_room)
     }
