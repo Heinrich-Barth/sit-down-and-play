@@ -18,6 +18,9 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     this._imageCDNUrl = "";
     this._isReady = false;
 
+    if (document.body.hasAttribute("data-use-dce") && document.body.getAttribute("data-use-dce") === "false")
+        this._useImagesDC = false;
+
     const pThat = this;
     if (Object.keys(this._list).length === 0)
     {
@@ -63,6 +66,11 @@ CardList.prototype.getFlipSide = function(code)
         return this._imageBacksideDefault;
     else
         return this.getImage(sBacksideCode);
+};
+
+CardList.prototype.setUseImagesDC = function(bUse)
+{
+    this._useImagesDC = bUse !== false;
 };
 
 CardList.prototype.useImagesDC = function()
