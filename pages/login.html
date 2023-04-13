@@ -31,10 +31,14 @@
 
                 </div>
                 <p class="arda-text" id="game-type">
-                    Choose a game type:<span class="label-after"></span>
+                    Choose a game type<span class="label-after"></span>
                     <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label for="toggle_isarda"><strong>Arda</strong></label><span class="label-after"></span>
                     <input type="radio" checked="checked" id="toggle_isstandard" value="standard" name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label><span class="label-after"></span>
                     <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                    <span class="label-newline"></span>
+                    Errata Settings <input type="checkbox" id="toggle_allow_dce" value="true" checked name="dce_errata"><label for="toggle_allow_dce">Use <strong>DC errata</strong></label>
+                    <span class="label-newline"></span>
+                    Voice Chat Settings <input type="checkbox" id="toggle_jitsi" value="jitsi" name="voice_jitsi"><label for="toggle_jitsi">Use <strong>Jitsi</strong> instead of Discord</label><a href="#" class="hidden" id="jitsi_link">(click to join voice chat in a new tab)</a>
                 </p>
                 <div class="fields hidden" id="invalid-cards-info">
                     <h2>Invalid Codes found</h2>
@@ -60,13 +64,13 @@
         </div>
     </div>
     
-    <script src="/media/client/game/libraries.js?version=230205"></script>
-    <script src="/media/client/decktextfields/index.js?version=230205"></script>
-    <script defer src="/media/client/notification/notification.js?version=230205"></script>
-    <script defer src="/media/client/dropfile-generic.js?version=230205"></script>
-    <script defer src="/media/client/deck/read.js?version=230205"></script>
-    <script defer src="/media/client/login.js?version=20230305?version=230205"></script>
-    <script defer src="/media/client/navigation/navigation.js?version=230205"></script>
+    <script src="/media/client/game/libraries.js?version=230412"></script>
+    <script src="/media/client/decktextfields/index.js?version=230412"></script>
+    <script defer src="/media/client/notification/notification.js?version=230412"></script>
+    <script defer src="/media/client/dropfile-generic.js?version=230412"></script>
+    <script defer src="/media/client/deck/read.js?version=230412"></script>
+    <script defer src="/media/client/login.js?version=20230305?version=230412"></script>
+    <script defer src="/media/client/navigation/navigation.js?version=230412"></script>
 </body>
 
 </html>
