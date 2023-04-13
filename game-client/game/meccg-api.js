@@ -6,6 +6,7 @@ const MeccgPlayers = {
     room : "",
     _interval : null,
     usermap : null,
+    _isMyTurn: true,
 
     isChallenger : function(sid)
     {
@@ -15,6 +16,16 @@ const MeccgPlayers = {
     getChallengerId : function()
     {
         return this.myId;
+    },
+
+    setMyTurn : function(bIsMyTurn)
+    {
+        MeccgPlayers._isMyTurn = bIsMyTurn;
+    },
+
+    isMyTurn : function()
+    {
+        return MeccgPlayers._isMyTurn === true;
     },
 
     visitorAddNameToOpponent: function(e)

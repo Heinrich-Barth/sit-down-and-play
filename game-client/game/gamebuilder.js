@@ -548,6 +548,8 @@ const GameBuilder = {
             /** maybe notify on hand size */
             GameBuilder.onResolveHandNotification(sPhase);
 
+            MeccgPlayers.setMyTurn(bIsMe);
+
             switch(sPhase)
             {
                 case "start":
