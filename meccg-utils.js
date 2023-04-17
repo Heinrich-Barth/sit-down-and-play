@@ -1,22 +1,14 @@
-
-const g_sUUIDTpl = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-const g_sUUIDLength = g_sUUIDTpl.length;
-
-const replaceTplUUID = function(c)
-{
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-}
+const crypto = require("crypto");
+const g_sUUIDLength = crypto.randomUUID().length;
 
 const generateUuid = function () 
 {
-    return g_sUUIDTpl.replace(/[xy]/g, replaceTplUUID);
+    return crypto.randomUUID();
 };
 
 const generateFlatUuid = function()
 {
-    const sTpl = "xxxxxxxx_xxxx_xxxx_xxxx_xxxxxxxxxxxx";
-    return sTpl.replace(/[xy]/g, replaceTplUUID);
+    return generateUuid().replaceAll("-", "_");
 };
 
 const isAlphaNumeric = function(sInput)
@@ -97,7 +89,7 @@ exports.createContentSecurityPolicyMegaAdditionals = function(csp_image_domain)
 
 /**
  * Create a unique user id
- * @returns UUID String
+ * @returns String
  */
  exports.createContentSecurityPolicySelfOnly = function()
  {
