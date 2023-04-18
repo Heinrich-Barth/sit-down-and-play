@@ -15,9 +15,18 @@
 .game-watch-only #playercard_hand
 {
     min-height: 50px;
-    right: 5px;
-    left: auto;
+    padding: 0;
+    min-width: auto;
+    max-width: none;
+    bottom: auto;
+    top: 35px;
+    left: 40px;
 }
+
+.game-watch-only #playercard_hand .icons { margin-bottom: 0;}
+.game-watch-only #playercard_hand .icon { display: none; }
+.game-watch-only #playercard_hand .icon.act { display: inline-block; }
+.game-watch-only #playercard_hand .task_overlay { background-color: transparent;}
 
 .game-watch-only .company-characters-add
 {
@@ -94,7 +103,10 @@
 .game-watch-only .icons a.hand 
 {
     height: 20px;
+    width: 50px;
+    margin-bottom: 10px;
     background-position-y: 0;
+    background-position-x: center;
 }
 
 .game-watch-only .card-bar.card-bar-shared
