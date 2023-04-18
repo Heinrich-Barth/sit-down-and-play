@@ -72,9 +72,7 @@
 
     .navigation {
 
-        position: absolute;
-        top: 1em;
-        left: 0;
+        position: relative;
         width: 100%;
         line-height: 1.5em;
         z-index: 101;
@@ -102,5 +100,10 @@
             display: inline-block;
             text-align: center;
         }
+    }
+
+    .content .inner-content
+    {
+        padding-top: 1em;
     }
 }

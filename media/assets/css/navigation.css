@@ -54,9 +54,7 @@
 }
 
 .navigation-full-width .navigation {
-  position: absolute;
-  top: 1em;
-  left: 0;
+  position: relative;
   width: 100%;
   line-height: 1.5em;
   z-index: 101;
@@ -83,4 +81,7 @@
 .navigation-full-width .navigation li {
   display: inline-block;
   text-align: center;
+}
+.navigation-full-width .content .inner-content {
+  padding-top: 1em;
 }
