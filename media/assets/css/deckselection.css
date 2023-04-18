@@ -142,7 +142,7 @@ h2 {
 
 .content {
   color: #fff;
-  background: linear-gradient(170deg, transparent, rgb(0, 0, 0) 40%);
+  background: linear-gradient(179deg, transparent, rgb(0, 0, 0) 80%);
   border-top: 0;
   padding: 0;
   min-height: 100vh;
@@ -258,6 +258,16 @@ h3 {
   flex: 30%;
 }
 
+@media (max-width: 540px) {
+  .content .fields-join input,
+  .content .fields-join button {
+    width: 100%;
+    display: block;
+  }
+  .content .fields-join button {
+    margin-top: 10px;
+  }
+}
 /* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (max-width: 767.98px) {
   .deck-grid {

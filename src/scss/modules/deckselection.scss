@@ -20,7 +20,7 @@ h2 {
 }
 .content {
     color: $color-white;
-    background:linear-gradient(170deg, transparent, rgba(0,0,0,1) 40%);
+    background:linear-gradient(179deg, transparent, rgb(0, 0, 0) 80%);
     border-top: 0;
     padding: 0;
     min-height: 100vh;
@@ -164,6 +164,22 @@ h3 {
             flex: 30%;
         }
 
+    }
+}
+
+@media (max-width: 540px) 
+{
+    .content .fields-join 
+    {
+        input,
+        button {
+            width: 100%;
+            display: block;
+        }
+
+        button {
+            margin-top: 10px;
+        }
     }
 }
 
