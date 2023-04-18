@@ -255,7 +255,7 @@ const SavedGameManager =
     {
         this.doSaveGame(jGame, (data) => {
             if (data !== null)
-                document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": det}));
+                document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": data}));
         });
     },
 
