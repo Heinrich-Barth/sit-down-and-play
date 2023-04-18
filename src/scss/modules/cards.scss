@@ -220,7 +220,7 @@ body {
             height: 16px;
             width: 16px;
             background-position: 0 1px !important;
-            background-size: 16px 16px !important;
+            background-size: contain !important;
         }
         .deckname {
             display: inline;

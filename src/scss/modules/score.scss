@@ -147,6 +147,7 @@
             transform: translate(50%, -50%);
             font-size: 1.1em;
 
+            .result-autosave a,
             .result-token a,
             .return-to-lobby a{
                 display: block !important;
@@ -156,6 +157,16 @@
 
                 &:hover {
                     color: #ffa500;
+                }
+            }
+
+            .disconnection-notice {
+                text-align: center;
+                h2 {
+                    font-size: 1em;
+                }
+                p {
+                    color: #fff;
                 }
             }
         }
@@ -249,7 +260,7 @@
     }
 
     .view-card-list-container a {
-        background-size: 20px 20px !important;
+        background-size: contain !important;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 5px;
         width: 20px;
@@ -264,7 +275,7 @@
         a,
         a:hover
         {
-            background-size: 20px 20px !important;   
+            background-size: contain !important;   
         }
     }
 }

@@ -44,6 +44,8 @@ a {
 
     a {
         margin: 5px;
+        width: 20px;
+        height: 20px;
 
         &:first-of-type {
             margin-left: 10px;
@@ -327,7 +329,7 @@ img.card-icon {
 
     a.discardpile,
     a.discardpile:hover {
-        background-size: 20px 20px !important;
+        background-size: contain !important;
         background-position-x: 0px;
         background-position-y: 0px;
     }
@@ -413,7 +415,7 @@ img.card-icon {
 
         .character-card-dice {
             position: absolute;
-            right: 0;
+            left: 30px;
             bottom: 2px;
             width: 30px;
             height: 20px;
