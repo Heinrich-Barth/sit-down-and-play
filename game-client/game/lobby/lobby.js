@@ -9,7 +9,7 @@ const Lobby = {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/client/game/lobby/lobby.css?t=" + Date.now());
+        styleSheet.setAttribute("href", "/media/client/game/lobby/lobby.css?version=" + Date.now());
         document.head.appendChild(styleSheet);
     },
 
@@ -95,6 +95,13 @@ const Lobby = {
             const elem = document.getElementById("visitor-wrapper");
             Lobby.onClickToggleSetValue(elem, false, "Visitors cannot join this game");
         }
+    },
+
+    triggerLockRoom()
+    {
+        const elem = document.getElementById("lobby-wrapper");
+        if (elem !== null && elem.hasAttribute("data-allow") && elem.getAttribute("data-allow") === "true")
+            Lobby.onClickToggleUsers();
     }
 };
 

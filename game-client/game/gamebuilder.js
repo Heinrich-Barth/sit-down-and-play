@@ -6,6 +6,7 @@ const GameBuilder = {
     _hiddenStartPhase : false,
     _saved : { },
     _isVisitor : false,
+    _lockRoom : false,
 
     CardList : null,
     CardPreview : null,
@@ -29,6 +30,34 @@ const GameBuilder = {
         
         GameBuilder.initRestEndpoints();
         GameBuilder.initAdditionals();
+
+        if (!GameBuilder._isVisitor && g_sLobbyToken !== "")
+            GameBuilder._lockRoom = GameBuilder.isFirstConnection();
+    },
+
+    triggerLockRoom : function()
+    {
+        if (!GameBuilder._lockRoom)
+            return;
+
+        GameBuilder._lockRoom = false;
+        if (typeof Lobby !== "undefined" && typeof Lobby.triggerLockRoom === "function")
+            Lobby.triggerLockRoom();
+    },
+
+    isFirstConnection : function()
+    {
+        try
+        {
+            const val = document.body.hasAttribute("data-connected-count") ? document.body.getAttribute("data-connected-count") : "";
+            return val !== "" && parseInt(val) === 0;
+        }
+        catch (err)
+        {
+            console.error(err);            
+        }
+
+        return false;
     },
 
     updateSpecatorCounter: function()
@@ -604,6 +633,9 @@ const GameBuilder = {
 
             if (bIsMe || GameBuilder.isVisitor())
                 document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
+
+            if (sPhase !== "start")
+                GameBuilder.triggerLockRoom();
         });
 
         MeccgApi.addListener("/game/company/arrive", function(_bIsMe, jData)
