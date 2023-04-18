@@ -10,7 +10,7 @@ class Notification {
     {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
-        styleSheet.setAttribute("href", "/media/client/notification/notification.css");
+        styleSheet.setAttribute("href", "/media/client/notification/notification.css?version=" + Date.now());
         document.head.appendChild(styleSheet)
     }
 
