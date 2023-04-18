@@ -91,6 +91,10 @@ body, p
             }
         }
 
+        .game-link a { display: inline-block; }
+
+        .game-duration { margin-left: 10px; font-size: 0.85em;}
+
         .action {
             width: 100px;
         }
@@ -132,6 +136,36 @@ body, p
     {
         animation: gamelist-line-to-refresh 60s infinite forwards;
     }
+}
+
+.release-notes {
+
+    width: 70%;
+    max-width: 900px;
+    margin: 20px auto 0 auto;
+
+    td,
+    th {
+        text-align: left;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    tr th {
+        border-bottom: 2px solid #fff;
+    }
+
+    tr td {
+        border-bottom: 1px dotted #fff;
+    }
+    tr:last-of-type td {
+        border-bottom: 0;
+    }
+
+    tr td:first-of-type { padding-right: 10px; }
+
+
+
 }
 
 @keyframes gamelist-line-to-refresh {
