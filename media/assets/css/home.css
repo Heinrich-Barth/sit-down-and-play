@@ -228,6 +228,30 @@ body, p {
   animation: gamelist-line-to-refresh 60s infinite forwards;
 }
 
+.release-notes {
+  width: 70%;
+  max-width: 900px;
+  margin: 20px auto 0 auto;
+}
+.release-notes td,
+.release-notes th {
+  text-align: left;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.release-notes tr th {
+  border-bottom: 2px solid #fff;
+}
+.release-notes tr td {
+  border-bottom: 1px dotted #fff;
+}
+.release-notes tr:last-of-type td {
+  border-bottom: 0;
+}
+.release-notes tr td:first-of-type {
+  padding-right: 10px;
+}
+
 @keyframes gamelist-line-to-refresh {
   from {
     width: 0%;

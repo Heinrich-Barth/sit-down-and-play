@@ -38,11 +38,6 @@ const toNumberString = function(nValue)
 
 const addGameTypes = function(container, data, isArda, existing)
 {
-    /*
-    visitors: pRoom.canJoinVisitor(),
-    jitsi: pRoom.useJitsi(),
-    accessible: pRoom.canJoinPlayer(),
-     */
     for (let value of data)
     {
         if (isArda !== value.arda)
@@ -75,7 +70,7 @@ const addGameTypes = function(container, data, isArda, existing)
         _tr.appendChild(tdJitsi);
         tdJitsi.setAttribute("class", "action");
         if (value.jitsi)
-            tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone"> via Jitsi</a> `;
+            tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone" target="_blank"> via Jitsi</a> `;
         else
             tdJitsi.innerHTML = `<span class="fa fa-microphone"> via Discord</span> `;
 
@@ -181,7 +176,7 @@ const fetchAndUpdateGames = function()
     const styleSheet = document.createElement("link")
     styleSheet.setAttribute("rel", "stylesheet");
     styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/media/client/home/home.css");
+    styleSheet.setAttribute("href", "/media/client/home/home.css?version=" + Date.now());
     document.head.appendChild(styleSheet);
 
     document.getElementById("login").classList.remove("hidden");

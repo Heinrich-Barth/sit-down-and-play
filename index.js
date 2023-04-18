@@ -345,6 +345,7 @@ SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback6hrs, (
 /** Suggestions for code/name resolving */
 SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getNameCodeSuggestionMap()).status(200));
 
+require("./releasenotes")(SERVER)
 require("./Personalisation")(SERVER, g_pExpress);
 
 /**
