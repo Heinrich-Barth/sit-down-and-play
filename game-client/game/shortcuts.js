@@ -44,6 +44,7 @@ const ShotcutManager =
                 MapWindow.close();
                 break;
 
+            case "w":
             case "r":
                 if (CardPreview.currentCharacterId !== undefined && CardPreview.currentCharacterId !== "")
                     document.getElementById(CardPreview.currentCharacterId).querySelector(".card-dice").dispatchEvent(new Event("click"));
