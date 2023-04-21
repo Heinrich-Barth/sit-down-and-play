@@ -24,7 +24,11 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     const pThat = this;
     if (Object.keys(this._list).length === 0)
     {
-        fetch("/data/list/images")
+        const sVal = new Date().toISOString();
+        const nPos = sVal.indexOf("T");
+        const _now = nPos === -1 ? "" + Date.now() : sVal.substring(0, nPos);
+
+        fetch("/data/list/images?t=" + _now)
         .then((response) => response.json())
         .then((cards) => 
         {
