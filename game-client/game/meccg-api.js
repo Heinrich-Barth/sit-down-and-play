@@ -188,7 +188,8 @@ const MeccgApi =
 
     addListener: function (path, callbackFunction)
     {
-        MeccgApi._paths[path] = callbackFunction;           
+        if (path !== "")
+            MeccgApi._paths[path] = callbackFunction;
     },
 
     initSocketPaths : function()
