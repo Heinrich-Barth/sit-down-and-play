@@ -1,5 +1,3 @@
-
-
 class DiceChooser extends PreferenceChoise 
 {
     getHeadline()
