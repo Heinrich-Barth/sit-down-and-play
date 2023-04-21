@@ -290,11 +290,15 @@
         if (res.length === 0)
             return;
         
+        const codes = [];
         const jTarget = document.getElementById("found_sites");
         for (let _card of res)
         {
-            if (g_pRegionMapPreferences.showSiteSet(_card.set_code))
+            if (g_pRegionMapPreferences.showSiteSet(_card.set_code) && !codes.includes(_card.code))
+            {
                 jTarget.appendChild(this.createImage(_card.code, _card.site, _card.region, _card.siteSitle, _card.tapped));
+                codes.push(_card.code);
+            }
         }
     }
 }
