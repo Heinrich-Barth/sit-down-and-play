@@ -55,6 +55,12 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/view-cards/offer-reveal", this.viewOfferReveal.bind(this));
         this.getMeccgApi().addListener("/game/view-cards/offer-remove", this.viewOfferRemove.bind(this));
         
+        this.getMeccgApi().addListener("/game/deck/reveal/start", this.onDeckRevealStart.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/cancel", this.onDeckRevealCancel.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/remove", this.onDeckRevealRemove.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/offer", this.onDeckRevealOffer.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/accept", this.onDeckRevealAccept.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/perform", this.onDeckRevealPerform.bind(this));
 
         this.getMeccgApi().addListener("/game/company/create", this.onGameCompanyCreate.bind(this));
         this.getMeccgApi().addListener("/game/company/arrive", this.onGameCompanyArrives.bind(this));
@@ -1091,6 +1097,87 @@ class GameStandard extends GamePlayers
     {
         this.publishToPlayers("/game/view-cards/reveal/list", userid, {type: obj, list: this._getList(userid, obj) });
         this.publishChat(userid, " offers to show cards in " + obj, false);
+    }
+
+    onDeckRevealStart(userid, _socket, obj)
+    {
+        const player = obj.first;
+        const list = this.getPlayboardManager().GetTopCardsInPile(player, obj.deck, obj.count);
+        if (list.length === 0)
+            return;
+
+        this.publishToPlayers("/game/deck/reveal/start", userid, {
+            first: obj.first,
+            second: obj.second,
+            deck: obj.deck,
+            cards: {
+                first: [],
+                second: list
+            }
+        });
+    }
+
+    onDeckRevealCancel(userid, _socket, obj)
+    {
+        this.publishToPlayers("/game/deck/reveal/cancel", userid, {
+            first: obj.first,
+            second: obj.second
+        });
+    }
+
+    
+    onDeckRevealRemove(userid, _socket, obj)
+    {
+        this.publishToPlayers("/game/deck/reveal/remove", userid, {
+            first: obj.first,
+            second: obj.second,
+            code: obj.code,
+            uuid: obj.uuid
+        });
+    }
+
+    onDeckRevealOffer(userid, _socket, obj)
+    {
+        this.publishToPlayers("/game/deck/reveal/offer", userid, {
+            first: obj.first,
+            second: obj.second,
+            code: obj.code,
+            uuid: obj.uuid
+        });
+    }
+    
+    onDeckRevealAccept(userid, _socket, obj)
+    {
+        this.publishToPlayers("/game/deck/reveal/accept", userid, {
+            first: obj.first,
+            second: obj.second
+        });
+    }
+
+    onDeckRevealSuccess(userid, obj)
+    {
+        this.publishToPlayers("/game/deck/reveal/success", userid, {
+            first: obj.first,
+            second: obj.second
+        });
+    }
+
+    onDeckRevealPerform(userid, _socket, obj)
+    {
+        if (this.onDeckRevealMoveToDeck(obj.deck, obj.cards))
+            this.onDeckRevealSuccess(userid, obj);
+        else
+            this.onDeckRevealCancel(userid, null, obj);
+    }
+
+    onDeckRevealMoveToDeck(deck, cards)
+    {
+        let moved = false;
+
+        for (let id in cards)
+            moved |= this.getPlayboardManager().ReorderCardsInDeck(id, deck, cards[id]);
+
+        return moved;
     }
 
     viewList(userid, _socket, obj)

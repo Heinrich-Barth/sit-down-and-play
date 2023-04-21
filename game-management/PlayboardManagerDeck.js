@@ -228,6 +228,55 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         return this.getCardList(this.getDecks().getCards().handMarshallingPoints(playerId));
     }
 
+    ReorderCardsInDeck(playerId, deckType, cards)
+    {
+        if (deckType !== "playdeck" || cards.length === 0)
+            return false;
+
+        const deck = this.getPlayerDeck(playerId);
+        let moved = 0;
+
+        for (let _cardUuid of cards.reverse())
+        {
+            if (deck.pop().fromPlaydeck(_cardUuid))
+            {
+                deck.push().toPlaydeck(_cardUuid)
+                moved++;
+            }
+        }
+
+        return moved > 0;
+    }
+
+    GetTopCardsInPile(playerId, sPile, nNumber)
+    {
+        if (nNumber < 1)
+            return [];
+
+        let list;
+        switch(sPile)
+        {
+            case "playdeck":
+                list = this.getCardList(this.getDecks().getCards().playdeck(playerId));
+                break;
+            default:
+                list = [];
+                break;
+        }
+
+        const listSize = list.length;
+        if (listSize > nNumber)
+        {
+            const result = [];
+            for (let i = 0; i < nNumber; i++)
+                result.push(list[i]);
+
+            return result;
+        }
+        else
+            return list;
+    }
+
     GetCardsInVictoryShared(playerId)
     {
         return this.getCardList(this.getDecks().getCards().sharedVicory(playerId));

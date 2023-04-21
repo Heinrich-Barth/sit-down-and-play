@@ -279,6 +279,8 @@ class TaskBarCards
 
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
             elem.onclick = TaskBarCards.OnTurnClick;
+
+        RevealPlayerDeck.init("icon_bar_playdeck");   
     }    
 
     static rollDiceCharacter(uuid, code)

@@ -309,6 +309,17 @@ const ContextMenu = {
             return false;
         },
 
+        onContextPlayDeckActions : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target !== null)
+                ContextMenu.show(e, "_site", "_code", "_company", "playdeck_actions");
+            
+            return false;
+        },
+
         onContextSiteArrive : function(e)
         {
             e.preventDefault();
@@ -514,6 +525,16 @@ const ContextMenu = {
             const companyId = ContextMenu.getAttribute(pMenu, "data-company");
             if (companyId !== "")
                 MeccgApi.send("/game/company/returntoorigin", {company : companyId });
+        },
+
+        reveal5CardsToOpponent : function(pMenu)
+        {
+            RevealPlayerDeck.INSTANCE.onChoosePlayer();
+        },
+
+        shufflePlaydeck : function(pMenu)
+        {
+            MeccgApi.send("/game/view-cards/shuffle", { target: "discardpile" });
         }
     },
     
@@ -548,9 +569,13 @@ const ContextMenu = {
         this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
         this.addItem("movement_return", "Return to site of origin", "fa-ban", "context-menu-item-arrive", ContextMenu.callbacks.returnToSiteOfOrigin, "Remove target site.");
 
+        this.addItem("reval_cards_number", "Reveal 5 cards to your opponent", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
+        this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", ContextMenu.callbacks.shufflePlaydeck, "");
+
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
+        this.data.types["playdeck_actions"] = ["reval_cards_number", "playdeck_shuffle"];
 
         this.data.specialClasses["card"] = "";
         this.data.specialClasses["location"] = "context-menu-site";

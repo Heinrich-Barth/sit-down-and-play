@@ -1,6 +1,5 @@
-.card-bar
-{
-    &.card-bar-shared{
+.card-bar {
+    &.card-bar-shared {
         top: 170px;
         position: absolute;
         max-height: 150px;
@@ -18,13 +17,14 @@
         a {
             background: none !important;
         }
+
         .icon {
             font-size: 0.8em;
             padding: 2px 0;
             height: auto;
             width: auto;
 
-            &:hover{
+            &:hover {
                 filter: sepia(100%) brightness(150%);
             }
         }
@@ -41,7 +41,7 @@
             bottom: 5px;
             height: 20px;
             width: 20px;
-            background-size: contain;        
+            background-size: contain;
         }
     }
 
@@ -64,11 +64,11 @@
         width: 50px;
         opacity: 0.9;
         background-color: #000;
-        color: #ff0; 
+        color: #ff0;
         text-overflow: ellipsis;
         overflow-x: hidden;
-    } 
-    
+    }
+
     .icon-shared-out::after {
         content: 'Out';
     }
@@ -98,14 +98,12 @@
         content: 'Hand';
     }
 
-    .icon
-    {
+    .icon {
         max-height: 70px;
         color: white;
         font-size: 12px;
-    
-        span.count
-        {
+
+        span.count {
             padding-left: 2px;
         }
 
@@ -114,10 +112,100 @@
             border-radius: 5%;
         }
     }
-    
-    .icons a.backside
-    {
-        background: url("/data/backside") 0 0 no-repeat; 
-        background-size: 31px 50px !important;  
+
+    .icons a.backside {
+        background: url("/data/backside") 0 0 no-repeat;
+        background-size: 31px 50px !important;
+    }
+
+    .deckpile-additional-actions {
+        .deckpile-additional-action {
+            display: none;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            z-index: 5;
+            margin: 0;
+            cursor: pointer;
+            line-height: 1.5em;
+        }
+
+        &:hover .deckpile-additional-action {
+            display: block;
+        }
+    }
+}
+
+.trade-panel {
+    &.trade-hide-buttons button.trade-accept { display: none !important;}
+    .config-panel {
+        padding-top: 20px;
+
+        button {
+            color: #fff;
+            margin: 2px;
+
+            &.trade-cancel {
+                background-color: #c32222;
+
+                &:hover {
+                    background-color: #dc2600;
+                }
+            }
+
+            &.trade-accept {
+                background-color: #98c593;
+
+                &:hover {
+                    background-color: #a8cea4;
+                }
+            }
+        }
+
+        li a {
+            display: block;
+            text-align: center;
+        }
+
+        &.trade-await-reply button {
+            visibility: hidden;
+        }
+
+        .offered-list {
+            min-height: 85px;
+            border-bottom: 2px dotted #ffa500;
+            text-align: center;
+            margin-bottom: 10px;
+
+            div {
+                display: inline-block;
+                margin: 0 3px;
+            }
+        }
+
+        .offering-list div {
+            display: inline-block;
+            margin: 0 3px;
+            position: relative;
+            border: 1px solid transparent;
+
+            &.fa {
+                border: 1px solid #98c593;
+            }
+
+            &::before {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                background: #98c593;
+                border-radius: 3px;
+            }
+
+            img {
+                cursor: pointer;
+            }
+
+        }
     }
 }
