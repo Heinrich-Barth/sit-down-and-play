@@ -54,7 +54,7 @@ body, p
     .join-game 
     {
         padding: 2em;
-        margin-top: 5em;
+        margin-top: 0.5em;
         align-items: flex-start;
     }
 }
@@ -62,7 +62,7 @@ body, p
 .game-list 
 {
     padding: 2em;
-    margin-top: 5em;
+    margin-top: 0.5em;
 
     table { 
         width: 100%; 
@@ -140,7 +140,7 @@ body, p
 
 .release-notes {
 
-    width: 70%;
+    width: 80%;
     max-width: 900px;
     margin: 20px auto 0 auto;
 
@@ -187,5 +187,16 @@ body, p
 {
     .content {
         padding-top: 6em;
+    }
+}
+@media (max-width: 800px) 
+{
+    .content {
+        padding-top: 6em;
+    }
+
+    .release-notes {
+        max-width: 100%;
+        width: 100%;
     }
 }
