@@ -19,6 +19,7 @@ const ViewCards =
     },
 
     _quantities : typeof Quantities === "undefined" ? null : new Quantities(),
+    _isReady : false,
     
     getLimit : function(code)
     {
@@ -270,13 +271,11 @@ const ViewCards =
         const bAllowAllKeywords = keyword === "_all";
         const bAllowAllSkills = skill === "_all";
         
-        let vnIndicesCharacters = {};
-        
+        let listResult = [];
         let _index = -1, _type, _align, _title, _text;
         for (let card of ViewCards.config.jsonData) 
         {
             _index++;
-
             if (card.count === -1)
                 continue;
 
@@ -288,13 +287,13 @@ const ViewCards =
             if (!ViewCards.isValidSet(sSet, card.set_code))
                 continue;
             
-            if (!bAllowAllType && sType !== "" && _type.toString() !== sType)
+            if (!bAllowAllType && sType !== "" && _type !== sType)
                 continue;
             
-            if (!bAllowAllCat && sCategory !== "" && card.type.toString() !== sCategory)
+            if (!bAllowAllCat && sCategory !== "" && card.type !== sCategory)
                 continue;
             
-            if (!bAllowAllAlign && sAlign !== "" && _align.toString() !== sAlign)
+            if (!bAllowAllAlign && sAlign !== "" && _align !== sAlign)
                 continue;
 
             if (keyword !== "" && !bAllowAllKeywords && (card.keywords === null || !card.keywords.includes(keyword)))
@@ -303,18 +302,43 @@ const ViewCards =
             if (skill !== "" && !bAllowAllSkills && (card.skills === null || !card.skills.includes(skill)))
                 continue;
             
-            if (sTitle !== "" && _title.toString().toLowerCase().indexOf(sTitle) === -1 && _text.toString().toLowerCase().indexOf(sTitle) === -1)
-                continue;
-
             if (card.title === "Warlord AL" || card.title === "Wizard AL")
                 continue;
-            
-            if (typeof vnIndicesCharacters[_type.toString()] === 'undefined' )
-                vnIndicesCharacters[_type.toString()] = [];
 
-            vnIndicesCharacters[_type.toString()].push(_index);
-        }        
+            let boost = 0;
+            if (sTitle !== "")
+            {
+                if (_title.indexOf(sTitle) >= 0)
+                    boost = 10;
+                else if (_text.indexOf(sTitle) >= 0)
+                    boost = 5;
+                else
+                    continue;
+            }
+
+            listResult.push({
+                type: _type,
+                index: _index,
+                boost: boost
+            });
+        }
         
+        return this.createOrderdResult(listResult);
+    },
+
+    createOrderdResult : function(listResult)
+    {
+        const vnIndicesCharacters = {};
+        for (let elem of listResult)
+        {
+            if (typeof vnIndicesCharacters[elem.type] === 'undefined' )
+                vnIndicesCharacters[elem.type] = [];
+        }
+
+        listResult.sort((a, b) => b.boost - a.boost);
+        for (let elem of listResult)
+            vnIndicesCharacters[elem.type].push(elem.index);
+
         return vnIndicesCharacters;
     },
 
@@ -378,6 +402,9 @@ const ViewCards =
 
     initDeckbuilder: function()
     {
+        if (this._isReady)
+            return;
+
         fetch("/data/list/cards")
         .then((response) => response.json())
         .then(this.onCardResult.bind(this))
@@ -386,7 +413,9 @@ const ViewCards =
             const elem = document.getElementById("loading-line-counter");
             if (elem !== null)
                 elem.parentElement.removeChild(elem);
-        })
+        });
+
+        this._isReady = true;
     },
 
     getCardsFromStorage : function()
@@ -414,10 +443,26 @@ const ViewCards =
             localStorage.setItem("meccg_deckbuilder", JSON.stringify(result));
     },
 
+    processCards : function(list)
+    {
+        for (let card of list)
+        {
+            card.title = card.title.toLowerCase().replace(/-/g, " ");
+            card.text = card.text.toLowerCase();
+
+            const pos = card.text.indexOf('"');
+            const posLast = card.text.lastIndexOf('"');
+            if (pos !== posLast)
+                card.text = card.text.substring(0, pos).trim();
+        }
+    },
+
     onCardResult : function(jsonCards, hideMessage)
     {
         if (jsonCards === null || !Array.isArray(jsonCards))
             return;
+
+        this.processCards(jsonCards);
 
         const jMeta = new CreateCardsMeta(jsonCards);
         this.initCards(jsonCards, [ ]);
