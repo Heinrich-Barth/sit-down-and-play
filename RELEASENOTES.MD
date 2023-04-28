@@ -4,6 +4,12 @@ Find the latest feature update information here.
 
 | Module | Description | 
 | --- | --- |
+| Game | Challenge deck have updated sites and deck notes. |
+| Deckbuilder | You can add preferred sites to your deck which will be offered during movement organisation. |
+| Movement | If site of origin and target site are in the same region, 2 region cards will be displayed instead of 1 to not give away strategic information about potential target sites.  |
+| Deckbuilder | Sites are available as category but cannot be added to the deck (yet). |
+| Game | Player can reveal top 5 cards of their playdeck and allow opponent to re-order them |
+| Deckbuilder | Text searches sorts result by relevance depending on matches in either title or text |
 | Game  | Automatically lock room for new players once the first turn has been started. The room can be unlocked at any time by the host. |
 | Game  | Keyboard shortcuts added to traverse through turn phases - see tooltip at the cursor when hovering over the turn sequence bar above your hand cards for further information |
 | Game  | Roll the dices for specific characters with dedicated dice icons on the character (or hovering over them and hitting the 'r' key on your keyboard) |

@@ -5,12 +5,12 @@ const loadFile = function()
 {
     try
     {
-        let data = fs.readFileSync("./RELEASENOTES.MD", "utf-8");
+        const data = fs.readFileSync("./RELEASENOTES.MD", "utf-8");
         if (data === null || data === "")
             return "";
         
         const pattern = "| --- | --- |";
-        let pos = data.indexOf("| --- | --- |");
+        const pos = data.indexOf("| --- | --- |");
         if (pos == -1)
             return "";
 
