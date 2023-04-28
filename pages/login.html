@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="/media/assets/favicon.png">
     <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="/media/assets/css/deckselection.css" />
+    <link rel="stylesheet" href="/media/assets/css/deckselection.css?version=230427" />
 
     <script src="/media/client/httpsonly.js"></script>
     <script src="/media/assets/js/jquery.min.js"></script>
@@ -23,7 +23,7 @@
     <div class="content" id="login">
         <div class="inner-content">
             <h1>Join the table</h1>
-            <form method="post" action="#">
+            <form method="post" action="#" id="deckform">
                 <div class="fields-join">
                     <input type="text" class="w50" name="user" id="user" placeholder="Who are you to the others?" value="{DISPLAYNAME}"
                         maxlength="20" placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
@@ -58,19 +58,16 @@
                     </div>
                 </div>
             </form>
-            <form method="post" action="#" class="hidden" id="form">
-                <textarea name="data"></textarea>
-            </form>
         </div>
     </div>
     
-    <script src="/media/client/game/libraries.js?version=230412"></script>
-    <script src="/media/client/decktextfields/index.js?version=230412"></script>
-    <script defer src="/media/client/notification/notification.js?version=230412"></script>
-    <script defer src="/media/client/dropfile-generic.js?version=230412"></script>
-    <script defer src="/media/client/deck/read.js?version=230412"></script>
-    <script defer src="/media/client/login.js?version=20230305?version=230412"></script>
-    <script defer src="/media/client/navigation/navigation.js?version=230412"></script>
+    <script src="/media/client/game/libraries.js?version=230427"></script>
+    <script src="/media/client/decktextfields/index.js?version=230427"></script>
+    <script defer src="/media/client/notification/notification.js?version=230427"></script>
+    <script defer src="/media/client/dropfile-generic.js?version=230427"></script>
+    <script defer src="/media/client/deck/read.js?version=230427"></script>
+    <script defer src="/media/client/login.js?version=20230305?version=230427"></script>
+    <script defer src="/media/client/navigation/navigation.js?version=230427"></script>
 </body>
 
 </html>
