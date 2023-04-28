@@ -36,5 +36,9 @@
     height: 90%;
     bottom: 20px;
 }
-
+.mapwindow .preview-left.preview-top
+{
+    max-height: 90%;
+    height: 90%;
+}
 .on-drag-event-generic .preview-container { display: none; }

@@ -82,8 +82,33 @@ const getCurrentDate = function()
         return sVal.substring(0, nPos);
 }
 
+
+const fetchFromLocalStorage = function()
+{
+    if (localStorage.getItem("game_data"))
+    {
+        try
+        {
+            return JSON.parse(localStorage.getItem("game_data")).underdeeps;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
+
+    return null;
+}
+
 const fetchMap = function (tappedSites) 
 {
+    const localData = fetchFromLocalStorage();
+    if (localData !== null)
+    {
+        MapInstanceRendererUd.onInit(localData, tappedSites);
+        return;
+    }
+
     fetch("/data/list/underdeeps?t=" + getCurrentDate()).then((response) => {
         if (response.status === 200)
             response.json().then((map) => MapInstanceRendererUd.onInit(map, tappedSites));

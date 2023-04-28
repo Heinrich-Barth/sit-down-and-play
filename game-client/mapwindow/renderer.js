@@ -50,12 +50,12 @@ const MapInstanceRenderer = {
         pMap.createInstance();
     },
 
-    onInitDefault: function (data, tapped) {
+    onInitDefault: function (data, tapped, listPreferredCodes) {
         const sCode = MapInstanceRenderer.getStartCode();
         MapInstanceRenderer._isMovementSelection = sCode !== "";
 
         new MapViewRegionsFilterable().createInstance(data.map);
-        new MapViewSiteImages(data, tapped).createInstance();
+        new MapViewSiteImages(data, tapped, listPreferredCodes).createInstance();
 
         const pMap = new MapViewRegions(data);
         pMap.createInstance(sCode);
@@ -77,7 +77,7 @@ const MapInstanceRenderer = {
     onInit: function (data, tapped) {
 
         if (!MapInstanceRenderer.isEditor())
-            MapInstanceRenderer.onInitDefault(data, tapped);
+            MapInstanceRenderer.onInitDefault(data, tapped, fetchPreferredSitesFromLocalStorage());
         else
             MapInstanceRenderer.onInitEditor(data);
         
@@ -106,7 +106,51 @@ const getCurrentDate = function()
         return sVal.substring(0, nPos);
 }
 
+const fetchFromLocalStorage = function()
+{
+    if (localStorage.getItem("game_data"))
+    {
+        try
+        {
+            return JSON.parse(localStorage.getItem("game_data")).map;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
+
+    return null;
+}
+
+const fetchPreferredSitesFromLocalStorage = function()
+{
+    if (localStorage.getItem("sitelist"))
+    {
+        try
+        {
+            const res = JSON.parse(localStorage.getItem("sitelist"));
+            if (Array.isArray(res) && res.length > 0)
+                return res;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
+
+    return [];
+}
+
 const fetchMap = function (tappedSites) {
+
+    const localData = fetchFromLocalStorage();
+    if (localData !== null)
+    {
+        MapInstanceRenderer.onInit(localData, tappedSites);
+        return;
+    }
+
     fetch("/data/list/map?t=" + getCurrentDate()).then((response) => {
         if (response.status === 200)
             response.json().then((map) => MapInstanceRenderer.onInit(map, tappedSites));

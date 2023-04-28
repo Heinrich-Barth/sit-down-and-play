@@ -3,14 +3,48 @@
  */
  class MapViewSiteImages  {
 
-    constructor(jMap, tapped)
+    constructor(jMap, tapped, listPreferredCodes)
     {
         this.CardPreview = CardPreview;
         this.CardList = new CardList(jMap.images, []);
 
         this._temp = null;
+        this._preferredSites = MapViewSiteImages.verifySiteList(listPreferredCodes);
         this.tapped = tapped === undefined ? {} : tapped;
         this.jMap = jMap.map === undefined ? {} : jMap.map;
+    }
+
+    static verifySiteList(list)
+    {
+        if (!Array.isArray(list) || list.length === 0)
+            return null;
+
+        const result = { };
+        for (let elem of list)
+        {
+            if (elem === "")
+                continue;
+
+            if (result[MapViewSiteImages.removeSetAlignment(elem)] === undefined)
+                result[MapViewSiteImages.removeSetAlignment(elem)] = [elem];
+            else
+                result[MapViewSiteImages.removeSetAlignment(elem)].push(elem);
+        }
+
+        return result;
+    }
+
+    static removeSetAlignment(elem)
+    {
+        let pos = elem.indexOf(" [");
+        if (pos !== -1)
+            elem = elem.substring(0, pos).trim();
+
+        pos = elem.indexOf(" (");
+        if (pos !== -1)
+            elem = elem.substring(0, pos).trim();
+
+        return elem.toLowerCase();
     }
 
     isSiteTapped(code)
@@ -61,6 +95,9 @@
         document.body.addEventListener("meccg-map-search", this.onSearch.bind(this), false);
 
         document.body.classList.add("mapwindow");
+
+        if (this._preferredSites !== null)
+            setTimeout(this.injectPreferredSites.bind(this), 500);
     }
 
     onSearch(e)
@@ -93,11 +130,67 @@
                     this.getSiteImages(jRegion.sites[key], showAlignment, region, key);
             }
         }
-        
+       
         this.fillSiteList();
         this.lazyloadImages();
 
         document.body.dispatchEvent(new CustomEvent("meccg-map-show-images-done", { "detail":  "found_sites" }));
+    }
+
+    createPreferredSitesContainer()
+    {
+        const elem = document.createElement("div");
+        elem.setAttribute("class", "preferred-sites-container blue-box");
+        elem.setAttribute("id", "sites_preferred");
+        elem.onclick = () => elem.parentNode.removeChild(elem);
+
+        const h2 = document.createElement("h2");
+        h2.innerText = "Choose from your preferred sites";
+
+        const p = document.createElement("p");
+        p.innerText = "You can also close this overlay by clicking in the background of this box.";
+
+        elem.append(h2);
+        elem.append(p);
+
+        return elem;
+    }
+
+    insertPreferredSites(container, mapSites)
+    {
+        const elemList = document.createElement("div");
+        elemList.setAttribute("class", "preferred-image-list");
+
+        const candidates = Object.keys(mapSites);
+        for (let region in this.jMap)
+        {
+            const jRegion = this.jMap[region];
+            for (let key in jRegion.sites)
+            {
+                const title = key.toLowerCase();
+                if (!candidates.includes(title))
+                    continue;
+
+                for (let code of mapSites[title])
+                {
+                    const img = this.createImage(code, true, region, key, this.isSiteTapped(code));
+                    img.setAttribute("src", img.getAttribute("data-src"));
+                    img.classList.add("card-icon");
+                    img.setAttribute("title", "Click to choose this card");
+                    elemList.appendChild(img);
+                }
+            }
+        }
+
+        container.appendChild(elemList);
+    }
+
+    injectPreferredSites()
+    {
+        const container = this.createPreferredSitesContainer();
+        this.insertPreferredSites(container, this._preferredSites);
+        this.CardPreview.initGeneric(container);
+        document.body.appendChild(container);
     }
 
     showImagesSearchAll(text)
@@ -170,7 +263,6 @@
             title : title
         } }));
     }
-
 
     createSearchLimitations()
     {

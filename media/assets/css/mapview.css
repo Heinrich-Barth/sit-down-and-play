@@ -237,6 +237,7 @@ div.panel-buttons {
   height: 112px;
   background: url(/data/backside) 0 0 no-repeat;
   background-size: contain;
+  border: 1px solid black;
 }
 #found_sites img.site-is-tapped {
   opacity: 0.5;
@@ -301,4 +302,27 @@ img.map-region-icon {
   to {
     width: 100%;
   }
+}
+.preferred-sites-container {
+  position: fixed;
+  z-index: 300;
+  left: 2%;
+  bottom: 2%;
+  width: auto;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  overflow: auto;
+  max-height: 50%;
+  max-width: 98%;
+}
+.preferred-sites-container .preferred-image-list img {
+  display: inline;
+  height: 100px;
+  margin: 5px;
+}
+.preferred-sites-container .preferred-image-list img.site-is-tapped {
+  opacity: 0.6;
+  rotate: 180deg;
 }
