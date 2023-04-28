@@ -1,5 +1,6 @@
 const GameStandard = require("../game-management/GameStandard");
 const PlayboardManager = require("../game-management/PlayboardManager");
+const DeckManager = require("../game-management/DeckManager");
 
 describe('globalRestoreGame(userid, socket, data)', () => {
 
@@ -23,7 +24,10 @@ describe('globalRestoreGame(userid, socket, data)', () => {
     }
     const eventManager = { trigger: function() { /** not needed */ } };
     const pPlayboardManager = new PlayboardManager([], eventManager, {}, false);
-    const instance = new GameStandard(_MeccgApi, _Chat, pPlayboardManager)
+    const instance = new GameStandard(_MeccgApi, _Chat, pPlayboardManager);
+
+    gameData.data.playboard.decks.cardMap = instance.base64Encode(gameData.data.playboard.decks.cardMap);
+    expect(typeof gameData.data.playboard.decks.cardMap).toEqual("string");
 
     instance.setCallbackOnRestoreError(function() {
         throw new Error("Invalid!");
@@ -40,6 +44,26 @@ describe('globalRestoreGame(userid, socket, data)', () => {
         
         instance.globalRestoreGame("100", null, data);
         expect(15).toEqual(15);
+    });
+
+    it('base64Encode(json)', () => {
+
+        const data = {
+            time: Date.now()
+        };
+    
+        const str = instance.base64Encode(data);
+        expect(str).not.toEqual("");
+    });
+
+    it('base64Encode(json)', () => {
+
+        const data = {
+            time: Date.now()
+        };
+    
+        const restored = instance.base64Decode(instance.base64Encode(data));
+        expect(restored.time).toEqual(data.time);
     });
 });
 
