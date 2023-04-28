@@ -230,11 +230,6 @@ class GameRoom
         this.api.publish(sPath, player, data);
     }
 
-    isEmpty() 
-    { 
-        return Object.keys(this.players).length === 0; 
-    }
-
     isAccepted(userId) 
     {
         if (userId === undefined || userId === "")
