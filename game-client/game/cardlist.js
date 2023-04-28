@@ -21,9 +21,29 @@ function CardList(images, quests, useImagesDC, useImagesIC)
     if (document.body.hasAttribute("data-use-dce") && document.body.getAttribute("data-use-dce") === "false")
         this._useImagesDC = false;
 
-    const pThat = this;
-    if (Object.keys(this._list).length === 0)
+    if (Object.keys(this._list).length > 0)
+        return;
+
+    if (localStorage.getItem("game_data"))
     {
+        try
+        {
+            const cards = JSON.parse(localStorage.getItem("game_data")).images;
+            this._list = cards.images;
+            if (cards.fliped !== undefined)
+                this._fliped = cards.fliped;
+
+            this._isReady = true;
+            return;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
+
+    {
+        const pThat = this;
         const sVal = new Date().toISOString();
         const nPos = sVal.indexOf("T");
         const _now = nPos === -1 ? "" + Date.now() : sVal.substring(0, nPos);
