@@ -78,6 +78,7 @@ class DeckTextFields {
         parent.append(this.createFieldsDiv("sideboard"));
         parent.append(this.createFieldsDiv("characters"));
         parent.append(this.createFieldsDiv("pool"));
+        parent.append(this.createFieldsDiv("sites"));
         return parent;
     }
 
