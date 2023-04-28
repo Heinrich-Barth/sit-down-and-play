@@ -3,17 +3,12 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
  */
 
-const CACHE_NAME = "v2";
+const CACHE_NAME = "v3";
 
 /**
  * List of urls to cache
  */
 const assets = [
-  "/data/list/cards",
-  "/data/list/images",
-  "/data/list/underdeeps",
-  "/data/list/sites",
-  "/data/list/map",
   "/media/assets/backgrounds/home.webp"
 ]
 
