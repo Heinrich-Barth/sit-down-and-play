@@ -173,10 +173,18 @@ class GameCompanyLocation
         pImage.setAttribute("src", src);
     }
 
-    drawRegions(companyElem, regions, bIsPlayer)
+    drawRegions(companyElem, regions, bIsPlayer, bHasTargetSite)
     {
         const pContainerReg = companyElem.querySelector(".site-regions");
         DomUtils.removeAllChildNodes(pContainerReg);
+
+        if (regions.length === 0)
+            return;
+
+        /*  target site can be in the same region but this gives away certain information about the movement. 
+            So always show at least 2 regions */
+        if (bHasTargetSite && regions.length === 1)
+            regions.push("" + regions[0]);
 
         for (let _reg of regions)
         {
@@ -237,7 +245,7 @@ class GameCompanyLocation
         if (attached.length > 0)
             this.onAttachCardToCompanySites(company, attached, true);
 
-        this.drawRegions(companyElem, regions, bIsPlayer);
+        this.drawRegions(companyElem, regions, bIsPlayer, target !== "");
 
         if (target !== "" && isRevealed)
             this.revealMovement(company);
