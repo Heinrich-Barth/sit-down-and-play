@@ -102,6 +102,7 @@ const populateDeck = function(jData)
 
     populateField(jData.sideboard, "sideboard", true);
     populateField(jData.pool, "pool", true);
+    populateField(jData.sites, "sites", true);
 
     addDeckNotes(jData.notes);
 
@@ -134,7 +135,11 @@ const getCardCodeList = function()
     function toJson(sId, vsCards)
     {
         let _code;
-        for (_code of document.getElementById(sId).value.split('\n'))
+        const area = document.getElementById(sId);
+        if (area === null)
+            return;
+
+        for (_code of area.value.split('\n'))
         {
             let sCode = getCode(_code);
             if (sCode !== "" && !vsCards.includes(sCode))
@@ -151,6 +156,7 @@ const getCardCodeList = function()
     toJson("characters", _res); 
     toJson("resources", _res);
     toJson("hazards", _res);
+    toJson("sites", _res);
 
     return _res;
 };
@@ -175,7 +181,8 @@ const createDeck = function()
 {
     function toJson(sId)
     {
-        let asLines = document.getElementById(sId).value.split('\n');
+        const area = document.getElementById(sId);
+        const asLines = area === null ? [] : area.value.split('\n');
         let _deck = {};
 
         for (let _entry of asLines)
@@ -195,7 +202,8 @@ const createDeck = function()
         sideboard: toJson("sideboard"),
         chars : toJson("characters"),
         resources : toJson("resources"),
-        hazards : toJson("hazards")
+        hazards : toJson("hazards"),
+        sites: toJson("sites")
     };
 
     if (isEmpty(jDeck.pool) || isEmpty(jDeck.chars) || (isEmpty(jDeck.hazards) && isEmpty(jDeck.resources)))
@@ -236,7 +244,9 @@ const onLoadDecks = function(data)
             divDeck.setAttribute("class", "challenge-deck");
             divDeck.setAttribute("data-deck-list", i);
             divDeck.setAttribute("data-deck-id", key);
+            divDeck.setAttribute("title", "Click to select or right click to download");
             divDeck.onclick = onChallengeDeckChosen;
+            divDeck.oncontextmenu = onDownloadDeck;
             divDeck.innerText = key;
             label.appendChild(divDeck);
         }
@@ -256,6 +266,7 @@ const onLoadDecks = function(data)
     const divButton = document.createElement("button");
     divButton.innerText = " Load a deck";
     divButton.setAttribute("class", "fa fa-folder load-deck-file");
+    divButton.setAttribute("type", "button");
     divButton.onclick = () => document.getElementById("load_deck_file").click();
 
     const divFile = document.createElement("input");
@@ -296,6 +307,32 @@ const removeSelectedDeck = function()
     if (elem !== null)
         elem.classList.remove("selected-deck");
 };
+
+const onDownloadDeck = function(e)
+{
+    e.preventDefault();
+    
+    const sKey = e.target.getAttribute("data-deck-id");
+    const nArray = parseInt(e.target.getAttribute("data-deck-list"));
+    const data = g_jDecks[nArray].decks[sKey];
+    const filename = e.target.innerText + ".meccg";
+
+    try
+    {
+        const type = "text/plain";
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(new Blob([data], {"type": type}));
+        a.download = filename;
+        a.click();    
+    }
+    catch (err)
+    {
+        console.log(err);
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
+    }
+
+    return false;
+}
 
 const onChallengeDeckChosen = function(e)
 {
@@ -443,13 +480,18 @@ const onPerformLogin = function()
         deck: jDeck
     }
 
-    document.getElementById("form").querySelector("textarea").value = JSON.stringify(bodyData);
+    const sUrlTarget = getTargetUrl(sUrl, getGameType()) + "/check";
 
-    const gameType = getGameType();
-    const sUrlTarget = getTargetUrl(sUrl, gameType);
-        
-    document.getElementById("form").setAttribute("action", sUrlTarget + "/check");   
-    document.getElementById("form").submit();
+    const tmpForm = document.createElement("form");
+    tmpForm.setAttribute("class", "hidden");
+    tmpForm.setAttribute("method", "post");
+    tmpForm.setAttribute("action", sUrlTarget);
+    const tmpTextarea = document.createElement("textarea");
+    tmpTextarea.setAttribute("name", "data");
+    tmpForm.appendChild(tmpTextarea);
+    document.body.appendChild(tmpForm);
+    tmpTextarea.value = JSON.stringify(bodyData);
+    tmpForm.submit();
 };
 
 const getTargetUrl = function(sUrl, gameType)
@@ -699,7 +741,7 @@ const onCheckCardCodes = function()
             response.json().then((data) => 
             {
                 if (data.valid === true)
-                    onPerformLogin();
+                    preloadGameData();
                 else
                     onProcessDeckCheckResult(data.codes);
             });
@@ -772,7 +814,6 @@ const g_pDeckTextFields = new DeckTextFields();
 
     g_pDeckTextFields.insert("deck-text-fields", "Deck Details", "w50");
 
-
     const sUserName = document.getElementById("user").value;
     if (sUserName === "")
     {
@@ -812,15 +853,11 @@ const g_pDeckTextFields = new DeckTextFields();
             insertSocialMedia(false);
     }));
 
-    const forms = document.getElementsByTagName("form");
-    const len = forms === null ? 0 : forms.length;
-    for (let i = 0; i < len; i++)
-    {
-        forms[i].onsubmit = (e) => {
+    const forms = document.getElementById("deckform");
+    forms.onsubmit = (e) => {
             document.getElementById("host").dispatchEvent(new Event('click'));
             e.preventDefault();
             return false;
-        }
     }
 
     CalculateDeckCategory.init();
@@ -829,3 +866,27 @@ const g_pDeckTextFields = new DeckTextFields();
 })();
 
 document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);
+
+const preloadGameData = function()
+{
+    const form = document.querySelector("form");
+    if (form !== null)
+        form.setAttribute("class", "hidden");
+
+    const div = document.createElement("div");
+    div.setAttribute("class", "loading-line-counter");
+    document.body.appendChild(div);
+
+    const elem = document.querySelector("h1");
+    if (elem !== null)
+        elem.innerText = "... loading data ...";
+
+    localStorage.removeItem("game_data");
+
+    fetch("/data/list/gamedata")
+    .then(response => response.json())
+    .then(data => localStorage.setItem("game_data", JSON.stringify(data)))
+    .catch(console.error)
+    .finally(onPerformLogin);
+    
+}
