@@ -46,6 +46,7 @@ const ReadDeck = {
         deck.hazards = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Hazard"));
         deck.character = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Character"));
         deck.resources = this.getCardList(this.extractDeckSectionSpecifica(deckSection, "Resource"));
+        deck.sites = this.getCardListSection(data, "Sites")
         deck.notes = this.extractDeckPart(data, "Notes");
         return deck;
     },
@@ -197,10 +198,20 @@ Pool
 ####
 Sideboard
 ####`;
-
         text += this.toStringPart(jDeck.sideboard.characters, "Character");
         text += this.toStringPart(jDeck.sideboard.resources, "Resource");
         text += this.toStringPart(jDeck.sideboard.hazards, "Hazard");
+        
+        if (Object.keys(jDeck.sites).length > 0)
+        {
+            text += `
+
+####
+Sites
+####`;
+            text += this.toStringPart(jDeck.sites, "Sites");
+        }
+
         if (notes !== "")
         {
             text += `

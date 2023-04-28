@@ -181,12 +181,12 @@ CreateCardsMeta.prototype.updateHazardOrResource = function (cards)
 {
     for (let card of cards) 
     {
-        const _category = card.type;
-        if (_category === "Region" || _category === "Site")
+        const _category = card.type.toLowerCase();
+        if (_category === "region")
             continue;
-        else if (_category === "Hazard" && !this._listHazardTypes.includes(card.Secondary))
+        else if (_category === "hazard" && !this._listHazardTypes.includes(card.Secondary))
             this._listHazardTypes.push(card.Secondary);
-        else if (_category !== "Hazard" && !this._listNonHazardTypes.includes(card.Secondary))
+        else if (_category !== "hazard" && !this._listNonHazardTypes.includes(card.Secondary))
             this._listNonHazardTypes.push(card.Secondary);
     }
 

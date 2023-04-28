@@ -14,6 +14,7 @@ const DeckbuilderApi =
     DECK_HAZARDS: "hazards",
     DECK_AVATAR : "avatar",
     DECK_POOL : "pool",
+    DECK_SITES: "sites",
 
     onAdd : function(e)
     {
@@ -256,6 +257,7 @@ const DeckbuilderApi =
         _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_CHARACTER2));
         _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_AVATAR, DeckbuilderApi.DECK_AVATAR));
         _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_SIDEBOARD, DeckbuilderApi.DECK_SIDEBOARD));
+        _notFound.push(addCardGroup(cards, DeckbuilderApi.DECK_SITES, DeckbuilderApi.DECK_SITES));
         return _notFound;
     },
 
@@ -276,7 +278,8 @@ const DeckbuilderApi =
                 characters: {},
                 resources: {},
                 hazards: {}
-            }
+            }, 
+            sites: { }
         };
 
         function onProcessPart(cards, targetPart)
@@ -284,14 +287,17 @@ const DeckbuilderApi =
             if (cards === undefined || cards === null)
                 return;
 
-            for (let code of Object.keys(cards))
+            for (let code in cards)
             {
-                if (cards[code].type === "Hazard")
-                    targetPart["hazards"][code] = cards[code].count;
-                else if (cards[code].type === "Character")
-                    targetPart["characters"][code] = cards[code].count;
+                const _card = cards[code];
+                if (_card.type === "Hazard")
+                    targetPart["hazards"][code] = _card.count;
+                else if (_card.type === "Character")
+                    targetPart["characters"][code] = _card.count;
+                else if (_card.type === "Site")
+                    targetPart[code] = 1;
                 else
-                    targetPart["resources"][code] = cards[code].count;
+                    targetPart["resources"][code] = _card.count;
             }
         }
 
@@ -300,7 +306,7 @@ const DeckbuilderApi =
             if (cards === undefined || target === undefined || cards === null)
                 return;
 
-            for (let code of Object.keys(cards))
+            for (let code in cards)
                 target[code] = cards[code].count;
         }
 
@@ -310,6 +316,7 @@ const DeckbuilderApi =
         onProcessTarget(input.resource, deck.deck.resources);
         onProcessTarget(input.hazard, deck.deck.hazards);
         onProcessPart(input.sideboard, deck.sideboard);
+        onProcessPart(input.sites, deck.sites);
 
         return deck;
     },
@@ -319,25 +326,6 @@ const DeckbuilderApi =
         return ReadDeck.toString(jDeck, title, notes);
     }
 }
-
-let g_bKeyIsCtrl = false;
-
-document.addEventListener('keyup', () => g_bKeyIsCtrl = false);
-document.addEventListener('keydown', function(e)
-{
-    if (e.key === "Control") 
-    {
-        e.preventDefault();
-        g_bKeyIsCtrl = true;
-    }
-
-	if (e.key === "s" && g_bKeyIsCtrl)
-    {
-        g_bKeyIsCtrl = false;
-        e.preventDefault();
-        onSaveDeck();
-	}
-});
 
 document.getElementById("save_deck").onclick = function()
 {

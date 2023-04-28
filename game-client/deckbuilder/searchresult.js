@@ -71,7 +71,7 @@ const SearchResult = {
 
         for (let key in vnIndicesCharacters)
         {
-            if (key === "Site" || key === "" || key === "Region")
+            if (key === "" || key === "Region")
                 continue;
 
             const _size = vnIndicesCharacters[key].length;
@@ -206,7 +206,8 @@ const SearchResult = {
                 case "faction":
                 case "ally":
                 case "not specified":
-                    sHtmlOther.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
+                case "site":
+                        sHtmlOther.appendChild(this.createLinkListHtml(key, vnIndicesCharacters[key].length));
                     break;
 
                 case "creature":
@@ -214,7 +215,6 @@ const SearchResult = {
                     break;
                 
                 case "haven":
-                case "site":
                 case "region":
                     break;
 
@@ -329,6 +329,8 @@ const SearchResult = {
     {
         if (pJson.type === "Hazard")
             return "hazard";
+        else if (pJson.type === "Site")
+            return "sites";
         else if (pJson.Secondary === "Avatar")
             return "avatar";
         else if (pJson.Secondary === "Character")

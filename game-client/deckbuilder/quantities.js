@@ -60,7 +60,7 @@ Quantities.prototype.init = function()
     this.add("Share of the Treasure", 14);
 
     this.addType("Avatar", 5);
-    this.addType("Site", 0);
+    this.addType("Site", 1);
     this.addType("Region", 0);
 };
 

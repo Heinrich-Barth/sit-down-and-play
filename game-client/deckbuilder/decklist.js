@@ -70,6 +70,14 @@ const DeckList =
             </div>
         </div>
 
+        <div class="pos-rel deck_part" id="deck_part_sites">
+            <label for="checkbox_sites">Sites (<span id="count_sites">0</span>)</label>
+            <input type="checkbox" id="checkbox_sites">
+            <div id="sites-list-container" class="no-pad-top list_toggle">
+                <div class="pos-rel fl w48 deck_part_col sites-list-container" id="sb_sites"></div>
+            </div>
+        </div>
+
         <div class="pos-rel">
             <label for="checkbox_notes">Deck Notes</label>
             <input type="checkbox" id="checkbox_notes">
@@ -235,6 +243,10 @@ const DeckList =
             case "sideboard":
                 this.addCardSideboard(pCard, sCode);
                 break;
+            case "site":
+            case "sites":
+                this.addCardSite(pCard, sCode);
+                break;
             case "avatar":
                 this.addCardToChars(pCard, sCode, true);
                 break;
@@ -244,7 +256,10 @@ const DeckList =
                 break;
             case "resource":
             case "hazard":
-                this.addCardToDeck(pCard, sCode);
+                if (pCard.type === "Site")
+                    this.addCardSite(pCard, sCode);
+                else
+                    this.addCardToDeck(pCard, sCode);
                 break;
             case "pool":
             case "pool_chars":
@@ -324,6 +339,11 @@ const DeckList =
             _containerId = "sb_resources";
 
         return this.addCardGeneric(pCard, _containerId);
+    },
+
+    addCardSite : function(pCard)
+    {
+        return this.addCardGeneric(pCard, "sb_sites");
     },
 
     addCardPool : function(pCard)
@@ -499,6 +519,8 @@ const DeckList =
             case "pool_chars":
             case "pool_resources":
                 return "pool";
+            case "sb_sites":
+                return "sites";
             default: 
                 return "";
         }

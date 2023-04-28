@@ -335,6 +335,15 @@ body h4 {
 .deck-builder .decklist .card_of_deck_construct .card_deck_title {
   text-transform: capitalize;
 }
+.deck-builder .sites-list-container .action {
+  min-width: auto !important;
+}
+.deck-builder .sites-list-container .action a {
+  display: none;
+}
+.deck-builder .sites-list-container .action a.deck_rem {
+  display: inline-block;
+}
 .deck-builder .list_left {
   flex: 3 70%;
 }
@@ -353,6 +362,10 @@ body h4 {
 }
 .deck-builder .category .actions[data-count="0"] a {
   display: none !important;
+}
+.deck-builder .category[data-id=Site] a.icon_add_pool,
+.deck-builder .category[data-id=Site] a.icon_add_sideboard {
+  visibility: hidden;
 }
 .deck-builder .category .image {
   position: relative;

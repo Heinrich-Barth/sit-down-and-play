@@ -58,7 +58,7 @@ body {
             padding: 0 1em !important;
         }
 
-        
+
     }
 
     textarea {
@@ -165,17 +165,20 @@ body {
     column-gap: 20px;
     align-items: start;
 
-    input[type="checkbox"] { 
-        display: none; 
+    input[type="checkbox"] {
+        display: none;
 
-        &:checked ~ .deck_part,
-        &:checked ~ .list_toggle,
-        &:checked ~ .d_container 
-        { display: none !important; }
+        &:checked~.deck_part,
+        &:checked~.list_toggle,
+        &:checked~.d_container {
+            display: none !important;
+        }
     }
+
     .fa:before {
         padding-right: 5px;
     }
+
     .decklist {
         flex: 1 30%;
         padding: 10px;
@@ -186,28 +189,27 @@ body {
             padding-right: 5px;
         }
 
-        a:hover 
-        {
+        a:hover {
             color: $color-white;
         }
 
         h2 {
             cursor: pointer;
-            font-size: 15px; 
+            font-size: 15px;
             text-align: center;
+
             &:hover {
                 color: #fff;
             }
         }
 
-        label
-        { 
-            padding-top: 10px; 
+        label {
+            padding-top: 10px;
             border-bottom: 1px dotted $color-orange;
-            display: block; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-size: 0.9em; 
+            display: block;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9em;
             margin: 1em 0;
             color: $color-orange;
 
@@ -215,6 +217,7 @@ body {
                 color: #fff;
             }
         }
+
         .decklist-action-move {
             display: inline-block;
             height: 16px;
@@ -222,6 +225,7 @@ body {
             background-position: 0 1px !important;
             background-size: contain !important;
         }
+
         .deckname {
             display: inline;
             width: 150px;
@@ -232,33 +236,46 @@ body {
             border-top: 0;
             background: transparent;
             color: #fff;
-            font-size: 15px; 
+            font-size: 15px;
         }
 
 
-        .card_of_deck_construct{
+        .card_of_deck_construct {
 
             display: flex;
             flex-wrap: nowrap;
             align-items: stretch;
 
             &:hover {
-                background-color: rgba(255,255,255,0.1);
+                background-color: rgba(255, 255, 255, 0.1);
                 cursor: pointer;
             }
 
             .action {
                 min-width: 90px;
             }
-            .count_deck_entry{
+
+            .count_deck_entry {
                 min-width: 20px;
                 text-align: center;
             }
-            .card_deck_title{
+
+            .card_deck_title {
                 text-transform: capitalize;
             }
         }
-        
+    }
+
+    .sites-list-container .action {
+        min-width: auto !important;
+
+        a {
+            display: none;
+
+            &.deck_rem {
+                display: inline-block;
+            }
+        }
     }
 
     .list_left {
@@ -275,18 +292,30 @@ body {
 
     .category {
 
-        .actions[data-count="0"] 
-        {
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
+        .actions {
+            &[data-count="0"] {
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
 
-            a { display: none !important; }
+                a {
+                    display: none !important;
+                }
+            }
+
+        }
+
+        &[data-id="Site"] {
+
+            a.icon_add_pool,
+            a.icon_add_sideboard {
+                visibility: hidden;
+            }
         }
 
         .image {
-            
+
             position: relative;
 
             .count_bubble {
@@ -302,8 +331,7 @@ body {
                 line-height: 1em;
             }
 
-            .actions
-            {
+            .actions {
                 position: absolute;
                 top: 35px;
                 right: 20px;
@@ -311,7 +339,7 @@ body {
 
                 a {
                     display: block;
-                    background-color: rgba(0,0,0,0.5);
+                    background-color: rgba(0, 0, 0, 0.5);
                     height: 64px;
                     margin-top: 5px;
                     border-radius: 5px;
@@ -331,33 +359,32 @@ body {
 
 
 .deck_move_pool,
-.actions  .icon_add_pool 
-{ 
+.actions .icon_add_pool {
     background: url("/media/assets/images/icons/icon-hand.png") 5px 15px no-repeat
 }
+
 .deck_move_pool:hover,
-.actions a.icon_add_pool:hover 
-{ 
-    background-image: url("/media/assets/images/icons/icon-hand-hover.png"); 
+.actions a.icon_add_pool:hover {
+    background-image: url("/media/assets/images/icons/icon-hand-hover.png");
 }
+
 .deck_move_play:hover,
-.actions a.icon_add_deck:hover 
-{ 
+.actions a.icon_add_deck:hover {
     background-image: url("/media/assets/images/icons/icon-playdeck-hover.png");
 }
+
 .deck_move_play,
-.actions a.icon_add_deck 
-{ 
-    background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat; 
+.actions a.icon_add_deck {
+    background: url("/media/assets/images/icons/icon-playdeck.png") -10px 0px no-repeat;
 }
+
 .deck_move_sideboard:hover,
-.actions a.icon_add_sideboard:hover 
-{ 
+.actions a.icon_add_sideboard:hover {
     background-image: url("/media/assets/images/icons/icon-sideboard-hover.png");
 }
+
 .deck_move_sideboard,
-.actions a.icon_add_sideboard 
-{ 
+.actions a.icon_add_sideboard {
     background: url("/media/assets/images/icons/icon-sideboard.png") 5px 15px no-repeat
 }
 
@@ -365,11 +392,14 @@ body {
 #deck_resources .deck_move_play,
 #deck_chars .deck_move_play,
 #deck_hazards .deck_move_play,
-#sideboard .deck_move_sideboard
-{ display: none; }
+#sideboard .deck_move_sideboard {
+    display: none;
+}
 
 
-#help_observer { float: left;}
+#help_observer {
+    float: left;
+}
 
 #deck_card_view {
     position: fixed;
@@ -377,15 +407,15 @@ body {
     left: 24%;
     top: 0;
 
-    img  {
+    img {
         position: fixed;
         top: 50%;
         height: auto;
         max-height: 100%;
         margin: 2px;
         transform: translateY(-50%);
-        
-        
+
+
     }
 }
 
@@ -418,7 +448,7 @@ body {
             transform: none;
             text-align: center;
             max-width: 95%;
-            margin: 20px auto;    
+            margin: 20px auto;
         }
     }
 
@@ -433,16 +463,14 @@ body {
     }
 
     .list_left,
-    .decklist 
-    {
+    .decklist {
         display: block;
     }
 }
 
-.loading-line-counter
-{
+.loading-line-counter {
     height: 5px;
-    background-color: rgba(255,165,0,0.8);
+    background-color: rgba(255, 165, 0, 0.8);
     width: 1%;
     position: absolute;
     left: 0;
@@ -452,8 +480,13 @@ body {
 }
 
 @keyframes loading-line-counter-refresh {
-    from { width: 0%; }
-    to { width: 100%; }
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 
