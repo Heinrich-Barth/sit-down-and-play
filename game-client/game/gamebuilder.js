@@ -276,6 +276,8 @@ const GameBuilder = {
             document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
             document.body.dispatchEvent(new CustomEvent("meccg-sfx-ready", { "detail": true }));
             
+            MeccgApi.send("/game/card/sites", { });
+
         }, 500);
     },
     
@@ -384,6 +386,12 @@ const GameBuilder = {
                    
         MeccgApi.addListener("/game/state/save/receive", () => { /** fallback */});
         MeccgApi.addListener("/game/state/save/current", () => { /** fallback */});
+
+        MeccgApi.addListener("/game/card/sites", function(bIsMe, jData) {
+
+            if (bIsMe && typeof SiteList !== "undefined")
+                SiteList.register(jData.cards);            
+        });
         
         MeccgApi.addListener("/game/player/set-current", function(bIsMe, jData)
         {
