@@ -31,40 +31,29 @@ let SERVER = {
 
         cache : {
 
-            cacheDate : new Date(Date.now() + (8640000 * 1000)).toUTCString(),
-            cacheDate6hrs : new Date(Date.now() + (21600 * 1000)).toUTCString(),
-
             jsonCallback : function(_req, res, next)
             {
-                res.header("Cache-Control", "public, max-age=8640000");
-                res.header("Expires", SERVER.caching.cache.cacheDate);
+                res.header("Cache-Control", "public, max-age=21600");
                 res.header('Content-Type', "application/json");
-                
                 next();
             },
 
             jsonCallback6hrs : function(_req, res, next)
             {
                 res.header("Cache-Control", "public, max-age=21600");
-                res.header("Expires", SERVER.caching.cache.cacheDate6hrs);
                 res.header('Content-Type', "application/json");
-                
                 next();
             },
 
             htmlCallback : function(_req, res, next)
             {
-                res.header("Cache-Control", "public, max-age=8640000");
-                res.header("Expires", SERVER.caching.cache.cacheDate);
+                res.header("Cache-Control", "public, max-age=0");
                 res.header('Content-Type', "text/html");
-                
                 next();
             },
         },
 
         expires : {
-
-            dateStringNow : new Date().toUTCString(),
 
             jsonCallback : function(_req, res, next)
             {
@@ -75,15 +64,12 @@ let SERVER = {
             generic : function(_req, res, next)
             {
                 res.header("Cache-Control", "no-store");
-                res.header("Expires", SERVER.caching.expires.dateStringNow);
-
                 next();
             },
 
             withResultType(res, sType)
             {
                 res.header("Cache-Control", "no-store");
-                res.header("Expires", SERVER.caching.expires.dateStringNow);
                 res.header('Content-Type', sType);
             }
         }
@@ -341,6 +327,19 @@ SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback6hrs, 
  * Show list of available sites
  */
 SERVER.instance.get("/data/list/sites", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getSiteList()).status(200));
+
+SERVER.instance.get("/data/list/gamedata", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => {
+
+    res.status(200).json({
+        images: SERVER.cards.getImageList(),
+        map: SERVER.cards.getMapdata(),
+        underdeeps: SERVER.cards.getUnderdeepMapdata()
+    });
+});
+
+SERVER.instance.get("/data/list/map", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getMapdata()).status(200));
+SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getUnderdeepMapdata()).status(200));
+
 
 /** Suggestions for code/name resolving */
 SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getNameCodeSuggestionMap()).status(200));
