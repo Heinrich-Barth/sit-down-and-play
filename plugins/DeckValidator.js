@@ -181,7 +181,8 @@ const validateDeck = function(jDeck, pCardRepository)
     let res = {
         pool : {},
         playdeck : {},
-        sideboard : {}
+        sideboard : {},
+        sites: {}
     }
 
     let count = 0;
@@ -192,6 +193,7 @@ const validateDeck = function(jDeck, pCardRepository)
     count += copyGenericCards(res.playdeck, jDeck.chars, pCardRepository);
     count += copyGenericCards(res.playdeck, jDeck.resources, pCardRepository);
     count += copyGenericCards(res.playdeck, jDeck.hazards, pCardRepository);
+    count += copyGenericCards(res.sites, jDeck.sites, pCardRepository);
 
     return count === 0 ? null : res;
 };
