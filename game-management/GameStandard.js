@@ -33,6 +33,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/card/move", this.onCardMove.bind(this));
         this.getMeccgApi().addListener("/game/card/discard", this.onCardDiscard.bind(this));
         this.getMeccgApi().addListener("/game/card/hand", this.onCardInHand.bind(this));
+        this.getMeccgApi().addListener("/game/card/sites", this.onCardSites.bind(this));
         this.getMeccgApi().addListener("/game/card/token", this.onCardToken.bind(this));
         this.getMeccgApi().addListener("/game/card/add", this.onGameAddCardsToGame.bind(this)); /* add a list of cards to the sideboard */
         this.getMeccgApi().addListener("/game/card/import", this.onCardImport.bind(this));
@@ -611,6 +612,15 @@ class GameStandard extends GamePlayers
             res.push({ code: card.code, uuid: card.uuid, count: 1, type: card.type, owner: ""} );
 
         this.replyToPlayer("/game/card/hand", socket, { cards: res });
+    }
+
+    onCardSites(userid, socket)
+    {
+        const res = [];
+        for (let card of this.getPlayboardManager().GetCardsSites(userid))
+            res.push(card.code);
+
+        this.replyToPlayer("/game/card/sites", socket, { cards: res });
     }
 
     onCardDiscard(userid, _socket, data)

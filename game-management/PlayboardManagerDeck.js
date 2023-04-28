@@ -223,6 +223,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         return this.getCardList(this.getDecks().getCards().hand(playerId));
     }
 
+    GetCardsSites(playerId)
+    {
+        return this.getCardList(this.getDecks().getCards().sites(playerId));
+    }
+
     GetCardsInHandMarshallingPoints(playerId)
     {
         return this.getCardList(this.getDecks().getCards().handMarshallingPoints(playerId));

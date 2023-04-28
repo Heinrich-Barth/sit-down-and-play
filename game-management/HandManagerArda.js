@@ -18,6 +18,11 @@ class HandManagerArda extends HandManager
         return this.getCardPils(playerId, "handMinorItems");
     }
 
+    sites(_playerId)
+    {
+        return [];
+    }
+
     handMarshallingPoints(playerId)
     {
         return this.getCardPils(playerId, "handCardsMP");

@@ -15,6 +15,7 @@ class DeckDefault extends DeckCommons {
         this.victory = [];
         this.playdeck = [];
         this.outofplay = [];
+        this.sites = [];
     }
 
     /**
@@ -29,6 +30,7 @@ class DeckDefault extends DeckCommons {
         this.restoreList(this.victory, deck.victory);
         this.restoreList(this.playdeck, deck.playdeck);
         this.restoreList(this.outofplay, deck.outofplay);
+        this.restoreList(this.sites, deck.sites);
     }
 
     /**
@@ -80,6 +82,7 @@ class DeckDefault extends DeckCommons {
         data.victory = this.victory;
         data.playdeck = this.playdeck;
         data.outofplay = this.outofplay;
+        data.sites = this.sites;
 
         return data;
     }
@@ -439,15 +442,15 @@ class DeckDefault extends DeckCommons {
         const MAX_CARDS_PER_DECK = this.getMaxDeckSize();
 
         let nSize = 0;
-
         nSize += this.add(jsonDeck["pool"], this.handCards, _cardMap, listAgents, gameCardProvider);
         nSize += this.add(jsonDeck["playdeck"], this.playdeck, _cardMap, listAgents, gameCardProvider);
+        nSize += this.add(jsonDeck["sites"], this.sites, _cardMap, listAgents, gameCardProvider);
         nSize += this.add(jsonDeck["sideboard"], this.sideboard, _cardMap, listAgents, gameCardProvider);
         
         if (nSize == MAX_CARDS_PER_DECK)
-            console.log("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
+            console.info("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
         else
-            console.log("Added " + nSize + " cards to " + this.getPlayerId() + "'s deck.");
+            console.info("Added " + nSize + " cards to " + this.getPlayerId() + "'s deck.");
     }
 }
 

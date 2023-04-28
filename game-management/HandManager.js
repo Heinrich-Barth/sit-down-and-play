@@ -35,6 +35,11 @@ class HandManager
             return this.DECKS._deck[playerId].size();
     }
 
+    sites(playerId)
+    {
+        return this.getCardPils(playerId, "sites");
+    }
+
     hand(playerId)
     {
         return this.getCardPils(playerId, "handCards");
