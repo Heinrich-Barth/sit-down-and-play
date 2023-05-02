@@ -8,6 +8,7 @@ CardPreview.allowIdleMax = 1000 * 60 * 15;
 CardPreview.idleForceShutdown = null;
 CardPreview.idleCountdownActive = false;
 CardPreview.currentCharacterId = "";
+CardPreview.currentCardId = "";
 
 CardPreview.getTargetContainer = function(bLeft, bTop)
 {
@@ -94,19 +95,23 @@ CardPreview.show = function(img, bLeft, bTop)
 CardPreview.onHoverCharacter = function(img)
 {
     CardPreview.currentCharacterId = "";
+    CardPreview.currentCardId = "";
     
-    const parent = img.parentElement;
-    if (parent === null || parent.getAttribute("data-card-type") !== "character")
+    if (img.parentElement === null)
         return;
 
-    const id = parent.getAttribute("id");
-    if (id !== null)
+    const parent = img.parentElement;
+    const id = parent.hasAttribute("id") ? parent.getAttribute("id") : "";
+    if (parent.getAttribute("data-card-type") === "character")
         CardPreview.currentCharacterId = id;
+
+    CardPreview.currentCardId = parent.hasAttribute("data-uuid") ? parent.getAttribute("data-uuid") : "";
 }
 
 CardPreview.hide = function(bLeft, bTop)
 {
     CardPreview.currentCharacterId = "";
+    CardPreview.currentCardId = "";
 
     const elem = CardPreview.getTargetContainer(bLeft, bTop);
     if (elem !== null)
@@ -159,8 +164,8 @@ CardPreview.init = function(cardDiv)
 
 CardPreview._getImage = function(elem)
 {
-    let bAlways = CardPreview.isVisitor || CardPreview._isMyCard(elem);
-    let src = elem.getAttribute("src") || "";
+    const bAlways = CardPreview.isVisitor || CardPreview._isMyCard(elem);
+    const src = elem.getAttribute("src") || "";
 
     if (!bAlways || !CardPreview._isBackside(src))
         return src;
@@ -175,7 +180,7 @@ CardPreview._isBackside = function(src)
 
 CardPreview._isMyCard = function(elem)
 {
-    let sVal = elem.getAttribute("data-owner");
+    const sVal = elem.getAttribute("data-owner");
     return sVal === null || typeof sVal === "undefined" || sVal === "";
 };
 
@@ -208,7 +213,7 @@ CardPreview.showImage = function(elem)
 
 CardPreview._initView = function(sId)
 {
-    let elem = document.getElementById(sId);
+    const elem = document.getElementById(sId);
     if (elem !== null)
         elem.onmouseover = CardPreview._hidePreviewBox;
 };

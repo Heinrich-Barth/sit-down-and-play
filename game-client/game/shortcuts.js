@@ -34,6 +34,37 @@ const ShotcutManager =
         return "" + code;
     },
 
+    isDraggable : function(uuid)
+    {
+        return ShotcutManager.getDraggableDiv(uuid) !== null;
+    },
+
+    getDraggableDiv : function(uuid)
+    {
+        if (uuid === null || uuid === "")
+            return null;
+
+        const pStage =  document.getElementById("stagecard_" + uuid);
+        if (pStage !== null)
+            return pStage;
+        else
+            return document.getElementById("ingamecard_" + uuid);
+    },
+
+    discardHoveredCard : function(uuid)
+    {
+        const div = ShotcutManager.getDraggableDiv(uuid);
+        if (div === null)
+            return;
+
+        const src = div.hasAttribute("data-location") ? div.getAttribute("data-location") : "";
+        if (src !== "")
+        {
+            DomUtils.removeNode(div);
+            MeccgApi.send("/game/card/move", {uuid: uuid, target: "discardpile", source: src, drawTop : false});
+        }
+    },
+
     onKeyUp : function(evt)
     {
         const code = this.getKey(evt);
@@ -46,7 +77,7 @@ const ShotcutManager =
 
             case "w":
             case "r":
-                if (CardPreview.currentCharacterId !== undefined && CardPreview.currentCharacterId !== "")
+                if (CardPreview.currentCharacterId !== "")
                     document.getElementById(CardPreview.currentCharacterId).querySelector(".card-dice").dispatchEvent(new Event("click"));
                 else
                     document.getElementById("playercard_hand").querySelector(".card-dice").dispatchEvent(new Event("click"));
@@ -60,6 +91,15 @@ const ShotcutManager =
                 this.clickProgressionLink("eotdiscard");
                 break;
 
+            case "f":
+                if (CardPreview.currentCardId !== "" && ShotcutManager.isDraggable(CardPreview.currentCardId))
+                    MeccgApi.send("/game/card/state/reveal", {uuid : CardPreview.currentCardId, code: "" }); 
+                break;
+
+            case "x":
+                if (CardPreview.currentCardId !== "")
+                    ShotcutManager.discardHoveredCard(CardPreview.currentCardId);
+                break;
             case "q":
                 this.clickProgressionLink("eot");
                 break;
