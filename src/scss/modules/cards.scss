@@ -129,8 +129,6 @@ body {
         img {
             width: 100%;
             max-height: 100%;
-            background: url(/data/backside) 0 0 no-repeat;
-            background-size: contain;
             border-radius: 5%;
         }
     }
@@ -317,6 +315,16 @@ body {
         .image {
 
             position: relative;
+            min-height: 400px;
+            min-width: 300px;
+
+            .image_overlay {
+                height: 100%;
+                width: 100%;
+                background: url("/data/backside") 0 0 no-repeat;
+                background-size: contain;
+            }
+        
 
             .count_bubble {
                 right: 5px;

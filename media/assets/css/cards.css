@@ -224,8 +224,6 @@ body h4 {
 .category .image img {
   width: 100%;
   max-height: 100%;
-  background: url(/data/backside) 0 0 no-repeat;
-  background-size: contain;
   border-radius: 5%;
 }
 
@@ -369,6 +367,14 @@ body h4 {
 }
 .deck-builder .category .image {
   position: relative;
+  min-height: 400px;
+  min-width: 300px;
+}
+.deck-builder .category .image .image_overlay {
+  height: 100%;
+  width: 100%;
+  background: url("/data/backside") 0 0 no-repeat;
+  background-size: contain;
 }
 .deck-builder .category .image .count_bubble {
   right: 5px;
