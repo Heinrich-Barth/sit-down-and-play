@@ -510,7 +510,7 @@ SERVER.instance.post("/login", (req, res) => {
 require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
 require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
-//require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
+require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
 require("./server/RoutingErrorPages")(SERVER, g_pExpress);
 require("./server/RoutingTournament")(SERVER, g_pExpress);
