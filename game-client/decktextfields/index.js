@@ -82,6 +82,17 @@ class DeckTextFields {
         return parent;
     }
 
+    createSiteTextInformation()
+    {
+        const i = document.createElement("strong");
+        i.setAttribute("class", "fa fa-info-circle");
+
+        const p = document.createElement("p");
+        p.appendChild(i);
+        p.appendChild(document.createTextNode(" If you add sites to your site deck, these will be made available on the region map. You may still access all other sites and regions, of course."));
+        return p;
+    }
+
 
     insert(id, title, cssClass) {
         const elem = document.getElementById(id);
@@ -91,6 +102,7 @@ class DeckTextFields {
         const fields = this.createTextfields();
         if (elem.classList.contains("deck-fields"))
         {
+            elem.prepend(this.createSiteTextInformation());
             elem.prepend(fields);
             elem.prepend(this.createTitle(title));
             if (cssClass)
