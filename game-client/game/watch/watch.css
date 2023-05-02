@@ -1,5 +1,3 @@
-
-
 .game-watch-only .card-bar-play,
 .game-watch-only .help-wrapper,
 .game-watch-only #playercard-hand-content,
@@ -7,7 +5,9 @@
 .game-watch-only .area-player,
 .game-watch-only .chattext,
 .game-watch-only .arda-hand-wrapper,
-.game-watch-only .arda-card-hands
+.game-watch-only .arda-card-hands,
+.game-watch-only .companies .company .character-card-dice,
+.game-watch-only .company-characters-add
 {
     display: none !important;
 }
@@ -27,11 +27,6 @@
 .game-watch-only #playercard_hand .icon { display: none; }
 .game-watch-only #playercard_hand .icon.act { display: inline-block; }
 .game-watch-only #playercard_hand .task_overlay { background-color: transparent;}
-
-.game-watch-only .company-characters-add
-{
-    display: none;
-}
 
 .game-watch-only .taskbar.turn-opponent .task_overlay
 {
@@ -55,12 +50,12 @@
     border-bottom: 2px solid black;
 }
 
-
 .game-watch-only .staging-area,
 .game-watch-only .companies,
 .game-watch-only .visitor-hand-view,
 .game-watch-only .table .row,
-.game-watch-only .area-opponent 
+.game-watch-only .area-opponent,
+.game-watch-only .scoring-sheet.final-score.final-score-watch  .button
 {
     display: block !important;
 }
@@ -114,10 +109,6 @@
     height: 190px;
 }
 
-.game-watch-only .scoring-sheet.final-score.final-score-watch  .button
-{
-    display: block !important;
-}
 .game-watch-only .staging-area .fr { float: left; }
 .game-watch-only .visitor-hand-view .card-hand
 {
