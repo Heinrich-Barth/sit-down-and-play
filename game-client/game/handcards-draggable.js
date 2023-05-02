@@ -508,13 +508,141 @@ const HandCardsDraggable = {
         const img = pDiv.querySelector("img");
         return img !== null && "/data/backside-region" !== img.getAttribute("src");
     },
+
+    getDonatingCharacter : function(source, elemDraggable)
+    {
+        if (source === "hand")
+            return { character_uuid : elemDraggable.getAttribute("data-uuid"), company_uuid : "" };
+        else
+            return HandCardsDraggable.getCompanyPath(elemDraggable);
+    },
+
+    getDonatingCompanyUuid : function(donatingCharacter, receivingCharacter)
+    {
+        if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
+            return donatingCharacter.company_uuid;
+        else
+            return "";
+    },
+
+    onCardCharacterHostOnDrop : function(_event, ui)
+    {
+        const elemDraggable = ui.draggable[0];
+        const source = elemDraggable.getAttribute("data-location");
+        const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
+        receivingCharacter.character_uuid = this.getAttribute("data-uuid");
+        const redrawReceivingCompanyId = receivingCharacter.company_uuid;
+        let redrawDonatingCompanyId = "";
+        
+        if (elemDraggable.getAttribute("data-card-type") === "character")
+        {
+            const donatingCharacter = HandCardsDraggable.getDonatingCharacter(source, elemDraggable);
+            redrawDonatingCompanyId = HandCardsDraggable.getDonatingCompanyUuid(donatingCharacter, receivingCharacter);
+            
+            const params = {
+                    uuid : elemDraggable.getAttribute("data-uuid"),
+                    targetcharacter: receivingCharacter.character_uuid,
+                    companyId : receivingCharacter.company_uuid,
+                    fromHand : source === "hand"
+            };
+                
+            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+            HandCardsDraggable.getApi().send("/game/character/join/character", params, true);
+        }
+        else if (source === "hand" || source === "stagingarea")
+        {
+            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+            HandCardsDraggable.onAddResourcesToCharacter(elemDraggable.getAttribute("data-uuid"), this, true);
+        }
+        else 
+        {
+            const donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
+            donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
+            
+            if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) /* oneself cannot be the target */
+                return;
+
+            if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
+                redrawDonatingCompanyId = donatingCharacter.company_uuid;
+            
+            if (elemDraggable.getAttribute("data-card-type") === "resource")
+            {
+                CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+                HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), this, false);
+            }
+            else if (elemDraggable.getAttribute("data-card-type") === "hazard")
+            {   
+                CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+                HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), this, source === "hand");
+            }
+        }
+
+        if (redrawReceivingCompanyId !== "")
+            HandCardsDraggable.getApi().send("/game/draw/company", redrawReceivingCompanyId);
+        
+        if (redrawDonatingCompanyId !== "")
+            HandCardsDraggable.getApi().send("/game/draw/company", redrawDonatingCompanyId);
+    },
+
+    characterIsHostingCharacter : function(cardDiv)
+    {
+        return this.getCompanyPath(cardDiv).is_host;
+    },
+
+    onCardCharacterFollowerOnDrop : function(_event, ui ) 
+    {
+        const elemDraggable = ui.draggable[0];
+        const source = elemDraggable.getAttribute("data-location");
+        const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
+        receivingCharacter.character_uuid = this.getAttribute("data-uuid");
+        
+        let drawReceivingCompanyId = receivingCharacter.company_uuid;
+        let drawDonatingCompanyId = "";
+        
+        if (elemDraggable.getAttribute("data-card-type") === "character")
+            return;
+
+        if (source === "hand" || source === "stagingarea")
+        {
+            const pThis = this;
+            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+            HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, true);
+        }
+        else
+        {
+            const donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
+            if (receivingCharacter.character_uuid === donatingCharacter.character_uuid) /*oneself cannot be the target*/
+                return;
+            else if (receivingCharacter.company_uuid !== donatingCharacter.character_uuid)
+                drawDonatingCompanyId = donatingCharacter.character_uuid;
+
+            const draggableType = elemDraggable.getAttribute("data-card-type");
+            if (draggableType === "resource")
+            {
+                const pThis = this;
+                CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+                HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, false);
+            }
+            else if (draggableType === "hazard")
+            {
+                const pThis = this;
+                CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+                HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, true);
+            }
+            else
+                return;
+        }
+
+        if (drawReceivingCompanyId !== "")
+            HandCardsDraggable.getApi().send("/game/draw/company", drawReceivingCompanyId);
+        
+        if (drawDonatingCompanyId !== "")
+            HandCardsDraggable.getApi().send("/game/draw/company", drawDonatingCompanyId);
+    },
     
     initOnCardCharacter : function(cardDiv)
     {
-        if (cardDiv === null)
-            return;
-
-        const isHost = this.getCompanyPath(cardDiv).is_host;
+        const isHost = this.characterIsHostingCharacter(cardDiv);
         if (isHost) /* if this character is a host, he/she may accept characters under direct influence */
         {
             jQuery(cardDiv).droppable(
@@ -522,75 +650,7 @@ const HandCardsDraggable = {
                 tolerance: "pointer",
                 classes: HandCardsDraggable.droppableParams,
                 accept: HandCardsDraggable.droppableAccept,
-                
-                drop: function(_event, ui ) 
-                {
-                    const elemDraggable = ui.draggable[0];
-                    const source = elemDraggable.getAttribute("data-location");
-                    const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
-                    receivingCharacter.character_uuid = this.getAttribute("data-uuid");
-                    const redrawReceivingCompanyId = receivingCharacter.company_uuid;
-                    let redrawDonatingCompanyId = "";
-                    
-                    if (elemDraggable.getAttribute("data-card-type") === "character")
-                    {
-                        let donatingCharacter;
-                        if (source === "hand")
-                            donatingCharacter = { character_uuid : elemDraggable.getAttribute("data-uuid"), company_uuid : "" };
-                        else
-                            donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
-
-                        if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
-                            redrawDonatingCompanyId = donatingCharacter.company_uuid;
-                        
-                        const params = {
-                                uuid : elemDraggable.getAttribute("data-uuid"),
-                                targetcharacter: receivingCharacter.character_uuid,
-                                companyId : receivingCharacter.company_uuid,
-                                fromHand : source === "hand"
-                        };
-                          
-                        CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                        HandCardsDraggable.getApi().send("/game/character/join/character", params, true);
-                    }
-                    else if (source === "hand" || source === "stagingarea")
-                    {
-                        CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                        const pThis = this;
-                        HandCardsDraggable.onAddResourcesToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, true);
-                    }
-                    else 
-                    {
-                        let donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
-                        donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
-                        
-                        if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) /* oneself cannot be the target */
-                            return;
-
-                        if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
-                            redrawDonatingCompanyId = donatingCharacter.company_uuid;
-                        
-                        if (elemDraggable.getAttribute("data-card-type") === "resource")
-                        {
-                            const pThis = this;
-                            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                            HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, false);
-                        }
-                        else if (elemDraggable.getAttribute("data-card-type") === "hazard")
-                        {   
-                            const pThis = this;
-                            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                            HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, source === "hand");
-                        }
-                    }
-
-                    if (redrawReceivingCompanyId !== "")
-                        HandCardsDraggable.getApi().send("/game/draw/company", redrawReceivingCompanyId);
-                    
-                    if (redrawDonatingCompanyId !== "")
-                        HandCardsDraggable.getApi().send("/game/draw/company", redrawDonatingCompanyId);
-                }
-                
+                drop: HandCardsDraggable.onCardCharacterHostOnDrop
             });
         }
         else /* influenced character */
@@ -600,56 +660,7 @@ const HandCardsDraggable = {
                 tolerance: "pointer",
                 classes: HandCardsDraggable.droppableParams,
                 accept: HandCardsDraggable.droppableAcceptResrouceAndHazards,
-                drop: function(_event, ui ) 
-                {
-                    const elemDraggable = ui.draggable[0];
-                    const source = elemDraggable.getAttribute("data-location");
-                    const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
-                    receivingCharacter.character_uuid = this.getAttribute("data-uuid");
-                    
-                    let drawReceivingCompanyId = receivingCharacter.company_uuid;
-                    let drawDonatingCompanyId = "";
-                    
-                    if (elemDraggable.getAttribute("data-card-type") === "character")
-                        return;
-
-                    if (source === "hand" || source === "stagingarea")
-                    {
-                        const pThis = this;
-                        CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                        HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, true);
-                    }
-                    else
-                    {
-                        const donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
-                        if (receivingCharacter.character_uuid === donatingCharacter.character_uuid) /*oneself cannot be the target*/
-                            return;
-                        else if (receivingCharacter.company_uuid !== donatingCharacter.character_uuid)
-                            drawDonatingCompanyId = donatingCharacter.character_uuid;
-
-                        const draggableType = elemDraggable.getAttribute("data-card-type");
-                        if (draggableType === "resource")
-                        {
-                            const pThis = this;
-                            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                            HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, false);
-                        }
-                        else if (draggableType === "hazard")
-                        {
-                            const pThis = this;
-                            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                            HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), pThis, true);
-                        }
-                        else
-                            return;
-                    }
-
-                    if (drawReceivingCompanyId !== "")
-                        HandCardsDraggable.getApi().send("/game/draw/company", drawReceivingCompanyId);
-                    
-                    if (drawDonatingCompanyId !== "")
-                        HandCardsDraggable.getApi().send("/game/draw/company", drawDonatingCompanyId);
-                }
+                drop: HandCardsDraggable.onCardCharacterFollowerOnDrop
             });
         }
 
