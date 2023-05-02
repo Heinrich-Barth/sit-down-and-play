@@ -229,8 +229,7 @@ body, p {
 }
 
 .release-notes {
-  width: 80%;
-  max-width: 900px;
+  width: 90%;
   margin: 20px auto 0 auto;
 }
 .release-notes td,
@@ -275,9 +274,5 @@ body, p {
 @media (max-width: 800px) {
   .content {
     padding-top: 6em;
-  }
-  .release-notes {
-    max-width: 100%;
-    width: 100%;
   }
 }
