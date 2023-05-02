@@ -58,6 +58,28 @@ class GamePreferences extends Preferences {
             document.body.removeAttribute("data-autosave");
     }
 
+    _toggleFullscreen(isActive)
+    {
+        const elem = document.documentElement;
+        if (elem === undefined)
+            return;
+
+        if (isActive)
+        {
+            if (elem.requestFullscreen) 
+                elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) /* Safari */
+                elem.webkitRequestFullscreen();
+        }
+        else
+        {
+            if (document.exitFullscreen) 
+                document.exitFullscreen();
+            else if (document.webkitExitFullscreen)  /* Safari */
+                document.webkitExitFullscreen();
+        }
+    }
+
     _backgroundDarkness(isActive)
     {
         const list = document.getElementsByClassName("table");
@@ -155,6 +177,7 @@ class GamePreferences extends Preferences {
         this.createEntry0("viewpile_open");
         this.createEntry0("show_chat");
         this.createEntry0("use_padding_bottom");
+        this.createEntry0("toggle_fullscreen");
     }
 
     static isWatching()
@@ -177,7 +200,7 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
         this.addConfigSlider("game_sfx", "Sound volume", 20, "fa-volume-up", this._volumeChange.bind(this));
         this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
-
+        this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
