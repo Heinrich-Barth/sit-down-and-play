@@ -272,15 +272,14 @@ class GameStandard extends GamePlayers
 
     onStagingAreaAddCard(userid, _socket, data)
     {
-        let _uuid = data.uuid;
-
+        const _uuid = data.uuid;
         if (!this.getPlayboardManager().MoveCardToStagingArea(_uuid, userid, userid))
         {
             this.publishChat(userid, "Cannot move card to staging area", false);
             return false;
         }
 
-        let card = this.getPlayboardManager().GetCardByUuid(_uuid);
+        const card = this.getPlayboardManager().GetCardByUuid(_uuid);
         card.turn = this.getCurrentTurn();
 
         this.publishToPlayers("/game/remove-card-from-hand", "", _uuid);
@@ -290,7 +289,7 @@ class GameStandard extends GamePlayers
             code: card.code, 
             type: card.type, 
             state: card.state, 
-            revealed: card.revealed, 
+            revealed: card.revealed !== false, 
             owner: card.owner, 
             turn: card.turn,
             secondary : card.secondary
@@ -306,10 +305,12 @@ class GameStandard extends GamePlayers
 
         this.publishToPlayers("/game/card/reveal", userid, {uuid: uuid, reveal: rev});
 
-        if (rev)
+        if (!rev)
+            this.publishChat(userid, " hides a card", true);
+        else if (data.code && data.code !== "")
             this.publishChat(userid, " reveals " + data.code, true);
         else
-            this.publishChat(userid, " hides a card", true);
+            this.publishChat(userid, " reveals a card", true);
     }
 
     onGameCardStateSet(userid, _socket, data)
@@ -408,62 +409,69 @@ class GameStandard extends GamePlayers
         this.updateHandCountersPlayer(userid);
     }
 
-    onCardStore(userid, _socket, obj)
+    doStorCard(characterUuid, card )
     {
-        let card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
-        if (card === null)
-            return;
-
-        this.getPlayboardManager().UpdateOwnership(userid, card);
-
-        let nStored = 0, nDiscarded = 0;
+        let bStored = false;
+        let nDiscarded = 0;
         let list = [];
         let affectedCompanyUuid = "";
-        if (card.type === "character")
+        const isCharacter = card.type === "character";
+        if (isCharacter)
         {
-            let _remove = [];
-            
-            affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
+            affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(characterUuid);
 
-            list = this.getPlayboardManager().PopCharacterAndItsCards(obj.uuid);
-
-            for (let _uuid of list)
+            for (let _uuid of this.getPlayboardManager().PopCharacterAndItsCards(characterUuid))
             {
-                if (_uuid === obj.uuid)
+                if (_uuid === characterUuid)
                 {
                     if (this.getPlayboardManager().AddToPile(_uuid, card.owner, "victory"))
                     {
-                        nStored++;
-                        _remove.push(_uuid);
+                        bStored = true;
+                        list.push(_uuid);
                     }
                 } 
                 else if (this.getPlayboardManager().AddToPile(_uuid, card.owner, "discard"))
                 {
                     nDiscarded++;
-                    _remove.push(_uuid);
+                    list.push(_uuid);
                 }
             }
-
-            list = _remove;
         }
 
-        if (list.length === 0 || card.type !== "character" )
+        if (!isCharacter || list.length === 0)
         {
-            if (this.getPlayboardManager().MoveCardTo(obj.uuid, card.owner, "victory"))
+            if (this.getPlayboardManager().MoveCardTo(characterUuid, card.owner, "victory"))
             {
-                nStored++;
-                list = [obj.uuid];
+                bStored = true;
+                list = [characterUuid];
             }
         } 
 
-        if (nStored !== 0)
+        return {
+            list: list,
+            stored: bStored,
+            discarded: nDiscarded,
+            affectedCompanyUuid : affectedCompanyUuid
+        }
+    }
+
+    onCardStore(userid, _socket, obj)
+    {
+        const card = this.getPlayboardManager().GetCardByUuid(obj.uuid);
+        if (card === null)
+            return;
+
+        this.getPlayboardManager().UpdateOwnership(userid, card);
+
+        const result = this.doStorCard(obj.uuid, card)
+        if (result.stored)
         {
-            this.publishToPlayers("/game/card/remove", userid, list);
+            this.publishToPlayers("/game/card/remove", userid, result.list);
             this.updateHandCountersPlayerAll();
 
             this.publishChat(userid, "Stores " + card.code, true);
-            if (nDiscarded > 0)
-                this.publishChat(userid, "... and discarded " + nDiscarded + " card(s)", true);
+            if (result.discarded > 0)
+                this.publishChat(userid, "... and discarded " + result.discarded + " card(s)", true);
 
             this.publishToPlayers("/game/event/score", userid, {owner: card.owner, code: card.code });
         } 
@@ -471,7 +479,7 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, "Could not store " + card.code, false);
 
         /** update the company */
-        this.onRedrawCompany(userid,affectedCompanyUuid);
+        this.onRedrawCompany(userid, result.affectedCompanyUuid);
     }
 
     identifyCardOwnerWhenMoving(userid, cardOwner, target)
@@ -484,7 +492,7 @@ class GameStandard extends GamePlayers
 
     onCardMoveDoMove(userid, obj, card)
     {
-        let result = {
+        const result = {
             codes: [],
             uuids : [],
             countMoved : 0,
@@ -1323,6 +1331,92 @@ class GameStandard extends GamePlayers
         return false;
     }
 
+    globalRestoreGameOwnerShips(playboard, assignments)
+    {
+        const _map = playboard.decks.cardMap;
+        for (let _cardId in _map)
+        {
+            const _formerOwner = _map[_cardId].owner;
+            if (assignments[_formerOwner] !== undefined)
+                _map[_cardId].owner = assignments[_formerOwner];
+            else
+                throw new Error("Cannot find former owner " + _formerOwner + " of card " + _cardId + ". Cannot restore game.");
+        }
+    }
+
+    globalRestoreGameSitemap(playboard, assignments)
+    {
+        for (let key in playboard.decks.siteMap) 
+        {
+            const newkey = assignments[key];
+            if (newkey === undefined)
+                throw new Error("Cannot find owner " + key + " in siteMap");
+            
+            playboard.decks.siteMap[newkey] = playboard.decks.siteMap[key];
+
+            /** 
+             * It might be, that the OLD and NEW ids are identical (immediate restoring)
+             * This would cause the player to be removed from the game; therefore
+             * make sure we do not remove a valid sitemap.
+             */
+            if (newkey !== key)
+                delete playboard.decks.siteMap[key];
+        }
+    }
+
+    globalRestoreGameDecks(playboard, assignments)
+    {
+        for (let key in playboard.decks.deck) 
+        {
+            const newkey = assignments[key];
+            if (newkey === undefined)
+                throw new Error("Cannot find owner " + key + " in deck");
+
+            playboard.decks.deck[newkey] = playboard.decks.deck[key];
+            if (newkey !== key)
+                delete playboard.decks.deck[key];
+        }
+    }
+
+    globalRestoreGameStagingArea(playboard, assignments)
+    {
+        for (let key in playboard.stagingarea) 
+        {
+            const newkey = assignments[key];
+            if (newkey === undefined)
+                throw new Error("Cannot find owner " + key + " in stagingarea");
+
+            playboard.stagingarea[newkey] = playboard.stagingarea[key];
+            if (newkey !== key)
+                delete playboard.stagingarea[key];    
+        }
+    }
+
+    globalRestoreGameScoring(scoring, assignments)
+    {
+        for (let key in scoring) 
+        {
+            const newkey = assignments[key];
+            if (newkey === undefined)
+                throw new Error("Cannot find owner " + key + " in scoring");
+
+            scoring[newkey] = scoring[key];
+            if (newkey !== key)
+                delete scoring[key];
+        }
+    }
+
+    globalRestoreGameCompanies(playboard, assignments)
+    {
+        for (let key in playboard.companies) 
+        {
+            const newkey = assignments[playboard.companies[key].playerId];
+            if (newkey !== undefined)
+                playboard.companies[key].playerId = newkey;
+            else
+                throw new Error("Cannot find owner " + key + " in companies");
+        }
+    }
 
     globalRestoreGame(userid, _socket, data)
     {
@@ -1335,115 +1429,22 @@ class GameStandard extends GamePlayers
 
         try
         {
-            let playboard = data.game.playboard;
-            let _map = playboard.decks.cardMap;
-            for (let _cardId of Object.keys(_map))
-            {
-                const _formerOwner = _map[_cardId].owner;
-                if (assignments[_formerOwner] === undefined)
-                    throw new Error("Cannot find former owner " + _formerOwner + " of card " + _cardId + ". Cannot restore game.");
-                else
-                    _map[_cardId].owner = assignments[_formerOwner];
-            }
+            const playboard = data.game.playboard;
+            this.globalRestoreGameOwnerShips(playboard, assignments);
+            this.globalRestoreGameSitemap(playboard, assignments);
+            this.globalRestoreGameDecks(playboard, assignments)
+            this.globalRestoreGameStagingArea(playboard, assignments);            
+            this.globalRestoreGameCompanies(playboard, assignments);
+            this.globalRestoreGameScoring(data.game.scoring, assignments);
 
-            let error = false;
-            let keys = Object.keys(playboard.decks.siteMap);
-            keys.forEach(function(key) 
-            {
-                let newkey = assignments[key];
-                if (newkey === undefined)
-                {
-                    console.warn("Cannot find owner " + key + " in siteMap");
-                    error = true;
-                }
-                else
-                {
-                    playboard.decks.siteMap[newkey] = playboard.decks.siteMap[key];
-
-                    /** 
-                     * It might be, that the OLD and NEW ids are identical (immediate restoring)
-                     * This would cause the player to be removed from the game; therefore
-                     * make sure we do not remove a valid sitemap.
-                     */
-                    if (newkey !== key)
-                        delete playboard.decks.siteMap[key];
-                }
-            });
-
-            keys = Object.keys(playboard.decks.deck);
-            keys.forEach(function(key) 
-            {
-                let newkey = assignments[key];
-                if (newkey === undefined)
-                {
-                    console.warn("Cannot find owner " + key + " in deck");
-                    error = true;
-                }
-                else
-                {
-                    playboard.decks.deck[newkey] = playboard.decks.deck[key];
-                    if (newkey !== key)
-                        delete playboard.decks.deck[key];
-                }
-            });
-
-            keys = Object.keys(playboard.stagingarea);
-            keys.forEach(function(key) 
-            {
-                let newkey = assignments[key];
-                if (newkey === undefined)
-                {
-                    console.warn("Cannot find owner " + key + " in stagingarea");
-                    error = true;
-                }
-                else
-                {
-                    playboard.stagingarea[newkey] = playboard.stagingarea[key];
-                    if (newkey !== key)
-                        delete playboard.stagingarea[key];    
-                }
-            });
-
-            keys = Object.keys(data.game.scoring);
-            keys.forEach(function(key) 
-            {
-                let newkey = assignments[key];
-                if (newkey === undefined)
-                {
-                    console.warn("Cannot find owner " + key + " in scoring");
-                    error = true;
-                }
-                else
-                {
-                    data.game.scoring[newkey] = data.game.scoring[key];
-                    if (newkey !== key)
-                        delete data.game.scoring[key];
-                }
-            });
-
-            keys = Object.keys(playboard.companies);
-            keys.forEach((key) => 
-            {
-                let newkey = assignments[playboard.companies[key].playerId];
-                if (newkey === undefined)
-                {
-                    console.warn("Cannot find owner " + key + " in companies");
-                    error = true;
-                }
-                else
-                    playboard.companies[key].playerId = newkey;
-            });
-
-            if (error)
-                throw new Error("Could not update ownership");
-            else if (!this.restore(playboard, data.game.scoring, data.game.meta))
+            if (!this.restore(playboard, data.game.scoring, data.game.meta))
                 throw new Error("Cannot restore game playboard");
             
             super.globalRestoreGame(userid, _socket, data);
             
             this.restorePlayerPhase(data.game.meta.phase, 
                                     data.game.meta.players.turn, 
-                                    data.game.meta.players.current)
+                                    data.game.meta.players.current);
             this.publishToPlayers("/game/restore", userid, { success : true });
         }
         catch (err)
