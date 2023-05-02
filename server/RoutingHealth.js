@@ -54,5 +54,5 @@ exports.setup = function(SERVER, pAuthentication)
     g_Server = SERVER;
     g_pAuthentication = pAuthentication;
 
-    SERVER.instance.use("/health", g_pAuthentication.isSignedInPlay, onHealth);
+    SERVER.instance.get("/health", g_pAuthentication.isSignedInPlay, onHealth);
 };
