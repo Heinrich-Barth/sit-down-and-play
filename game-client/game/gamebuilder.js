@@ -281,7 +281,7 @@ const GameBuilder = {
         }, 500);
     },
     
-    onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type, state, revealed, turn, token, secondary)
+    onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type = "", state = "", revealed = true, turn = 0, token = 0, secondary = "")
     {
         const cardId = GameBuilder.Stagingarea.onAddCardToStagingArea(bIsMe, uuid, cardCode, type, state, revealed, turn, token, secondary);
         if (cardId === "")
@@ -567,94 +567,15 @@ const GameBuilder = {
         
         MeccgApi.addListener("/game/set-turn", (_bIsMe, jData) => document.getElementById("game_turns").innerHTML = jData.turn);
 
-        MeccgApi.addListener("/game/set-phase", function(bIsMe, jData)
-        {
-            const sPhase = jData.phase;
-            const sCurrent = jData.currentplayer;
-            
-            const jTaskbar = document.querySelector(".taskbar");
-            if (bIsMe)
-                jTaskbar.classList.remove("turn-opponent");
-            else if (!jTaskbar.classList.contains("turn-opponent"))
-                jTaskbar.classList.add("turn-opponent");
-            
-            let list = jTaskbar.querySelectorAll("a");
-            for (let elem of list)
-                elem.classList.remove("act");
-
-            /** maybe notify on hand size */
-            GameBuilder.onResolveHandNotification(sPhase);
-
-            MeccgPlayers.setMyTurn(bIsMe);
-
-            switch(sPhase)
-            {
-                case "start":
-                    if (bIsMe)
-                        document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "It is your turn now" }));
-                        
-                    GameBuilder.CompanyManager.onEnterStartPhase(bIsMe);
-                    break;
-                case "organisation":
-                    GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
-                    
-                    if (bIsMe && g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
-                        MeccgApi.send("/game/save/auto", {});
-
-                    break;
-                case "movement":
-                    GameBuilder.CompanyManager.onEnterMovementHazardPhase(bIsMe);
-                    break;
-                case "site":
-                    GameBuilder.CompanyManager.onEnterSitePhase(sCurrent, bIsMe);
-                    break;
-                case "longevent":
-                case "eotdiscard":
-                case "eot":
-                    break;
-
-                default:
-                    return false;
-            }
-
-            GameBuilder.CompanyManager.removeCompanyMarking();
-            GameBuilder.CompanyManager.setCurrentPlayer(sCurrent, bIsMe);
-
-            if (sPhase !== "start" && !GameBuilder._hiddenStartPhase)
-            {
-                GameBuilder._hiddenStartPhase = true;
-                DomUtils.removeNode(document.getElementById("startphase_turn"));
-            }
-            
-            /**
-             * update links in taskbar
-             */
-            list = document.querySelectorAll(".taskbar .taskbar-turn");
-            for (let jThis of list)
-            {
-                if (jThis.getAttribute("data-phase") === sPhase)
-                {
-                    jThis.classList.add("act");
-                    document.querySelector(".area.area-player").setAttribute("data-turn-phase", sPhase);
-                }
-            }
-
-            if (bIsMe || GameBuilder.isVisitor())
-                document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
-
-            if (sPhase !== "start")
-                GameBuilder.triggerLockRoom();
-        });
+        MeccgApi.addListener("/game/set-phase", GameBuilder.onSetPhase.doSet);
 
         MeccgApi.addListener("/game/company/arrive", function(_bIsMe, jData)
         {
             GameBuilder.CompanyManager.onCompanyArrivesAtDestination(jData.company, true);
             GameBuilder.resolveHandNotification();
         });
-        MeccgApi.addListener("/game/company/markcurrently", function(_bIsMe, jData)
-        {
-            GameBuilder.CompanyManager.onCompanyMarkCurrently(jData.uuid);
-        });
+        MeccgApi.addListener("/game/company/markcurrently", (_bIsMe, jData) => GameBuilder.CompanyManager.onCompanyMarkCurrently(jData.uuid));
+
         MeccgApi.addListener("/game/company/returntoorigin", function(_bIsMe, jData)
         {
             GameBuilder.CompanyManager.onCompanyReturnsToOrigin(jData.company, true);
@@ -670,10 +591,7 @@ const GameBuilder = {
                 GameBuilder.Scoring.showScoreSheet(jData);
         });
 
-        MeccgApi.addListener("/game/score/watch", function(_bIsMe, jData)
-        {
-            GameBuilder.Scoring.showScoreSheetWatch(jData);
-        });
+        MeccgApi.addListener("/game/score/watch", (_bIsMe, jData) => GameBuilder.Scoring.showScoreSheetWatch(jData));
 
         MeccgApi.addListener("/game/score/show-pile", function(bIsMe, jData)
         {
@@ -707,6 +625,103 @@ const GameBuilder = {
         });
 
         MeccgApi.addListener("/game/hand/clear", () => DomUtils.removeAllChildNodes(document.getElementById("playercard_hand_container")));
+    },
+
+
+    onSetPhase : {
+
+        unsetCurrentPlayer : function(bIsMe)
+        {
+            const jTaskbar = document.querySelector(".taskbar");
+            if (bIsMe)
+                jTaskbar.classList.remove("turn-opponent");
+            else if (!jTaskbar.classList.contains("turn-opponent"))
+                jTaskbar.classList.add("turn-opponent");
+            
+            const list = jTaskbar.querySelectorAll("a");
+            for (let elem of list)
+                elem.classList.remove("act");
+        },
+
+        processPhaseSpecific : function(bIsMe, sPhase, sCurrent)
+        {
+            switch(sPhase)
+            {
+                case "start":
+                    if (bIsMe)
+                        document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "It is your turn now" }));
+                        
+                    GameBuilder.CompanyManager.onEnterStartPhase(bIsMe);
+                    break;
+                case "organisation":
+                    GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
+                    
+                    if (bIsMe && g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
+                        MeccgApi.send("/game/save/auto", {});
+
+                    break;
+                case "movement":
+                    GameBuilder.CompanyManager.onEnterMovementHazardPhase(bIsMe);
+                    break;
+                case "site":
+                    GameBuilder.CompanyManager.onEnterSitePhase(sCurrent, bIsMe);
+                    break;
+                case "longevent":
+                case "eotdiscard":
+                case "eot":
+                    break;
+
+                default:
+                    return false;
+            }
+        },
+
+        doSet : function(bIsMe, jData)
+        {
+            const sPhase = jData.phase;
+            const sCurrent = jData.currentplayer;
+            
+            GameBuilder.onSetPhase.unsetCurrentPlayer(bIsMe);
+
+            /** maybe notify on hand size */
+            GameBuilder.onResolveHandNotification(sPhase);
+
+            MeccgPlayers.setMyTurn(bIsMe);
+
+            GameBuilder.onSetPhase.processPhaseSpecific(bIsMe, sPhase, sCurrent);
+
+            GameBuilder.CompanyManager.removeCompanyMarking();
+            GameBuilder.CompanyManager.setCurrentPlayer(sCurrent, bIsMe);
+
+            if (sPhase !== "start" && !GameBuilder._hiddenStartPhase)
+            {
+                GameBuilder._hiddenStartPhase = true;
+                DomUtils.removeNode(document.getElementById("startphase_turn"));
+            }
+            
+            /** update links in taskbar */
+            GameBuilder.onSetPhase.updateTaskbarTurn(sPhase);
+
+            if (bIsMe || GameBuilder.isVisitor())
+                document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
+
+            if (sPhase !== "start")
+                GameBuilder.triggerLockRoom();
+        },
+
+        updateTaskbarTurn : function(sPhase)
+        {
+            const list = document.querySelectorAll(".taskbar .taskbar-turn");
+            for (let jThis of list)
+            {
+                if (jThis.getAttribute("data-phase") === sPhase)
+                {
+                    jThis.classList.add("act");
+                    document.querySelector(".area.area-player").setAttribute("data-turn-phase", sPhase);
+                    break;
+                }
+            }
+        }
     },
                             
     queryConnectionStatus : function()

@@ -161,7 +161,6 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
  * @param {Object} pTargetContainer DOM container
  * @param {boolean} bInsertBefore insert before given element (of append otherwise)
  * @param {boolean} bIsHosting Is hosting character
- * @param {boolean} isRevealed
  * @returns {Object} DOM Container
  */
  function insertNewCharacter(jsonCard, pContainer, bInsertBefore, bIsHosting)
@@ -195,7 +194,6 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
     pImage.setAttribute("class", "card-icon");
     pImage.setAttribute("src", _backside);
     pImage.setAttribute("data-image-backside", _backside);
-    pImage.setAttribute("data-image-path", "");
     pImage.setAttribute("decoding", "async");
     pImage.setAttribute("crossorigin", "anonymous");
     pImage.setAttribute("data-uuid", card.uuid);
@@ -337,7 +335,7 @@ const GameCompanies = {
             ArrayList(pCharacter).find("img.card-icon").each(function (img)
             {
                 if (img.getAttribute("data-revealed") === "true")
-                    img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image"));
+                    img.setAttribute("src", img.getAttribute("data-img-image"));
             });
 
             return pCharacter;
@@ -461,7 +459,7 @@ const GameCompanies = {
     {
         if (typeof jsonCompany !== "object" ||
             typeof jsonCompany.id === "undefined" || 
-            typeof jsonCompany.characters === "undefined" ||
+            !Array.isArray(jsonCompany.characters) ||
             jsonCompany.characters.length === 0)
         {
             return false;
@@ -470,11 +468,7 @@ const GameCompanies = {
 
         const elemContainer = this.requireCompanyContainer(bIsMe, jsonCompany.id, jsonCompany.playerId, pCheckForCardsPlayed);
         const pPlayerCompany = document.getElementById("company_" + jsonCompany.id);
-        
-        if (elemContainer === null)
-            return false;
-
-        const elemList = elemContainer.querySelector(".company-characters");
+        const elemList = elemContainer === null ? null : elemContainer.querySelector(".company-characters");
         if (elemList === null)
             return false;
             
@@ -483,29 +477,11 @@ const GameCompanies = {
 
         this.drawLocations(jsonCompany.id, jsonCompany.sites.current, jsonCompany.sites.regions, jsonCompany.sites.target, jsonCompany.sites.revealed, jsonCompany.sites.attached, jsonCompany.sites.current_tapped, jsonCompany.sites.target_tapped);
 
-        /** 
-         * important: cards not my own must to be dragged around,
-         * unless they are in my company.
-         */
+        /* important: cards not my own must to be dragged around, unless they are in my company. */
         if (!bIsMe && !this.isPlayersCompany(pPlayerCompany))
-        {
-            ArrayList(elemContainer).find(".card").each(function(jThis)
-            {
-                const sType = jThis.getAttribute("data-card-type");
-                if (sType !== null && sType !== "hazard")
-                    jThis.setAttribute("draggable", "false");
-            });
-        }
+            ArrayList(elemContainer).find(".card").each(this.drawCompanyRemoveDraggableHazardParams.bind(this));
 
-        ArrayList(elemList).find(".card").each(function (div)
-        {
-            if (bIsMe)
-                GameCompanies.CardPreview.initOnGuard(div);
-            else
-                GameCompanies.CardPreview.init(div);
-
-            GameCompanies.initSingleCardEvent(div, false);
-        });
+        ArrayList(elemList).find(".card").each((div) => this.drawCompanyInitCardPreview(div, bIsMe));
 
         if (pPlayerCompany !== null && bIsMe)
             GameCompanies.HandCardsDraggable.initOnCompany(elemContainer);
@@ -515,6 +491,23 @@ const GameCompanies = {
 
         this.highlightNewCardsAtTable(elemContainer, pCheckForCardsPlayed);
         return true;
+    },
+
+    drawCompanyRemoveDraggableHazardParams : function(jThis)
+    {
+        const sType = jThis.getAttribute("data-card-type");
+        if (sType !== null && sType !== "hazard")
+            jThis.setAttribute("draggable", "false");
+    },
+
+    drawCompanyInitCardPreview : function(div, bIsMe)
+    {
+        if (bIsMe)
+            GameCompanies.CardPreview.initOnGuard(div);
+        else
+            GameCompanies.CardPreview.init(div);
+
+        GameCompanies.initSingleCardEvent(div, false);
     },
 
     highlightNewCardsAtTable(elemContainer, pCheckForCardsPlayed)
@@ -541,8 +534,7 @@ const GameCompanies = {
 
     revealCard : function(pImage)
     {
-        const src = pImage.getAttribute("data-image-path") + pImage.getAttribute("data-img-image");
-        pImage.setAttribute("src", src);
+        pImage.setAttribute("src", pImage.getAttribute("data-img-image"));
     },
 
     revealLocations: function (company)
@@ -739,18 +731,13 @@ const GameCompanies = {
             plem.classList.add("card-highlight");
     },
 
-    onMenuActionRevealCard: function (uuid, reveal)
+    onMenuActionRevealCard: function (uuid = "", reveal = true)
     {
         const pImage = uuid === "" ? null : document.querySelector('div.card[data-uuid="' + uuid + '"] img.card-icon');
         if (pImage === null)
             return;
 
-        let src;
-        if (reveal)
-            src = pImage.getAttribute("data-image-path") + pImage.getAttribute("data-img-image");
-        else
-            src = pImage.getAttribute("data-image-backside");
-
+        const src = reveal ? pImage.getAttribute("data-img-image") : pImage.getAttribute("data-image-backside");
         if (src !== "")
             pImage.setAttribute("src", src);
     },
