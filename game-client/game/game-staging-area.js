@@ -23,7 +23,7 @@ class StagingArea
             return "";
     }
 
-    createNewCard(uuid, code, type, id, cssState, turn, token, secondary)
+    createNewCard(uuid, code, type, id, cssState = "", turn = 0, token = 0, secondary = "")
     {
         if (uuid === "")
             return null;
@@ -32,17 +32,17 @@ class StagingArea
         jDiv.setAttribute("class", "card " + cssState);
         jDiv.setAttribute("id", id);
 
-        let safeCode = this.CardList.getSafeCode(code);
+        const safeCode = this.CardList.getSafeCode(code);
 
         jDiv.setAttribute("data-uuid", uuid);
         jDiv.setAttribute("data-card-code", safeCode);
         jDiv.setAttribute("data-card-type", type);
         jDiv.setAttribute("draggable", "true");
-        jDiv.setAttribute("data-revealed", true);
+        jDiv.setAttribute("data-revealed", "true");
         jDiv.setAttribute("title", safeCode + ", since turn " + turn);
         jDiv.setAttribute("data-turn", turn);
-        jDiv.setAttribute("data-secondary", secondary === undefined ? "" : secondary.toLowerCase());
-        if (token !== undefined && token > 0)
+        jDiv.setAttribute("data-secondary", secondary.toLowerCase());
+        if (token > 0)
             jDiv.setAttribute("data-token", token);
 
         let jImage = document.createElement("img");
@@ -50,7 +50,6 @@ class StagingArea
         jImage.setAttribute("src", "/data/backside");
         jImage.setAttribute("crossorigin", "anonymous");
         jImage.setAttribute("data-image-backside", this.CardList.getFlipSide(code));
-        jImage.setAttribute("data-image-path", "");
         jImage.setAttribute("data-uuid", uuid);
         jImage.setAttribute("decoding", "async");
         jImage.setAttribute("data-revealed", true);
@@ -81,7 +80,7 @@ class StagingArea
         const elem = document.getElementById(id);
         const img = elem === null ? null : elem.querySelector("img");
         if (img !== null)
-            img.setAttribute("src", img.getAttribute("data-image-path") + img.getAttribute("data-img-image"));
+            img.setAttribute("src", img.getAttribute("data-img-image"));
     }
 
     insertNewCard(uuid, isPlayer, code, type, state, turn, token, secondary)

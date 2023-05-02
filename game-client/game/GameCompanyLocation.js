@@ -28,7 +28,6 @@ class GameCompanyLocation
         pImage.setAttribute("data-owner", sOwner);
         pImage.setAttribute("class", "card-icon");
         pImage.setAttribute("data-img-image", img);
-        pImage.setAttribute("data-image-path", "");
         pImage.setAttribute("data-image-backside", "/data/backside");
         pImage.setAttribute("crossorigin", "anonymous");
         div.appendChild(pImage);
@@ -53,7 +52,7 @@ class GameCompanyLocation
         companyElem.querySelector(".site-current").appendChild(this.createLocationCard(code, img, bIsPlayer, GameCompanyLocation.TITLE_SITE_ORIGIN));
 
         if (revealStartSite)
-            ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-image-path") + _img.getAttribute("data-img-image")));
+            ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-img-image")));
         
         if (current_tapped)
             ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
@@ -169,8 +168,7 @@ class GameCompanyLocation
 
     revealCard(pImage)
     {
-        const src = pImage.getAttribute("data-image-path") + pImage.getAttribute("data-img-image");
-        pImage.setAttribute("src", src);
+        pImage.setAttribute("src", pImage.getAttribute("data-img-image"));
     }
 
     drawRegions(companyElem, regions, bIsPlayer, bHasTargetSite)
