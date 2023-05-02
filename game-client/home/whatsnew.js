@@ -1,12 +1,19 @@
 const ReleaseNotes = {
 
+    MAX_ENTRIES : 10,
+
     init : function(listRows)
     {
         if (!Array.isArray(listRows) || listRows.length === 0)
             return;
 
-        const table = this.createTable(listRows);
+        const table = this.createTable(this.reduceList(listRows, this.MAX_ENTRIES));
         this.insertTemplate(table);
+    },
+
+    reduceList : function(list, maxEntries)
+    {
+        return list.length <= maxEntries ? list : list.slice(0, maxEntries);
     },
 
     createTable : function(list)
@@ -15,7 +22,7 @@ const ReleaseNotes = {
         table.setAttribute("class", "release-notes")
         table.innerHTML = `<thead>
         <tr>
-            <th>Module</th>
+            <th>Area</th>
             <th>Description</th>
         </tr>
         </thead>
@@ -52,8 +59,16 @@ const ReleaseNotes = {
             return null;
 
         const div = document.createElement("div");
-        div.setAttribute("class", "game-lists");
-        div.innerHTML = `<h2>Latest Updates</h2>`;
+        div.setAttribute("class", "game-list");
+        
+        const h2 = document.createElement("h2");
+        h2.innerText = "Latest Updates";
+
+        const p = document.createElement("p")
+        p.innerText = "This list contians the 10 latest feature/fixes. For a full list, please checkout the repository.";
+
+        div.appendChild(h2);
+        div.appendChild(p);
         div.appendChild(table);
 
         pSibling.appendChild(div);
