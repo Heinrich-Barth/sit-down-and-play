@@ -1,0 +1,91 @@
+.player_selector {
+    padding: 5px;
+    display: inline-block;
+    height: 20px;
+
+    span.game_time {
+        font-size: 0.8em;
+    }
+}
+
+.player-selector-box {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    min-width: 100px;
+    color: #fff;
+    z-index: 400;
+
+    .player-view {
+        padding-left: 0;
+        display: none;
+    }
+
+    a {
+        display: inline-block;
+        min-width: 10px;
+        color: #fff;
+
+        &.cur {
+            color: #ffa500;
+
+            &.player-view {
+                display: inline-block;
+            }
+        }
+
+        .player-active { display: none; }
+
+        &.act {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+
+            .player-active { 
+                display: inline-block; 
+                padding-left: 5px; 
+                animation: player-selector-current 10s infinite forwards;
+            }
+        }
+    }
+
+    span {
+        min-width: 5px;
+        min-height: auto;
+        display: inline-block;
+
+        &:before {
+            padding-right: 5px;
+        }
+    }
+
+    .indicator-green {
+        border-left: 5px solid #BADA55;
+    }
+
+    .indicator-red {
+        border-left: 5px solid #d94f4f;
+    }
+
+    .indicator-grey {
+        border-left: 5px solid grey;
+    }
+}
+
+.player_group {
+    display: inline-block;
+}
+
+
+@keyframes player-selector-current {
+    100% {
+        rotate: 0deg;
+    }
+
+    50% {
+        rotate: 180deg;
+    }
+
+    0% {
+        rotate: 1deg;
+    }
+}

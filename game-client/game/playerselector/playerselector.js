@@ -122,7 +122,34 @@ class PlayerSelector
                 elemA.setAttribute("href", "#");
                 elemA.setAttribute("id", "player_selector_" + sHexId);
                 elemA.setAttribute("data-hex", sHexId);
-                elemA.innerHTML = `<span class="indicator-green">&nbsp;</span>${sName} <i class="player-view fa fa-eye" title="Currently visible opponent"></i><i class="player-handcard-count" title="cards in hand">0</i><i class="player-playdeck-count" title="cards in playdeck">0</i>`;
+
+                const docGroup = document.createDocumentFragment();
+
+                const txtName = document.createElement("span");
+                txtName.setAttribute("class", "indicator-green");
+                txtName.innerText = sName;
+
+                const iView = document.createElement("i");
+                iView.setAttribute("class", "player-view fa fa-eye");
+                iView.setAttribute("title", "Currently visible opponent");
+
+                const iCurrent = document.createElement("i");
+                iCurrent.setAttribute("class", "player-active fa fa-pagelines");
+                iCurrent.setAttribute("title", "Active Player");
+
+                const iHand = document.createElement("i");
+                iHand.setAttribute("class", "player-handcard-count");
+                iHand.setAttribute("title", "cards in hand");
+                iHand.innerText = 0;
+
+                const iPlay = document.createElement("i");
+                iPlay.setAttribute("class", "player-playdeck-count");
+                iPlay.setAttribute("title", "cards in playdeck");
+                iPlay.innerText = 0;
+
+                docGroup.append(iCurrent, txtName, iView, iHand, iPlay);
+                elemA.appendChild(docGroup);
+
                 document.getElementById("player_selector").appendChild(elemA);
                 document.getElementById("player_selector_" + sHexId).onclick = this.onLoadOpponentView;
             }        
