@@ -160,10 +160,7 @@ class DeckCommons {
     transferCard(listPlaydeck, listTarget)
     {
         if (listPlaydeck.length === 0)
-        {
-            console.log("no cards in source list to transfer card");
             return "";
-        }
 
         const _id = listPlaydeck[0];
 
