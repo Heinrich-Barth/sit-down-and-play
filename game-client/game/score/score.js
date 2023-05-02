@@ -69,7 +69,7 @@ class ScoringContainers {
 
         let div = document.createElement("div");
         div.setAttribute("class", "view-score-card fl");
-        div.innerHTML = `<img src="/data/backside" data-image-path="" data-image-backside="/data/backside">`;
+        div.innerHTML = `<img src="/data/backside" data-image-backside="/data/backside">`;
 
         let view_score_container = document.createElement("div");
         view_score_container.setAttribute("class", "view-score-container blue-box");
@@ -268,8 +268,7 @@ const SCORING = {
     displayCard : function(sCode)
     {
         const elem = document.getElementById("scoring-card").querySelector("img");
-        const sSrc = elem.getAttribute("data-image-path") + SCORING.cardList.getImage(sCode);
-        elem.setAttribute("src", sSrc);
+        elem.setAttribute("src", SCORING.cardList.getImage(sCode));
     },
     
     onStoreCard : function()
