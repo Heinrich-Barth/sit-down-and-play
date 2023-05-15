@@ -89,7 +89,8 @@ const createDeck = function()
             characters : toJson("characters"),
             resources : toJson("resources"),
             hazards : toJson("hazards")
-        }
+        },
+        sites : toJson("sites")
     };
 
     if (count === 0)
