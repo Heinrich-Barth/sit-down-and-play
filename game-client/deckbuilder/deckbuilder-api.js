@@ -98,20 +98,17 @@ const DeckbuilderApi =
     },
 
     _count : 0,
+    _deckname : "",
     
-    loadDeckName : function()
-    {
-        return "";
-    },
-
     onUpdateDeckName : function(e)
     {
+        DeckbuilderApi._deckname = "";
         if (e === undefined || e.detail === undefined)
             return;
 
         const name = e.detail.trim();
         const pos = name.lastIndexOf(".");
-        document.getElementById("deckname").value = pos < 1 ? name.trim() : name.substr(0, pos).trim();
+        DeckbuilderApi._deckname = pos < 1 ? name.trim() : name.substr(0, pos).trim();
     },
 
     onLoadDeck : function(e)
@@ -329,11 +326,9 @@ const DeckbuilderApi =
 
 document.getElementById("save_deck").onclick = function()
 {
-    let sName = document.getElementById("deckname").value;
+    let sName = DeckbuilderApi._deckname.trim();
     if (sName === null || sName === undefined || sName === "")
         sName = "Your deck";
-    else
-        sName = sName.trim();
 
     const _deck = DeckbuilderApi.createExtendedDeck(DeckbuilderApi._deck);
     const notes = document.getElementById("notes").value;

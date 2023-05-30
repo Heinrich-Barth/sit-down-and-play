@@ -99,6 +99,8 @@ const SearchResult = {
                     _image.setAttribute("class", "preview");
                     _image.setAttribute("decoding", "async");
                     _image.setAttribute("crossorigin", "anonymous");
+                    _image.onmouseover = ViewCards.onViewLargeCardsOver;
+                    _image.onmouseout = ViewCards.onViewLargeCardsOut;
 
                     const _tmp = document.createElement("div");
                     _tmp.setAttribute("class", "image_overlay");
@@ -302,6 +304,20 @@ const SearchResult = {
         const nIndex = parseInt(pDiv.getAttribute("data-index"));
 
         document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-add-to-deck", { "detail": { index : nIndex, target: sTargetDeck } }));
+
+        const elem = document.getElementById("" + nIndex);
+        if (elem !== null)
+        {
+            if (elem.classList.contains("animation-blink"))
+                elem.classList.remove("animation-blink");
+
+            setTimeout(() => elem.classList.add("animation-blink"), 10);
+            setTimeout(() => {
+                if (elem.classList.contains("animation-blink"))
+                    elem.classList.remove("animation-blink");
+            }, 1050);
+        }
+
         return false;
     },
 
@@ -360,11 +376,14 @@ const SearchResult = {
             ArrayList(document.getElementById("result")).find("div.category").each( (_e) => _e.classList.add("hidden") );
             ArrayList(document).find("li.current").each((_elem) => _elem.classList.remove("current"));
     
-            setTimeout(() => SearchResult.makeImagesVisible(sId), 10);
+            setTimeout(() => {
+                SearchResult.makeImagesVisible(sId)
+                document.getElementById("result").scrollIntoView();
+            }, 10);
     
             this.parentNode.classList.add("current");
         }
-
+        
         e.preventDefault();
         return false;
     },

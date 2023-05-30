@@ -171,13 +171,13 @@ const SearchBar = {
 
     init : function()
     {
-        if (document.getElementById("searchbar") !== null)
+        const elem = document.getElementById("searchbar");
+        if (elem === null || elem.hasAttribute("data-ready"))
             return;
 
-        const elem = document.createElement("div");
         elem.setAttribute("class", "pos-rel bgblue filters on-drag-hide");
-        elem.setAttribute("id", "searchbar");
-
+        elem.setAttribute("data-ready", "true");
+        
         const form = document.createElement("form");
         form.onsubmit = () => {
             SearchBar.onTriggerSearch();
@@ -215,7 +215,6 @@ const SearchBar = {
                     </div>
                 </div>`;
         elem.appendChild(form);
-        document.body.prepend(elem);
     }
 };
 

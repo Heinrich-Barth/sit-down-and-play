@@ -13,84 +13,82 @@ const DeckList =
             <span id="summary_sideboard">0</span> <label>Sideboard</label>`;
         document.body.prepend(elem);
 
-        elem = document.createElement("div");
-        elem.setAttribute("class", "decklist fl bgblue");
-        elem.setAttribute("id", "deck_container");
-        elem.innerHTML = `<h2><span class="fa fa-eye" id="deck_name"></span><input type="text" class="deckname" id="deckname" placeholder="Your deck name" value=""> (<span id="deck_count">0</span>)</h2>
+        elem = document.getElementById("deck_container");
+        if (elem === null)
+            return;
 
-        <div>
-            <button class="button-small" id="save_deck"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save deck</button>
-        </div>
-
-        <div class="pos-rel">
-            <div class="pos-rel fl w48 deck_part" id="deck_part_pool">
-                <label for="checkbox_pool">Pool (<span class="count_type" id="count_pool">0</span>)</label>
-                <input type="checkbox" id="checkbox_pool">
+        elem.setAttribute("class", "decklist fl bgblue deck-columns");
+        elem.innerHTML = `
+        <div class="row-cols">
+            <div class="row-col pos-rel deck_part" id="deck_part_pool">
+                <label>Pool (<span class="count_type" id="count_pool">0</span>)</label>
                 <div id="pool" class="pt5 list_toggle">
                     <h4>Characters</h4>
-                    <div class="pos-rel fl w48 deck_part_col" id="pool_chars"></div>
+                    <div class="pos-rel deck_part_col" id="pool_chars"></div>
 
                     <h4>Resources</h4>
-                    <div class="pos-rel fl w48 deck_part_col" id="pool_resources"></div>
+                    <div class="pos-rel deck_part_col" id="pool_resources"></div>
+                </div>
+
+                <div class="pos-rel deck_part_col margin-top-2em" id="deck_chars">
+                    <label>Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</label>
                 </div>
             </div>
-            <div class="pos-rel fl w48 deck_part_col" id="deck_chars">
-                <label for="checkbox_ch" class="mr-20">Characters (<span class="count_type_col" id="count_deck_chars">0</span>)</label>
-                <input type="checkbox" id="checkbox_ch">
+
+            <div class="row-col pos-rel">
+                <div class="pos-rel fl w48 deck_part_col" id="deck_resources">
+                    <label class="mr-20">Resources (<span class="count_type_col" id="count_deck_r">0</span>)</label>
+                </div>
             </div>
-            <div class="clearfix"> </div>
-        </div>
-
-        <div class="pos-rel">
-            <div class="pos-rel fl w48 deck_part_col" id="deck_resources">
-                <label for="checkbox_res" class="mr-20">Resources (<span class="count_type_col" id="count_deck_r">0</span>)</label>
-                <input type="checkbox" id="checkbox_res">
-            </div>
-
-            <div class="pos-rel fl w48 deck_part_col" id="deck_hazards">
-                <label for="checkbox_haz">Hazards (<span class="count_type_col" id="count_deck_h">0</span>)</label>
-                <input type="checkbox" id="checkbox_haz">
-            </div>
-            <div class="clearfix"> </div>
-        </div>
-
-        <div class="pos-rel deck_part" id="deck_part_sideboard">
-            <label for="checkbox_sb">Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
-            <input type="checkbox" id="checkbox_sb">
-            <div id="sideboard" class="no-pad-top list_toggle">
-                <h4>Characters</h4>
-                <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
-
-                <h4>Resources</h4>
-                <div class="pos-rel fl w48 deck_part_col" id="sb_resources"></div>
-
-                <h4>Hazards</h4>
-                <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
+            <div class="row-col pos-rel">
+                <div class="pos-rel fl w48 deck_part_col" id="deck_hazards">
+                    <label>Hazards (<span class="count_type_col" id="count_deck_h">0</span>)</label>
+                </div>
                 <div class="clearfix"> </div>
             </div>
-        </div>
 
-        <div class="pos-rel deck_part" id="deck_part_sites">
-            <label for="checkbox_sites">Sites (<span id="count_sites">0</span>)</label>
-            <input type="checkbox" id="checkbox_sites">
-            <div id="sites-list-container" class="no-pad-top list_toggle">
-                <div class="pos-rel fl w48 deck_part_col sites-list-container" id="sb_sites"></div>
+            <div class="row-col pos-rel deck_part" id="deck_part_sideboard">
+                <label>Sideboard (<span class="count_type" id="count_sideboard">0</span>)</label>
+                <div id="sideboard" class="no-pad-top list_toggle">
+                    <h4>Characters</h4>
+                    <div class="pos-rel fl w48 deck_part_col" id="sb_chars"></div>
+
+                    <h4>Resources</h4>
+                    <div class="pos-rel fl w48 deck_part_col" id="sb_resources"></div>
+
+                    <h4>Hazards</h4>
+                    <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+
+            <div class="row-col pos-rel deck_part" id="deck_part_sites">
+                <label>Sites (<span id="count_sites">0</span>)</label>
+                <div id="sites-list-container" class="no-pad-top list_toggle">
+                    <div class="pos-rel fl w48 deck_part_col sites-list-container" id="sb_sites"></div>
+                </div>
             </div>
         </div>
-
-        <div class="pos-rel">
-            <label for="checkbox_notes">Deck Notes</label>
-            <input type="checkbox" id="checkbox_notes">
-            <div class="no-pad-top list_toggle">
-                <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
-                <textarea id="notes" placeholder="Deck notes (optional)"></textarea>
+        <div class="pos-rel margin-top-2em">
+            <label>Deck Notes</label>
+            <div class="row-cols">
+                <div class="row-col row-col-meta-name">
+                    <div class="no-pad-top list_toggle">
+                        <div class="pos-rel fl w48 deck_part_col" id="sb_hazards"></div>
+                        <textarea id="notes" placeholder="Deck notes (optional)"></textarea>
+                    </div>
+                </div>
+                <div class="row-col row-col-meta-count"></div>
+                <div class="row-col row-col-meta-buttons" id="deck-bttons">
+                    <button class="button-small" id="save_deck"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save deck</button>
+                    <button class="button-small" id="view_deck"><i class="fa fa fa-eye" aria-hidden="true"></i> View current deck</button>
+                    <button class="button-small" id="load_deck"><i class="fa fa fa-folder" aria-hidden="true"></i> Load deck</button>
+                </div>
             </div>
         </div>`;
 
-        const divButton = document.createElement("button");
-        divButton.innerText = " Load a deck";
-        divButton.setAttribute("class", "fa fa-folder");
-        divButton.onclick = () => document.getElementById("load_deck_file").click();
+        document.getElementById("load_deck").onclick = () => document.getElementById("load_deck_file").click();
+        document.getElementById("view_deck").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck"));
     
         const divFile = document.createElement("input");
         divFile.setAttribute("class", "hidden");
@@ -98,12 +96,10 @@ const DeckList =
         divFile.setAttribute("id", "load_deck_file");
         divFile.onchange = DeckList.readSingleFromInput;
     
-        elem.appendChild(divButton);
-        elem.appendChild(divFile);
+        document.getElementById("deck-bttons").appendChild(divFile);
 
-        elem.querySelector("h2").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck", { "detail": "" }));
+        /*elem.querySelector("h2").onclick = () => document.body.dispatchEvent(new CustomEvent("meccg-deckbuilder-viewdeck", { "detail": "" }));*/
 
-        document.getElementById("result_container").prepend(elem);
         document.getElementById("result_container").classList.add("deck-builder");
         document.getElementById("linklist").parentNode.classList.add("list_left");
 
@@ -116,15 +112,7 @@ const DeckList =
         
         const list = document.getElementById("deck_container").querySelectorAll("label");
         for (let _element of list)
-        {
-            if (!_element.hasAttribute("data-no-arrow"))
-            {
-                _element.setAttribute("data-open", "fa-chevron-down");
-                _element.setAttribute("data-close", "fa-chevron-up");
-                _element.classList.add("fa");
-                _element.classList.add("fa-chevron-down");
-            }
-        }
+            _element.classList.add("deck-section-caption");
             
     },
 
@@ -616,7 +604,7 @@ const DeckList =
         for (let _elem of elem.getElementsByClassName("decklist-action-move"))
             _elem.onclick = DeckList.onMoveCard.bind(DeckList);
 
-        elem.onmouseover = function()
+        elem.onmouseover = function(e)
         {
             const index = this.getAttribute("data-index");
             if (typeof index === "undefined")
@@ -625,9 +613,17 @@ const DeckList =
             const pCard = ViewCards.config.jsonData[index];
             if (pCard === null || typeof pCard === "undefined")
                 return;
-           
+
+            const elemLeft = e.clientX - window.scrollX;
+            const windowHalf = window.innerWidth / 2;
+        
             const _elem = document.getElementById("deck_card_view");
-            _elem.innerHTML = '<img decoding="async" crossorigin="anonymous" src="' + getImageUrlByCode(pCard.code) + '">';
+            const _img = document.createElement("img");
+            _img.setAttribute("decoding", "async");
+            _img.setAttribute("class", elemLeft >= windowHalf ? "left" : "right");
+            _img.setAttribute("crossorigin", "anonymous");
+            _img.setAttribute("src", getImageUrlByCode(pCard.code));
+            _elem.appendChild(_img);
             _elem.classList.remove("hidden");
         };
 

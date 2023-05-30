@@ -18,6 +18,11 @@ const ViewCards =
         vsCodeIndices : { }
     },
 
+    view: {
+        cards: 0,
+        zoom: true
+    },
+
     _quantities : typeof Quantities === "undefined" ? null : new Quantities(),
     _isReady : false,
     
@@ -473,11 +478,100 @@ const ViewCards =
             document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Cards loaded" }));
     },
 
+    onChangeRowNumber : function(value)
+    {
+        const res = document.getElementById("result");
+        if (res === null)
+            return;
+        
+        if (value !== undefined && value !== "")
+            res.setAttribute("class", "result-contianer cards-per-row-" + value);
+        else if (res.hasAttribute("class"))
+            res.removeAttribute("class");
+    },
+
+    onViewLargeCardsOver : function(e)
+    {
+        if (!ViewCards.view.zoom)
+            return;
+
+        const elemLeft = e.clientX - window.scrollX;
+        const windowHalf = window.innerWidth / 2;
+    
+        const _elem = document.getElementById("deck_card_view");
+        const _img = document.createElement("img");
+        _img.setAttribute("decoding", "async");
+        _img.setAttribute("class", elemLeft >= windowHalf ? "left" : "right");
+        _img.setAttribute("crossorigin", "anonymous");
+        _img.setAttribute("src", this.src);
+        _elem.appendChild(_img);
+        _elem.classList.remove("hidden");
+    },
+
+    onViewLargeCardsOut : function()
+    {
+        const _elem = document.getElementById("deck_card_view");
+        _elem.classList.add("hidden");
+        DomUtils.empty(_elem);
+    },
+
     onCardsError : function()
     {        
         const jsonCards = this.getCardsFromStorage();
         if (jsonCards !== null)
             this.onCardResult(jsonCards, true);
+
+        const select = document.createElement("select");
+        select.setAttribute("id", "cards-per-row")
+        select.onchange = () => ViewCards.onChangeRowNumber(select.value);
+
+        for (let i = 3; i < 7; i++)
+        {
+            let opt = document.createElement('option');
+            opt.innerText = "" + i + " cards per row";
+            opt.value = i;
+            if (i === 5)
+                opt.selected = true;
+            select.appendChild(opt);
+        }
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "row-cols");
+
+        let label = document.createElement("label");
+        label.setAttribute("for", "cards-per-row");
+        label.innerText = "Cards per row: ";
+
+        let grp = document.createElement("div");
+        grp.setAttribute("class", "row-col");
+        grp.appendChild(label);
+        grp.appendChild(select);
+        div.appendChild(grp);
+
+        label = document.createElement("label");
+        label.setAttribute("for", "card-zoom");
+        label.innerText = "Show large card when cursor hovers over a card."
+
+        const input = document.createElement("input");
+        input.setAttribute("id", "card-zoom");
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("checked", "checked");
+        input.onchange = () => ViewCards.view.zoom = input.checked;
+
+        grp = document.createElement("div");
+        grp.setAttribute("class", "row-col");
+        grp.appendChild(input);
+        grp.appendChild(label);
+        div.appendChild(grp);
+        div.setAttribute("class", "row-cols");
+
+        const divP = document.getElementById("view-preferences");
+        if (divP !== null)
+        {
+            divP.setAttribute("class", "deck-columns center");
+            divP.appendChild(div);
+            ViewCards.onChangeRowNumber(5);
+        }
     }
 };
 
@@ -496,4 +590,4 @@ document.body.addEventListener("meccg-init-ready", () => {
 
 
 document.body.addEventListener("meccg-deckbuilder-search", ViewCards.search.bind(ViewCards), false);
-document.body.addEventListener("meccg-deckbuilder-viewdeck", ViewCards.searchDeck.apply.bind(ViewCards), false);
+document.body.addEventListener("meccg-deckbuilder-viewdeck", ViewCards.searchDeck.bind(ViewCards), false);

@@ -66,6 +66,77 @@ body {
     }
 }
 
+.deck-columns {
+    position: relative;
+    padding: 1em 2em;
+    margin: 1em 0;
+    z-index: 1;
+
+    .row-cols {
+        display: flex;
+        flex-direction: flex-start;
+        margin-top: 1em;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
+
+        .row-col {
+            flex: auto;
+            padding: 0 5px;
+        }
+
+        .row-col-meta-name {
+            width: 65%;
+        }
+
+        .row-col-meta-count {
+            width: 5%;
+            text-align: center;
+        }
+
+        .row-col-meta-buttons {
+            width: 25%;
+
+            button {
+                margin-top: 1em;
+                text-align: left;
+
+                &:first-of-type {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    .deck-section-caption {
+        border-bottom: 1px solid;
+        text-align: center;
+        text-transform: uppercase;
+        display: block;
+    }
+
+    .margin-top-2em {
+        margin-top: 2em;
+    }
+
+    h4 {
+        border-bottom: 0;
+    }
+
+    select,
+    input {
+        display: inline-block;
+        line-height: 1em;
+        height: auto;
+        width: auto;
+    }
+
+    label {
+        cursor: pointer;
+    }
+}
+
 .linklist {
     ul {
         display: inline;
@@ -321,10 +392,11 @@ body {
             .image_overlay {
                 height: 100%;
                 width: 100%;
+                border-radius: 5%;
                 background: url("/data/backside") 0 0 no-repeat;
                 background-size: contain;
             }
-        
+
 
             .count_bubble {
                 right: 5px;
@@ -411,19 +483,27 @@ body {
 
 #deck_card_view {
     position: fixed;
-    z-index: 100;
-    left: 24%;
     top: 0;
+    left: 0;
+    z-index: 300;
 
     img {
         position: fixed;
-        top: 50%;
-        height: auto;
-        max-height: 100%;
+
+        top: 5%;
+        width: auto;
+        height: 90%;
+        max-width: 50%;
         margin: 2px;
-        transform: translateY(-50%);
+        border-radius: 5%;
 
+        &.left {
+            left: 5px;
+        }
 
+        &.right {
+            right: 5px;
+        }
     }
 }
 
@@ -466,7 +546,7 @@ body {
 
     .category .image {
         margin-right: 5px;
-        width: 400px;
+        width: 365px;
         height: auto;
     }
 
@@ -485,6 +565,44 @@ body {
     top: 0;
     z-index: 5;
     animation: loading-line-counter-refresh 3s infinite forwards;
+}
+
+.result-contianer {
+
+    .image { min-width: auto !important; }
+    
+    &.cards-per-row-3 .image {
+        width: 32.5% !important;
+    }
+
+    &.cards-per-row-4 .image {
+        width: 24.5% !important;
+    }
+
+    &.cards-per-row-5 .image {
+        width: 19.5% !important;
+    }
+
+    &.cards-per-row-6 .image {
+        width: 16% !important;
+    }
+}
+
+.animation-blink img.preview {
+    animation: blink-once 0.5s ease-in-out 0s;
+}
+@keyframes blink-once {
+    0% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes loading-line-counter-refresh {
