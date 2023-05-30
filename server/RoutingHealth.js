@@ -18,6 +18,20 @@ const getMemory = function()
     return data;
 }
 
+const onHealthSmall = function(_req, res)
+{
+    const gameCount = g_Server.roomManager.getGameCount().length;
+    const data = { 
+        startup: g_sUptime,
+        uptime : Date.now() - lUptime,
+        games: gameCount
+    };
+
+    res.header('Content-Type', 'application/json');
+    res.header("Cache-Control", "no-store");
+    res.send(JSON.stringify(data, null, 3));
+};
+
 const onHealth = function(_req, res)
 {
     const jGames = g_Server.roomManager.getActiveGames();
@@ -45,7 +59,8 @@ const onHealth = function(_req, res)
     res.send(JSON.stringify(data, null, 3));
 };
 
-const g_sUptime = new Date(Date.now()).toUTCString();
+const lUptime = Date.now();
+const g_sUptime = new Date(lUptime).toUTCString();
 let g_Server = null;
 let g_pAuthentication = null;
 
@@ -54,5 +69,6 @@ exports.setup = function(SERVER, pAuthentication)
     g_Server = SERVER;
     g_pAuthentication = pAuthentication;
 
-    SERVER.instance.get("/health", g_pAuthentication.isSignedInPlay, onHealth);
+    SERVER.instance.get("/health", g_pAuthentication.isSignedInPlay, onHealthSmall);
+    SERVER.instance.get("/health/full", g_pAuthentication.isSignedInPlay, onHealth);
 };
