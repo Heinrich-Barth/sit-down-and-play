@@ -27,9 +27,13 @@ class ImageList {
         if (isDCErratum)
             this.g_nCountErrataDC++;
 
+
         const data = {
             image: ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl)
         };
+
+        if (typeof card["ImageNameES"] === "string")
+            data["imageES"] = ImageList.createImageUrl(card.ImageName, card.set_code.toUpperCase(), imageUrl);
 
         if (isDCErratum)
             data.ImageNameErrataDC = ImageList.createImageUrl(card.ImageNameErrataDC, card.set_code.toUpperCase(), imageUrl);
