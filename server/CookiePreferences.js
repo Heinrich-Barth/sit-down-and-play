@@ -65,7 +65,7 @@ class CookiePreferences
         }
         catch (e)
         {
-            console.log(e);
+            console.warn(e.message);
         }
     }
 }
