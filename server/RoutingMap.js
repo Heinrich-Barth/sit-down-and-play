@@ -8,7 +8,7 @@ const getTappedSites = function(SERVER, cookies)
     }
     catch(e)
     {
-        console.log(e);
+        console.error(e);
     }
 
     return { };

@@ -257,7 +257,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
         catch (e) 
         {
-            console.log(e);
+            console.warn(e.message);
             this.createExpireResponse(res).redirect("/error/login");
         }
     }
@@ -354,7 +354,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
         catch (e) 
         {
-            console.log(e);
+            console.warn(e.message);
             this.createExpireResponse(res).redirect("/error/login");
         }
     }

@@ -34,7 +34,7 @@ module.exports = function(SERVER, isProduction, g_pAuthentication)
         }
         catch (e)
         {
-            console.log(e);
+            console.error(e);
         }
 
         res.setHeader('Content-Type', 'text/plain');
