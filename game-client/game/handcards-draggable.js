@@ -322,7 +322,7 @@ const HandCardsDraggable = {
      */
     getCompanyPath : function(pCardContainer)
     {
-        let pCompanyCharacter = DomUtils.closestByClass(pCardContainer, "company-character");
+        const pCompanyCharacter = DomUtils.closestByClass(pCardContainer, "company-character");
 
         const character_uuid = pCompanyCharacter === null ? "" : pCompanyCharacter.getAttribute("data-character-uuid")
 
@@ -335,14 +335,15 @@ const HandCardsDraggable = {
          * This characters company ID
          * @type String
          */
-        const companySourceId = DomUtils.closestByClass(pCardContainer, "company").getAttribute("data-company-id");
+        const pClosestCompany = DomUtils.closestByClass(pCardContainer, "company");
+        const companySourceId = pClosestCompany === null ? "" : pClosestCompany.getAttribute("data-company-id");
         
         let parentCharacterUuid = "";
         if (!isHostCharacter && pCompanyCharacter !== null)
         {
-            pCompanyCharacter = DomUtils.closestByClass(pCompanyCharacter.parentNode, "company-character");
-            if (pCompanyCharacter !== null)
-                parentCharacterUuid = pCompanyCharacter.getAttribute("data-character-uuid");
+            const _companyCharacter = DomUtils.closestByClass(pCompanyCharacter.parentNode, "company-character");
+            if (_companyCharacter !== null)
+                parentCharacterUuid = _companyCharacter.getAttribute("data-character-uuid");
         }
 
         return {
