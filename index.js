@@ -100,7 +100,6 @@ let SERVER = {
 
         increase : function(req, _res, next)
         {
-            console.log(req.baseUrl);
             switch(decodeURIComponent(req.baseUrl))
             {
                 case "/deckbuilder":
@@ -215,18 +214,22 @@ SERVER.onListenSetupSocketIo = function ()
 
     SERVER._io.use((socket, next) => 
     {
-        const token = socket.handshake.auth.authorization;
-        const room = socket.handshake.auth.room;
-        const userid = socket.handshake.auth.userId;
+        const data = socket.handshake.auth;
+
+        const token = data.authorization;
+        const room = data.room;
 
         try
         {
-            if (SERVER.roomManager.verifyApiKey(room, token))
+            if (SERVER.roomManager.allowJoin(room, token, data.userId, data.joined, data.player_access_token_once))
             {
                 socket.auth = true;
                 socket.room = room;
-                socket.userid = userid;
+                socket.userid = data.userId;
+                socket.username = data.dispayName;
+                socket.joined = data.joined;
                 next();
+                return;
             }
             else
                 socket.disconnect("invalid authentication");
@@ -235,6 +238,8 @@ SERVER.onListenSetupSocketIo = function ()
         {
             console.log(err);
         }
+
+        next(null, false);
     });
 };
 

@@ -20,6 +20,11 @@ class TimedNotificationInfo
         return true;
     }
 
+    abort()
+    {
+        this.question.close();
+    }
+
     getTitle()
     {
         return "";

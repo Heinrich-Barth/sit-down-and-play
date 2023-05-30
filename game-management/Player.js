@@ -24,7 +24,6 @@ class Player
     onJoin()
     {
         this.joined = true;
-        this.player_access_token_once = 0;
         this.deck = null; /** the deck is only needed once */
     }
 
@@ -51,7 +50,15 @@ class Player
             console.error(err);
         }
 
-    }    
+    }
+
+    reconnect(socket, room)
+    {
+        this.disconnect();
+        
+        this.socket = socket;
+        this.socket.join(room);
+    }
 
     getName()
     {

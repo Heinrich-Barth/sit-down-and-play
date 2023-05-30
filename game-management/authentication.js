@@ -24,32 +24,8 @@ const AuthenticationManagement = {
 
     triggerAuthenticationProcess: function (socket)
     {
-        /**
-         * if the user/application authenticates correctly, we grant permission to send the deck
-         * and their username
-         * 
-         * The user will receive /authenticate/success
-         */
-        socket.on("/authenticate", (data) =>
-        {
-            console.log("Authentication request received.");
-            if (!AuthenticationManagement.userManager.allowJoin(data.room, data.token, data.userId, data.joined, data.player_access_token_once))
-            {
-                console.log("Cannot join game.");
-                socket.disconnect("Cannot join");
-            }
-            else 
-            {
-                socket.username = data.dispayName;
-                socket.userid = data.userId;
-                socket.joined = data.joined;
-
-                console.log(socket.username + " (#" + socket.id + ") " + " authenticated successfully to room " + socket.room);
-    
-                AuthenticationManagement._addGenericRoutes(socket);
-                socket.emit("/authenticate/success", {});
-            }
-        });
+        AuthenticationManagement._addGenericRoutes(socket);
+        socket.on("/authenticate", () => socket.emit("/authenticate/success", {}));
     },
 
     /**
@@ -81,6 +57,15 @@ const AuthenticationManagement = {
             {
                 socket.auth = false;
                 socket.disconnect("cannot rejoin");
+            }
+        });
+
+        socket.on("/game/rejoin/reconnected", (data) =>
+        {
+            if (!AuthenticationManagement.userManager.rejoinAfterReconnect(data.userid, data.room, socket))
+            {
+                socket.auth = false;
+                socket.disconnect("cannot reconnect");
             }
         });
 

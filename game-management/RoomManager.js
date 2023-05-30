@@ -130,10 +130,8 @@ class RoomManager {
         const pPlayer = this._getPlayerOrVisitor(room, userid);
         if (pPlayer === null || lToken < 1)
             return false;
-
-        const lRes = pPlayer.getAccessToken() === lToken;
-        pPlayer.setAccessToken(0);
-        return lRes;
+        else
+            return pPlayer.getAccessToken() === lToken;
     }
 
     filterPlayerList (room, waitingOnly)
@@ -453,6 +451,51 @@ class RoomManager {
             console.log("will not remove the administrator.");
     }
 
+
+    rejoinAfterReconnect(userid, room, socket) 
+    {
+        if (this._rooms[room] === undefined)
+        {
+            console.warn("Room is not available");
+            return false;
+        }
+        
+        const pRoom = this._rooms[room];
+        const isPlayer = pRoom.players[userid] !== undefined;
+        const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
+        if (pPlayer === undefined)
+        {
+            console.warn("Player not available");
+            return false;
+        }
+
+        pPlayer.reconnect(socket, room);
+
+        pRoom.initGameEndpoint(socket);
+
+        try
+        {
+            pRoom.reply("/game/rejoin/reconnected/success", socket, {});
+
+            /* draw this player's cards and prepare player's hand */
+            pRoom.getGame().startPoolPhaseByPlayer(userid);
+
+            /* draw this player's board and restore the game table */
+            pRoom.reply("/game/rejoin/immediately", socket, pRoom.getGame().getCurrentBoard(userid));
+            if (isPlayer)
+                pRoom.publish("/game/player/indicator", "", { userid: userid, connected: true });
+
+            return true;
+        }
+        catch (err)
+        {
+            console.error(err);
+            pRoom.getGame().removePlayer(userid);
+        }
+        
+        return false;
+    }
+
     /**
      * Player rejoined the table
      * 
@@ -469,17 +512,17 @@ class RoomManager {
         const isPlayer = pRoom.players[userid] !== undefined;
         const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
         if (pPlayer === undefined)
+        {
+            console.warn("Player is undefined: rejoinAfterBreak");
             return false;
+        }
 
         /* add the player to the board of all other players */
         if (isPlayer)
             pRoom.publish("/game/player/add", "", { userid: userid, name: pPlayer.getName() });
 
         /* now join the game room to receive all "published" messages as well */
-        pPlayer.disconnect();
-        
-        pPlayer.socket = socket;
-        pPlayer.socket.join(room);
+        pPlayer.reconnect(socket, room);
         pPlayer.visitor = !isPlayer;
 
         /* now, acitave endpoints for this player */
@@ -601,12 +644,6 @@ class RoomManager {
         delete pRoom.players[userid];
         pRoom.getGame().removePlayer(userid);
         return true;
-    }
-
-    verifyApiKey(room, roomKey)
-    {
-        const pRoom = this.getRoom(room);
-        return pRoom !== null && pRoom.getSecret() === roomKey;
     }
 
     allowJoin(room, expectSecret, userId, joined, player_access_token_once) 

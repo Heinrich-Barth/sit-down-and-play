@@ -119,6 +119,7 @@ const MeccgApi =
 {
     _routes: {},
     _socket: null,
+    _reconnecting : false,
     _ignoreDisconnection : false,
     room : "",
     _interval : null,
@@ -136,6 +137,11 @@ const MeccgApi =
         return g_lTimeJoined;
     },
 
+    socketIsConnected : function()
+    {
+        return this._socket !== null && this._socket.connected;
+    },
+
     send: function (path, message)
     {
         if (typeof message === "undefined")
@@ -143,7 +149,7 @@ const MeccgApi =
 
         try
         {
-            if (MeccgApi._socket !== null)
+            if (MeccgApi.socketIsConnected())
                 MeccgApi._socket.emit(path, message);
             
             return true;
@@ -236,8 +242,7 @@ const MeccgApi =
 
     onReconnected : function()
     {
-        MeccgApi.onConnected();
-        MeccgApi.emitRegisterToServer();
+        /** deprecated */
     },
     
     onDisconnected : function()
@@ -247,15 +252,22 @@ const MeccgApi =
 
     onAuthenticationSuccess : function()
     {
+        if (MeccgApi.isConnected)
+            return;
+
         const sUser = g_sDisplayName;
         const sUserUUID = g_sUserId;
         const sRoom = g_sRoom;
 
         MeccgApi.isConnected = true;
-        MeccgApi.initSocketPaths();
         MeccgApi.send("/game/rejoin/immediately", { username: sUser, userid : sUserUUID, room: sRoom });
 
         document.body.dispatchEvent(new CustomEvent("meccg-api-ready", { "detail": true }));
+    },
+
+    onReconnectionSuccess : function()
+    {
+        MeccgApi.send("/game/rejoin/reconnected", { userid : g_sUserId, room: g_sRoom });
     },
 
     setupSocketConnection()
@@ -264,18 +276,30 @@ const MeccgApi =
         this._socket = io(window.location.host, 
         {
             reconnection: false,
-            reconnectionDelay: 5000,
-            reconnectionDelayMax: 5000,
-            reconnectionAttempts: 4,
-            timeout: 4000,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 4000,
+            reconnectionAttempts: 5,
+            timeout: 2000,
             auth: {
                 authorization: g_sApiKey,
                 room: g_sRoom,
-                userId : g_sUserId
+                userId : g_sUserId,
+                joined: g_lTimeJoined,
+                username: g_sDisplayName,
+                player_access_token_once: MeccgApi.getOneTimeAccessToken()
             }
         });
 
-        this._socket.on("connect", () => MeccgApi.isConnected = true);
+        MeccgApi.initSocketPaths();
+
+        this._socket.on("connect", () => {
+            if (!MeccgApi._reconnecting)
+                MeccgApi.onAuthenticationSuccess();
+            else
+                MeccgApi.onReconnectionSuccess();
+        });
+
+        this._socket.on("/game/rejoin/reconnected/success", MeccgApi.onReconnectionCompleted);
 
         this._socket.on("error", MeccgApi.onSocketError.bind(MeccgApi));
         this._socket.on("connect_error", MeccgApi.onSocketError.bind(MeccgApi));
@@ -284,26 +308,46 @@ const MeccgApi =
         this._socket.on('/disconnect/shutdown', MeccgApi.expectShutdown);
         this._socket.on('disconnect', (reason) => 
         {
-            if (MeccgApi._ignoreDisconnection)
-                MeccgApi.disconnectSocket();
-            else
+            MeccgApi.onDisconnected();
+
+            if (MeccgApi._ignoreDisconnection || reason === "io server disconnect" || reason === "io client disconnect")
             {
-                if (reason)
-                {
-                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost: " + reason }));
-                    MeccgApi._disconnectInfo.show(reason);   
-                }
-                else
-                {
-                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost." }));
-                    MeccgApi._disconnectInfo.show("");    
-                }
-                
-                document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "notify" }));
+                MeccgApi.disconnectSocket();
+                return;
             }
 
-            MeccgApi.onDisconnected();
+            if (typeof reason === "undefined")
+                reason = "";
+
+            document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "notify" }));
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Connection to server lost: " + reason + ". Reconnecting in 1 second" }));
+        
+            setTimeout(MeccgApi.triggerReconnection.bind(MeccgApi), 1000);
+            setTimeout(MeccgApi.verifyReconnected.bind(MeccgApi), 1000 * 10)
         });
+    },
+
+    onReconnectionCompleted : function()
+    {
+        MeccgApi.isConnected = true;
+        MeccgApi._disconnectInfo.abort();
+
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Reconnected." }));
+    },
+
+    triggerReconnection: function()
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "Reconnecting..." }));
+        this._reconnecting = true;
+        this._socket.connect();
+    },
+
+    verifyReconnected: function()
+    {
+        if (this.socketIsConnected())
+            MeccgApi._disconnectInfo.abort();
+        else
+            MeccgApi._disconnectInfo.show("");
     },
 
     onSocketError : function(error)
@@ -376,14 +420,7 @@ const MeccgApi =
     emitRegisterToServer : function()
     {
         /** so do the login */
-        this._socket.emit("/authenticate", { 
-            token: g_sApiKey, 
-            room: g_sRoom,
-            joined : MeccgApi.getTimeJoined(),
-            userId : g_sUserId,
-            dispayName : g_sDisplayName,
-            player_access_token_once : MeccgApi.getOneTimeAccessToken()
-        });
+        this._socket.emit("/authenticate", { });
     },
 
     forceEndGame : function()
