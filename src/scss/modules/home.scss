@@ -123,7 +123,7 @@ body, p
     height: 5px;
     background-color: rgba(255,165,0,0.8);
     width: 1%;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
 
@@ -162,9 +162,6 @@ body, p
     }
 
     tr td:first-of-type { padding-right: 10px; }
-
-
-
 }
 
 @keyframes gamelist-line-to-refresh {
@@ -194,4 +191,9 @@ body, p
         padding-top: 6em;
     }
 
+}
+
+footer {
+    font-size: 0.8em;
+    text-align: center;
 }

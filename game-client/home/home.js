@@ -36,60 +36,69 @@ const toNumberString = function(nValue)
     return (nValue < 10 ? "0" : "") + nValue;
 };
 
+const getGameTypeDuration = function(isArda, lTime)
+{
+    const pDate = new Date(Date.now() - lTime);
+
+    let lMins = ((pDate.getHours()-1) * 60 +  pDate.getMinutes());
+    if (lMins > 0)
+        lMins += "min";
+    else
+        lMins = "now";
+
+    return (isArda ? "Arda, " : "") + "" + lMins 
+}
+
+const addGameType = function(value, isArda)
+{
+    const _room = value.room;
+    const _players = value.players.sort().join(", ");
+    const _context = isArda ? "arda" : "play";
+
+    const since = getGameTypeDuration(isArda, value.time);
+    
+    const _tr = document.createElement("tr");
+    const tdRoom = document.createElement("td");
+    _tr.appendChild(tdRoom);
+    tdRoom.setAttribute("class", "name game-link");
+    if (value.accessible)
+        tdRoom.innerHTML = `<a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> ${_room}</a> <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+    else
+        tdRoom.innerHTML = `${_room} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+
+    const tdJitsi = document.createElement("td");
+    _tr.appendChild(tdJitsi);
+    tdJitsi.setAttribute("class", "action");
+    if (value.jitsi)
+        tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone" target="_blank"> via Jitsi</a> `;
+    else
+        tdJitsi.innerHTML = `<span class="fa fa-microphone"> via Discord</span> `;
+
+    const tdWatch = document.createElement("td");
+    _tr.appendChild(tdWatch);
+    tdWatch.setAttribute("class", "action");
+    if (value.visitors)
+        tdWatch.innerHTML = `<a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a>`;
+
+    const tdPlayers = document.createElement("td");
+    _tr.appendChild(tdPlayers);
+    tdPlayers.setAttribute("class", "players");
+    tdPlayers.innerText = _players;
+
+    return _tr;
+}
+
 const addGameTypes = function(container, data, isArda, existing)
 {
     for (let value of data)
     {
-        if (isArda !== value.arda)
-            continue;
-
-        let _room = value.room;
-        let _players = value.players.sort().join(", ");
-        let _context = value.arda ? "arda" : "play";
-
-        const pDate = new Date(new Date().getTime() - value.time);
-
-        let lMins = ((pDate.getHours()-1) * 60 +  pDate.getMinutes());
-        if (lMins > 0)
-            lMins += "min";
-        else
-            lMins = "now";
-
-        const since = (isArda ? "Arda, " : "") + "" + lMins 
-        
-        const _tr = document.createElement("tr");
-        const tdRoom = document.createElement("td");
-        _tr.appendChild(tdRoom);
-        tdRoom.setAttribute("class", "name game-link");
-        if (value.accessible)
-            tdRoom.innerHTML = `<a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> ${_room}</a> <span class="game-duration fa fa-clock-o"> ${since}</span>`;
-        else
-            tdRoom.innerHTML = `${_room} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
-
-        const tdJitsi = document.createElement("td");
-        _tr.appendChild(tdJitsi);
-        tdJitsi.setAttribute("class", "action");
-        if (value.jitsi)
-            tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone" target="_blank"> via Jitsi</a> `;
-        else
-            tdJitsi.innerHTML = `<span class="fa fa-microphone"> via Discord</span> `;
-
-        const tdWatch = document.createElement("td");
-        _tr.appendChild(tdWatch);
-        tdWatch.setAttribute("class", "action");
-        if (value.visitors)
-            tdWatch.innerHTML = `<a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a>`;
-
-        const tdPlayers = document.createElement("td");
-        _tr.appendChild(tdPlayers);
-        tdPlayers.setAttribute("class", "players");
-        tdPlayers.innerText = _players;
-
-        container.appendChild(_tr);
-        existing.push(_room)
+        if (isArda === value.arda)
+        {
+            container.appendChild(addGameType(value, isArda));
+            existing.push(value.room);
+        }
     }
 };
-
 
 const hideContainer = function(id)
 {
@@ -104,6 +113,35 @@ const showContainer = function(id)
     if (elem !== null && elem.classList.contains("hidden"))
         elem.classList.remove("hidden");
 };
+
+const requireFooter = function()
+{
+    let footer = document.querySelector("footer");
+    if (footer === null)
+    {
+        footer = document.createElement("footer");
+        document.body.appendChild(footer);
+    } 
+
+    return footer;
+}
+
+const onAddFooterTime = function(data)
+{
+    const footer = requireFooter();
+    footer.innerText = "";
+
+    const gameCount = data.games;
+    const text = document.createDocumentFragment();
+    text.appendChild(document.createTextNode(data.startup));
+    
+    if (gameCount === 1)
+        text.appendChild(document.createTextNode(", 1 game so far."));
+    else if (gameCount > 1)
+        text.appendChild(document.createTextNode(", " + gameCount + " games so far."));
+
+    footer.appendChild(text);
+}
 
 const onResult = function(data)
 {
@@ -155,7 +193,7 @@ const fetchAndUpdateGames = function()
 {
     g_nCountFechGames++;
     fetch("/data/games").then((response) => response.json().then(onResult)).catch(showFetchError);
-
+    fetch("/health").then(response => response.json()).then(onAddFooterTime).catch(showFetchError);
     if (g_nCountFechGames === 60)
     {
         clearInterval(g_fetchGamesInterval);
