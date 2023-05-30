@@ -94,6 +94,9 @@ class StagingArea
             return "";
         
         const id = "stagecard_" + uuid;
+        if (document.getElementById(id) !== null)
+            return "";
+
         const css = this.getCardStateCss(state);
         const res = this.createNewCard(uuid, code, type, id, css, turn, token, secondary);
         if (res === null)
