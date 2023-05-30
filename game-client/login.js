@@ -344,7 +344,7 @@ const onChallengeDeckChosen = function(e)
 
     document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_jDecks[nArray].decks[sKey] }));
 
-    setTimeout(() => CalculateDeckCategory.calculateAll(), 500);
+    setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
 }
 
 const stripHashFromUrl = function()
@@ -688,11 +688,10 @@ const CalculateDeckCategory =
     initTextareaOnClick:function(elemid)
     {
         const elem = document.getElementById(elemid);
-        if (elem === null || elem.parentElement === null || elem.parentElement.parentElement === null)
+        if (elem === null || elem.parentElement === null)
             return;
 
-        const pParent = elem.parentElement.parentElement;
-        const h3 = pParent.querySelector("h3");
+        const h3 = elem.parentElement.querySelector("h3");
         if (h3 !== null)
         {
             h3.setAttribute("id", "label-" + elemid);
@@ -810,8 +809,8 @@ const initJitsiSelection = function()
 
 const g_pDeckTextFields = new DeckTextFields();
 
+/** generic init */
 (function () {
-
     g_pDeckTextFields.insert("deck-text-fields", "Deck Details", "w50");
 
     const sUserName = document.getElementById("user").value;
@@ -823,19 +822,37 @@ const g_pDeckTextFields = new DeckTextFields();
     else
         document.getElementById("user").value = sUserName;
    
-
     document.getElementById("host").onclick = onCheckCardCodes;
 
     initJitsiSelection();
 
-    fetch("/data/decks").then((response) => response.json().then(onLoadDecks))
+    const forms = document.getElementById("deckform");
+    forms.onsubmit = (e) => {
+            document.getElementById("host").dispatchEvent(new Event('click'));
+            e.preventDefault();
+            return false;
+    }
+
+    CalculateDeckCategory.init();
+    document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "login" })); /** update the deck list view */
+
+})();
+
+(function () {
+
+    fetch("/data/decks")
+    .then((response) => response.json())
+    .then(onLoadDecks)
     .catch((err) => 
     {
         console.log(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
     });
 
-    fetch("/data/games/" + getRoomName()).then((response) => response.json().then(data => {
+    fetch("/data/games/" + getRoomName())
+    .then((response) => response.json())
+    .then(data => 
+        {
         if (data.exists === true)
         {
             const button = document.getElementById("host");
@@ -849,20 +866,11 @@ const g_pDeckTextFields = new DeckTextFields();
             if (data.share === true)
                 insertSocialMedia(true);
         }
-        else 
-            insertSocialMedia(false);
-    }));
+        //else 
+        //    insertSocialMedia(false);
+    })
+    .catch(console.log);
 
-    const forms = document.getElementById("deckform");
-    forms.onsubmit = (e) => {
-            document.getElementById("host").dispatchEvent(new Event('click'));
-            e.preventDefault();
-            return false;
-    }
-
-    CalculateDeckCategory.init();
-
-    document.body.dispatchEvent(new CustomEvent("meccg-init-dropzone", { "detail": "login" })); /** update the deck list view */
 })();
 
 document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);
