@@ -20,7 +20,7 @@ const initMsg = isDebug
 console.log('\x1b[7m%s\x1b[0m', '\n---------- ' + initMsg + ' ----------');
 
 const sourcePath = './src/scss';
-const targetPath = './media/assets/css';
+const targetPath = './public/media/assets/css';
 
 const compileFile = function(file, targetFilepath)
 {
@@ -55,6 +55,7 @@ gulp.task('compile-saas-helprules', () => compileFile('/modules/rules.scss'));
 gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselector.scss', "./game-client/game/playerselector"));
 
 
+gulp.task('copy-client-js', () => gulp.src("./src/game-client/**/*.js").pipe(gulp.dest("./public/client")));
 
 const sccsModules = [
     "compile-sass-about",
@@ -76,7 +77,11 @@ const sccsModules = [
 // Task to watch changes
 // 
 gulp.task('watch-assets', () => {
+    console.log("watch scss");
     gulp.watch(sourcePath + '/**/*.scss', gulp.series(sccsModules));
+
+    console.log("watch js");
+    gulp.watch("./src/game-client/**/*.js", gulp.series(["copy-client-js"]));
     
 });
 
