@@ -539,11 +539,6 @@ SERVER.onIoConnection = function (socket)
         }
         else 
         {
-            if (reason)
-                console.info(socket.username + " (" + socket.id + ") disconnected from game " + socket.room + ". Reason was: " + reason);
-            else
-                console.info(socket.username + " (" + socket.id + ") disconnected from game " + socket.room);
-
             SERVER.roomManager.onDisconnected(socket.userid, socket.room);
             SERVER.roomManager.checkGameContinuence(socket.room);
         }
