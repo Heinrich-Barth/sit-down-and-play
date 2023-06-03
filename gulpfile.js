@@ -51,6 +51,9 @@ gulp.task('compile-saas-tabletop', () => compileFile('/modules/tabletop.scss'));
 gulp.task('compile-saas-mapview', () => compileFile('/modules/mapview.scss'));
 gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./game-client/game/score"));
 gulp.task('compile-saas-gamearda', () => compileFile('/modules/game-arda.scss'));
+gulp.task('compile-saas-helprules', () => compileFile('/modules/rules.scss'));
+gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselector.scss', "./game-client/game/playerselector"));
+
 
 
 const sccsModules = [
@@ -64,7 +67,9 @@ const sccsModules = [
     "compile-saas-tabletop",
     "compile-saas-score",
     "compile-saas-mapview",
-    "compile-saas-gamearda"
+    "compile-saas-gamearda",
+    "compile-saas-helprules",
+    "compile-saas-playerselector"
 ]
 
 // 
