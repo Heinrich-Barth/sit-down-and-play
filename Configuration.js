@@ -6,16 +6,13 @@ class Configuration {
     {
         this._csp_header = "";
         this._csp_self = "";
-
         this._isProd = process.env.NODE_ENV === "production";
-
-
 
         this._maxRooms = Configuration.assertString(process.env.ROOMS, 10);
         this._maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
 
         this._port = Configuration.assertString(process.env.PORT, 8080);
-        this._deckDirectory = Configuration.assertString(process.env.DECKLISTFOLDER, "/data/decks");
+        this._deckDirectory = "/public/decks";
 
         if(Configuration.checkHasLocalImages())
         {

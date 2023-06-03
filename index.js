@@ -19,7 +19,8 @@ let SERVER = {
 
             generic : {
                 etag: true,
-                maxage: 8640000 * 1000
+                maxage: 8640000 * 1000,
+                "Cache-Control": "public, max-age=21600"
             },
 
             jpeg : {
@@ -307,25 +308,13 @@ SERVER.shutdown = function ()
         SERVER.doShutdown();
 }
 
-/**
- * These are the JS game files. Avoid caching.
- */
-SERVER.instance.use("/media/client", g_pExpress.static("game-client"));
+SERVER.instance.use(g_pExpress.static("public"));
 
-require("./game-logs")(SERVER.instance, g_pExpress);
-
-/* All media can be used with static routes */
-SERVER.instance.use("/media/assets", g_pExpress.static("media/assets", SERVER.caching.headerData.generic));
-SERVER.instance.use("/media/maps", g_pExpress.static("media/maps", SERVER.caching.headerData.generic));
-
-if (SERVER.configuration.useLocalImages())
-{
-    console.log("Use local image path");
-    SERVER.instance.use("/data/images", g_pExpress.static("data-local/images", SERVER.caching.headerData.generic));
-}
 /**
  * Show list of available images. 
- */
+
+*/
+SERVER.instance.use("/data", g_pAuthentication.isSignedInPlay);
 SERVER.instance.get("/data/list/images", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(SERVER.cards.getImageList()).status(200));
 
 /**
@@ -350,12 +339,12 @@ SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback6h
 SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getNameCodeSuggestionMap()).status(200));
 
 require("./releasenotes")(SERVER)
-require("./Personalisation")(SERVER, g_pExpress);
+require("./Personalisation")(SERVER);
 
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
  */
-SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data/scores.json", SERVER.caching.headerData.generic));
+SERVER.instance.use("/data/scores", g_pExpress.static(__dirname + "/data-local/scores.json", SERVER.caching.headerData.generic));
 
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.
@@ -369,37 +358,29 @@ SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback6hrs, (
 
 SERVER.instance.get("/data/list/filters", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.cards.getFilters()).status(200));
 
-SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/media/assets/images/cards/backside.jpg", SERVER.caching.headerData.jpeg));
-SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/media/assets/images/cards/backside-region.jpg", SERVER.caching.headerData.jpeg));
-SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-generic.jpg", SERVER.caching.headerData.jpeg));
-SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-region.jpg", SERVER.caching.headerData.jpeg));
-SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/media/assets/images/cards/notfound-site.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/public/media/assets/images/cards/backside.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/backside-region", g_pExpress.static(__dirname + "/public/media/assets/images/cards/backside-region.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-generic", g_pExpress.static(__dirname + "/public/media/assets/images/cards/notfound-generic.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-region", g_pExpress.static(__dirname + "/public/media/assets/images/cards/notfound-region.jpg", SERVER.caching.headerData.jpeg));
+SERVER.instance.use("/data/card-not-found-site", g_pExpress.static(__dirname + "/public/media/assets/images/cards/notfound-site.jpg", SERVER.caching.headerData.jpeg));
 
-require("./pwa")(SERVER, g_pExpress, g_pAuthentication);
-
-SERVER.instance.use("/serviceWorker.js", g_pExpress.static(__dirname + "/serviceWorker.js"));
 
 /**
  * Get active games
  */
-SERVER.instance.get("/data/games", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.getActiveGames()).status(200));
-SERVER.instance.get("/data/games/:room", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getActiveGame(req.params.room)).status(200));
-SERVER.instance.get("/data/spectators/:room", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getSpectators(req.params.room)).status(200));
-
-/**
- * Get the status of a given player (access denied, waiting, addmitted)
- */
-SERVER.instance.get("/data/dump", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.dump()).status(200));
+SERVER.instance.get("/data/games", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER.roomManager.getActiveGames()).status(200));
+SERVER.instance.get("/data/games/:room", SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getActiveGame(req.params.room)).status(200));
+SERVER.instance.get("/data/spectators/:room", SERVER.caching.expires.jsonCallback, (req, res) => res.send(SERVER.roomManager.getSpectators(req.params.room)).status(200));
 
 /**
  * Load a list of available challenge decks to start right away
  */
-SERVER.instance.get("/data/decks", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, (_req, res) => res.send(PLUGINS.decklist).status(200));
+SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(PLUGINS.decklist).status(200));
 
 /**
   * Check if the deck is valid.
   */
-SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, SERVER.caching.expires.jsonCallback, function (req, res) 
+SERVER.instance.post("/data/decks/check", SERVER.caching.expires.jsonCallback, function (req, res) 
 {
     let bChecked = false;
     let vsUnknown = [];
@@ -426,7 +407,7 @@ SERVER.instance.post("/data/decks/check", g_pAuthentication.isSignedInPlay, SERV
 });
 
 SERVER.instance.get("/data/samplerooms", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER._sampleRooms).status(200));
-SERVER.instance.post("/data/hash", g_pAuthentication.isSignedInPlay, (req, res) =>
+SERVER.instance.post("/data/hash", (req, res) =>
 {
     const data = req.body.value;
     if (typeof data !== "string" || data === "")
@@ -444,12 +425,8 @@ SERVER.instance.post("/data/hash", g_pAuthentication.isSignedInPlay, (req, res) 
         });
 });
 
-
-if (SERVER.configuration.hasLocalImages())
-{
-    console.log("Card images are accessed locally from " + SERVER.configuration.imageFolder());
-    SERVER.instance.use("/data/images", g_pExpress.static(SERVER.configuration.imageFolder(), SERVER.caching.headerData.generic));
-}
+require("./pwa")(SERVER, g_pExpress, g_pAuthentication);
+require("./game-logs")(SERVER.instance, g_pExpress);
 
 /** load navigation and non-game endpoints */
 require("./plugins/Navigation")(SERVER, g_pExpress, g_pAuthentication, __dirname);

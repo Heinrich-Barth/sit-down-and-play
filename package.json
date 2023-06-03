@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "concurrently \"gulp --debug\" \"node index.js\"",
+    "dev": "concurrently \"gulp --debug\" \"IS_DEVELOPMENT=true node index.js\"",
     "local": "PORT=8080 IMAGE_PATH=/data/card-images CARDURL=data/cards.json MAPPOS=data/map-positions-example.json node index.js",
     "play": "PORT=8080 IMAGE_PATH=/data/card-images CARDURL=data-local/cards.json MAPPOS=data-local/map-positions.json DECKLISTFOLDER=data-local/decks node index.js",
     "build_xmls": "node index-generate-from-xmls.js",

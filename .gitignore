@@ -16,3 +16,6 @@ data-local/cards.json
 
 plugins/authentication-file.js
 plugins/authentication-login.html
+
+logs/
+public/client

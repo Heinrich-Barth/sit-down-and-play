@@ -25,7 +25,7 @@ const loadScoreStats = function()
     try
     {
         const fs = require("fs");
-        const data = JSON.parse(fs.readFileSync("data/scores.json"));
+        const data = JSON.parse(fs.readFileSync("data-local/scores.json"));
         return data.categories;
     }
     catch (err)

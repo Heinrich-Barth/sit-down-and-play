@@ -46,8 +46,7 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     pCookiePreferences.setProduction(isProduction);
 
     /* Map images should be cached */
-    SERVER.instance.use("/media/maps", g_pExpress.static(__dirname + "/../media/maps", SERVER.caching.headerData.generic));
-    SERVER.instance.use("/media/map-black-tile", g_pExpress.static(__dirname + "/../media/map-tile.jpg", SERVER.caching.headerData.generic));
+    SERVER.instance.use("/media/map-black-tile", g_pExpress.static(__dirname + "/../public/media/map-tile.jpg", SERVER.caching.headerData.generic));
 
     /**
      * Show Map Pages

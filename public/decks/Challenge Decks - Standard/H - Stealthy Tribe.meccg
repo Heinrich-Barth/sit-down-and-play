@@ -1,0 +1,148 @@
+#
+# GCCG v0.9.4 Middle-earth deck
+#
+# H - Stealthy Tribe
+#
+
+####
+Deck
+####
+
+# Hazard (30)
+
+3 The Moon Is Dead (DM)
+2 Barrow-wight (LE)
+1 Choking Shadows (TW)
+3 Plague of Wights (LE)
+2 An Unexpected Outpost (DM)
+3 Ghouls (LE)
+3 Doors of Night (LE)
+1 Exhalation of Decay (DM)
+2 Twilight (LE)
+3 Chill Douser (DM)
+1 Power Built by Waiting (AS)
+3 Wisp of Pale Sheen (DM)
+3 Stirring Bones (DM)
+
+# Character (10)
+
+3 Hoarmûrath the Ringwraith (LE)
+2 Ill-favoured Fellow (WH)
+2 Orc Tracker (LE)
+3 Sly Southerner (WH)
+
+# Resource (30)
+
+3 Records Unread (AS)
+1 Bade to Rule (LE)
+1 Scroll of Isildur [M] (LE)
+2 Orc Quarrels (LE)
+3 Vile Fumes (WH)
+1 Sneakin' (LE)
+3 Blasting Fire (WH)
+3 War-wolf (LE)
+1 Stinker (LE)
+1 High Helm (LE)
+2 Crept Along Cleverly (WH)
+1 The Arkenstone [M] (LE)
+1 Orcs of Moria (LE)
+2 Snaga-hai (LE)
+3 A Nice Place to Hide (LE)
+1 Great Lord of Goblin-gate (AS)
+1 Sable Shield (LE)
+
+####
+Pool
+####
+
+# Resource (7)
+
+1 Gorbag (LE)
+1 Grishnákh (LE)
+1 Ill-favoured Fellow (WH)
+1 Lugdush (WH)
+1 Ufthak (LE)
+1 Blazon of the Eye (LE)
+1 Strange Rations (LE)
+
+####
+Sideboard
+####
+
+# Resource (20)
+
+2 Black Mace (LE)
+1 Sudden Call (LE)
+1 Orc Quarrels (LE)
+1 Twilight (LE)
+2 Foolish Words (LE)
+2 Ghosts (LE)
+1 Crept Along Cleverly (WH)
+2 Voices of Malice (LE)
+1 Fell Rider (LE)
+2 Piercing All Shadows (WH)
+1 Orcs of Gundabad (LE)
+1 Stench of Mordor (LE)
+3 Ambusher (LE)
+
+####
+Sites
+####
+
+# Sites (13)
+
+1 barad-dûr [m] (le)
+1 carn dûm [m] (le)
+1 caves of ûlund [m] (le)
+1 dead marshes [m] (le)
+1 dol guldur [m] (le)
+1 goblin-gate [m] (le)
+1 minas morgul [m] (le)
+1 moria [m] (le)
+1 mount doom [m] (le)
+1 mount gram [m] (le)
+1 mount gundabad [m] (le)
+1 sarn goriwing [m] (le)
+1 shelob's lair [m] (le)
+
+####
+Notes
+####
+Hoarmurath directs a band of Morgul scouts into the frings Shadow areas of the Misty Mountains to steal technologies and win over independent Orc tribes. His minions rely on stealth and minimal movement in the open, through they can fight in a pinch. The hazards are solid Undead.
+
+= Starting Companies (2) at Do1 Guldur
+a) Gorbag, Grishnakh, Ufthak, and Lugdush form the main company. Gorbag controls Grishnakh and starts with Blazon of the Eye. Ufthak starts with Strange Rations.
+b) Ill-favoured Fellow starts by himself at Do1 Guldur and waits for more characters to join his company.
+
+= Suggested Sites for Resources
+The Arkenstone - Moria or Caves of Ulund
+Blasting Fire 3x - tapped Shadow-hold
+Great Lord of Goblingate - Goblin-gate
+High Helm - Mount Gundabad or Sarn Goriwing
+Orcs of Moria - Moria
+Sable Shield - Mount Gundabad or Sarn Goriwing
+Scroll of Isildur - Moria or Caves of Ulund [storing it a Barad-dur]
+Snaga-hai 2x - tapped Shadow-hold
+Stinker - Goblin-gate
+Vile Fumes 3x - tapped Shadow-hold
+War-wolf 3x - tapped Shadow-hold (except Dead Marshes and Mount Gram)
+Black Mace 2x (sideboard) - Moria or Caves of Ulund (2nd deck cycle)
+Orcs of Mirkwood (sideboard) - Sarn Goriwing
+
+= Resource Play
+The trickiest aspect of this deck is playing multiple site-tapping resources at a small number of Shadow- holds. The 3 Records unread are key to pulling this off. This minor item untaps Goblin-gate for the 2 allies playable there and Moria for its faction and one greater item. The nature of this deck is for company of Orcs scouts to move very little, thereby decreasing the number of creatures that attack them. Once a shadow-hold is tapped, the deck provides a great number of playable 1 marshalling point resources including factions, allies and item. A company should not move to an untapped Moria or Goblin-gate unless it has one of resources specific to that site in hand.
+
+= Hoarmurath
+Hoarmurath taps every organization phase to bring a resource to the play deck from the sideboard. The only exception is when you have Voices of Malice in your hand - Hoarmurath is your only sage. He does not move from Do1 Guldur in any case, increasing your hand size by one. It may be useful to bring in Fell Rider near the end of the first deck cycle. In this way, you have the option of moving Hoarmurath for the second cycle.
+
+= Hazard Play
+Woe be the opponent who wanders into this hazard mix unprepared! Practicing a little patience, you can unload a vicious mix of Undead-attacks. The key is to turn them into monsters with bonuses from The Moon Is Dead, Plague of Wights, and Chill Dousers. For example, you can reasonably create a Ghouls attack of 14 strikes at 10 prowess. You should generally look to discard hazards in favour of keeping your numerous marshalling point sources in hand, however.
+
+= Sideboard
+Many resources in the sideboard will undoubtedly be useful against any opponent: Orc Quarrels, Black Maces, Sudden Call, etc. In fact, with Hoarmurath tapping most turns to bring a resource into the play deck, you effectively increase the number of resources in the play deck without increasing the number of hazards. There is nothing tricky about the sideboard hazards. Use An Unexpected Outposts to recycle your best Undead creatures or enhancers if you are making good use of them. Otherwise bring in hazards from the sideboard to hit the elusive opponent in new ways.
+
+= Strategy Resources
+Starting company here is built to keep hazards away. Orc scouts count as half for company size, just like hobbits. Gorbag’s a bit larger than your average hobbit, though. The point here is to go to shadow holds, play some items, allies or factions, and use Records Unread to untap the site and do it again. Gollum (as Stinker) is back, but the competition for him isn’t too big a deal since the Great Lord of Goblin-Gate and the War-wolves will cover your ally requirements. This is likely to be a slow deck, since you’ll can spend a least a couple of turns at a given site.
+
+= Strategy Hazards
+Hazards are Undead, again more powerful than the hero version was. Doors of Night, Plague of Wights, and The Moon is Dead makes for some truly evil undead attacks. Against other minions, they’ll mostly be detainment, but slowing your opponent down can be as good as wounding characters if you’re careful. Careful using Choking Shadows against minions - you may end up making everything detainment! Be sure to save Chill Dousers and Stirring Bones for Ruins and Lairs, where they’ll be normal attacks. Again, there’s nothing against factions except two Foolish Words in the sideboard, so be sure to get your own.

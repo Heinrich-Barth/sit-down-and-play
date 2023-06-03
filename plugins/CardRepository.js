@@ -5,7 +5,7 @@ const getRemovableKeysArray = function()
 {
     try
     {
-        let data = require("fs").readFileSync("./data/obsoleteCardKeys.json", 'utf8');
+        let data = require("fs").readFileSync("./data-local/obsoleteCardKeys.json", 'utf8');
         if (data !== "")
             return JSON.parse(data);
     }

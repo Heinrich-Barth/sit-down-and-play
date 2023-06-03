@@ -53,7 +53,7 @@ Deck checksums are calculated based on the deck provided by a player. Using the 
 
 Once you have finised your game, the final results will be dispayed and link `Copy result to clipboard` will be made available
 
-![The Result Screen](readme-data/resulttoken-splash.png)
+![The Result Screen](public/readme-data/resulttoken-splash.png)
 
 This automatically copies the result token to your clipboard and you can conveniently forward it to the tournament organiser.
 
@@ -61,6 +61,6 @@ This automatically copies the result token to your clipboard and you can conveni
 
 You can evaluate any token via a dedicated endpoint `/tournament`. You will find a text field into which you can paste the token. It will automatically be analysed and its information presented in a readible manner.
 
-![The Result Screen](readme-data/resulttoken-example.png)
+![The Result Screen](public/readme-data/resulttoken-example.png)
 
 If a token is invalid (e.g. somebody has changed the data), the signature hash becomes invalid and the token will not be accepted.
