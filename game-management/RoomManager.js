@@ -58,27 +58,31 @@ class RoomManager {
             return null;
     }
 
-    _createRoom(room, userId, options) 
+    _createRoom(room, userId, displayname, options) 
     {
         const isArda = options.arda;
         const isSinglePlayer = options.singleplayer;
         const useDCE = options.dce;
         const jitsi = options.jitsi;
 
-        if (this._rooms[room] === undefined)
-        {
-            this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
-            
-            if (!useDCE)
-                this._rooms[room].setUseDCE(false);
-            if (jitsi)
-                this._rooms[room].setUseJitsi(true);
+        if (this._rooms[room] !== undefined)
+            return this._rooms[room];
 
-            if (this.roomCountAll.length >= 10)
-                this.roomCountAll.shift();
+        this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
+        
+        if (!useDCE)
+            this._rooms[room].setUseDCE(false);
+        if (jitsi)
+            this._rooms[room].setUseJitsi(true);
 
-            this.roomCountAll.push(Date.now());
-        }
+        if (this.roomCountAll.length >= 10)
+            this.roomCountAll.shift();
+
+        this.roomCountAll.push({
+            "time": Date.now(),
+            "creator": displayname,
+            "arda": isArda
+        });
     
         return this._rooms[room];
     }
@@ -255,13 +259,21 @@ class RoomManager {
 
     getGameCount()
     {
+        
         if (this.roomCountAll.length === 0)
             return [];
 
-        let res = [];
-        for (let _time of this.roomCountAll)
-            res.push(new Date(_time).toISOString());
-
+        const res = [];
+        for (let _val of this.roomCountAll)
+        {
+            res.push(
+            {
+                "started": new Date(_val.time).toUTCString(),
+                "creator": _val.creator,
+                "arda": _val.arda
+            });
+        }
+        
         return res;
     }
 
@@ -756,7 +768,7 @@ class RoomManager {
      */
     addToLobby(room, userId, displayname, jDeck, roomOptions) 
     {
-        const pRoom = this._createRoom(room, userId, roomOptions);
+        const pRoom = this._createRoom(room, userId, displayname, roomOptions);
         const isFirst = pRoom.isEmpty();
 
         /** a singleplayer game cannot have other players and a ghost game about to die should not allow new contestants */
