@@ -23,12 +23,14 @@ const loadSampleRooms = function(existing)
     if (document.getElementById("enter_room").value !== "")
         return;
 
-    fetch("/data/samplerooms").then((response) => response.json().then((_rooms) => 
+    fetch("/data/samplerooms").then((response) => response.json())
+    .then((_rooms) => 
     {
         const filtered = _rooms.filter((candidate) => !existing.includes(candidate));
         if (filtered.length > 0)
             document.getElementById("enter_room").value = filtered[randomNumber(filtered.length)];
-    }));
+    })
+    .catch(console.error);
 }
 
 const toNumberString = function(nValue)
