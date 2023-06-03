@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "concurrently \"gulp --debug\" \"IS_DEVELOPMENT=true node index.js\"",
+    "dev": "concurrently \"gulp --debug\" \"node index.js\"",
     "build_xmls": "node index-generate-from-xmls.js",
     "test_clear": "jest --clearCache",
     "test": "jest --config ./jest.config.json"
