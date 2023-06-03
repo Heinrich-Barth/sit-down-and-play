@@ -7,20 +7,12 @@ npm-debug.log
 *.dev
 .DS_Store
 
-data/cards-raw.json
-data/config.json
-data/test
-data/decks
-data/card-images
-data/map-positions.json
-
-media/maps/*
+public/media/maps/*
+public/media/personalisation/*.css
 
 pages/rules-*.html
-keepalive.js
 
-plugins/namelist.json
-data-local/
+data-local/cards.json
 
 plugins/authentication-file.js
 plugins/authentication-login.html
