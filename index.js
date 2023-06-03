@@ -301,7 +301,7 @@ SERVER.shutdown = function ()
             return new Promise((resolve) => setTimeout(resolve, time));
         }
             
-        sleep(2000).then(SERVER.doShutdown);
+        sleep(2000).then(SERVER.doShutdown).catch(console.error);
     }
     else
         SERVER.doShutdown();
