@@ -64,6 +64,7 @@ Open your terminal and access this project folder. Then run the following comman
 
 ````
 npm install
+npm run dev (run only once to build target sources)
 npm start
 ````
 
