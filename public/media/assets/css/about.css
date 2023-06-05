@@ -9,7 +9,7 @@ html, body {
   border: 0;
   cursor: default;
   background-color: #000;
-  font-family: "Titillium Web", "Helvetica Neue", sans-serif;
+  font-family: serif, sans-serif;
   font-size: 1em;
   user-select: none;
   line-height: 1.5em;
@@ -30,9 +30,8 @@ body {
 
 .bgblue,
 .blue-box {
-  background: rgba(61, 65, 70, 0.82);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(60, 60, 60, 0.4) 100%);
   border-radius: 5px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 h1, h2 {
