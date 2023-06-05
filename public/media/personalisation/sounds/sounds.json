@@ -1,0 +1,11 @@
+{
+    "dice": "/media/personalisation/sounds/roll_dice.ogg",
+    "drawcard": "/media/personalisation/sounds/card_pickup.ogg",
+    "discard": "/media/personalisation/sounds/card_drop.ogg",
+    "shuffle": "/media/personalisation/sounds/shuffle.ogg",
+    "score": "/media/personalisation/sounds/flip_coin.ogg",
+    "launch": "/media/personalisation/sounds/launch.ogg",
+    "yourturn": "/media/personalisation/sounds/launch.ogg",
+    "endgame": "/media/personalisation/sounds/endgame.ogg",
+    "notify": "/media/personalisation/sounds/notifiation.ogg"
+}
