@@ -50,18 +50,18 @@ class ChatBox {
         const text = document.createElement("div");
         text.innerHTML = "<b>" + ChatBox.getTimer() + sFrom + ":</b> " + this.ensureLength(sText, 200);
         let objDiv = document.getElementById("chatbox");
-        objDiv.appendChild(text);
+        objDiv.prepend(text);
 
         this.reduceMessages(objDiv);
-        objDiv.scrollTop = objDiv.scrollHeight;
+        objDiv.scrollTop = 0;
     }
 
     reduceMessages(div)
     {
-        const maxLen = 15;
+        const maxLen = 70;
         const list = div.querySelectorAll("div");
-        if (list !== null && list.length > maxLen && div.firstChild)
-            div.removeChild(div.firstChild);
+        if (list !== null && list.length > maxLen && div.lastChild)
+            div.removeChild(div.lastChild);
     }
 
     isValidInput(sText) 
