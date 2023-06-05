@@ -684,7 +684,7 @@ const HandCardsDraggable = {
             cursor: 'move',
             revert: true,
             opacity: 0.5,
-            revertDuration : 200,
+            revertDuration : 100,
             
             start: function() 
             {

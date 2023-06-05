@@ -38,6 +38,18 @@ class GamePreferences extends Preferences {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
     }
 
+    _toggleCardZoom(isActive)
+    {
+        if (isActive)
+        {
+            if (!document.body.classList.contains("zoom-1"))
+                document.body.classList.add("zoom-1");
+
+        }
+        else if (document.body.classList.contains("zoom-1"))
+            document.body.classList.remove("zoom-1");
+    }
+
     _togglePaddingBottom(isActive)
     {
         const table = document.querySelector(".area-player");
@@ -153,6 +165,7 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
+        this.createEntry0("toggle_zoom");
 
         if (!bWatcher)
             this.createEntry0("game_dices");
@@ -211,6 +224,7 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", false, this._togglePaddingBottom)
+        this.addConfigToggle("toggle_zoom", "Large cards on the table", false, this._toggleCardZoom);
         this._toggleCardPreview();
     }
 

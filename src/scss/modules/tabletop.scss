@@ -171,7 +171,7 @@ a {
         margin: 0 50px;
         height: 100%;
 
-        div.card { display: inline-block; }
+        div.card { display: inline-block; max-width: 90px }
     }
 
     .companies {
