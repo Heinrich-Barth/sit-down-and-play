@@ -54,6 +54,14 @@ class ScorintSheet {
         return this._calculate();
     }
 
+    setCategory(type, nPoints)
+    {
+        if (type !== "" && typeof this._sheet[type] !== "undefined")
+            this._sheet[type] = nPoints;
+
+        return this._calculate();
+    }
+
     /**
      * Update sheet and calculate points
      * @param {json} jData 
@@ -200,6 +208,14 @@ class Scores {
     {
         if (typeof this._sheets[sPlayerId] !== "undefined")
             return this._sheets[sPlayerId].update(jData);
+        else
+            return -1;
+    }
+
+    setCategory(sPlayerId, type, nPoints)
+    {
+        if (typeof this._sheets[sPlayerId] !== "undefined")
+            return this._sheets[sPlayerId].setCategory(type, nPoints);
         else
             return -1;
     }

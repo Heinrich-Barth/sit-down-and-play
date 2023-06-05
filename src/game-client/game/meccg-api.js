@@ -6,6 +6,7 @@ const MeccgPlayers = {
     room : "",
     _interval : null,
     usermap : null,
+    avatarmap: null,
     _isMyTurn: true,
 
     isChallenger : function(sid)
@@ -51,7 +52,8 @@ const MeccgPlayers = {
     {
         if (this.usermap === null)
         {
-            this.usermap = jMap;
+            this.usermap = jMap.names;
+            this.avatarmap = jMap.avatars;
             this.onPlayerListReceived();
         }
     },
@@ -90,7 +92,8 @@ const MeccgPlayers = {
     {
         document.body.dispatchEvent(new CustomEvent("meccg-players-updated", { "detail": {
             challengerId : MeccgPlayers.getChallengerId(),
-            map : MeccgPlayers.usermap
+            map : MeccgPlayers.usermap,
+            avatars: MeccgPlayers.avatarmap
         }}));
     },
 

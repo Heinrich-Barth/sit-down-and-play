@@ -58,7 +58,7 @@ CardPreview.addHover = function(id, bRight, bTop)
 
 CardPreview.getElementPositionIsLeft = function(elem)
 {
-    const elemLeft = elem.getBoundingClientRect().x - window.scrollX;
+    const elemLeft = elem.getBoundingClientRect().right - window.scrollX;
     const windowHalf = window.innerWidth / 2;
     return elemLeft < windowHalf;
 }
@@ -213,7 +213,8 @@ CardPreview.showImage = function(elem, isLeft)
 
     if (elem !== null)
     {
-        CardPreview.show(CardPreview._getImage(elem), !isLeft, true);
+        const isRight = !CardPreview.getElementPositionIsLeft(elem);
+        CardPreview.show(CardPreview._getImage(elem), isRight, true);
         CardPreview.onHoverCharacter(elem);
     }
 };

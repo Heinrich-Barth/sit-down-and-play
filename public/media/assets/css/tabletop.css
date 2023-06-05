@@ -458,11 +458,16 @@ a:hover {
   opacity: 0.6;
   width: 16px;
   height: 16px;
+  visibility: hidden;
 }
 .location-icon-image:hover {
   opacity: 1;
   color: #fff;
   background-color: #ffa500;
+}
+
+.company:hover .location-icon-image {
+  visibility: visible;
 }
 
 .location-icon {
@@ -836,6 +841,9 @@ img.card-icon {
 .companies .company:hover {
   background: rgba(255, 255, 255, 0.15);
 }
+.companies .company:hover .company-site-list {
+  border-bottom: 3px dashed black;
+}
 .companies .company .company-character:hover {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 10px;
@@ -856,7 +864,7 @@ img.card-icon {
 .companies .company .company-site-list {
   min-height: 80px;
   padding: 5px;
-  border-bottom: 3px dashed black;
+  border-bottom: 0px dashed black;
 }
 .companies .company .company-site-list-border {
   position: absolute;

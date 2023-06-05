@@ -591,6 +591,8 @@ const GameBuilder = {
                 GameBuilder.Scoring.showScoreSheet(jData);
         });
 
+        MeccgApi.addListener("/game/score/show/current", (_bIsMe, data) => GameBuilder.Scoring.updateInGameScores(data));
+
         MeccgApi.addListener("/game/score/watch", (_bIsMe, jData) => GameBuilder.Scoring.showScoreSheetWatch(jData));
 
         MeccgApi.addListener("/game/score/show-pile", function(bIsMe, jData)

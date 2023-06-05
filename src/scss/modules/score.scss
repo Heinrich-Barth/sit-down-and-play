@@ -269,7 +269,6 @@
     }
 }
 
-
 #scoring-sheet {
     .view-card-list-container {
         a,
@@ -296,5 +295,41 @@
 
     100% {
         box-shadow: none;
+    }
+}
+
+
+.scoring-sheet-ingame {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 400;
+    padding: 5px;
+
+    color: #fff;
+    text-align: center;
+    a { 
+        display: none;
+        margin: 0 2px;
+    }
+
+    &.show-properties a {
+        display: block;
+    }
+    
+    .avatar {
+        position: relative;
+        display: inline-block;
+        width: 33px;
+        height: 23px;
+        overflow: hidden;
+        cursor: pointer;
+
+        img {
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            width: 100%;
+        }
     }
 }

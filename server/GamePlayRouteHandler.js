@@ -205,6 +205,14 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         return this.getServerInstance().cards.validateDeck(jDeck);
     }
 
+    getAvatar(jDeck)
+    {
+        if (this.isArda() || this.isSinglePlayer())
+            return  "";
+        else
+            return this.getServerInstance().cards.getAvatar(jDeck);
+    }
+
     redirectToGameIfMember(req, res, next)
     {
         if (this.userIsAlreadyInGame(req))
@@ -323,6 +331,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             if (jDeck === null)
                 throw new Error("Invalid Deck");
 
+            const avatar = this.getAvatar(jData.deck);
+
             /** Now, check if there already is a game for this Room */
             const userId = this.requireUserId(req);
 
@@ -330,7 +340,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
                 arda: this.isArda(),
                 singleplayer: this.isSinglePlayer(),
                 dce: useDCE,
-                jitsi:  useJitsi
+                jitsi:  useJitsi,
+                avatar: avatar
             };
 
             /** add player to lobby */

@@ -24,6 +24,8 @@ class PlayerSelector
         const elem = document.getElementById("player_selector_" + sHex);
         if (elem !== null)
             elem.parentNode.removeChild(elem);
+
+        GameBuilder.Scoring.removeInGame(sHexId);
     }
     
     updateLastSeen(username, isOnline)
@@ -98,6 +100,10 @@ class PlayerSelector
         }            
     }
 
+    addScoring(sName, _playerId, sHexId, isMe)
+    {
+        GameBuilder.Scoring.addInGame(sName, _playerId, sHexId, isMe);
+    }
 
     /**
      * Add players to the player indicator box 
@@ -118,6 +124,8 @@ class PlayerSelector
             const sHexId = this.player2Hex(_playerId);
             if (document.getElementById("player_selector_" + sHexId) === null) /** indicator already available, so skipp this */
             {
+                this.addScoring(sName, _playerId, sHexId, _playerId === sMyId);
+
                 const elemA = document.createElement("a");
                 elemA.setAttribute("href", "#");
                 elemA.setAttribute("id", "player_selector_" + sHexId);

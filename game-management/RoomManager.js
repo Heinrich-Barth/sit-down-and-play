@@ -779,7 +779,7 @@ class RoomManager {
             this._eventManager.trigger("arda-prepare-deck", this.gameCardProvider, jDeck, isFirst);
 
         const lNow = Date.now();
-        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow);
+        pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow, roomOptions.avatar);
 
         /** timer to check for abandoned games */
         this.checkGameContinuence(room);

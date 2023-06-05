@@ -27,6 +27,7 @@ class CardRepository {
         this._agentList = [];
         this._nameCodeAlternatives = {};
         this._cardsDeckbuilder = [];
+        this._listAvatars = [];
     }
 
     getCards()
@@ -174,6 +175,21 @@ class CardRepository {
         }
 
         return quests;
+    }
+
+    identifyAvatars()
+    {
+        let nCount = 0;
+        for (let card of this._raw)
+        {
+            if (card["Secondary"] === "Avatar")
+            {
+                this._listAvatars.push(card.code);
+                nCount++;
+            }
+        }
+        
+        console.info("\t- Avatars: " + nCount);
     }
 
     identifyQuests()
@@ -402,6 +418,7 @@ class CardRepository {
         this.stripQuotes();
         this.codesLowercase();
         this.identifyQuests();
+        this.identifyAvatars();
         this.identifyUnderdeeps();
         this.integrityCheck();
         this.sort();
@@ -550,6 +567,11 @@ class CardRepository {
             return false;  
         else
             return card["Secondary"] === "Agent" || card["agent"] === "yes";
+    }
+
+    isAvatar(code)
+    {
+        return code !== "" && this._listAvatars.includes(code);
     }
 
     createAgentList()

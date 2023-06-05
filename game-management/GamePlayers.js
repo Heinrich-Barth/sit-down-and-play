@@ -16,6 +16,7 @@ class GamePlayers extends GameBase
             this_player: "",
             ids: [],
             names: {},
+            avatars: {},
             checksums: [],
             current: 0,
             turn: 1,
@@ -45,7 +46,7 @@ class GamePlayers extends GameBase
             return false;
         else
         {
-            this.addOpponent(playerId, playerName, checksum);
+            this.addOpponent(playerId, playerName, checksum, pPlayer.getAvatar());
             return this.getPlayboardManager().AddDeck(playerId, cards);
         }
     }
@@ -86,10 +87,14 @@ class GamePlayers extends GameBase
         this.addOpponent(sId, sName, "");
     }
 
-    addOpponent(sId, sName, checksum)
+    addOpponent(sId, sName, checksum, avatar)
     {
         this.players.ids.push(sId);
         this.players.names[sId] = sName;
+
+        if (avatar !== undefined && avatar !== "")
+            this.players.avatars[sId] = avatar;
+
         if (checksum !== "")
             this.players.checksums.push(checksum);
         this.scoring.add(sId);
@@ -125,6 +130,7 @@ class GamePlayers extends GameBase
         this.players.checksums = [];
         this.players.current = 0;
         this.players.turn = 1;
+        this.players.avatars = {};
         this.scoring.reset();
     }
 
@@ -166,6 +172,11 @@ class GamePlayers extends GameBase
         return this.players.names;
     }
 
+    getAvatarMap()
+    {
+        return this.players.avatars;
+    }
+
     isMyTurn()
     {
         return this.currentIsMe();
@@ -204,6 +215,9 @@ class GamePlayers extends GameBase
         this.players.ids = _ids;
         if (this.players.names[userId] !== undefined)
             delete this.players.names[userId];
+
+        if (this.players.avatars[userId] !== undefined)
+            delete this.players.avatars[userId];
 
         /** it might be that the removed player had its turn already. hence, the current player moved on place to the left */
         if (this.players.current !== 0 && this.players.current >= _posDel)
@@ -245,7 +259,11 @@ class GamePlayers extends GameBase
     sendPlayerList()
     {
         let userid = this.getCurrentPlayerId();
-        this.publishToPlayers("/game/set-player-names", userid, this.getNameMap());
+        const data = {
+            names: this.getNameMap(),
+            avatars: this.getAvatarMap()
+        };
+        this.publishToPlayers("/game/set-player-names", userid, data);
         this.publishToPlayers("/game/time", userid, { time : this.getGameOnline() });
     }
 }

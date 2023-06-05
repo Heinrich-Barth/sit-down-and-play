@@ -110,7 +110,7 @@ CardList.prototype.getImageByCode = function(code, sDefault)
 {
     code = this.removeQuotes(code);
             
-    if (typeof this._list[code] === "undefined" || typeof this._list[code].image === "undefined")
+    if (code === "" || typeof this._list[code] === "undefined" || typeof this._list[code].image === "undefined")
         return sDefault;
     
     const image = this._list[code];

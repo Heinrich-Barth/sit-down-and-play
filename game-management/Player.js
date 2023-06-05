@@ -14,6 +14,18 @@ class Player
         this.socket = null;
         this.visitor  = false;
         this.player_access_token_once  = Date.now();
+        this.avatar = "";
+    }
+
+    getAvatar()
+    {
+        return this.avatar;
+    }
+
+    setAvatar(sAva)
+    {
+        if (sAva)
+            this.avatar = sAva;
     }
 
     isConnected()

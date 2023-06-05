@@ -253,9 +253,12 @@ class GameRoom
             return false;
     }
 
-    addPlayer(userid, displayname, jDeck, isAdmin, timeAdded)
+    addPlayer(userid, displayname, jDeck, isAdmin, timeAdded, avatar)
     {
-        this.players[userid] = new Player(displayname, jDeck, isAdmin, timeAdded);
+        const pPlayer = new Player(displayname, jDeck, isAdmin, timeAdded);
+        pPlayer.setAvatar(avatar);
+        
+        this.players[userid] = pPlayer;
         this.chat.addPlayer(userid, displayname);
     }
 

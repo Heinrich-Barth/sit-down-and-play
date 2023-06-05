@@ -89,6 +89,34 @@ class CardDataProvider extends CardRepository {
         this.loadFromUrl(this.cardsUrl);
     }
 
+    getAvatarInDPile(jDeck)
+    {
+        for(let k in jDeck)
+        {
+            if (jDeck[k] === 0)
+                continue;
+    
+            console.log(k);
+            const _code = this.getVerifiedCardCode(k.replace(/"/g, '').toLowerCase());
+            if (this.isAvatar(_code))
+                return _code;
+        }
+
+        return "";
+    }
+
+    getAvatar(jDeck)
+    {
+        if (jDeck.pool === undefined || jDeck.chars === undefined)
+            return "";
+
+        const val = this.getAvatarInDPile(jDeck.chars);
+        if (val !== "")
+            return val;
+
+        return this.getAvatarInDPile(jDeck.pool)
+    }
+
     validateDeck(jDeck)
     {
         return DeckValidator.validate(jDeck, this);

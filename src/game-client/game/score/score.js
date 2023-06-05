@@ -204,6 +204,257 @@ class ScoringContainers {
     }
 }
 
+const SCORING_INGAME = 
+{
+    _props : null,
+    _avatars: {},
+
+    removeInGame : function(sHexId)
+    {
+        DomUtils.remove(document.getElementById("scoring-ingame-" + sHexId));
+    },
+
+    updateAvatars: function(avatars)
+    {
+        for (let id in avatars)
+            this._avatars[id] = avatars[id];
+
+        const table = document.getElementById("scoring-sheet-ingame");
+        if (table === null)
+            return;
+
+        const list = table.getElementsByClassName("scoring-ingame-avatar");
+        if (list === null || list.length === 0)
+            return;
+
+        for (let img of list)
+        {
+            const id = img.getAttribute("data-player-id");
+            if (avatars[id] !== undefined)
+                img.setAttribute("src", SCORING_INGAME.getAvatar(avatars[id]));
+        }
+    },
+
+    getFirstCharacter : function(text)
+    {
+        if (typeof text === "string" && text.length > 0)
+            return text.substring(0, 1).toUpperCase();
+        else
+            return "-";
+    },
+
+    updateAll : function(data)
+    {
+        const table = document.getElementById("scoring-sheet-ingame");
+        if (table === null)
+            return;
+        
+        for (let id in data)
+        {
+            const score = data[id];
+            const tr = table.querySelector(`tr[data-player-id="${id}"]`);
+            if (tr === null)
+                continue;
+
+            const list = tr.getElementsByTagName("td");
+            if (list === null || list.length === 0)
+                continue;
+
+            let bUpdated = false;
+            let total = 0;
+            for (let td of list)
+            {
+                const type = td.hasAttribute("data-score-type") ? td.getAttribute("data-score-type") : "";
+                const val = score[type];
+                if (val)
+                {
+                    const target = td.querySelector("span").innerText;
+                    if (target.innerText + "" !== "" + val)
+                    {
+                        td.querySelector("span").innerText = val;                  
+                        bUpdated = true;
+                    }
+                    total += parseInt(val);
+                }
+            }
+
+            const vpClasses = bUpdated ? tr.getElementsByClassName("final-score") : null;
+            if (vpClasses !== null && vpClasses.length > 0)
+                vpClasses[0].innerText = total;
+        }
+    },
+
+    getAvatar: function(id)
+    {
+        if (this._avatars[id] === undefined)
+            return g_Game.CardList.getImage("");
+        else
+            return g_Game.CardList.getImage(this._avatars[id]);
+    },
+
+    toggleSets : function()
+    {
+        const elem = document.getElementById("scoring-sheet-ingame");
+        if (!elem.classList.contains("show-properties"))
+            elem.classList.add("show-properties");
+        else
+            elem.classList.remove("show-properties");
+
+    },
+
+    addInGame : function(sName, _playerId, sHexId, isMe)
+    {
+        if (document.getElementById("scoring-ingame-" + sHexId) !== null)
+            return;
+
+        const table = document.getElementById("scoring-sheet-ingame");
+        if (table === null)
+            return;
+
+        const tbody = table.querySelector("tbody");
+        if (tbody === null)
+            return;
+
+        const tr = document.createElement("tr");
+        tbody.appendChild(tr);
+
+        tr.setAttribute("id", "scoring-ingame-" + sHexId);
+        tr.setAttribute("data-hex", sHexId);
+        tr.setAttribute("data-player-id", _playerId);
+
+        let th1 = document.createElement("td");
+        tr.appendChild(th1)
+        th1.setAttribute("class", "avatar");
+        th1.setAttribute("title", sName);
+
+        const img = document.createElement("img");
+        img.setAttribute("src", SCORING_INGAME.getAvatar(_playerId));
+        img.setAttribute("class", "scoring-ingame-avatar");
+        img.setAttribute("title", sName);
+        img.setAttribute("data-player-id", _playerId);
+        th1.appendChild(img);
+
+        
+        this._props.forEach(function(entry)
+        {
+            if (entry.label.length === 0)
+                return;
+            
+            const td = document.createElement("td");
+            tr.appendChild(td);
+
+            td.setAttribute("data-score-type", entry.value);
+
+            if (isMe)
+            {
+                const aP = document.createElement("a");
+                aP.setAttribute("href", "#");
+                aP.setAttribute("data-score-action", "increase");
+                aP.setAttribute("title", "increase");
+                aP.onclick = SCORING_INGAME.onClickIncrease;
+                aP.innerHTML = `<i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i>`;
+
+                const span = document.createElement("span");
+                span.innerText = "0";
+
+                const aM = document.createElement("a");
+                aM.setAttribute("href", "#");
+                aM.setAttribute("data-score-action", "decrease");
+                aM.setAttribute("title", "decrease");
+                aM.onclick = SCORING_INGAME.onClickDecrease;
+                aM.innerHTML = `<i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i>`;
+
+                td.append(aP, span, aM);
+            }
+            else
+            {
+                const span = document.createElement("span");
+                span.innerText = "0";
+                td.append(span);
+            }
+        });
+
+        th1 = document.createElement("td");
+        tr.appendChild(th1)
+        th1.setAttribute("class", "final-score");
+        th1.innerText = 0;
+    },
+
+    onUpdateValue : function(link, nDif)
+    {
+        const td = link.parentNode;
+        const span = td == null ? null : td.querySelector("span");
+        if (span === null || !td.hasAttribute("data-score-type"))
+            return;
+
+        const val = parseInt(span.innerText);
+        const res = isNaN(val) ? -1 : val + nDif;
+        if (res < 0)
+            return;
+
+        span.innerText = res;
+
+        MeccgApi.send("/game/score/set", { type: td.getAttribute("data-score-type"), points: res });
+    },
+
+    onClickDecrease: function(e)
+    {
+        SCORING_INGAME.onUpdateValue(this, -1);
+        e.preventDefault();
+        return false;
+    },
+
+    onClickIncrease: function(e)
+    {
+        SCORING_INGAME.onUpdateValue(this, 1);
+        e.preventDefault();
+        return false;
+    },
+
+    init: function(props)
+    {
+        if (document.body.getAttribute("data-is-singleplayer") !== document.body.getAttribute("data-game-arda") || document.getElementById("scoring-sheet-ingame") !== null)
+            return;
+
+        this._props = props;
+
+        const div = document.createElement("div");
+        div.setAttribute("id", "scoring-sheet-ingame");
+        div.setAttribute("class", "scoring-sheet-ingame blue-box");
+        div.setAttribute("title", "Click to edit points");
+        div.onclick = SCORING_INGAME.toggleSets;
+
+        const jTable = document.createElement("table");
+        div.appendChild(jTable);
+        {
+            const thead = document.createElement("thead");
+            const tbody = document.createElement("tbody");
+
+            jTable.appendChild(thead);
+            jTable.appendChild(tbody);
+
+            const tr = document.createElement("tr");
+            thead.appendChild(tr);
+            tr.appendChild(document.createElement("th"));
+
+            this._props.forEach(function(entry)
+            {
+                if (entry.label.length === 0)
+                    return;
+                
+                const th = document.createElement("th");
+                tr.appendChild(th);
+                th.setAttribute("title", entry.value);
+                th.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+            });
+
+            tr.appendChild(document.createElement("th"));
+        }
+        
+        document.body.appendChild(div);
+    }
+}
+
 const SCORING = {
         
     stats : { },
@@ -227,6 +478,8 @@ const SCORING = {
     _init : function(categories, min, max)
     {
         new ScoringContainers(categories, min, max).create();
+        SCORING_INGAME.init(categories);
+
         this._createStatsMap(categories);
 
         if (document.getElementById("scoring-card") !== null)
@@ -650,7 +903,13 @@ const SCORING = {
     },
 };
 
-document.body.addEventListener("meccg-players-updated", (e) => SCORING.addPlayers(e.detail.challengerId, e.detail.map), false);
+document.body.addEventListener("meccg-players-updated", (e) => 
+{
+    SCORING.addPlayers(e.detail.challengerId, e.detail.map)
+    SCORING_INGAME.updateAvatars(e.detail.avatars);
+}, false);
+
+
 document.body.addEventListener("meccg-score-card", (e) => SCORING.scoreCard(e.detail), false);
 
 function createScoringApp(_CardList)
@@ -686,9 +945,24 @@ function createScoringApp(_CardList)
 
     return {
 
+        addInGame: function(sName, _playerId, sHexId, isMe)
+        {
+            SCORING_INGAME.addInGame(sName, _playerId, sHexId, isMe);
+        },
+
+        removeInGame: function(sHexId)
+        {
+            updateInGameScores.removeInGame(sHexId);
+        },
+
         addPlayers: function(sMyId, jNameMap)
         {
             SCORING.addPlayers(sMyId, jNameMap);
+        },
+
+        updateInGameScores : function(data)
+        {
+            SCORING_INGAME.updateAll(data);
         },
 
         showScoreSheet : function(jData)

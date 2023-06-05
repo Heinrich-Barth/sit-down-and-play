@@ -75,6 +75,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/score/show", this.scoreShow.bind(this));
         this.getMeccgApi().addListener("/game/score/update", this.scoreUpdate.bind(this));
         this.getMeccgApi().addListener("/game/score/add", this.scoreAdd.bind(this));
+        this.getMeccgApi().addListener("/game/score/set", this.scoreSet.bind(this));
 
         this.getMeccgApi().addListener("/game/draw/company", this.onGameDrawCompany.bind(this)); /* draw a single company by its id */
         this.getMeccgApi().addListener("/game/draw/companies", this.onGameDrawCompanies.bind(this));
@@ -654,11 +655,29 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, " looks at score sheet", false);
     }
 
+    sendCurrentScores(userid)
+    {
+        this.publishToPlayers("/game/score/show/current", userid, this.getScoring().getScoreSheets());
+    }
+
     scoreUpdate(userid, _socket, data)
     {
         const total = this.getScoring().updateScore(userid, data);
         if (total !== -1)
+        {
             this.publishChat(userid, " updates score to a total of " + total + " point(s)", true);
+            this.sendCurrentScores(userid);
+        }
+    }
+
+    scoreSet(userid, _socket, data)
+    {
+        const total = this.getScoring().setCategory(userid, data.type, data.points);
+        if (total !== -1)
+        {
+            this.publishChat(userid, " sets" + data.type + " score to " + data.points + " point(s)", true);
+            this.sendCurrentScores(userid);
+        }
     }
 
     scoreAdd(userid, _socket, data)
@@ -668,6 +687,8 @@ class GameStandard extends GamePlayers
         {
             this.publishChat(userid, " updated " + data.type + " score by " + data.points + " point(s) to a total of " + total + " MPs.", true);
             this.publishToPlayers("/game/sfx", userid, { "type": "score" });
+
+            this.sendCurrentScores(userid);
         }
     }
 
