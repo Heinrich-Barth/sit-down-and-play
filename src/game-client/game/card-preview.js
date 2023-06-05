@@ -213,7 +213,6 @@ CardPreview.showImage = function(elem, isLeft)
 
     if (elem !== null)
     {
-        //const isLeft = CardPreview.getElementPositionIsLeft(elem);
         CardPreview.show(CardPreview._getImage(elem), !isLeft, true);
         CardPreview.onHoverCharacter(elem);
     }
