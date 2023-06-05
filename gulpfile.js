@@ -55,7 +55,7 @@ gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselec
 gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./public/client/game/score"));
 
 
-gulp.task('copy-client-js', () => gulp.src("./src/game-client/**/*.js").pipe(gulp.dest("./public/client")));
+gulp.task('copy-client-js', () => gulp.src("./src/game-client/**/*").pipe(gulp.dest("./public/client")));
 
 const sccsModules = [
     "compile-sass-about",
@@ -81,7 +81,7 @@ gulp.task('watch-assets', () => {
     gulp.watch(sourcePath + '/**/*.scss', gulp.series(sccsModules));
 
     console.log("watch js");
-    gulp.watch("./src/game-client/**/*.js", gulp.series(["copy-client-js"]));
+    gulp.watch("./src/game-client/**/*", gulp.series(["copy-client-js"]));
     
 });
 
