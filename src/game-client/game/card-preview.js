@@ -189,13 +189,22 @@ CardPreview._isMyCard = function(elem)
  * needs to show the front side. AND also regard that an onguard card might have been
  * flipped so it is visible.
  */
-CardPreview._doHoverOnGuard = function()
+CardPreview._doHoverOnGuard = function(e)
 {
     /* THIS points to the element being hovered */
-    CardPreview.showImage(this);
+    const isLeft = CardPreview.isOnLeft(e);
+    CardPreview.showImage(this, isLeft);
 };
 
-CardPreview.showImage = function(elem)
+CardPreview.isOnLeft = function(e)
+{
+    const elemLeft = e.clientX - window.scrollX;
+    const windowHalf = window.innerWidth / 2;
+    console.log("test");
+    return elemLeft <= windowHalf;
+};
+
+CardPreview.showImage = function(elem, isLeft)
 {
     if (elem === null)
         return;
@@ -205,7 +214,7 @@ CardPreview.showImage = function(elem)
 
     if (elem !== null)
     {
-        const isLeft = CardPreview.getElementPositionIsLeft(elem);
+        //const isLeft = CardPreview.getElementPositionIsLeft(elem);
         CardPreview.show(CardPreview._getImage(elem), !isLeft, true);
         CardPreview.onHoverCharacter(elem);
     }
