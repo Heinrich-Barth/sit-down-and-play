@@ -49,10 +49,10 @@ gulp.task('compile-saas-deckselection', () => compileFile('/modules/deckselectio
 gulp.task('compile-saas-navigation', () => compileFile('/modules/navigation.scss'));
 gulp.task('compile-saas-tabletop', () => compileFile('/modules/tabletop.scss'));
 gulp.task('compile-saas-mapview', () => compileFile('/modules/mapview.scss'));
-gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./game-client/game/score"));
 gulp.task('compile-saas-gamearda', () => compileFile('/modules/game-arda.scss'));
 gulp.task('compile-saas-helprules', () => compileFile('/modules/rules.scss'));
-gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselector.scss', "./game-client/game/playerselector"));
+gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselector.scss', "./public/client/game/playerselector"));
+gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./public/client/game/score"));
 
 
 gulp.task('copy-client-js', () => gulp.src("./src/game-client/**/*.js").pipe(gulp.dest("./public/client")));
