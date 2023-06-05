@@ -295,10 +295,10 @@ const SCORING = {
 
     sendScoreCard : function(sCardCode, isDefault)
     {
-        fetch("/data/marshallingpoints?code=" + encodeURI(sCardCode) + "&standard=" + isDefault).then((response) => 
+        fetch("/data/marshallingpoints?code=" + encodeURI(sCardCode) + "&standard=" + isDefault)
+        .then((response) => response.json())
+        .then((data) => 
         {
-            response.json().then((data) => 
-            {
                 let elem;
                 const points = data.points && data.points >= 0 ? data.points : 0;
                 elem = document.getElementById("score_" + points + "_points");
@@ -309,7 +309,6 @@ const SCORING = {
                 elem = document.getElementById("score_" + kat + "_label");
                 if (elem !== null)
                     elem.click();
-            });
         })
         .catch(() => { /** ignore error */});
     },
@@ -348,14 +347,14 @@ const SCORING = {
         const elem = jTable.querySelector('tr[data-score-type="'  + type + '"]');
         if (elem === null)
         {
-            console.log("Cannot obtain cell of type " + type);
+            console.warn("Cannot obtain cell of type " + type);
             return null;
         }
         
         const cell = elem.querySelector('td[data-player="'+player+'"]');
         if (cell === null)
         {
-            console.log("Cannot obtain cell of type " + type + " for player " + player);
+            console.warn("Cannot obtain cell of type " + type + " for player " + player);
             return null;
         }
         else
@@ -672,15 +671,12 @@ function createScoringApp(_CardList)
         return res;
     };
 
-    fetch("/data/scores").then((response) => 
+    fetch("/data/scores")
+    .then((response) => response.json())
+    .then((data) => 
     {
-        if (response.status === 200)
-        {
-            response.json().then((data) => {
-                if (typeof data !== "undefined" && typeof data.categories !== "undefined" && typeof data.points !== "undefined")
-                    SCORING._init(extractCategories(data.categories), data.points.min, data.points.max);
-            });
-        }
+            if (typeof data !== "undefined" && typeof data.categories !== "undefined" && typeof data.points !== "undefined")
+                SCORING._init(extractCategories(data.categories), data.points.min, data.points.max);
     })
     .catch((err) => 
     {
