@@ -88,8 +88,6 @@ a {
     }
 }
 
-
-
 .location-icon-image {
     position: absolute;
     right: 0;
@@ -97,7 +95,7 @@ a {
     z-index: 100;
     color: #000;
     background-color: #fff;
-    border-radius: 50%;
+    border-radius: 5px;
     padding: 4px;
     opacity: 0.6;
     width: 16px;
@@ -141,8 +139,8 @@ a {
         position: relative;
         min-height: 30%;
 
-        .table-padding-bottom {
-            padding-bottom: 200px;
+        &.table-padding-bottom {
+            padding-bottom: 170px;
         }
     }
 
@@ -277,7 +275,7 @@ img.card-icon {
 
     .hand-card-sizer {
         padding: 5px 10px;
-        text-align: right;
+        text-align: center;
         color: #fff;
         font-size: 10px;
     }
@@ -349,7 +347,7 @@ img.card-icon {
     position: relative;
     display: table-cell;
     vertical-align: top;
-    padding-left: 50px;
+    padding-left: 55px;
     width: 25%;
 
     .staging-area-drop {

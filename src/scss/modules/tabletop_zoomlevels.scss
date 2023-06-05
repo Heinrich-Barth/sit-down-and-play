@@ -9,10 +9,16 @@
             margin-top: -95px;
         }
     }
+    
+    .card-hands,
+    .arda-card-hands
+    {
+        .card-hand img.card-icon {
+            height: 80px !important;
+        }
 
-    .card-hand img.card-icon {
-        height: 80px !important;
     }
+    
 
 }
 
