@@ -2,13 +2,18 @@
     position: fixed;
     right: 5px;
     top: 5px;
-    width: 294px;
-    height: 53px;
+    width: 200px;
+    height: 45px;
     font-size: 0.65em;
     color: #fff;
     display: block;
     padding: 0.65em 0.75em;
     outline: none;
+    overflow-y: hidden;
+}
+.chatbox:hover {
+    height: auto;
+    max-height: 50%;
     overflow-y: auto;
 }
 .chatbox div { line-break: normal;  }
