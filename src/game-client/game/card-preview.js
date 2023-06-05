@@ -200,7 +200,6 @@ CardPreview.isOnLeft = function(e)
 {
     const elemLeft = e.clientX - window.scrollX;
     const windowHalf = window.innerWidth / 2;
-    console.log("test");
     return elemLeft <= windowHalf;
 };
 
