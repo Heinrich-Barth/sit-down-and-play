@@ -2,7 +2,7 @@
 #question_box 
 {
     z-index: 900;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.3);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -18,9 +18,8 @@
     margin: 200px auto 0 auto;
     text-align: center;
     padding: 20px;
+    background: rgba(0,0,0,0.8);
 }
-
-.question-game p { font-size: 0.8em; }
 
 .question-game input[type="button"] {
     background-color: #98c593;
