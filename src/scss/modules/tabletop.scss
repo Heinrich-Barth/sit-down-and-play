@@ -100,11 +100,18 @@ a {
     opacity: 0.6;
     width: 16px;
     height: 16px;
+    visibility: hidden;
 
     &:hover {
         opacity: 1;
         color: #fff;
         background-color: #ffa500;
+    }
+}
+
+.company:hover {
+    .location-icon-image {
+        visibility: visible;
     }
 }
 
@@ -400,6 +407,11 @@ img.card-icon {
 
         &:hover {
             background: rgba(255, 255, 255, 0.15);
+
+            .company-site-list
+            {
+                border-bottom: 3px dashed black;
+            }
         }
 
         .company-character:hover {
@@ -425,7 +437,7 @@ img.card-icon {
         .company-site-list {
             min-height: 80px;
             padding: 5px;
-            border-bottom: 3px dashed black;
+            border-bottom: 0px dashed black;
         }
         
         .company-site-list-border {
