@@ -97,7 +97,6 @@ const DropZone = {
 
     ondragend : function(e)
     {
-        console.log("ondragend");
         document.body.classList.remove("on-drag-over");
         e.preventDefault();
     }
