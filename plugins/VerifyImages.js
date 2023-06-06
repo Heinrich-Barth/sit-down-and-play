@@ -35,7 +35,7 @@ const isFile = function(file)
 {
     try
     {
-        const uri = path.resolve(__dirname + "/../data-local" + file);
+        const uri = path.resolve(__dirname + "/../public" + file);
         const stat = fs.statSync(uri);
         return stat && stat.isFile();
     }
