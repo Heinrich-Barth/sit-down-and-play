@@ -84,6 +84,7 @@ const MeccgPlayers = {
         if (this.usermap !== null && this.usermap[jData.userid] === undefined)
         {            
             this.usermap[jData.userid] = jData.name;
+            this.avatarmap[jData.userid] = jData.avatar;
             this.onPlayerListReceived();
         }
     },
