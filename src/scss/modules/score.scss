@@ -313,9 +313,30 @@
         margin: 0 2px;
     }
 
-    &.show-properties a {
+    &:hover a {
         display: block;
     }
+
+    table {
+        border-spacing: 0;
+    }
+
+    th, td
+    {
+        padding: 2px 4px;
+
+        &.final-score {
+            padding: 2px 5px;
+            font-weight: bold;
+        }
+    }
+
+    td:nth-child(even)
+    {
+        background: #4f4f4f;
+    }
+
+    
     
     .avatar {
         position: relative;
