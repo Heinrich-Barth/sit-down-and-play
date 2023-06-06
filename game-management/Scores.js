@@ -196,6 +196,14 @@ class Scores {
         return sheets;
     }
 
+    getScoreSheet(userid)
+    {
+        if (typeof this._sheets[userid] === "undefined")
+            return { };
+        else
+            return this._sheets[userid].getSheet();
+    }
+
     getPlayerScore(sPlayerId)
     {
         if (typeof this._sheets[sPlayerId] === "undefined")
