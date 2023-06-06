@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "build": "gulp --production",
     "dev": "concurrently \"gulp --debug\" \"node index.js\"",
     "build_xmls": "node index-generate-from-xmls.js",
     "test_clear": "jest --clearCache",

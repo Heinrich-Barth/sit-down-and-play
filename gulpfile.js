@@ -9,7 +9,8 @@ const cleanCSS = require('gulp-clean-css');
 const rename    = require('gulp-rename');
 
 // read parameters
-const isDebug = true;
+const argv      = require('yargs').argv;
+const isDebug = argv.production === undefined;
 const isProd = !isDebug;
 
 // init
@@ -27,8 +28,8 @@ const compileFile = function(file, targetFilepath)
     console.log("Compile " + file)
     let css_file = gulp.src(sourcePath + file).pipe(sass());
 
-    if (!isDebug)
-        css_file = css_file.pipe(cleanCSS({format: {"wrapAt": 1024}}));
+    //if (!isDebug)
+    //    css_file = css_file.pipe(cleanCSS({format: {"wrapAt": 1024}}));
 
     const dirTarget = targetFilepath === undefined ? targetPath : targetFilepath;
     return css_file
@@ -82,12 +83,11 @@ gulp.task('watch-assets', () => {
 
     console.log("watch js");
     gulp.watch("./src/game-client/**/*", gulp.series(["copy-client-js"]));
-    
 });
 
 // Task to build assets
 gulp.task('build-assets', gulp.series(sccsModules));
 
 // Default-Task
-const vsArgs = isProd ? ['build-assets'] : ['build-assets', 'watch-assets']
+const vsArgs = isProd ? ['build-assets', "copy-client-js"] : ['build-assets', 'watch-assets']
 gulp.task('default', gulp.series(vsArgs));
