@@ -82,6 +82,11 @@ CardList.prototype.getImageRegion = function(code)
     return this.getImageByCode(code, this._imageNotFoundRegion);
 };
 
+CardList.prototype.getBackside = function() 
+{
+    return this._imageBacksideDefault;
+};
+
 CardList.prototype.getFlipSide = function(code) 
 {
     code = this.removeQuotes(code);
