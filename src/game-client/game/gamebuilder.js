@@ -270,12 +270,21 @@ const GameBuilder = {
         for (let _data of jData.opponent.stage_resources)
             GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
         
+        const scores = [];
+        for (let id in jData.scores)
+        {
+            scores.push({
+                id: id, 
+                scores: jData.scores[id]
+            });
+        }
         setTimeout(() => {
 
             DomUtils.removeNode(document.getElementById("lidles-eye"));
             document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
             document.body.dispatchEvent(new CustomEvent("meccg-sfx-ready", { "detail": true }));
             
+            GameBuilder.Scoring.updateInGameScores(scores);
             MeccgApi.send("/game/card/sites", { });
 
         }, 500);

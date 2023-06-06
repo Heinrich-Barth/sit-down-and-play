@@ -227,11 +227,11 @@ const SCORING_INGAME =
         if (list === null || list.length === 0)
             return;
 
+        
         for (let img of list)
         {
             const id = img.getAttribute("data-player-id");
-            if (avatars[id] !== undefined)
-                img.setAttribute("src", SCORING_INGAME.getAvatar(avatars[id]));
+            img.setAttribute("src", SCORING_INGAME.getAvatar(id));
         }
     },
 
@@ -243,63 +243,85 @@ const SCORING_INGAME =
             return "-";
     },
 
-    updateAll : function(data)
+    buildScoreCellMap : function(tr)
     {
+        const list = tr.getElementsByTagName("td");
+        if (list === null || list.length === 0)
+            return {};
+
+        const map = {};
+        for (let td of list)
+        {
+            const type = td.hasAttribute("data-score-type") ? td.getAttribute("data-score-type") : "";
+            const span = type === "" ? null : td.querySelector("span");
+            if (span !== null)
+                map[type] = span;
+        }
+
+        return map;
+    },
+
+    updateInGameScore : function(tr, score)
+    {
+        const fields = this.buildScoreCellMap(tr);
+        
+        let total = 0;
+        for (let id in score)
+        {
+            const td = fields[id];
+            if (td === undefined)
+            {
+                console.warn("cannot find table cell " + id);
+                continue;
+            }
+
+            const val = score[id];
+            if (val < 0)
+                continue;
+
+            if (td.innerText + "" !== "" + val)
+                td.innerText = val;                  
+
+            total += parseInt(val);
+        }
+
+        const vpClasses = tr.getElementsByClassName("final-score");
+        if (vpClasses !== null && vpClasses.length > 0)
+            vpClasses[0].innerText = total;
+    },
+
+    updateInGameScores : function(list)
+    {
+        if (!Array.isArray(list) || list.length === 0)
+            return;
+
         const table = document.getElementById("scoring-sheet-ingame");
         if (table === null)
             return;
         
-        for (let id in data)
+        for (let scores of list)
         {
-            const score = data[id];
+            const id = scores.id;
             const tr = table.querySelector(`tr[data-player-id="${id}"]`);
-            if (tr === null)
-                continue;
-
-            const list = tr.getElementsByTagName("td");
-            if (list === null || list.length === 0)
-                continue;
-
-            let bUpdated = false;
-            let total = 0;
-            for (let td of list)
-            {
-                const type = td.hasAttribute("data-score-type") ? td.getAttribute("data-score-type") : "";
-                const val = score[type];
-                if (val)
-                {
-                    const target = td.querySelector("span").innerText;
-                    if (target.innerText + "" !== "" + val)
-                    {
-                        td.querySelector("span").innerText = val;                  
-                        bUpdated = true;
-                    }
-                    total += parseInt(val);
-                }
-            }
-
-            const vpClasses = bUpdated ? tr.getElementsByClassName("final-score") : null;
-            if (vpClasses !== null && vpClasses.length > 0)
-                vpClasses[0].innerText = total;
+            if (tr !== null)
+                this.updateInGameScore(tr, scores.scores);
         }
+    },
+
+    getPlayerTitle(name, id)
+    {
+        if (this._avatars[id] === undefined || this._avatars[id] === "")
+            return name;
+        else 
+            return name + ", " + this._avatars[id];
     },
 
     getAvatar: function(id)
     {
-        if (this._avatars[id] === undefined)
-            return g_Game.CardList.getImage("");
+        if (this._avatars[id] === undefined || this._avatars[id] === "")
+            return g_Game.CardList.getBackside();
         else
             return g_Game.CardList.getImage(this._avatars[id]);
-    },
-
-    toggleSets : function()
-    {
-        const elem = document.getElementById("scoring-sheet-ingame");
-        if (!elem.classList.contains("show-properties"))
-            elem.classList.add("show-properties");
-        else
-            elem.classList.remove("show-properties");
-
     },
 
     addInGame : function(sName, _playerId, sHexId, isMe)
@@ -330,11 +352,10 @@ const SCORING_INGAME =
         const img = document.createElement("img");
         img.setAttribute("src", SCORING_INGAME.getAvatar(_playerId));
         img.setAttribute("class", "scoring-ingame-avatar");
-        img.setAttribute("title", sName);
+        img.setAttribute("title", SCORING_INGAME.getPlayerTitle(sName, _playerId));
         img.setAttribute("data-player-id", _playerId);
         th1.appendChild(img);
 
-        
         this._props.forEach(function(entry)
         {
             if (entry.label.length === 0)
@@ -422,7 +443,6 @@ const SCORING_INGAME =
         div.setAttribute("id", "scoring-sheet-ingame");
         div.setAttribute("class", "scoring-sheet-ingame blue-box");
         div.setAttribute("title", "Click to edit points");
-        div.onclick = SCORING_INGAME.toggleSets;
 
         const jTable = document.createElement("table");
         div.appendChild(jTable);
@@ -448,7 +468,10 @@ const SCORING_INGAME =
                 th.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
             });
 
-            tr.appendChild(document.createElement("th"));
+            const sum = document.createElement("th");
+            sum.setAttribute("class", "final-score");
+            sum.innerHTML = "&sum;";
+            tr.appendChild(sum);
         }
         
         document.body.appendChild(div);
@@ -912,6 +935,49 @@ document.body.addEventListener("meccg-players-updated", (e) =>
 
 document.body.addEventListener("meccg-score-card", (e) => SCORING.scoreCard(e.detail), false);
 
+const SCORE_API = {
+
+    addInGame: function(sName, _playerId, sHexId, isMe)
+    {
+        SCORING_INGAME.addInGame(sName, _playerId, sHexId, isMe);
+    },
+
+    removeInGame: function(sHexId)
+    {
+        SCORING_INGAME.removeInGame(sHexId);
+    },
+
+    addPlayers: function(sMyId, jNameMap)
+    {
+        SCORING.addPlayers(sMyId, jNameMap);
+    },
+
+    updateInGameScores : function(list)
+    {
+        SCORING_INGAME.updateInGameScores(list);
+    },
+
+    showScoreSheet : function(jData)
+    {
+        SCORING.showScoreSheet(jData);
+    },
+
+    showScoreSheetWatch : function(jData)
+    {
+        SCORING.showScoreSheetWatch(jData);
+    },
+
+    showScoreSheetCards : function(jData)
+    {
+        SCORING.showScoreSheetCards(jData);
+    },
+
+    showFinalScore: function(score, stats, token, automaticShutdown)
+    {
+        SCORING.showFinalScore(score, stats, token, automaticShutdown);
+    }
+};
+
 function createScoringApp(_CardList)
 {
     SCORING.cardList = _CardList;
@@ -934,8 +1000,8 @@ function createScoringApp(_CardList)
     .then((response) => response.json())
     .then((data) => 
     {
-            if (typeof data !== "undefined" && typeof data.categories !== "undefined" && typeof data.points !== "undefined")
-                SCORING._init(extractCategories(data.categories), data.points.min, data.points.max);
+        if (typeof data !== "undefined" && typeof data.categories !== "undefined" && typeof data.points !== "undefined")
+            SCORING._init(extractCategories(data.categories), data.points.min, data.points.max);
     })
     .catch((err) => 
     {
@@ -943,48 +1009,7 @@ function createScoringApp(_CardList)
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch scores." }));
     });
 
-    return {
-
-        addInGame: function(sName, _playerId, sHexId, isMe)
-        {
-            SCORING_INGAME.addInGame(sName, _playerId, sHexId, isMe);
-        },
-
-        removeInGame: function(sHexId)
-        {
-            updateInGameScores.removeInGame(sHexId);
-        },
-
-        addPlayers: function(sMyId, jNameMap)
-        {
-            SCORING.addPlayers(sMyId, jNameMap);
-        },
-
-        updateInGameScores : function(data)
-        {
-            SCORING_INGAME.updateAll(data);
-        },
-
-        showScoreSheet : function(jData)
-        {
-            SCORING.showScoreSheet(jData);
-        },
-
-        showScoreSheetWatch : function(jData)
-        {
-            SCORING.showScoreSheetWatch(jData);
-        },
-
-        showScoreSheetCards : function(jData)
-        {
-            SCORING.showScoreSheetCards(jData);
-        },
-
-        showFinalScore: function(score, stats, token, automaticShutdown)
-        {
-            SCORING.showFinalScore(score, stats, token, automaticShutdown);
-        }
-    };
+    return SCORE_API;
 }
 
 (function()
