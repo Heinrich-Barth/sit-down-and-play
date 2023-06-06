@@ -531,7 +531,7 @@ class RoomManager {
 
         /* add the player to the board of all other players */
         if (isPlayer)
-            pRoom.publish("/game/player/add", "", { userid: userid, name: pPlayer.getName() });
+            pRoom.publish("/game/player/add", "", { userid: userid, name: pPlayer.getName(), avatar: pPlayer.getAvatar() });
 
         /* now join the game room to receive all "published" messages as well */
         pPlayer.reconnect(socket, room);

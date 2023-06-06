@@ -178,6 +178,7 @@ class GameStandard extends GamePlayers
                 stage_resources: []
             },
 
+            scores: [],
             data : _data
         };
     }
@@ -227,6 +228,8 @@ class GameStandard extends GamePlayers
             this.updateHandCountersPlayer(_playerId);
         }
 
+        data.scores = this.getScoring().getScoreSheets();
+        
         this.sendCurrentPhase();
         return data;
     }
@@ -655,9 +658,30 @@ class GameStandard extends GamePlayers
         this.publishChat(userid, " looks at score sheet", false);
     }
 
-    sendCurrentScores(userid)
+    sendCurrentScores(...userids)
     {
-        this.publishToPlayers("/game/score/show/current", userid, this.getScoring().getScoreSheets());
+        let firstId = "";
+        const res = [];
+        for (let userid of userids)
+        {
+            if (userid === "")
+                continue;
+
+            if (firstId === "")
+                firstId = userid;
+
+            const sheet = this.getScoring().getScoreSheet(userid);
+            if (sheet !== null)
+            {
+                res.push({
+                    id: userid,
+                    scores: this.getScoring().getScoreSheet(userid)
+                });
+            }
+        }
+
+        if (firstId !== "")
+            this.publishToPlayers("/game/score/show/current", firstId, res);
     }
 
     scoreUpdate(userid, _socket, data)
