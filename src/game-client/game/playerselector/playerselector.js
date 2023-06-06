@@ -25,7 +25,7 @@ class PlayerSelector
         if (elem !== null)
             elem.parentNode.removeChild(elem);
 
-        GameBuilder.Scoring.removeInGame(sHexId);
+        GameBuilder.Scoring.removeInGame(sHex);
     }
     
     updateLastSeen(username, isOnline)
