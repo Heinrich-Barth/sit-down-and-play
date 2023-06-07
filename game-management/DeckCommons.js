@@ -179,10 +179,7 @@ class DeckCommons {
     transferCardToTop(listPlaydeck, listTarget)
     {
         if (listPlaydeck.length === 0)
-        {
-            console.log("no cards in source list to transfer to top");
             return "";
-        }
 
         const _id = listPlaydeck[0];
 
