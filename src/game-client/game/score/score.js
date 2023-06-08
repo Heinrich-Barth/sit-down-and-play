@@ -354,6 +354,7 @@ const SCORING_INGAME =
         img.setAttribute("class", "scoring-ingame-avatar");
         img.setAttribute("title", SCORING_INGAME.getPlayerTitle(sName, _playerId));
         img.setAttribute("data-player-id", _playerId);
+        img.onclick = SCORING_INGAME.toggleSize.bind(SCORING_INGAME);
         th1.appendChild(img);
 
         this._props.forEach(function(entry)
@@ -363,7 +364,7 @@ const SCORING_INGAME =
             
             const td = document.createElement("td");
             tr.appendChild(td);
-
+            td.setAttribute("class", "scoring-sheet-ingame-collapse");
             td.setAttribute("data-score-type", entry.value);
 
             if (isMe)
@@ -371,9 +372,9 @@ const SCORING_INGAME =
                 const aP = document.createElement("a");
                 aP.setAttribute("href", "#");
                 aP.setAttribute("data-score-action", "increase");
-                aP.setAttribute("title", "increase");
+                aP.setAttribute("title", "increase " + entry.label + " points by 1");
                 aP.onclick = SCORING_INGAME.onClickIncrease;
-                aP.innerHTML = `<i class="fa fa-plus-circle" title="increase" aria-hidden="true"></i>`;
+                aP.innerHTML = `<i class="fa fa-plus-circle" aria-hidden="true"></i>`;
 
                 const span = document.createElement("span");
                 span.innerText = "0";
@@ -381,9 +382,9 @@ const SCORING_INGAME =
                 const aM = document.createElement("a");
                 aM.setAttribute("href", "#");
                 aM.setAttribute("data-score-action", "decrease");
-                aM.setAttribute("title", "decrease");
+                aM.setAttribute("title", "decrease " + entry.label + " points by 1");
                 aM.onclick = SCORING_INGAME.onClickDecrease;
-                aM.innerHTML = `<i class="fa fa-minus-circle" title="decrease" aria-hidden="true"></i>`;
+                aM.innerHTML = `<i class="fa fa-minus-circle" aria-hidden="true"></i>`;
 
                 td.append(aP, span, aM);
             }
@@ -432,6 +433,13 @@ const SCORING_INGAME =
         return false;
     },
 
+    toggleSize : function()
+    {
+        const elem = document.getElementById("scoring-sheet-ingame");
+        if (elem !== null)
+            elem.classList.toggle("scoring-sheet-ingame-collapsed");
+    },
+
     init: function(props)
     {
         if (document.body.getAttribute("data-is-singleplayer") !== document.body.getAttribute("data-game-arda") || document.getElementById("scoring-sheet-ingame") !== null)
@@ -442,7 +450,6 @@ const SCORING_INGAME =
         const div = document.createElement("div");
         div.setAttribute("id", "scoring-sheet-ingame");
         div.setAttribute("class", "scoring-sheet-ingame blue-box");
-        div.setAttribute("title", "Click to edit points");
 
         const jTable = document.createElement("table");
         div.appendChild(jTable);
@@ -463,9 +470,10 @@ const SCORING_INGAME =
                     return;
                 
                 const th = document.createElement("th");
-                tr.appendChild(th);
                 th.setAttribute("title", entry.value);
+                th.setAttribute("class", "scoring-sheet-ingame-collapse")
                 th.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+                tr.appendChild(th);
             });
 
             const sum = document.createElement("th");
