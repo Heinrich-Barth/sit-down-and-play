@@ -3,6 +3,9 @@
     right: 5px;
     top: 50%;
     transform: translateY(-50%);
+    opacity: 0.3;
+
+    &:hover { opacity: 1; }
 }
 
 .arda-hand-container {
@@ -32,7 +35,24 @@
     min-height: 84px;
     overflow-y: auto;
     max-height: 200px;
+
+    &.arda-card-hand-minor,
+    &.arda-card-hand-charackters
+    {
+        opacity: 0.3;
+        .arda-hand-card-actions,
+        .arda-card-hands-sizer{ display: none; }
+        .arda-hand-card-actions > .arda-inline { margin-right: 0;}
+        &:hover {
+            opacity: 1;
+
+            .arda-hand-card-actions { display: inline-block;}
+            .arda-card-hands-sizer{ display: block; }
+            .arda-hand-card-actions > .arda-inline { margin-right: 60px;}
+        }
+    }
 }
+
 
 div#arda_characters_hand {
     top: 75px;
