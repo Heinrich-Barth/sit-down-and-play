@@ -208,10 +208,28 @@ const SCORING_INGAME =
 {
     _props : null,
     _avatars: {},
+    _scores: { },
+    _hexIdMap : {},
+
+    recalculatePoints : function()
+    {
+        if (Object.keys(this._hexIdMap).length === 0 || Object.keys(this._scores).length === 0)
+            return;
+    },
 
     removeInGame : function(sHexId)
     {
-        DomUtils.remove(document.getElementById("scoring-ingame-" + sHexId));
+        const elem = document.getElementById("scoring-ingame-" + sHexId);
+        if (elem === null)
+            return;
+
+        const id = elem.hasAttribute("data-player-id") ? elem.getAttribute("data-player-id") : "";
+        DomUtils.remove(elem);
+        if (id !== "" && SCORING_INGAME._scores[id] !== undefined)
+            delete SCORING_INGAME._scores[id];
+
+        if (id !== "" && SCORING_INGAME._hexIdMap[id] !== undefined)
+            delete SCORING_INGAME._hexIdMap[id];
     },
 
     updateAvatars: function(avatars)
@@ -304,8 +322,13 @@ const SCORING_INGAME =
             const id = scores.id;
             const tr = table.querySelector(`tr[data-player-id="${id}"]`);
             if (tr !== null)
+            {
+                SCORING_INGAME._scores[id] = scores.scores;
                 this.updateInGameScore(tr, scores.scores);
+            }
         }
+
+        SCORING_INGAME.recalculatePoints();
     },
 
     getPlayerTitle(name, id)
@@ -336,6 +359,8 @@ const SCORING_INGAME =
         const tbody = table.querySelector("tbody");
         if (tbody === null)
             return;
+
+        SCORING_INGAME._hexIdMap[_playerId] = sHexId;
 
         const tr = document.createElement("tr");
         tbody.appendChild(tr);
@@ -379,6 +404,9 @@ const SCORING_INGAME =
                 const span = document.createElement("span");
                 span.innerText = "0";
 
+                const strong = document.createElement("strong");
+                strong.innerText = "0";
+
                 const aM = document.createElement("a");
                 aM.setAttribute("href", "#");
                 aM.setAttribute("data-score-action", "decrease");
@@ -386,13 +414,17 @@ const SCORING_INGAME =
                 aM.onclick = SCORING_INGAME.onClickDecrease;
                 aM.innerHTML = `<i class="fa fa-minus-circle" aria-hidden="true"></i>`;
 
-                td.append(aP, span, aM);
+                td.append(aP, span, strong, aM);
             }
             else
             {
                 const span = document.createElement("span");
                 span.innerText = "0";
-                td.append(span);
+
+                const strong = document.createElement("strong");
+                strong.innerText = "0";
+
+                td.append(span, strong);
             }
         });
 
@@ -440,17 +472,33 @@ const SCORING_INGAME =
             elem.classList.toggle("scoring-sheet-ingame-collapsed");
     },
 
-    init: function(props)
+    createWrapper : function()
     {
-        if (document.body.getAttribute("data-is-singleplayer") !== document.body.getAttribute("data-game-arda") || document.getElementById("scoring-sheet-ingame") !== null)
-            return;
-
-        this._props = props;
+        const isSingle = document.body.getAttribute("data-is-singleplayer") === "true";
+        const isArda = document.body.getAttribute("data-game-arda") === "true";
 
         const div = document.createElement("div");
         div.setAttribute("id", "scoring-sheet-ingame");
         div.setAttribute("class", "scoring-sheet-ingame blue-box");
 
+        if (isArda)
+            div.classList.add("scoring-arda");
+        else if (isSingle)
+            div.classList.add("scoring-single");
+
+        return div;
+    },
+
+    init: function(props)
+    {
+        if (document.getElementById("scoring-sheet-ingame") !== null)
+            return;
+
+        const div = SCORING_INGAME.createWrapper();
+        if (div === null)
+            return;
+
+        this._props = props;
         const jTable = document.createElement("table");
         div.appendChild(jTable);
         {
