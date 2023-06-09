@@ -310,6 +310,9 @@
         .scoring-sheet-ingame-collapse { display: none;}
     }
 
+    &.scoring-arda,
+    &.scoring-single { display: none; }
+
     color: #fff;
     text-align: center;
     a { 
