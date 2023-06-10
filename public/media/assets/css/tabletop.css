@@ -1021,16 +1021,16 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
 }
 
 img.card-icon {
-  height: 80px;
+  height: 100px;
 }
 
 .company-character-reosurces {
-  min-height: 84px;
+  min-height: 100px;
   display: flex;
   flex-direction: column;
 }
 .company-character-reosurces .card {
-  margin-top: -60px;
+  margin-top: -80px;
   z-index: 101;
 }
 .company-character-reosurces .card:nth-child(1) {
@@ -1131,7 +1131,7 @@ img.card-icon {
 .site-regions .card,
 .site-onguard .card {
   display: inline-block;
-  margin-left: -30px;
+  margin-left: -50px;
 }
 
 .site-regions .card:nth-child(1),

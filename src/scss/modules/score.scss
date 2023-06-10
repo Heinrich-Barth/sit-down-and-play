@@ -354,9 +354,11 @@
             text-align: center;
         }
 
+        strong { display: none;}
+
         span {
-            font-size: 1em;
-            color: #bdbdbd;
+            font-size: 1.4em;
+/*            color: #bdbdbd;*/
         }
 
         &.final-score,

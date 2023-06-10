@@ -100,16 +100,16 @@
 }
 
 img.card-icon {
-    height: 80px;
+    height: 100px;
 }
 
 .company-character-reosurces {
-    min-height: 84px;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
 
     .card {
-        margin-top: -60px;
+        margin-top: -80px;
         z-index: 101;
 
         &:nth-child(1) {
