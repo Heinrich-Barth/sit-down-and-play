@@ -320,8 +320,12 @@
         margin: 0 2px;
     }
 
-    &:hover a {
+    &:hover {
+        a {
         display: block;
+        }
+
+        td strong { display: none;}
     }
 
     table {
@@ -343,6 +347,24 @@
         background: #4f4f4f;
     }
 
+    td {
+        strong,
+        span {
+            display: block;
+            text-align: center;
+        }
+
+        span {
+            font-size: 1em;
+            color: #bdbdbd;
+        }
+
+        &.final-score,
+        strong {
+            font-size: 1.4em;
+            font-weight: normal;
+        }
+    }
     
     
     .avatar {
