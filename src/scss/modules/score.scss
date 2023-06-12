@@ -321,10 +321,9 @@
     }
 
     &:hover {
-        a {
-        display: block;
-        }
+        background: #000;
 
+        a { display: block; }
         td strong { display: none;}
     }
 

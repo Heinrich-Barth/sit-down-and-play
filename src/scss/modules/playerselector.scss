@@ -3,6 +3,8 @@
     display: inline-block;
     height: 20px;
 
+    &:hover { background: #000; }
+
     span.game_time {
         font-size: 0.8em;
     }
