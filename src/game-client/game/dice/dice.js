@@ -23,13 +23,15 @@ class DiceContainer {
         if (type !== null && type !== "" && type.indexOf(".") === -1)
             this._folder = type;
 
-        if (document.getElementById("dice_roll") !== null)
-            return;
+        const tempContainer = document.getElementById("dice_roll");
+        if (tempContainer !== null)
+            return tempContainer;
 
         const jCont = document.createElement("div");
         jCont.setAttribute("id", "dice_roll");
         jCont.innerHTML = '<div class="dice-result-list"></div>';
         document.body.prepend(jCont);
+        return jCont;
     }
 
     static getImage(asset, nVal)
@@ -117,6 +119,12 @@ class DiceContainer {
             return bIsPlayer ? "You" : this.getPlayerName(userId);
     }
 
+    requireContainer()
+    {
+        const elem = document.getElementById("dice_roll");
+        return elem === null ? this.create() : elem;
+    }
+
     show(name, first, second, total, dice, uuid)
     {
         const pos = this.getPosition(uuid);
@@ -126,7 +134,7 @@ class DiceContainer {
         if (pos === null)
         {
             elem.onclick = () => DiceContainer.removeResult(nId);
-            document.getElementById("dice_roll").querySelector(".dice-result-list").prepend(elem);
+            this.requireContainer().querySelector(".dice-result-list").prepend(elem);
         }
         else
         {
@@ -184,5 +192,3 @@ class DiceContainer {
 
 document.body.addEventListener("meccg-dice-rolled", DiceContainer.OnShow, false);
 document.body.addEventListener("meccg-players-updated", DiceContainer.OnPlayers, false);
-document.body.addEventListener("meccg-init-ready", () => new DiceContainer().create(), false);
-
