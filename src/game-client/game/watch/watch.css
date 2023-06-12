@@ -44,7 +44,11 @@
 .game-watch-only .staging-area
 {
     width: 100%;
+    max-width: 100% !important;
 }
+
+.game-watch-only .staging-area .staging-area-resources,
+.game-watch-only .staging-area .staging-area-hazard { display: inline-block; }
 
 .game-watch-only .visitor-hand-view
 {
