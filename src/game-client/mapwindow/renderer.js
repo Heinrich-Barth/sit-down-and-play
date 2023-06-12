@@ -93,7 +93,21 @@ const showErrorLoading = function (err) {
     if (err.message !== undefined)
         error = err.message;
 
-    document.getElementById("map_view_layer_loading").innerHTML = `<p>${error}</p>`;
+    DomUtils.empty(document.getElementById("map_view_layer_loading")); 
+
+    const p = document.createElement("p");
+
+    const i1 = document.createElement("i");
+    i1.setAttribute("class", "fa fa-exclamation-circle");
+    p.appendChild(i1);
+
+    p.appendChild(document.createTextNode(error));
+
+    const i2 = document.createElement("i");
+    i2.setAttribute("class", "fa fa-exclamation-circle");
+    p.appendChild(i2);
+
+    document.getElementById("map_view_layer_loading").appendChild(p);
 };
 
 const getCurrentDate = function()
@@ -106,8 +120,17 @@ const getCurrentDate = function()
         return sVal.substring(0, nPos);
 }
 
+const updateLoadingInfo = function(sValue)
+{
+    const elem = document.getElementById("map_view_layer_loading_desc");
+    if (elem !== null && sValue)
+        elem.innerText = sValue;
+}
+
 const fetchFromLocalStorage = function()
 {
+    updateLoadingInfo("map from local storage");
+
     if (localStorage.getItem("game_data"))
     {
         try
@@ -142,7 +165,7 @@ const fetchPreferredSitesFromLocalStorage = function()
     return [];
 }
 
-const fetchMap = function (tappedSites) {
+const fetchMap = async function (tappedSites) {
 
     const localData = fetchFromLocalStorage();
     if (localData !== null)
@@ -151,25 +174,26 @@ const fetchMap = function (tappedSites) {
         return;
     }
 
-    fetch("/data/list/map?t=" + getCurrentDate()).then((response) => {
-        if (response.status === 200)
-            response.json().then((map) => MapInstanceRenderer.onInit(map, tappedSites));
-        else
-            throw new Error("Could not load map");
-    })
-    .catch((err) => showErrorLoading(err));
+    updateLoadingInfo("map data (this may take a while)");
+
+    setTimeout(() => {
+        fetch("/data/list/map?t=" + getCurrentDate())
+        .then((response) => response.json())
+        .then((map) => MapInstanceRenderer.onInit(map, tappedSites))
+        .catch((err) => showErrorLoading(err));
+    }, 10);
+
 };
 
 const fetchTappedSites = function () {
     if (g_isInit)
         return;
 
-    fetch("/data/list/sites-tapped").then((response) => {
-        if (response.status === 200)
-            response.json().then(fetchMap);
-        else
-            throw new Error("Could not load tapped sites");
-    })
+    updateLoadingInfo("already tapped sites");
+
+    fetch("/data/list/sites-tapped")
+    .then((response) => response.json())
+    .then(fetchMap)
     .catch((err) => showErrorLoading(err));
 };
 
