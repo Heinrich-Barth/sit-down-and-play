@@ -169,7 +169,9 @@ body h4 {
   padding: 0 1em !important;
 }
 .deckbuilding textarea {
-  line-height: 1em;
+  line-height: 1.5em;
+  height: 165px;
+  padding-top: 1em;
 }
 
 .deck-columns {
@@ -192,12 +194,14 @@ body h4 {
 }
 .deck-columns .row-cols .row-col-meta-name {
   width: 65%;
+  padding-top: 10px;
 }
 .deck-columns .row-cols .row-col-meta-count {
   width: 5%;
   text-align: center;
 }
 .deck-columns .row-cols .row-col-meta-buttons {
+  padding-top: 10px;
   width: 25%;
 }
 .deck-columns .row-cols .row-col-meta-buttons button {

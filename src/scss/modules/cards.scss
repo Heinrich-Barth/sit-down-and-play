@@ -62,7 +62,9 @@ body {
     }
 
     textarea {
-        line-height: 1em;
+        line-height: 1.5em;
+        height: 165px;
+        padding-top: 1em;
     }
 }
 
@@ -88,6 +90,7 @@ body {
 
         .row-col-meta-name {
             width: 65%;
+            padding-top: 10px;
         }
 
         .row-col-meta-count {
@@ -96,6 +99,7 @@ body {
         }
 
         .row-col-meta-buttons {
+            padding-top: 10px;
             width: 25%;
 
             button {
