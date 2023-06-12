@@ -51,8 +51,8 @@ exports.setup = function(SERVER, isProduction, g_pExpress)
     /**
      * Show Map Pages
      */
-    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/../pages/map-underdeeps.html", SERVER.caching.headerData.generic));
-    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/../pages/map-regions.html", SERVER.caching.headerData.generic));
+    SERVER.instance.use("/map/underdeeps", g_pExpress.static(__dirname + "/../pages/map-underdeeps.html"));
+    SERVER.instance.use("/map/regions", g_pExpress.static(__dirname + "/../pages/map-regions.html"));
     SERVER.instance.use("/map/regions/edit", g_pExpress.static(__dirname + "/../pages/map-regions-marking.html"));
     
     /**
