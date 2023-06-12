@@ -7,7 +7,9 @@
 .game-watch-only .arda-hand-wrapper,
 .game-watch-only .arda-card-hands,
 .game-watch-only .companies .company .character-card-dice,
-.game-watch-only .company-characters-add
+.game-watch-only .company-characters-add,
+.game-watch-only .icons a.victory,
+.game-watch-only .icons a.hand 
 {
     display: none !important;
 }
@@ -48,6 +50,7 @@
 {
     text-align: center;
     border-bottom: 2px solid black;
+    margin-bottom: 100px;
 }
 
 .game-watch-only .staging-area,
@@ -93,16 +96,6 @@
 }
 
 .game-watch-only .chatbox { height: 20px; }
-
-.game-watch-only .icons a.victory,
-.game-watch-only .icons a.hand 
-{
-    height: 20px;
-    width: 50px;
-    margin-bottom: 10px;
-    background-position-y: 0;
-    background-position-x: center;
-}
 
 .game-watch-only .card-bar.card-bar-shared
 {
