@@ -308,7 +308,11 @@
 
     &.scoring-sheet-ingame-collapsed {
         .scoring-sheet-ingame-collapse { display: none;}
+
+        th.scoring-sheet-ingame-icon-openclose::before { content: '\00AB' }
     }
+
+    th.scoring-sheet-ingame-icon-openclose::before { content: '\00BB' }
 
     &.scoring-arda,
     &.scoring-single { display: none; }
@@ -328,7 +332,9 @@
     }
 
     table {
-        border-spacing: 0;
+        border-collapse: separate;
+        border-spacing: 0 2px;
+        font-size: 0.9em;
     }
 
     th, td

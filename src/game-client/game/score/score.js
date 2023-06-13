@@ -510,7 +510,9 @@ const SCORING_INGAME =
 
             const tr = document.createElement("tr");
             thead.appendChild(tr);
-            tr.appendChild(document.createElement("th"));
+            const th1 = document.createElement("th");
+            th1.setAttribute("class", "scoring-sheet-ingame-icon-openclose");
+            tr.appendChild(th1);
 
             this._props.forEach(function(entry)
             {
