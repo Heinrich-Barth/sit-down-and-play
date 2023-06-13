@@ -958,7 +958,7 @@ body.on-drag-event-resource .area-player .company-character-host .card img, body
 
 .zoom-1 .company-character-reosurces .card,
 .zoom-2 .company-character-reosurces .card {
-  margin-top: -95px;
+  margin-top: -110px;
 }
 .zoom-1 .card-hands .card-hand img.card-icon,
 .zoom-1 .arda-card-hands .card-hand img.card-icon,
@@ -1063,58 +1063,58 @@ img.card-icon {
   transform: translateX(105px);
 }
 .company-character-reosurces .card:nth-child(9) {
-  transform: translateX(130px);
+  transform: translateX(122px);
 }
 .company-character-reosurces .card:nth-child(10) {
-  transform: translateX(145px);
+  transform: translateX(137px);
 }
 .company-character-reosurces .card:nth-child(11) {
-  transform: translateX(160px);
+  transform: translateX(152px);
 }
 .company-character-reosurces .card:nth-child(12) {
-  transform: translateX(175px);
+  transform: translateX(167px);
 }
 .company-character-reosurces .card:nth-child(13) {
-  transform: translateX(190px);
+  transform: translateX(182px);
 }
 .company-character-reosurces .card:nth-child(14) {
-  transform: translateX(205px);
+  transform: translateX(197px);
 }
 .company-character-reosurces[data-stack-size="1"] {
-  width: 72px;
-}
-.company-character-reosurces[data-stack-size="2"] {
   width: 87px;
 }
-.company-character-reosurces[data-stack-size="3"] {
+.company-character-reosurces[data-stack-size="2"] {
   width: 102px;
 }
-.company-character-reosurces[data-stack-size="4"] {
+.company-character-reosurces[data-stack-size="3"] {
   width: 117px;
 }
-.company-character-reosurces[data-stack-size="5"] {
+.company-character-reosurces[data-stack-size="4"] {
   width: 132px;
 }
-.company-character-reosurces[data-stack-size="6"] {
+.company-character-reosurces[data-stack-size="5"] {
   width: 147px;
 }
-.company-character-reosurces[data-stack-size="7"] {
+.company-character-reosurces[data-stack-size="6"] {
   width: 162px;
 }
-.company-character-reosurces[data-stack-size="8"] {
+.company-character-reosurces[data-stack-size="7"] {
   width: 177px;
 }
-.company-character-reosurces[data-stack-size="9"] {
+.company-character-reosurces[data-stack-size="8"] {
   width: 192px;
 }
-.company-character-reosurces[data-stack-size="10"] {
+.company-character-reosurces[data-stack-size="9"] {
   width: 207px;
 }
-.company-character-reosurces[data-stack-size="11"] {
+.company-character-reosurces[data-stack-size="10"] {
   width: 222px;
 }
-.company-character-reosurces[data-stack-size="12"] {
+.company-character-reosurces[data-stack-size="11"] {
   width: 237px;
+}
+.company-character-reosurces[data-stack-size="12"] {
+  width: 252px;
 }
 
 .config-zoom {

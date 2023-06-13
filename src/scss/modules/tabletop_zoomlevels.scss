@@ -6,7 +6,7 @@
 
         .card
         {
-            margin-top: -95px;
+            margin-top: -110px;
         }
     }
     
@@ -146,77 +146,77 @@ img.card-icon {
         }
 
         &:nth-child(9) {
-            transform: translateX(130px);
+            transform: translateX(122px);
         }
 
         &:nth-child(10) {
-            transform: translateX(145px);
+            transform: translateX(137px);
         }
 
         &:nth-child(11) {
-            transform: translateX(160px);
+            transform: translateX(152px);
         }
 
         &:nth-child(12) {
-            transform: translateX(175px);
+            transform: translateX(167px);
         }
 
         &:nth-child(13) {
-            transform: translateX(190px);
+            transform: translateX(182px);
         }
 
         &:nth-child(14) {
-            transform: translateX(205px);
+            transform: translateX(197px);
         }
     }
 
     // this is the size of the stacked cards and the contianer width
     &[data-stack-size="1"] {
-        width: 72px
-    }
-
-    &[data-stack-size="2"] {
         width: 87px
     }
 
-    &[data-stack-size="3"] {
+    &[data-stack-size="2"] {
         width: 102px
     }
 
-    &[data-stack-size="4"] {
+    &[data-stack-size="3"] {
         width: 117px
     }
 
-    &[data-stack-size="5"] {
+    &[data-stack-size="4"] {
         width: 132px
     }
 
-    &[data-stack-size="6"] {
+    &[data-stack-size="5"] {
         width: 147px
     }
 
-    &[data-stack-size="7"] {
+    &[data-stack-size="6"] {
         width: 162px
     }
 
-    &[data-stack-size="8"] {
+    &[data-stack-size="7"] {
         width: 177px
     }
 
-    &[data-stack-size="9"] {
+    &[data-stack-size="8"] {
         width: 192px
     }
 
-    &[data-stack-size="10"] {
+    &[data-stack-size="9"] {
         width: 207px
     }
 
-    &[data-stack-size="11"] {
+    &[data-stack-size="10"] {
         width: 222px
     }
 
-    &[data-stack-size="12"] {
+    &[data-stack-size="11"] {
         width: 237px
+    }
+
+    &[data-stack-size="12"] {
+        width: 252px
     }
 }
 
