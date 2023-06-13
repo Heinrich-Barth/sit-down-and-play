@@ -65,7 +65,21 @@ const ReleaseNotes = {
         h2.innerText = "Latest Updates";
 
         const p = document.createElement("p")
-        p.innerText = "This list contians the 10 latest feature/fixes. For a full list, please checkout the repository.";
+        
+        const aLink = document.createElement("a");
+        aLink.setAttribute("href", "https://github.com/Heinrich-Barth/sit-down-and-play");
+        aLink.setAttribute("target", "_blank");
+
+        const aI = document.createElement("i");
+        aI.setAttribute("class", "fa fa-github");
+        aI.innerHTML = "&nbsp;";
+        aLink.append(aI, document.createTextNode("github/sit-down-and-play"));
+
+        p.append(
+            document.createTextNode("This list contians the 10 latest feature/fixes. For a full list, please checkout the repository at"),
+            aLink, 
+            document.createTextNode(".")
+        );
 
         div.appendChild(h2);
         div.appendChild(p);
