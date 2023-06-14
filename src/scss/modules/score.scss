@@ -181,6 +181,50 @@
             display: none !important;
         }
     }
+
+    .final-score-table {
+
+        border-collapse: collapse;
+        border-spacing: 2px !important;
+
+        img {
+            max-height: 70px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        thead th,
+        td { text-align: center !important; }
+
+        th,
+        td { 
+            padding: 2px;
+        }
+
+        span, strong { display: inline; padding: 0 2px }
+
+        span {
+            font-size: 0.8em;
+        }
+
+        strong {
+
+            font-size: 1.2em;
+        }
+
+        .score-is-cut { color: #ed7676; font-style: italic;}
+
+        tfoot {
+            th, td {
+                border-top: 1px solid white;
+                border-bottom: 1px solid white;
+                text-align: center;
+            }
+        }
+    }
+
 }
 
 .scoring-card .view-score-container {

@@ -210,12 +210,7 @@ const SCORING_INGAME =
     _avatars: {},
     _scores: { },
     _hexIdMap : {},
-
-    recalculatePoints : function()
-    {
-        if (Object.keys(this._hexIdMap).length === 0 || Object.keys(this._scores).length === 0)
-            return;
-    },
+    _names : {},
 
     removeInGame : function(sHexId)
     {
@@ -295,6 +290,130 @@ const SCORING_INGAME =
             elem.innerText = "" + value;
     },
 
+    buildFinalScores_tableHead : function()
+    {
+        const images = document.createElement("tr");
+        const names = document.createElement("tr");
+        
+        images.append(document.createElement("td"));
+
+        const tdPoints = document.createElement("th");
+        tdPoints.innerText = "Category"
+        names.append(tdPoints);
+        
+        for (let id in SCORING_INGAME._scores)
+        {
+            const img = document.createElement("img");
+            img.setAttribute("src", SCORING_INGAME.getAvatar(id));
+            img.setAttribute("class", "scoring-ingame-avatar");
+            const td1 = document.createElement("td");
+            td1.append(img);
+            images.append(td1);
+
+            const td2 = document.createElement("th");
+            td2.innerText = SCORING_INGAME._names[id] ? SCORING_INGAME._names[id] : "";
+            names.append(td2);
+        }
+
+        const res = document.createDocumentFragment();
+        res.append(images, names);
+        return res;
+    },
+
+    buildFinalScores_tableRows_map : function()
+    {
+        const ptsByCategory = {};
+
+        for (let id in SCORING_INGAME._scores)
+        {
+            for (let category in SCORING_INGAME._scores[id])
+            {
+                const tr = document.createElement("tr");
+                const th = document.createElement("th");
+                tr.appendChild(th);
+                th.innerText = category;
+                ptsByCategory[category] = tr;
+            }
+
+            break;
+        }
+
+        return ptsByCategory;
+    },
+
+    buildFinalScores_tableRows_cell : function(value, usable, isCut)
+    {
+        const td = document.createElement("td");
+        if (isCut)
+            td.setAttribute("class", "score-is-cut");
+
+        const span = document.createElement("span");
+        span.innerText = value;
+
+        const strong = document.createElement("strong");
+        strong.innerText = usable;
+
+        td.append(span, strong);
+        return td;
+    },
+
+    buildFinalScores_tableRows : function()
+    {
+        const map = this.buildFinalScores_tableRows_map();
+        const totalsRow = document.createDocumentFragment();
+
+        for (let id in SCORING_INGAME._scores)
+        {
+            const score = SCORING_INGAME._scores[id];
+
+            let total = 0;
+            let totalUsed = 0;
+
+            for (let category in score)
+            {
+                const _score = score[category] ;
+                const usable = _score.double ? _score.usable * 2 : _score.usable;
+                const isCut = _score.value !== usable;
+
+                map[category].append(this.buildFinalScores_tableRows_cell(_score.value, usable, isCut));
+
+                total += parseInt(_score.value);
+                totalUsed += parseInt(usable);
+            }
+
+            totalsRow.appendChild(this.buildFinalScores_tableRows_cell(total, totalUsed, total !== totalUsed));
+        }
+
+        return { 
+            list: map,
+            total: totalsRow
+        };
+    },
+
+    buildFinalScores : function()
+    {
+        const list = this.buildFinalScores_tableHead();
+        const map = this.buildFinalScores_tableRows();
+
+        const thead = document.createElement("thead");
+        thead.append(list);
+
+        const tbody = document.createElement("tbody");
+        for (let category in map.list)
+            tbody.append(map.list[category]);
+
+        const tfoot = document.createElement("tfoot");
+        const thFinal = document.createElement("th");
+        thFinal.innerText = "total";
+        tfoot.append(thFinal, map.total);
+
+        const table = document.createElement("table");
+        table.append(thead, tbody, tfoot);
+        table.setAttribute("class", "final-score-table");
+        
+        return table;
+    },
+
     updateInGameScore : function(tr, score)
     {
         const fields = this.buildScoreCellMap(tr);
@@ -311,9 +430,11 @@ const SCORING_INGAME =
             }
 
             const _score = score[id] ;
-            const isCut = _score.value !== _score.usable;
+            const usable = _score.double ? _score.usable * 2 : _score.usable;
+            const isCut = _score.value !== usable;
+
             this.updateCount(td.value, _score.value, isCut);
-            this.updateCount(td.usable, _score.usable, isCut);
+            this.updateCount(td.usable, usable, isCut);
 
             if (isCut)
                 td.td.classList.add("score-is-cut");
@@ -321,7 +442,7 @@ const SCORING_INGAME =
                 td.td.classList.remove("score-is-cut");
 
             total += parseInt(_score.value);
-            totalUsed += parseInt(_score.usable);
+            totalUsed += parseInt(usable);
         }
 
         const vpClasses = tr.getElementsByClassName("final-score");
@@ -343,7 +464,6 @@ const SCORING_INGAME =
             else if (th.classList.contains("score-is-cut"))
                 th.classList.remove("score-is-cut");
         }
-            
     },
 
     calculateTotals : function(score)
@@ -373,6 +493,7 @@ const SCORING_INGAME =
                 result[id] = {
                     value: score[id],
                     usable: score[id],
+                    double: false
                 } 
             }
         }
@@ -382,7 +503,8 @@ const SCORING_INGAME =
             {
                 result[id] = {
                     value: score[id],
-                    usable: score[id] < nAllowed ? score[id] : nAllowed
+                    usable: score[id] < nAllowed ? score[id] : nAllowed,
+                    double: false
                 } 
             }
         }
@@ -390,28 +512,94 @@ const SCORING_INGAME =
         return result;
     },
 
+    getRowMap : function()
+    {
+        const table = document.getElementById("scoring-sheet-ingame");
+        if (table === null)
+            return { };
+
+        const rows = {};
+        for (let id in SCORING_INGAME._scores)
+        {
+            const tr = table.querySelector(`tr[data-player-id="${id}"]`);
+            if (tr !== null)
+                rows[id] = tr;
+        }
+
+        return rows;
+    },
+
+    updatedStoredData : function(list)
+    {
+        for (let scores of list)
+        {
+            const id = scores.id;
+            SCORING_INGAME._scores[id] = this.calculateHalves(scores.scores);
+        }
+    },
+
+    doUpdateInGameScores : function()
+    {
+        const rows = this.getRowMap();
+        for (let id in SCORING_INGAME._scores)
+        {
+            const tr = rows[id] === undefined ? null : rows[id];
+            if (tr !== null)
+                this.updateInGameScore(tr, SCORING_INGAME._scores[id]);
+        }
+    },
+
+    createDoubleCalculationMap : function()
+    {
+        const ptsByCategory = {};
+
+        for (let id in SCORING_INGAME._scores)
+        {
+            for (let category in SCORING_INGAME._scores[id])
+                ptsByCategory[category] = 0;
+
+            break;
+        }
+
+        if (ptsByCategory["kill"] !== undefined)
+            delete ptsByCategory["kill"];
+
+        return ptsByCategory;
+    },
+
+    calculateDoubles : function()
+    {
+        const ids = Object.keys(SCORING_INGAME._scores);
+        if (ids.length < 2)
+            return;
+
+        const ptsByCategory = this.createDoubleCalculationMap();
+        for (let id of ids)
+        {
+            const score = SCORING_INGAME._scores[id];
+            for (let category in score)
+            {
+                if (score[category].value > 0)
+                    ptsByCategory[category]++;
+            }
+        }
+
+        for (let id of ids)
+        {
+            const score = SCORING_INGAME._scores[id];
+            for (let category in score)
+                score[category].double = score[category].value > 0 && ptsByCategory[category] === 1;
+        }
+    },
+
     updateInGameScores : function(list)
     {
         if (!Array.isArray(list) || list.length === 0)
             return;
-
-        const table = document.getElementById("scoring-sheet-ingame");
-        if (table === null)
-            return;
         
-        for (let scores of list)
-        {
-            const id = scores.id;
-            const tr = table.querySelector(`tr[data-player-id="${id}"]`);
-            if (tr !== null)
-            {
-                const mps = this.calculateHalves(scores.scores);
-                SCORING_INGAME._scores[id] = mps;
-                this.updateInGameScore(tr, mps);
-            }
-        }
-
-        SCORING_INGAME.recalculatePoints();
+        this.updatedStoredData(list);
+        this.calculateDoubles();
+        this.doUpdateInGameScores();
     },
 
     getPlayerTitle(name, id)
@@ -434,6 +622,8 @@ const SCORING_INGAME =
     {
         if (document.getElementById("scoring-ingame-" + sHexId) !== null)
             return;
+
+        SCORING_INGAME._names[_playerId] = sName;
 
         const table = document.getElementById("scoring-sheet-ingame");
         if (table === null)
@@ -974,10 +1164,20 @@ const SCORING = {
     
     showFinalScore : function(jData, stats, token, automaticShutdown)
     {
-        this._showScoreSheet(jData, false, token);        
+        const div = document.getElementById("scoring-sheet");
+        if (div === null)
+            return;
+
+        const jTable = div.querySelector(".view-score-container");
+        DomUtils.empty(jTable);
+        jTable.appendChild(SCORING_INGAME.buildFinalScores());
+
+        this.removeUpdateFunctionality();
 
         if (automaticShutdown)
             this._showShutdownNotice();
+
+        div.classList.remove("hidden");
         document.body.dispatchEvent(new CustomEvent("meccg-dice-stats", { "detail": stats }));
     },
 
