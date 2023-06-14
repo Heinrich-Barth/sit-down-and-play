@@ -341,17 +341,17 @@ const SCORING_INGAME =
         return ptsByCategory;
     },
 
-    buildFinalScores_tableRows_cell : function(value, usable, isCut)
+    buildFinalScores_tableRows_cell : function(value, usable, isCut, hideZero)
     {
         const td = document.createElement("td");
         if (isCut)
             td.setAttribute("class", "score-is-cut");
 
         const span = document.createElement("span");
-        span.innerText = value;
+        span.innerText = value == 0 && hideZero ? "-" : value;
 
         const strong = document.createElement("strong");
-        strong.innerText = usable;
+        strong.innerText = usable == 0 && hideZero ? "-" : usable;
 
         td.append(span, strong);
         return td;
@@ -371,17 +371,17 @@ const SCORING_INGAME =
 
             for (let category in score)
             {
-                const _score = score[category] ;
+                const _score = score[category];
                 const usable = _score.double ? _score.usable * 2 : _score.usable;
                 const isCut = _score.value !== usable;
 
-                map[category].append(this.buildFinalScores_tableRows_cell(_score.value, usable, isCut));
+                map[category].append(this.buildFinalScores_tableRows_cell(_score.value, usable, isCut, true));
 
                 total += parseInt(_score.value);
                 totalUsed += parseInt(usable);
             }
 
-            totalsRow.appendChild(this.buildFinalScores_tableRows_cell(total, totalUsed, total !== totalUsed));
+            totalsRow.appendChild(this.buildFinalScores_tableRows_cell(total, totalUsed, total !== totalUsed, false));
         }
 
         return { 
@@ -420,6 +420,7 @@ const SCORING_INGAME =
         
         let total = 0;
         let totalUsed = 0;
+
         for (let id in score)
         {
             const td = fields[id];
@@ -431,7 +432,7 @@ const SCORING_INGAME =
 
             const _score = score[id] ;
             const usable = _score.double ? _score.usable * 2 : _score.usable;
-            const isCut = _score.value !== usable;
+            const isCut = _score.value !== usable || _score.double;
 
             this.updateCount(td.value, _score.value, isCut);
             this.updateCount(td.usable, usable, isCut);
@@ -486,7 +487,7 @@ const SCORING_INGAME =
         const total = this.calculateTotals(score);
         const nAllowed = Math.floor(total / 2);
 
-        if (nAllowed < 2)
+        if (nAllowed < 1)
         {
             for (let id in score)
             {
