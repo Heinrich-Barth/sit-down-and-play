@@ -272,11 +272,27 @@ const SCORING_INGAME =
         {
             const type = td.hasAttribute("data-score-type") ? td.getAttribute("data-score-type") : "";
             const span = type === "" ? null : td.querySelector("span");
-            if (span !== null)
-                map[type] = span;
+            const strong = type === "" ? null : td.querySelector("strong");
+            if (span !== null && strong !== null)
+            {
+                map[type] = {
+                    td: td,
+                    value: span,
+                    usable: strong
+                };
+            }
         }
 
         return map;
+    },
+
+    updateCount : function(elem, value)
+    {
+        if (value < 0 || elem === null)
+            return;
+        
+        if (elem.innerText + "" !== "" + value)
+            elem.innerText = "" + value;
     },
 
     updateInGameScore : function(tr, score)
@@ -284,6 +300,7 @@ const SCORING_INGAME =
         const fields = this.buildScoreCellMap(tr);
         
         let total = 0;
+        let totalUsed = 0;
         for (let id in score)
         {
             const td = fields[id];
@@ -293,19 +310,84 @@ const SCORING_INGAME =
                 continue;
             }
 
-            const val = score[id];
-            if (val < 0)
-                continue;
+            const _score = score[id] ;
+            const isCut = _score.value !== _score.usable;
+            this.updateCount(td.value, _score.value, isCut);
+            this.updateCount(td.usable, _score.usable, isCut);
 
-            if (td.innerText + "" !== "" + val)
-                td.innerText = val;                  
+            if (isCut)
+                td.td.classList.add("score-is-cut");
+            else if (td.td.classList.contains("score-is-cut"))
+                td.td.classList.remove("score-is-cut");
 
-            total += parseInt(val);
+            total += parseInt(_score.value);
+            totalUsed += parseInt(_score.usable);
         }
 
         const vpClasses = tr.getElementsByClassName("final-score");
         if (vpClasses !== null && vpClasses.length > 0)
-            vpClasses[0].innerText = total;
+        {
+            const th = vpClasses[0];
+            const _span = th.querySelector("span");
+            const _strong = th.querySelector("strong");
+            const isCut = totalUsed != total;
+            
+            if (_span != null)
+                _span.innerText = total;
+
+            if (_strong != null)
+                _strong.innerText = totalUsed;
+            
+            if (isCut)
+                th.classList.add("score-is-cut");
+            else if (th.classList.contains("score-is-cut"))
+                th.classList.remove("score-is-cut");
+        }
+            
+    },
+
+    calculateTotals : function(score)
+    {
+        let total = 0;
+
+        for (let id in score)
+        {
+            const val = score[id];
+            if (val > 0)
+                total += parseInt(val);
+        }
+
+        return total;
+    },
+
+    calculateHalves : function(score)
+    {
+        let result = {};
+        const total = this.calculateTotals(score);
+        const nAllowed = Math.floor(total / 2);
+
+        if (nAllowed < 2)
+        {
+            for (let id in score)
+            {
+                result[id] = {
+                    value: score[id],
+                    usable: score[id],
+                } 
+            }
+        }
+        else
+        {
+            for (let id in score)
+            {
+                result[id] = {
+                    value: score[id],
+                    usable: score[id] < nAllowed ? score[id] : nAllowed
+                } 
+            }
+        }
+
+        return result;
     },
 
     updateInGameScores : function(list)
@@ -323,8 +405,9 @@ const SCORING_INGAME =
             const tr = table.querySelector(`tr[data-player-id="${id}"]`);
             if (tr !== null)
             {
-                SCORING_INGAME._scores[id] = scores.scores;
-                this.updateInGameScore(tr, scores.scores);
+                const mps = this.calculateHalves(scores.scores);
+                SCORING_INGAME._scores[id] = mps;
+                this.updateInGameScore(tr, mps);
             }
         }
 
@@ -363,7 +446,6 @@ const SCORING_INGAME =
         SCORING_INGAME._hexIdMap[_playerId] = sHexId;
 
         const tr = document.createElement("tr");
-        tbody.appendChild(tr);
 
         tr.setAttribute("id", "scoring-ingame-" + sHexId);
         tr.setAttribute("data-hex", sHexId);
@@ -430,8 +512,20 @@ const SCORING_INGAME =
 
         th1 = document.createElement("td");
         tr.appendChild(th1)
+        
         th1.setAttribute("class", "final-score");
-        th1.innerText = 0;
+        
+        {
+            const span = document.createElement("span");
+            span.innerText = "0";
+
+            const strong = document.createElement("strong");
+            strong.innerText = "0";
+
+            th1.append(span, strong);
+        }
+
+        tbody.appendChild(tr);
     },
 
     onUpdateValue : function(link, nDif)

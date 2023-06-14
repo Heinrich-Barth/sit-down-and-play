@@ -328,7 +328,10 @@
         background: #000;
 
         a { display: block; }
-        td strong { display: none;}
+        td { 
+            span { display: block; }
+            strong { display: none;}
+        }
     }
 
     table {
@@ -353,18 +356,9 @@
     }
 
     td {
-        strong,
-        span {
-            display: block;
-            text-align: center;
-        }
+        text-align: center;
 
-        strong { display: none;}
-
-        span {
-            font-size: 1.4em;
-/*            color: #bdbdbd;*/
-        }
+        span { display: none; }
 
         &.final-score,
         strong {
@@ -372,7 +366,8 @@
             font-weight: normal;
         }
     }
-    
+
+    .score-is-cut { color: #ed7676; font-style: italic;}
     
     .avatar {
         position: relative;
