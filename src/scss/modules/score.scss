@@ -115,17 +115,17 @@
         }
 
         tfoot {
-            tr.score-total th {
+            tr:first-child {
+                td,
+                th {
                 border-top: 1px solid white;
                 border-bottom: 1px solid white;
-
-                &.score-total {
-                    text-align: center;
                 }
             }
 
-            tr:last-child th {
-                padding-top: 10px;
+            td, th { 
+                padding: 5px 0; 
+                text-align: center;
             }
         }
 

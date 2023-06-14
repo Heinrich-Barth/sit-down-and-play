@@ -362,6 +362,8 @@ const SCORING_INGAME =
         const map = this.buildFinalScores_tableRows_map();
         const totalsRow = document.createDocumentFragment();
 
+        let listPoints = [];
+
         for (let id in SCORING_INGAME._scores)
         {
             const score = SCORING_INGAME._scores[id];
@@ -381,13 +383,51 @@ const SCORING_INGAME =
                 totalUsed += parseInt(usable);
             }
 
+            listPoints.push(totalUsed);
             totalsRow.appendChild(this.buildFinalScores_tableRows_cell(total, totalUsed, total !== totalUsed, false));
         }
 
         return { 
             list: map,
-            total: totalsRow
+            total: totalsRow,
+            arrayPoints: this.calculateTournamentPoints(listPoints)
         };
+    },
+
+    calculateTournamentPoints : function(list)
+    {
+        if (list.length !== 2)
+            return [];
+
+        const a = list[0];
+        const b = list[1];
+
+        if (a === b)
+        {
+            return [3,3];
+        }
+        else if (a >= b * 2)
+        {
+            return [6,0];
+        }
+        else if (b >= a * 2)
+        {
+            return [0, 6];
+        }
+        else if (a >= Math.round(b * 1.5))
+        {
+            return [5, 1];
+        }
+        else if (b >= Math.round(a * 1.5))
+        {
+            return [1, 5];
+        }
+        else if (a > b)
+        {
+            return [4, 2];
+        }
+        else
+            return [2, 4];
     },
 
     buildFinalScores : function()
@@ -402,16 +442,40 @@ const SCORING_INGAME =
         for (let category in map.list)
             tbody.append(map.list[category]);
 
-        const tfoot = document.createElement("tfoot");
+        const tfootTR = document.createElement("tr");
+
         const thFinal = document.createElement("th");
         thFinal.innerText = "total";
-        tfoot.append(thFinal, map.total);
+        tfootTR.append(thFinal, map.total);
+
+        const tfoot = document.createElement("tfoot");
+        tfoot.append(tfootTR, this.createListTRPoints(map.arrayPoints));
 
         const table = document.createElement("table");
         table.append(thead, tbody, tfoot);
         table.setAttribute("class", "final-score-table");
         
         return table;
+    },
+
+    createListTRPoints(list)
+    {
+        if (list.length !== 2)
+            return document.createDocumentFragment();
+
+        const th = document.createElement("th");
+        th.innerText = "Tournament";
+
+        const tr = document.createElement("tr");
+        tr.appendChild(th);
+        for (let elem of list)
+        {
+            const td1 = document.createElement("td");
+            td1.innerText = elem;
+            tr.appendChild(td1);
+        }
+
+        return tr;
     },
 
     updateInGameScore : function(tr, score)
