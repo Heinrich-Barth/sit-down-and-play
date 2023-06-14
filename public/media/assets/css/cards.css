@@ -172,6 +172,13 @@ body h4 {
 .deckbuilding .filters select {
   padding: 0 1em !important;
 }
+.deckbuilding .decklist-action-move {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-position: 0 1px !important;
+  background-size: contain !important;
+}
 .deckbuilding textarea {
   line-height: 1.5em;
   height: 165px;
@@ -359,13 +366,6 @@ body h4 {
 }
 .deck-builder .decklist label:hover {
   color: #fff;
-}
-.deck-builder .decklist .decklist-action-move {
-  display: inline-block;
-  height: 16px;
-  width: 16px;
-  background-position: 0 1px !important;
-  background-size: contain !important;
 }
 .deck-builder .decklist .deckname {
   display: inline;

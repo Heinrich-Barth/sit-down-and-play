@@ -61,6 +61,13 @@ body {
 
     }
 
+    .decklist-action-move {
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-position: 0 1px !important;
+        background-size: contain !important;
+    }
     textarea {
         line-height: 1.5em;
         height: 165px;
@@ -289,14 +296,6 @@ body {
             &:hover {
                 color: #fff;
             }
-        }
-
-        .decklist-action-move {
-            display: inline-block;
-            height: 16px;
-            width: 16px;
-            background-position: 0 1px !important;
-            background-size: contain !important;
         }
 
         .deckname {
