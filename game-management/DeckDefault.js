@@ -155,36 +155,40 @@ class DeckDefault extends DeckCommons {
             return false;
     }
 
-    importCardsToHand(code, bAsCharacter, _cardMap, gameCardProvider)
+    importCardsToDeck(code, bAsCharacter, _cardMap, gameCardProvider)
     {
         code = this.removeQuotes(code);
 
         const _entry = this.createCardEntry(code, false, gameCardProvider);
         if (_entry === null)
         {
-            console.log("Cannot register card " + code + " to hand.");
-            return false;
+            console.log("Cannot register card " + code + " to game.");
+            return "";
+        }
+
+        /** this is magic. if the target card is a SITE, we can convert it into either character OR ressource */
+        if (bAsCharacter)
+        {
+            _entry.type = "character";
+            _entry.secondary = "character";
+            _entry.revealed = true;
         }
         else
         {
-            /** this is magic. if the target card is a SITE, we can convert it into either character OR ressource */
-            if (bAsCharacter)
-            {
-                _entry.type = "character";
-                _entry.secondary = "character";
-                _entry.revealed = true;
-            }
-            else
-            {
-                _entry.type = "resource";
-                _entry.secondary = "permanent event";
-                _entry.revealed = false;
-            }
-
-            _cardMap[_entry.uuid] = _entry;
-            this.handCards.unshift(_entry.uuid);
-            return true;
+            _entry.type = "resource";
+            _entry.secondary = "permanent event";
+            _entry.revealed = false;
         }
+
+        _cardMap[_entry.uuid] = _entry;
+        this.handCards.unshift(_entry.uuid);
+        return _entry.uuid;
+    }
+
+    importCardsToHand(code, bAsCharacter, _cardMap, gameCardProvider)
+    {
+        const uuid = this.importCardsToDeck(code, bAsCharacter, _cardMap, gameCardProvider)
+        return uuid !== "";
     }
     
     /**

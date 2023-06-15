@@ -276,6 +276,10 @@ const DropFunctions = {
 
             HandCardsDraggable.onCreateNewCompany(uuid, source);
         }
+        else if (ui.draggable.attr("data-card-type") === "site")
+        {
+            DropFunctions.onDropSiteOnNewCompany(ui.draggable.attr("data-card-code"));
+        }
 
         return false;
     },
@@ -283,7 +287,8 @@ const DropFunctions = {
     dropOnAddCompanyCharacter :  function( _event, ui, companyUuid ) 
     {
         const pCard = ui.draggable[0];
-        if (pCard.getAttribute("data-card-type") === "character")
+        const type = pCard.getAttribute("data-card-type");
+        if (type === "character")
         {
             const source = pCard.getAttribute("data-location");
             const uuid = pCard.getAttribute("data-uuid");
@@ -293,8 +298,22 @@ const DropFunctions = {
             HandCardsDraggable.onJoinCompany(uuid, source, companyUuid);
             DropFunctions.getApi().send("/game/draw/company", companyUuid);
         }
+        else if (type === "site")
+        {
+            DropFunctions.onDropSiteOnCharacter(pCard.getAttribute("data-code"));
+        }
 
         return false;
+    },
+
+    onDropSiteOnNewCompany(code)
+    {
+        DropFunctions.onDropSiteOnCharacter(code, "", "");
+    },
+
+    onDropSiteOnCharacter(code, targetCharacter_uuid, targetCompany_uuid)
+    {
+        HandCardsDraggable.getApi().send("/game/card/import", {code : code, type: "site", location: "company", targetCompany: targetCompany_uuid, targetCharacter: targetCharacter_uuid  });
     }
 };
 
@@ -535,7 +554,13 @@ const HandCardsDraggable = {
         const redrawReceivingCompanyId = receivingCharacter.company_uuid;
         let redrawDonatingCompanyId = "";
         
-        if (elemDraggable.getAttribute("data-card-type") === "character")
+        if (elemDraggable.getAttribute("data-card-type") === "site")
+        {
+            const code = elemDraggable.getAttribute("data-card-code");
+            DropFunctions.onDropSiteOnCharacter(code, receivingCharacter.character_uuid, receivingCharacter.company_uuid);
+            return;
+        }
+        else if (elemDraggable.getAttribute("data-card-type") === "character")
         {
             const donatingCharacter = HandCardsDraggable.getDonatingCharacter(source, elemDraggable);
             redrawDonatingCompanyId = HandCardsDraggable.getDonatingCompanyUuid(donatingCharacter, receivingCharacter);
@@ -675,8 +700,8 @@ const HandCardsDraggable = {
      */
     initDraggableCard : function(pCardContainer)
     {
-        let sAllow = pCardContainer === null ? null : pCardContainer.getAttribute("draggable");
-        if (sAllow === null || sAllow !== "true")
+        const sAllow = pCardContainer === null || !pCardContainer.hasAttribute("draggable") ? "false" : pCardContainer.getAttribute("draggable");
+        if (sAllow !== "true")
             return;
         
         jQuery(pCardContainer).draggable(
@@ -890,13 +915,14 @@ const HandCardsDraggable = {
     
     droppableAcceptResrouceAndHazards : function(elem)
     {
-        let sType = elem.attr("data-card-type");
-        return sType === "resource" || sType === "hazard";
+        const sType = elem.attr("data-card-type");
+        return sType === "resource" || sType === "hazard" || sType === "site";
     },
     
     droppableAcceptCharacter : function(elem)
     {
-        return elem.attr("data-card-type") === "character";
+        const sType = elem.attr("data-card-type");
+        return sType === "character" || sType === "site";
     },
     
     droppableAcceptStagingArea : function(elem)

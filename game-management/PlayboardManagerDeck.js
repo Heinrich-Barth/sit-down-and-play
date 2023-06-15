@@ -258,17 +258,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
         if (nNumber < 1)
             return [];
 
-        let list;
-        switch(sPile)
-        {
-            case "playdeck":
-                list = this.getCardList(this.getDecks().getCards().playdeck(playerId));
-                break;
-            default:
-                list = [];
-                break;
-        }
-
+        const list = sPile !== "playdeck" ? [] : this.getCardList(this.getDecks().getCards().playdeck(playerId));
         const listSize = list.length;
         if (listSize > nNumber)
         {
@@ -505,6 +495,19 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
     ImportCardsToHand(playerId, code, bAsCharacter)
     {
         return this.getDecks().importCardsToHand(playerId, code, bAsCharacter, this.gameCardProvider);
+    }
+
+    /**
+     * Add a card DURING the game!
+     * 
+     * @param {String} playerId Target player
+     * @param {String} code Card Code
+     * @param {Boolean} bAsCharacter Consider this card as a character OR a ressource
+     * @returns {Number} Number of cards added or -1
+     */
+    ImportCardsToGame(playerId, code, bAsCharacter)
+    {
+        return this.getDecks().importCardsToGame(playerId, code, bAsCharacter, this.gameCardProvider);
     }
     
     isValidTarget(target)

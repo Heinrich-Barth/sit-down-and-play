@@ -62,12 +62,16 @@ const GameBuilder = {
 
     updateSpecatorCounter: function()
     {
-        fetch("/data/spectators/" + g_sRoom).then((response) =>
+        fetch("/data/spectators/" + g_sRoom)
+        .then((response) =>
         {
             if (response.status === 200)
-                response.json().then((data) => document.getElementById("game_spectators").innerText = data.count);
-
-        }).catch(console.error);  
+                return response.json();
+            else
+                return { count: 0 };
+        })
+        .then((data) => document.getElementById("game_spectators").innerText = data.count)
+        .catch(console.error);  
     },
 
     initAdditionals : function()

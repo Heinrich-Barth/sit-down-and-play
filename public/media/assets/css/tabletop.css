@@ -938,6 +938,19 @@ body.on-drag-event-character .area-player .company-character-influenced .company
   background-color: transparent;
   border: 0px;
 }
+body.on-drag-event-site .area-player .company-characters-add {
+  display: none;
+}
+body.on-drag-event-site .area-player .create-new-company {
+  background-image: url(/media/assets/images/icon-company-new.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  visibility: visible;
+}
+body.on-drag-event-site .area-player .company-character-influenced .company-character-host {
+  background-color: transparent;
+  border: 0px;
+}
 body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
   display: block;
   position: absolute;
@@ -952,7 +965,7 @@ body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .stagi
   border-radius: 5px !important;
   z-index: 900;
 }
-body.on-drag-event-resource .area-player .company-character-host .card img, body.on-drag-event-character .area-player .company-character-host .card img {
+body.on-drag-event-site .area-player .company-character-host .card img, body.on-drag-event-resource .area-player .company-character-host .card img, body.on-drag-event-character .area-player .company-character-host .card img {
   opacity: 0.7;
 }
 

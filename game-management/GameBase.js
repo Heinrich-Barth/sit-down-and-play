@@ -226,6 +226,11 @@ class GameBase {
         return this.getPlayboardManager().ImportCardsToHand(playerId, code, bAsCharacter);
     }
 
+    importCardsToGame(playerId, code, bAsCharacter)
+    {
+        return this.getPlayboardManager().ImportCardsToGame(playerId, code, bAsCharacter);
+    }
+    
     getDeckManager()
     {
         return this.getPlayboardManager().getDecks();

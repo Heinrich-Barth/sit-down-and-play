@@ -577,13 +577,15 @@ const GameCompanies = {
         
         ArrayList(companyContainer.querySelectorAll(".company-character-host")).each(function(elem)
         {
-            const img = elem.querySelector("img.card-icon");
-            if (img !== null)
+            ArrayList(elem.querySelectorAll("img.card-icon")).each(function (img)
             {
-                nCharacters++;
-                if (img.getAttribute("src") !== "/data/backside")
-                    bHasRevealed = true;
-            }
+                if (img.parentElement.getAttribute("data-card-type") === "character")
+                {
+                    nCharacters++;
+                    if (img.getAttribute("src") !== "/data/backside")
+                        bHasRevealed = true;
+                }
+            });
         });
 
         return nCharacters === 1 && !bHasRevealed;

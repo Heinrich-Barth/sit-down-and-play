@@ -221,6 +221,14 @@ class DeckManager {
 
     }
 
+    importCardsToGame(playerId, code, bAsCharacter, gameCardProvider)
+    {
+        if (typeof this._deck[playerId] === "undefined" || code === "")
+            return "";
+        else
+            return this._deck[playerId].importCardsToDeck(code, bAsCharacter, this._cardMap, gameCardProvider);
+    }
+
     getCards() 
     {
         if (this._handManager === null)

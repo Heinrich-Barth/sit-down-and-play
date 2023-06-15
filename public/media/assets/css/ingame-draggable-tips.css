@@ -147,7 +147,6 @@ body.on-drag-event-hazard .area-opponent .site-regions:before
 
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
 body.on-drag-event-hazard .area-opponent .site-regions:before,
-body.on-drag-event-hazard .area-opponent .company-character-host:before,
 body.on-drag-event-generic .area-opponent .site-target:before
 {
     transform: rotate(180deg);

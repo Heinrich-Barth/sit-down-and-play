@@ -270,7 +270,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     CharacterHostCard(company, character, uuid)
     {
         const pCard = this.GetCardByUuid(uuid);
-        if (pCard === null)
+        if (pCard === null || this.characters[character] === undefined)
             return false;
 
         const playerId = pCard.owner;

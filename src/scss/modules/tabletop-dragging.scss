@@ -27,6 +27,22 @@ body {
             border: 0px;
         }
     }
+
+    &.on-drag-event-site .area-player {
+        .company-characters-add {
+            display: none;
+        }
+        .create-new-company {
+            background-image: url(/media/assets/images/icon-company-new.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            visibility: visible;
+        }
+        .company-character-influenced .company-character-host {
+            background-color: transparent;
+            border: 0px;
+        }
+    }
     
     &.on-drag-event-hazard .staging-area-drop,
     &.on-drag-event-resource .staging-area-drop {
@@ -51,6 +67,7 @@ body {
         z-index: 900;
     }    
     
+    &.on-drag-event-site .area-player .company-character-host .card img,
     &.on-drag-event-resource .area-player .company-character-host .card img,
     &.on-drag-event-character .area-player .company-character-host .card img {
         opacity: 0.7;

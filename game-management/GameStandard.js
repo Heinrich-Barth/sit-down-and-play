@@ -753,7 +753,7 @@ class GameStandard extends GamePlayers
 
         {
             const cardChar = this.getPlayboardManager().GetCardByUuid(character);
-            if (cardChar === null || cardChar.revealed === false)
+            if (cardChar === null || cardChar.revealed === false || card.revealed === false)
                 this.publishChat(userid, " character hosts a card", true);
             else
                 this.publishChat(userid, cardChar.code + " hosts " + card.code, true);
@@ -1132,9 +1132,39 @@ class GameStandard extends GamePlayers
             this.publishChat(this.getCurrentPlayerId(), " is now in " + sPhase + " phase", true);
     }
 
+    onCardImportSite(userid, data)
+    {
+        const asCharacter = data.targetCompany === "" || data.targetCharacter === "";
+        const uuid = this.importCardsToGame(userid, data.code, asCharacter)
+        if (uuid === "")
+            return;
+
+        if (asCharacter)
+        {
+            const json = {
+                uuid: uuid,
+                source: "hand"
+            };
+            this.onGameCompanyCreate(userid, null, json);
+        }
+        else
+        {
+            const json = {
+                uuid : uuid,
+                companyId : data.targetCompany,
+                characterUuid : data.targetCharacter,
+                fromHand: true
+            };
+            this.onCharacterHostCard(userid, null, json);
+            this.onGameDrawCompany(userid, null, data.targetCompany);
+        }        
+    }
+
     onCardImport(userid, _socket, data)
     {
-        if (this.importCardDuringGame(userid, data.code, data.type === "character"))
+        if (data.type === "site")
+            this.onCardImportSite(userid, data);
+        else if (this.importCardDuringGame(userid, data.code, data.type === "character"))
             this.onGetTopCardFromHand(userid, null, 1);
     }
 

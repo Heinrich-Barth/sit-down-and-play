@@ -49,7 +49,8 @@ class GameCompanyLocation
         const code = this.CardList.getSafeCode(start);
         const img = this.CardList.getImageSite(start);
 
-        companyElem.querySelector(".site-current").appendChild(this.createLocationCard(code, img, bIsPlayer, GameCompanyLocation.TITLE_SITE_ORIGIN));
+        const pCard = this.createLocationCard(code, img, bIsPlayer, GameCompanyLocation.TITLE_SITE_ORIGIN);
+        companyElem.querySelector(".site-current").appendChild(pCard);
 
         if (revealStartSite)
             ArrayList(companyElem).find(".site-current img.card-icon").each((_img) => _img.setAttribute("src", _img.getAttribute("data-img-image")));
@@ -58,7 +59,21 @@ class GameCompanyLocation
             ArrayList(companyElem).find(".site-current .card").each((elem) => elem.classList.add("state_tapped"));
         
         if (bIsPlayer)
+        {
+            this.initSiteCardDraggable(pCard);
             document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: true, code: code }} ));
+        }
+    }
+
+    initSiteCardDraggable(pCardDiv)
+    {
+        if (!pCardDiv.classList.contains("ui-draggable"))
+        {
+            pCardDiv.setAttribute("draggable", "true");
+            pCardDiv.setAttribute("data-location", "sites");
+            pCardDiv.setAttribute("data-card-type", "site");
+            HandCardsDraggable.initDraggableCard(pCardDiv);
+        }
     }
 
     drawTargetSite(company, companyElem, target, bIsPlayer, target_tapped)
@@ -69,12 +84,16 @@ class GameCompanyLocation
         const pContainerTarget = companyElem.querySelector(".site-target");
 
         DomUtils.removeAllChildNodes(pContainerTarget);
-        pContainerTarget.appendChild(this.createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_DEST));
+        const pCardDiv = this.createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_DEST);
+        pContainerTarget.appendChild(pCardDiv);
         
         if (!bIsPlayer)
             document.body.dispatchEvent(new CustomEvent('meccg-context-site-arrive', { detail: { id: "company_" + company, company: company, code: code }} ));
         else
+        {
+            this.initSiteCardDraggable(pCardDiv);
             document.body.dispatchEvent(new CustomEvent('meccg-context-site', { detail: { id: "company_" + company, company: company, start: false, code: code }} ));
+        }
         
         if (target_tapped)
             ArrayList(pContainerTarget).find(".card").each((e) => e.classList.add("state_tapped"));
@@ -217,6 +236,8 @@ class GameCompanyLocation
 
         const bIsPlayer = this.pGameCompanies.isPlayersCompany(companyElem);
         const isAgent = this.pGameCompanies.detectIsAgentCompany(companyElem);
+
+        console.log("isAgent ", isAgent);
 
         if (target === undefined)
             target = "";
