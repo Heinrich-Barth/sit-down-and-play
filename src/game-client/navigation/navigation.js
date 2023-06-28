@@ -56,7 +56,7 @@ const Navigation = {
                     _target = 'target="_blank"';
 
                 const li = document.createElement("li");
-                li.innerHTML = `<a href="${_elem.url}" ${_target}>${linkIcon} ${_elem.label}</a>`
+                li.innerHTML = `<a rel="nofollow" href="${_elem.url}" ${_target}>${linkIcon} ${_elem.label}</a>`
                 nav.appendChild(li);
             }
         }
