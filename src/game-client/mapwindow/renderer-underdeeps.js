@@ -122,12 +122,15 @@ const fetchTappedSites = function ()
     if (g_isInit)
         return;
 
-    fetch("/data/list/sites-tapped").then((response) => {
+    fetch("/data/list/sites-tapped")
+    .then((response) => {
         if (response.status === 200)
-            response.json().then(fetchMap);
+            return response.json();
         else
-            throw new Error("Could not load tapped sites");
-    }).catch((err) => showErrorLoading(err));
+            return Promise.resolve({});
+    })
+    .then(fetchMap)
+    .catch((err) => showErrorLoading(err));
 };
 
 

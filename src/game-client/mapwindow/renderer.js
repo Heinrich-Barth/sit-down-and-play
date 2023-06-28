@@ -192,7 +192,12 @@ const fetchTappedSites = function () {
     updateLoadingInfo("already tapped sites");
 
     fetch("/data/list/sites-tapped")
-    .then((response) => response.json())
+    .then((response) => {
+        if (response.status === 200)
+            return response.json()
+        else
+            return Promise.resolve({});
+    })
     .then(fetchMap)
     .catch((err) => showErrorLoading(err));
 };
