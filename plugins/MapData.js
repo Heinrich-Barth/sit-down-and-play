@@ -165,7 +165,7 @@ class MapData
         for (let i in jCards) 
         {
             let card = jCards[i];
-            if (card.type === "Region")
+            if (card.type === "Region" && card.full_set !== undefined)
             {
                 count++;
                 if (typeof jMapData[card.title] === "undefined")
@@ -188,7 +188,7 @@ class MapData
         for (let i in jCards) 
         {
             let card = jCards[i];
-            if (card.type === "Site")
+            if (card.type === "Site" && card.full_set !== undefined)
             {
                 count++;
                 this.sets[card.set_code] = card.full_set;
