@@ -74,6 +74,9 @@ class ImageList {
 
         for (let card of cards)
         {
+            if (card["flip-title"] === undefined)
+                continue;
+                
             const flipTitle = card["flip-title"].replace(" 2", "").replace(" A", "").replace(" 1", "").replace(" B", "");
             if (flipTitle!== card.normalizedtitle)
             {
