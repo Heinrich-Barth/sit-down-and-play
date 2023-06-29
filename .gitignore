@@ -12,10 +12,12 @@ public/media/personalisation/*.css
 
 pages/rules-*.html
 
-data-local/cards.json
+data-local/cards-full.json
 
 plugins/authentication-file.js
 plugins/authentication-login.html
 
 logs/
 public/client
+
+temp.js
