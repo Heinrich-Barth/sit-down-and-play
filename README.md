@@ -4,7 +4,7 @@ This project allows you to play MECCG or other Collectible Card Games.
 
 *Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. This is not affiliated with Middle-earth Enterprises or Iron Crown Enterprises.*
 
-*MECCG* assets are not included in this repository. Please respect the copyright and trademak.
+*MECCG* assets are not included in this repository. Please respect the copyright and trademak. 
 
 ## Introduction
 
@@ -17,6 +17,8 @@ Although the gameplay is guided by Middle-earth Collectible Card Game, you can e
 However, you will need to provide the card data and its images for the full experience. See section below on how to start.
 
 Here is a [step by step guide](README_setup.md) how to set everything up. Detailed information can also be found in the [development guide](README_development.md).
+
+2 decks are provided to test play. The data files included are not suitable for deckbuilding and doing more than just playtesting.
 
 ### Feature Overview
 
@@ -66,8 +68,6 @@ npm start
 
 Your app should now be running on [localhost:8080](http://localhost:8080/).
 
-The application will make use of the local data files using `ENV` variables.
-
 `PORT` sets the app's port (8080) 
 
 Card data and images *are not part of this project* and you will have to provide them. Checkout [README_development.md](README_development.md) for more information about this.
@@ -76,7 +76,7 @@ Card data and images *are not part of this project* and you will have to provide
 
 The project does have a very low resource requirements:
 
-* About 100 MB RAM
+* About 50 MB RAM
 * Single Core CPU is enough
 
 By default, the project does *does not* spawn separate processes, because room/game management via socket.io does not consider a multi-thread approach.
