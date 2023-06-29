@@ -13,6 +13,7 @@ public/media/personalisation/*.css
 pages/rules-*.html
 
 data-local/cards-full.json
+data-local/map-positions-full.json
 
 plugins/authentication-file.js
 plugins/authentication-login.html
