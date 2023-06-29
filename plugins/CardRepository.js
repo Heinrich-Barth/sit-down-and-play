@@ -281,21 +281,14 @@ class CardRepository {
         let countUl = 0;
         let countAL = 0;
         let _arr = [];
-        for (let i = _raw.length - 1; i >= 0; i--)
+        for (let elem of _raw)
         {
-            if (_raw[i].set_code === "MEUL") 
-            {
+            if (elem.set_code === "MEUL") 
                 countUl++;
-            }
-            else if (_raw[i].code.indexOf(" AL (") !== -1)
-            {
+            else if (elem.code.indexOf(" AL (") !== -1)
                 countAL++;
-            }
             else 
-            {
-                _arr.push(_raw[i]);
-            }
-
+                _arr.push(elem);
         }
 
         if (countUl > 0)
