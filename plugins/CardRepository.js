@@ -155,7 +155,7 @@ class CardRepository {
 
         for (let card of this._raw)
         {
-            if (card["flip-title"] !== card.normalizedtitle)
+            if (card["flip-title"] !== undefined && card["flip-title"] !== card.normalizedtitle)
                 questsB[card["flip-title"]] = card.code;
         }
 
