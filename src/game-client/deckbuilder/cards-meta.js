@@ -53,7 +53,7 @@ CreateCardsMeta.prototype.updateSets = function (cards)
     let _data = { };
     for (let card of cards)
     {
-        if (card.set_code !== "")
+        if (card.set_code !== undefined && card.set_code !== "")
             _data[card.set_code] = card.full_set;
     }
 
