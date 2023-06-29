@@ -8,7 +8,7 @@ class MapDataUnderdeeps {
         const res = this.createAdjacentSiteList(cards);
         this.adjacents = res.adjacents;
         this.alignments = res.alignments;
-        console.info("\t-" + Object.keys(this.adjacents).length + " sites avialable for underdeeps map in total");
+        console.info("\t- " + Object.keys(this.adjacents).length + " sites avialable for underdeeps map in total");
     }
 
     get(_imageList)
