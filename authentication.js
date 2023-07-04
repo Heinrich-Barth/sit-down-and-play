@@ -1,6 +1,4 @@
-
-
-const Authentication = require("./authenticator");
+const fs = require("fs");
 
 /**
  * Load renderer modules from a given directory
@@ -10,14 +8,21 @@ const requireAuthenticationModule = function()
 {
     try
     {
-        const pAuthMod = require(__dirname + "/plugins/authentication-file.js");
-        return new pAuthMod();
+        if (fs.existsSync(__dirname + "/authentication") && fs.existsSync(__dirname + "/authentication/authentication-file.js"))
+        {    
+            const pAuthMod = require(__dirname + "/authentication/authentication-file.js");
+            console.info("Authentication module is available.");
+            return new pAuthMod();
+        }
     }
-    catch (err)
+    catch (errIgnore)
     {
+        /** ignore any errors */
     }     
      
-    console.log("No authentication module necessary.")
+    console.info("No authentication module necessary.");
+
+    const Authentication = require("./authenticator");
     return new Authentication();
 };
 
