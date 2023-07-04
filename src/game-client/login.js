@@ -227,13 +227,21 @@ const onLoadDecks = function(data)
 {
     g_jDecks = data;
 
+    let openFirst = data.length === 1;
+
     let divGroup = document.createDocumentFragment();
     for (let deck of g_jDecks)
     {
-        let label = document.createElement("details");
+        const label = document.createElement("details");
         divGroup.appendChild(label);
+
+        if (openFirst)
+        {
+            label.open = true;
+            openFirst = false;
+        }
         
-        let summary = document.createElement("summary");
+        const summary = document.createElement("summary");
         summary.innerText = " " + deck.name + " (" + Object.keys(deck.decks).length + ")";
         label.appendChild(summary);
 
