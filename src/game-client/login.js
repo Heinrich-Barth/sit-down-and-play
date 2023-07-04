@@ -221,12 +221,11 @@ const isEmpty = function(jDeck)
 };
 
 let g_jDecks = { };
+const g_pDeckMap = {};
 
 const onLoadDecks = function(data)
 {
     g_jDecks = data;
-
-    let i = 0;
 
     let divGroup = document.createDocumentFragment();
     for (let deck of g_jDecks)
@@ -242,8 +241,8 @@ const onLoadDecks = function(data)
         {
             const divDeck = document.createElement("div");
             divDeck.setAttribute("class", "challenge-deck");
-            divDeck.setAttribute("data-deck-list", i);
-            divDeck.setAttribute("data-deck-id", key);
+            divDeck.setAttribute("data-deck-id", deck.decks[key]);
+            divDeck.setAttribute("data-deck-name", key);
             divDeck.setAttribute("title", "Click to select or right click to download");
             divDeck.onclick = onChallengeDeckChosen;
             divDeck.oncontextmenu = onDownloadDeck;
@@ -252,7 +251,6 @@ const onLoadDecks = function(data)
         }
 
         divGroup.appendChild(label);
-        i++;
     }
 
     document.querySelector(".deck-list-entries").appendChild(divGroup);
@@ -308,21 +306,14 @@ const removeSelectedDeck = function()
         elem.classList.remove("selected-deck");
 };
 
-const onDownloadDeck = function(e)
+const onDownloadDeck0 = function(name, data)
 {
-    e.preventDefault();
-    
-    const sKey = e.target.getAttribute("data-deck-id");
-    const nArray = parseInt(e.target.getAttribute("data-deck-list"));
-    const data = g_jDecks[nArray].decks[sKey];
-    const filename = e.target.innerText + ".meccg";
-
     try
     {
         const type = "text/plain";
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(new Blob([data], {"type": type}));
-        a.download = filename;
+        a.download = name;
         a.click();    
     }
     catch (err)
@@ -330,21 +321,55 @@ const onDownloadDeck = function(e)
         console.log(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
     }
+}
+
+const onDownloadDeck = function(e)
+{
+    e.preventDefault();
+    
+    const deckid = e.target.getAttribute("data-deck-id");
+    const filename = e.target.getAttribute("data-deck-name") + ".meccg";
+
+    fetch("/data/decks/" + deckid)
+    .then(response => response.text())
+    .then(deckdata => 
+    {
+        g_pDeckMap[deckid] = deckdata;
+        onDownloadDeck0(filename,  deckdata);
+    })
+    .catch(err =>
+    {
+        console.log(err);
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not download deck" }));
+    });
 
     return false;
 }
 
 const onChallengeDeckChosen = function(e)
 {
-    const sKey = e.target.getAttribute("data-deck-id");
-    const nArray = parseInt(e.target.getAttribute("data-deck-list"));
+    const deckid = e.target.getAttribute("data-deck-id");
+
     removeSelectedDeck();
     e.target.classList.add("selected-deck");
     document.getElementById("toggle_isstandard").click();
 
-    document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_jDecks[nArray].decks[sKey] }));
-
-    setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
+    if (g_pDeckMap[deckid] !== undefined)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_pDeckMap[deckid] }));
+        setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
+        return;
+    }
+    
+    fetch("/data/decks/" + deckid)
+    .then(response => response.text())
+    .then(deckdata => 
+    {
+        g_pDeckMap[deckid] = deckdata;
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": deckdata }));
+        setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
+    })
+    .catch(console.error);
 }
 
 const stripHashFromUrl = function()

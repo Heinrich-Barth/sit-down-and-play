@@ -1,5 +1,15 @@
 const fs = require('fs');
 
+const g_vpDedckList = [];
+const g_pDeckById = { };
+let g_lId = 0;
+const g_pId = require("crypto").randomUUID().toString();
+
+const requireDeckId = function()
+{
+    return g_pId + "-" + (++g_lId);
+}
+
 /**
  * Replace the givne prefix from a name
  * @param {String} name 
@@ -54,15 +64,21 @@ const getFileList = function(sDirectory)
  */
 const createDecks = function(_list, sDirectory, sReplacePrefix)
 {
-    let decks = { };
-
-    const nSize = _list.length;
-    for (let i = 0; i < nSize; i++)
+    const decks = { };
+    for (let file of _list)
     {
         try
         {
-            const name = stripPrefix(replaceType(_list[i]), sReplacePrefix).trim();
-            decks[name] = fs.readFileSync(sDirectory + _list[i], 'utf8');
+            const deckid = requireDeckId();
+            const content = fs.readFileSync(sDirectory + file, 'utf8');
+
+            if (content.indexOf("#") !== -1)
+            {
+                const name = stripPrefix(replaceType(file), sReplacePrefix).trim();
+                decks[name] = deckid;
+            
+                g_pDeckById[deckid] = content;
+            }
         }
         catch (err)
         {
@@ -80,15 +96,12 @@ const createDecks = function(_list, sDirectory, sReplacePrefix)
  * @param {String} name 
  * @param {Object} _data 
  */
-const load0 = function(list, name, _data)
+const load0 = function(name, _data)
 {
-    if (_data !== null)
-    {
-        list.push({
-            name: name,
-            decks : _data
-        });
-    }
+    g_vpDedckList.push({
+        name: name,
+        decks : _data
+    });
 }
  
 /**
@@ -100,18 +113,39 @@ const load0 = function(list, name, _data)
 const getDecks = function (sDirectory, sReplacePrefix) 
 {
     if (sDirectory === undefined || sDirectory === "")
-        return [];
+        return {};
 
     if (!sDirectory.endsWith("/"))
         sDirectory += "/";
 
     if (sReplacePrefix === undefined)
         sReplacePrefix = "";
-
     
     const _list = getFileList(sDirectory);
     return createDecks(_list, sDirectory, sReplacePrefix);
 };
+
+const loadDeckList = function(sDir)
+{
+    try
+    {
+        const folders = fs.readdirSync(sDir, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+        for (let folder of folders)
+        {
+            const dir = sDir + "/" + folder;
+            load0(folder, getDecks(dir));
+        }    
+    }
+    catch (err)
+    {
+        console.warn(err.message);
+    }
+
+    if (g_lId > 0)
+        console.info(g_lId + " deck(s) available");
+}
+
+loadDeckList(__dirname + "/../public/decks");
 
 /**
   * Load deck files in given directory
@@ -120,24 +154,24 @@ const getDecks = function (sDirectory, sReplacePrefix)
   * @param {String} sDir 
   * @returns 
   */
-exports.load = function(sDir) 
+exports.load = function(SERVER)
 {
-    let decks = [];
-
-    try
+    if (g_lId === 0)
     {
-        const folders = fs.readdirSync(sDir, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
-        for (let folder of folders)
+        SERVER.instance.get("/data/decks", (_req, res) => res.json([]).status(200));
+    }
+    else
+    {
+        SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
+        SERVER.instance.get("/data/decks/:id", SERVER.caching.expires.jsonCallback, (req, res) => 
         {
-            const dir = sDir + "/" + folder;
-            load0(decks, folder, getDecks(dir));
-        }    
+            res.setHeader('content-type', 'text/plain');
+            res.status(200);
+            if (req.params.id && g_pDeckById[req.params.id])
+                res.send(g_pDeckById[req.params.id]);
+            else
+                res.send("");
+        });
     }
-    catch (err)
-    {
-        console.warn(err.message);
-    }
-
-    return decks;
 }
  

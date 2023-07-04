@@ -12,7 +12,6 @@ class Configuration {
         this._maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
 
         this._port = Configuration.assertString(process.env.PORT, 8080);
-        this._deckDirectory = "/public/decks";
 
         if(Configuration.checkHasLocalImages())
         {
@@ -174,14 +173,6 @@ class Configuration {
     imageUrl()
     {
         return this._imageUrl.indexOf("//") !== -1 ? this._imageUrl : "/data/images";
-    }
-
-    deckListFolder()
-    {
-        if (this._deckDirectory.startsWith("/"))
-            return __dirname + this._deckDirectory;
-        else 
-            return __dirname + "/" + this._deckDirectory;
     }
 
     static extractDomain(sInput)

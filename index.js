@@ -197,10 +197,6 @@ SERVER.instance = g_pExpress();
     SERVER._http = require('http').createServer(SERVER.instance);
 })();
 
-const PLUGINS = {
-    decklist : require("./game-management/Decklist.js").load(SERVER.configuration.deckListFolder())
-};
-
 /**
  * Once the server is up and running,
  * init the game module. This will make socket.io available
@@ -375,7 +371,7 @@ SERVER.instance.get("/data/spectators/:room", SERVER.caching.expires.jsonCallbac
 /**
  * Load a list of available challenge decks to start right away
  */
-SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(PLUGINS.decklist).status(200));
+require("./plugins/Decklist.js").load(SERVER);
 
 /**
   * Check if the deck is valid.
