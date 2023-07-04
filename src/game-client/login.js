@@ -369,7 +369,11 @@ const onChallengeDeckChosen = function(e)
         document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": deckdata }));
         setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
     })
-    .catch(console.error);
+    .catch(err =>
+    {
+        console.log(err);
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not load"}));
+    });
 }
 
 const stripHashFromUrl = function()
