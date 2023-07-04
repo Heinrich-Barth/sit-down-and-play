@@ -2,7 +2,7 @@ const fs = require("fs");
 
 class Configuration {
 
-    constructor(sLocalConfig)
+    constructor()
     {
         this._csp_header = "";
         this._csp_self = "";
@@ -37,9 +37,6 @@ class Configuration {
         }
 
         this._mapPositions = Configuration.obtainMapPositionFile();
-
-        if (sLocalConfig !== undefined && sLocalConfig !== "")
-            this.loadConfig(sLocalConfig);
     }
 
     getRequestTimeout()
@@ -137,12 +134,6 @@ class Configuration {
         }
 
         return null;
-    }
-
-    loadConfig(sLocalConfig)
-    {
-        console.log("Loading custom app configuration.");
-        this.loadFromJson(this.readJson(sLocalConfig));
     }
 
     mapPositionsFile()
