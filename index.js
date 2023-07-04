@@ -11,7 +11,7 @@ if (!fs.existsSync("./logs"))
 
 let SERVER = {
 
-    configuration: new Configiration(__dirname + "/data/config.json"),
+    configuration: new Configiration(),
 
     caching : {
 
