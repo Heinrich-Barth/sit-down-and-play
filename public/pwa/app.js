@@ -35,12 +35,17 @@ const Loading = {
         this.addAsset("/media/assets/backgrounds/home.webp", "Background loaded");        
     },
 
+    performRedirect : function()
+    {
+        setTimeout(() => window.location.href = "/", 1000);
+    },
+
     init : function()
     {
         this.createList();
 
         const list = this.createFetchs();
-        Promise.all(list).then(() => window.location.href = "/").catch((error) => {
+        Promise.all(list).then(Loading.performRedirect).catch((error) => {
             document.getElementById("detail").innerText = error.message;
             console.error(error);
         });

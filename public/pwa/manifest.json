@@ -2,7 +2,7 @@
     "name": "Sit Down and Play MECCG (PWA)",
     "short_name": "SitPlayMeccgPWA",
     "description": "Play MECCG",
-    "start_url": "/pwa/app.html",
+    "start_url": "/pwa",
     "scope": "/",
     "id": "/play",
     "display": "standalone",

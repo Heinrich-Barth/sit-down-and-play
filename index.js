@@ -304,6 +304,8 @@ SERVER.shutdown = function ()
         SERVER.doShutdown();
 }
 
+require("./pwa")(SERVER, g_pExpress, g_pAuthentication);
+
 SERVER.instance.use(g_pExpress.static("public"));
 
 /**
@@ -421,7 +423,6 @@ SERVER.instance.post("/data/hash", (req, res) =>
         });
 });
 
-require("./pwa")(SERVER, g_pExpress, g_pAuthentication);
 require("./game-logs")(SERVER.instance, g_pExpress);
 
 /** load navigation and non-game endpoints */
