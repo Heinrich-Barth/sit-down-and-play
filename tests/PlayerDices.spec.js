@@ -7,7 +7,7 @@ describe('Test', () => {
         const pInstance = new PlayerDices();
         
         let list = pInstance.getAvailableDices();
-        expect(list.length).toEqual(14);
+        expect(list.length).toEqual(15);
     });
 
     it("getDices()", () => {

@@ -8,7 +8,7 @@ class PlayerDices {
     {
         this.dices = { };
         this.stats = { };
-        this.diceList = ["black", "black-grey", "gold", "gold-light", "grey", "minion", "red", "redblack", "redwhite", "rune-alatar", "rune-gandalf", "rune-palando", "rune-radagast", "rune-saruman"];
+        this.diceList = ["black", "black-grey", "gold", "gold-light", "grey", "minion", "red", "redblack", "redwhite", "rune-alatar", "rune-gandalf", "rune-palando", "rune-radagast", "rune-saruman", "zblack-marc"];
     }
 
     /**
