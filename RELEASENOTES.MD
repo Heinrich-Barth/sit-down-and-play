@@ -4,7 +4,8 @@ Find the latest feature update information here.
 
 | Area | Description | 
 | --- | --- |
-| Game | Slightly larger card images. You may also expand the size to have even larger cards on the table. |
+| Game | Show box for cards played by your opponent for 2 seconds. |
+|  | Slightly larger card images. You may also expand the size to have even larger cards on the table. |
 |  | Drag a site to create a new company to play cards likt `No Strangers at this Time` or similar to keep the site in play. |
 |  | Drag a site on an agent to attach it to them. |
 |  | Scores will automatically include doubling of points per category if applicable. |

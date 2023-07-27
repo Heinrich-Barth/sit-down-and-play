@@ -15,6 +15,33 @@ const GameBuilder = {
     Stagingarea : null,
     Scoring : null,
 
+    getSiteOfOrigin : function(company)
+    {
+        if (company === "")
+            return null;
+
+        const container = document.getElementById("company_" + company);
+        if (container === null)
+            return null;
+
+        const targetSite = container.querySelector(".site-target");
+        if (targetSite === null)
+            return null;
+
+        const div = targetSite.querySelector(".card");
+        const code = div === null || !div.hasAttribute("data-card-code") ? "" : div.getAttribute("data-card-code");
+        return code && code !== "" ? code : null;
+    },
+
+    showDropEventBox : function(code, company)
+    {
+        if (company && company !== "")
+            code = GameBuilder.getSiteOfOrigin(company);
+
+        if (InfoBoxCard !== undefined) /** backward compatibility */
+            InfoBoxCard.showImage(code);
+    },
+
     createGameBuilder : function(_CardList_, _CardPreview_, _HandCardsDraggable_, _CompanyManager_, _Stagingarea_, _Scoring_)
     {
         GameBuilder.CardList = _CardList_;
@@ -371,9 +398,11 @@ const GameBuilder = {
 
         MeccgApi.addListener("/game/discardopenly", () => { /** fallback */ });
 
-        MeccgApi.addListener("/game/add-onguard", function(_bIsMe, jData)
+        MeccgApi.addListener("/game/add-onguard", function(bIsMe, jData)
         {
             GameBuilder.onAttachCardToCompanySite(jData.company, jData.code, jData.uuid, jData.state, jData.revealed, jData.owner);
+            if (jData.revealed && !bIsMe)
+                GameBuilder.showDropEventBox(jData.code, "");
         });
 
 
@@ -501,7 +530,11 @@ const GameBuilder = {
         MeccgApi.addListener("/game/card/state/glow", (_bIsMe, jData) =>GameBuilder.CompanyManager.onMenuActionGlow(jData.uuid));
         MeccgApi.addListener("/game/card/state/highlight", (_bIsMe, jData) => GameBuilder.CompanyManager.onMenuActionHighlight(jData.uuid));
 
-        MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary));
+        MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => {
+            GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary);
+            if (jData.revealed && !bIsMe)
+                GameBuilder.showDropEventBox(jData.code, "");
+        });
 
         MeccgApi.addListener("/game/update-deck-counter/player/generics", function(bIsMe, playload)
         {
@@ -596,7 +629,18 @@ const GameBuilder = {
         });
 
         MeccgApi.addListener("/game/company/highlight", (_bIsMe, jData) => GameBuilder.CompanyManager.onCompanyArrivesAtDestination(jData.company, false));
-        MeccgApi.addListener("/game/company/location/reveal", (_bIsMe, jData) => GameBuilder.CompanyManager.revealLocations(jData.company));
+        MeccgApi.addListener("/game/company/location/reveal", (bIsMe, jData) => 
+        { 
+            GameBuilder.CompanyManager.revealLocations(jData.company);
+            if (!bIsMe)
+                GameBuilder.showDropEventBox("", jData.company);
+        });
+
+        MeccgApi.addListener("/game/infobox/card", function(bIsMe, code)
+        {
+            if (!bIsMe)
+                GameBuilder.showDropEventBox(code, "");
+        });
         
         MeccgApi.addListener("/game/score/show", function(bIsMe, jData)
         {

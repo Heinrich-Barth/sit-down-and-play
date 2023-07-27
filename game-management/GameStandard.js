@@ -756,7 +756,10 @@ class GameStandard extends GamePlayers
             if (cardChar === null || cardChar.revealed === false || card.revealed === false)
                 this.publishChat(userid, " character hosts a card", true);
             else
+            {
+                this.publishToPlayers("/game/infobox/card", "", card.code);
                 this.publishChat(userid, cardChar.code + " hosts " + card.code, true);
+            }
         }
 
         return true;

@@ -237,8 +237,6 @@ class GameCompanyLocation
         const bIsPlayer = this.pGameCompanies.isPlayersCompany(companyElem);
         const isAgent = this.pGameCompanies.detectIsAgentCompany(companyElem);
 
-        console.log("isAgent ", isAgent);
-
         if (target === undefined)
             target = "";
 

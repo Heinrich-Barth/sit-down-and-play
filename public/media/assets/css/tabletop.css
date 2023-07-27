@@ -1291,4 +1291,39 @@ body.on-show-map-window .location-icon {
   border: 3px solid darkgrey;
 }
 
+.card-infobox {
+  position: fixed;
+  left: 100px;
+  top: 100px;
+}
+.card-infobox.card-infobox-hidden {
+  display: none;
+}
+.card-infobox .card-infobox-image {
+  position: relative;
+  height: 400px;
+  max-height: 40%;
+}
+.card-infobox .card-infobox-image::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  content: " ";
+  border-top: 3px solid #ffa500;
+  animation: infobox-moving-line 2s 10 forwards;
+}
+.card-infobox img {
+  height: 100%;
+  border-radius: 5%;
+}
+
+@keyframes infobox-moving-line {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
 /* playercard_hand */

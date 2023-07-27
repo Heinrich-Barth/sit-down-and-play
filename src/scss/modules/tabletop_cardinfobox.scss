@@ -1,0 +1,41 @@
+.card-infobox {
+    position: fixed;
+    left: 100px;
+    top: 100px;
+
+    &.card-infobox-hidden {
+        display: none;
+    }
+
+    .card-infobox-image {
+        position: relative;
+        height: 400px;
+        max-height: 40%;
+
+        &::before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            content: " ";
+            border-top: 3px solid $color-orange;
+            animation: infobox-moving-line 2s 10 forwards;
+        }        
+    }
+
+    img {
+        height: 100%;
+        border-radius: 5%;
+    }
+}
+
+
+@keyframes infobox-moving-line {
+    from { 
+        width: 0%; 
+    }
+    to { 
+        width: 100%;
+    }
+}
+
