@@ -250,7 +250,16 @@ const ContextMenu = {
             if (e.ctrlKey)
                 ContextMenu.hightlightCard(uuid, code);
             else
-                ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target, true));
+            {
+                const src = ContextMenu.getAttribute(e.target, "src");
+                if (src !== null && src.indexOf("/backside") !== -1)
+                {
+                    ContextMenu.callbacks._doFlip(uuid, code);
+                    ContextMenu.hightlightCard(uuid, code);
+                }
+                else
+                    ContextMenu.callbacks.doRotate(uuid, code, ContextMenu.cardGetTapClass(e.target, true));
+            }
         },
 
         onDoubleClick : function(e)
