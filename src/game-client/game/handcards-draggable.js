@@ -929,6 +929,28 @@ const HandCardsDraggable = {
     {
         let sAttr = elem.attr("data-card-type");
         return sAttr === "resource" || sAttr === "hazard";
+    },
+
+
+    setupCardPreviewElement : function(id)
+    {
+        const elem = document.getElementById(id);
+        if (elem !== null)
+        {
+            elem.onmouseover = CardPreview._doHoverOnGuard;        
+            elem.onmouseout = CardPreview.hideAll;
+        }
+    },
+
+    setupCardPreviewElements : function()
+    {
+        let list = ["icon-preview-shared-scored",
+                    "icon-preview-shared-outofplay",
+                    "icon-preview-scored",
+                    "icon-preview-discard"];
+
+        for (let id of list)
+            this.setupCardPreviewElement(id);
     }
 };
 
@@ -1015,5 +1037,6 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
         }
     });
 
+    HandCardsDraggable.setupCardPreviewElements();
     return HandCardsDraggable;
 }
