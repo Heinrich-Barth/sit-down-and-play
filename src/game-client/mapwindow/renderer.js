@@ -178,7 +178,13 @@ const fetchMap = async function (tappedSites) {
 
     setTimeout(() => {
         fetch("/data/list/map?t=" + getCurrentDate())
-        .then((response) => response.json())
+        .then((response) => 
+        {
+            if (response.status === 200)
+                response.json()
+            else
+                return Promise.resolve({});
+        })
         .then((map) => MapInstanceRenderer.onInit(map, tappedSites))
         .catch((err) => showErrorLoading(err));
     }, 10);
