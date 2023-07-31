@@ -88,7 +88,7 @@ const MapInstanceRenderer = {
 const showErrorLoading = function (err) {
     let error = "Could not load map. Sorry.";
     if (err !== undefined)
-        console.log('Error :-S', err);
+        console.error(err);
 
     if (err.message !== undefined)
         error = err.message;
@@ -175,18 +175,18 @@ const fetchMap = async function (tappedSites) {
     }
 
     updateLoadingInfo("map data (this may take a while)");
-
-    setTimeout(() => {
+    setTimeout(() => 
+    {
         fetch("/data/list/map?t=" + getCurrentDate())
         .then((response) => 
         {
             if (response.status === 200)
-                response.json()
+                return response.json()
             else
                 return Promise.resolve({});
         })
         .then((map) => MapInstanceRenderer.onInit(map, tappedSites))
-        .catch((err) => showErrorLoading(err));
+        .catch(showErrorLoading);
     }, 10);
 
 };
@@ -198,14 +198,15 @@ const fetchTappedSites = function () {
     updateLoadingInfo("already tapped sites");
 
     fetch("/data/list/sites-tapped")
-    .then((response) => {
+    .then((response) => 
+    {
         if (response.status === 200)
             return response.json()
         else
             return Promise.resolve({});
     })
     .then(fetchMap)
-    .catch((err) => showErrorLoading(err));
+    .catch(showErrorLoading);
 };
 
 function onKeyUp(ev) {
