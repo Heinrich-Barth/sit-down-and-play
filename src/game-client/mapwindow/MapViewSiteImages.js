@@ -158,10 +158,13 @@
 
     insertPreferredSites(container, mapSites)
     {
+        alert("insertPreferredSites")
         const elemList = document.createElement("div");
         elemList.setAttribute("class", "preferred-image-list");
 
         const candidates = Object.keys(mapSites);
+        const list = [];
+
         for (let region in this.jMap)
         {
             const jRegion = this.jMap[region];
@@ -171,14 +174,26 @@
                 if (!candidates.includes(title))
                     continue;
 
-                for (let code of mapSites[title])
-                {
-                    const img = this.createImage(code, true, region, key, this.isSiteTapped(code));
-                    img.setAttribute("src", img.getAttribute("data-src"));
-                    img.classList.add("card-icon");
-                    img.setAttribute("title", "Click to choose this card");
-                    elemList.appendChild(img);
-                }
+                list.push({
+                    title: title,
+                    codes: mapSites[title],
+                    region: region,
+                    key: key
+                });
+            }
+        }
+
+        list.sort((a, b) => a.title.localeCompare(b.title));
+
+        for (let elem of list)
+        {
+            for (let code of elem.codes)
+            {
+                const img = this.createImage(code, true, elem.region, elem.key, this.isSiteTapped(code));
+                img.setAttribute("src", img.getAttribute("data-src"));
+                img.classList.add("card-icon");
+                img.setAttribute("title", "Click to choose this card");
+                elemList.appendChild(img);   
             }
         }
 
