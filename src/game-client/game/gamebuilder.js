@@ -120,7 +120,38 @@ const GameBuilder = {
 
     addToHandContainer : function(pElement)
     {
-        document.getElementById("playercard_hand_container").appendChild(pElement);    
+        const container = document.getElementById("playercard_hand_container");
+        if (container === null)
+            return;
+
+        container.appendChild(pElement);    
+        const currentHandSize = container.getElementsByClassName("card-hand").length;
+        const allowed = this.getCurrentHandSizeCount();
+
+        if (currentHandSize === allowed)
+            pElement.classList.add("glowing");
+    },
+
+    getCurrentHandSizeCount : function()
+    {
+        const container = document.getElementById("playercard-hand-content");
+        if (container === null)
+            return -1;
+        const elem = container.querySelector(".card-hands-sizer-size");
+        if (elem === null)
+            return -1;
+
+        const val = elem.innerText;
+        try
+        {
+            return parseInt(val);
+        }
+        catch (errIgnore)
+        {
+
+        }
+
+        return -1;
     },
 
     _onClickDiscardHandCard : function(e)
