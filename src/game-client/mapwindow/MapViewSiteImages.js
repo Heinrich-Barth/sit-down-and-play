@@ -158,7 +158,6 @@
 
     insertPreferredSites(container, mapSites)
     {
-        alert("insertPreferredSites")
         const elemList = document.createElement("div");
         elemList.setAttribute("class", "preferred-image-list");
 
