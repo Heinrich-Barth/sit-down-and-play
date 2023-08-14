@@ -118,6 +118,32 @@ class GamePreferences extends Preferences {
         }}));
     }
 
+
+    _copySharePlay()
+    {
+        this._copyToClipboard(document.location.href);
+    }
+
+    _copyShareWatch()
+    {
+        this._copyToClipboard(document.location.href + "/watch");
+    }
+
+    _copyToClipboard(text)
+    {
+        if (navigator === undefined || navigator.clipboard === undefined || typeof text !== "string" || text === "")
+            return;
+
+        navigator.clipboard.writeText(text)
+        .then(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Link copied to clipboard."})))
+        .catch((err) => 
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not copy link to clipboard."}));
+            console.error(err);
+        });
+    }
+
+
     _endGame()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-query-end-game", { }));
@@ -172,22 +198,26 @@ class GamePreferences extends Preferences {
 
         this.createEntry0("game_sfx");
 
-        if (bWatcher)
-            return;
+        if (!bWatcher)
+        {
+            this.createSection("Game");
+            this.createEntry0("game_addcards");   
+            if (this.isAdmin())
+                this.createEntry0("game_autosave");
+    
+            this.createEntry0("game_save");
+            this.createEntry0("game_load");
+            this.createEntry0("images_errata_dc");
+            this.createEntry0("leave_game");
+    
+            this.createSection("Social Media");
+            this.createEntry0("share_play");
+            this.createEntry0("share_watch");                    
+    
+            this.createSection("General");
+            this.createEntry0("viewpile_open");
+        }
 
-        this.createSection("Game");
-        this.createEntry0("game_addcards");   
-        if (this.isAdmin())
-            this.createEntry0("game_autosave");
-        this.createEntry0("game_save");
-        this.createEntry0("game_load");
-        this.createEntry0("leave_game");
-
-        this.createSection("Images");
-        this.createEntry0("images_errata_dc");
-
-        this.createSection("General");
-        this.createEntry0("viewpile_open");
         this.createEntry0("show_chat");
         this.createEntry0("use_padding_bottom");
         this.createEntry0("toggle_fullscreen");
@@ -225,6 +255,10 @@ class GamePreferences extends Preferences {
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", false, this._togglePaddingBottom)
         this.addConfigToggle("toggle_zoom", "Large cards on the table", false, this._toggleCardZoom);
+
+        this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
+        this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
+
         this._toggleCardPreview();
     }
 
