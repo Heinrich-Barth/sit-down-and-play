@@ -183,12 +183,12 @@ const createDeck = function()
     {
         const area = document.getElementById(sId);
         const asLines = area === null ? [] : area.value.split('\n');
-        let _deck = {};
+        const _deck = {};
 
         for (let _entry of asLines)
         {
-            let sCount = getCount(_entry);
-            let sCode = getCode(_entry);
+            const sCount = getCount(_entry);
+            const sCode = getCode(_entry);
 
             if (sCode !== "" && sCount !== "")
                 _deck[sCode] = parseInt(sCount);
