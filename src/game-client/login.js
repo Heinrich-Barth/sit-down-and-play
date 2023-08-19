@@ -197,7 +197,7 @@ const createDeck = function()
         return _deck;
     }
 
-    let jDeck = {
+    const jDeck = {
         pool: toJson("pool"),
         sideboard: toJson("sideboard"),
         chars : toJson("characters"),
@@ -206,9 +206,24 @@ const createDeck = function()
         sites: toJson("sites")
     };
 
-    if (isEmpty(jDeck.pool) || isEmpty(jDeck.chars) || (isEmpty(jDeck.hazards) && isEmpty(jDeck.resources)))
+    if (isEmpty(jDeck.pool))
     {
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "This deck is not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Pool is not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
+        return null;
+    }
+    else if (isEmpty(jDeck.chars))
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Characters are not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
+        return null;
+    }
+    else if (isEmpty(jDeck.hazards))
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Hazards are not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
+        return null;
+    }
+    else if (isEmpty(jDeck.resources))
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Resources are not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
         return null;
     }
     else
@@ -932,6 +947,14 @@ const preloadGameData = function()
     .then(response => response.json())
     .then(data => localStorage.setItem("game_data", JSON.stringify(data)))
     .catch(console.error)
-    .finally(onPerformLogin);
+    .finally(() => 
+    {
+        if (!onPerformLogin())
+        {
+            const form = document.querySelector("form");
+            if (form !== null)
+                form.setAttribute("class", "hidden");
+        }
+    });
     
 }
