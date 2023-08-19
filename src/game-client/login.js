@@ -141,9 +141,9 @@ const getCardCodeList = function()
 
         for (_code of area.value.split('\n'))
         {
-            let sCode = getCode(_code);
-            if (sCode !== "" && !vsCards.includes(sCode))
-                vsCards.push(sCode);
+            const card = identifyCard(_code);
+            if (card !== null && card.code !== "" && !vsCards.includes(card.code))
+                vsCards.push(card.code);
         }
 
         return vsCards;
@@ -161,13 +161,41 @@ const getCardCodeList = function()
     return _res;
 };
 
-const getCount = function(line)
+const identifyCard = function(line)
 {
-    let nPos = line.indexOf(" ");
-    if (nPos === -1)
-        return "";
-    else 
-        return line.toString().substring(0, nPos);
+    if (line.length < 3)
+        return null;
+
+    try
+    {
+        const result = {
+            count: 1,
+            code: line
+        };
+
+        const val = line.substring(0, 2).trim();
+        if (val === "")
+            return result;
+
+        const num = parseInt(val);
+        if (num < 1)
+            return null;
+        
+        if (num > 0)
+        {
+            result.count = num;
+            result.code = line.substring(2).trim();
+        }
+
+        if (result.code !== "")
+            return result;
+    }
+    catch(err)
+    {
+        console.error(err);
+    }
+
+    return null
 };
 
 const getCode = function(line)
@@ -187,11 +215,9 @@ const createDeck = function()
 
         for (let _entry of asLines)
         {
-            const sCount = getCount(_entry);
-            const sCode = getCode(_entry);
-
-            if (sCode !== "" && sCount !== "")
-                _deck[sCode] = parseInt(sCount);
+            const card = identifyCard(_entry.trim());
+            if (card !== null && card.code !== "")
+                _deck[card.code] = card.count;
         }
 
         return _deck;
@@ -702,30 +728,13 @@ const CalculateDeckCategory =
         let size = 0;
 
         for (let line of text.split("\n"))
-            size += this.getCount(line.trim());
+        {
+            const card = identifyCard(line.trim());
+            if (card !== null && card.count > 0)
+                size += card.count;
+        }
 
         return size;
-    },
-
-    getCount : function(line)
-    {
-        if (line === null || line === "")
-            return 0;
-
-        try
-        {
-            const pos = line.indexOf(" ")
-            const val = pos < 1 ? "" : line.substring(0, pos).trim();
-
-            if (val !== "")
-                return parseInt(val);
-        }
-        catch (errIgnore)
-        {
-
-        }
-
-        return 0;
     },
 
     stripCount : function(label)
