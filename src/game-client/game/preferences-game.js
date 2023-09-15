@@ -253,8 +253,8 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
-        this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", false, this._togglePaddingBottom)
-        this.addConfigToggle("toggle_zoom", "Large cards on the table", false, this._toggleCardZoom);
+        this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)
+        this.addConfigToggle("toggle_zoom", "Large cards on the table", true, this._toggleCardZoom);
 
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
         this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
