@@ -405,17 +405,17 @@ const onChallengeDeckChosen = function(e)
 
     if (g_pDeckMap[deckid] !== undefined)
     {
-        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_pDeckMap[deckid] }));
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_pDeckMap[deckid].deck }));
         setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
         return;
     }
     
     fetch("/data/decks/" + deckid)
-    .then(response => response.text())
+    .then(response => response.json())
     .then(deckdata => 
     {
         g_pDeckMap[deckid] = deckdata;
-        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": deckdata }));
+        document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": deckdata.deck }));
         setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
     })
     .catch(err =>
