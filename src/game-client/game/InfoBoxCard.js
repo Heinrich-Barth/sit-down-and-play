@@ -45,10 +45,14 @@ const InfoBoxCard = {
       
         const img = document.createElement("img");
         img.setAttribute("src", image);
-        img.onclick = InfoBoxCard.getClearedBox.bind(InfoBoxCard);
+        img.onclick = this.getClearedBox.bind(this);
+        img.onmouseover = this.stopAutoHide.bind(this);
+        img.onmouseout = this.getClearedBox.bind(this);
+        img.title = "Click to close or move cursor away.";
 
         const div = document.createElement("div");
-        div.setAttribute("class", "card-infobox-image");
+        div.setAttribute("class", "card-infobox-image card-infobox-image-animation");
+        div.setAttribute("id", "card-infobox-image");
         div.appendChild(img);
         box.appendChild(div);
 
@@ -61,6 +65,15 @@ const InfoBoxCard = {
             box.classList.remove("card-infobox-hidden")
         else if (!bShow && !box.classList.contains("card-infobox-hidden"))
             box.classList.add("card-infobox-hidden")
+    },
+
+    stopAutoHide : function()
+    {
+        this.clearTimer();
+
+        const div = document.getElementById("card-infobox-image");
+        if (div !== null)
+            div.classList.remove("card-infobox-image-animation");
     },
 
     getClearedBox : function()
