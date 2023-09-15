@@ -121,6 +121,14 @@ class ImageList {
         return this.g_ImageList;
     }
 
+    getImageByCode(code)
+    {
+        if (code !== "" && this.g_ImageList[code])
+            return this.g_ImageList[code].image
+        else
+            return "";
+    }
+
     getQuestList()
     {
         return this.g_QuestList;

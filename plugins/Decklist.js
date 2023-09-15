@@ -77,7 +77,10 @@ const createDecks = function(_list, sDirectory, sReplacePrefix)
                 const name = stripPrefix(replaceType(file), sReplacePrefix).trim();
                 decks[name] = deckid;
             
-                g_pDeckById[deckid] = content;
+                g_pDeckById[deckid] = {
+                    deck: content,
+                    images: { }
+                };
             }
         }
         catch (err)
@@ -145,6 +148,75 @@ const loadDeckList = function(sDir)
         console.info(g_lId + " deck(s) available");
 }
 
+const identifyCardCode = function(line)
+{
+    if (line.length < 3)
+        return "";
+
+    try
+    {
+        const val = line.substring(0, 2).trim();
+        if (val === "")
+            return line;
+
+        const num = parseInt(val);
+        if (num < 1)
+            return "";
+        
+        if (num > 0)
+            return line.substring(2).trim();
+        else
+            return line;
+    }
+    catch(err)
+    {
+        console.error(err);
+    }
+
+    return ""
+};
+
+const getDeckCodeList = function(content)
+{
+    const list = [];
+    for (let line of content.split("\n"))
+    {
+        if (line.length < 4)
+            continue;
+
+        if (!line.endsWith(")") && !line.endsWith("]"))
+            continue;
+
+        const first = line.substring(0,1);
+        if (first === "#" || first === "=")
+            continue;
+
+        const card = identifyCardCode(line);
+        if (card !== "" && !list.includes(card))
+            list.push(card);
+    }
+
+    return list;
+}
+
+const updateCardImages = function(imageProvider)
+{
+    for (let key in g_pDeckById)
+    {
+        const data = g_pDeckById[key];
+        const list = getDeckCodeList(data.deck);
+        for (let code of list)
+        {
+            console.log(code);
+            const img = imageProvider.getImageByCode(code);
+            if (typeof img === "string" && img !== "")
+                data.images[code] = img;
+        }
+    }
+
+}
+
+
 loadDeckList(__dirname + "/../public/decks");
 
 /**
@@ -162,15 +234,16 @@ exports.load = function(SERVER)
     }
     else
     {
+        updateCardImages(SERVER.cards);
+
         SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
         SERVER.instance.get("/data/decks/:id", SERVER.caching.expires.jsonCallback, (req, res) => 
         {
-            res.setHeader('content-type', 'text/plain');
             res.status(200);
             if (req.params.id && g_pDeckById[req.params.id])
-                res.send(g_pDeckById[req.params.id]);
+                res.json(g_pDeckById[req.params.id]);
             else
-                res.send("");
+                res.json({})
         });
     }
 }

@@ -152,6 +152,11 @@ class CardDataProvider extends CardRepository {
         return this.cardsMap.siteList;
     }
 
+    getImageByCode(code)
+    {
+        return this.pImageList.getImageByCode(code.toLowerCase());
+    }
+
     getUnderdeepMapdata()
     {
         return this.cardsMap.underdeeps;
