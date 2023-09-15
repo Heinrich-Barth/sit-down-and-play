@@ -528,7 +528,10 @@ a:hover {
 }
 .table .row div.card {
   display: inline-block;
-  max-width: 90px;
+  max-width: 72px;
+}
+.table .row div.card.state_tapped {
+  max-width: 100px;
 }
 .table .companies {
   display: table-cell;
@@ -971,7 +974,7 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 
 .zoom-1 .company-character-reosurces .card,
 .zoom-2 .company-character-reosurces .card {
-  margin-top: -110px;
+  margin-top: -105px;
 }
 .zoom-1 .card-hands .card-hand img.card-icon,
 .zoom-1 .arda-card-hands .card-hand img.card-icon,
@@ -986,32 +989,35 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 }
 .zoom-1 .staging-area {
   width: auto;
-  min-width: 25%;
-  max-width: 240px;
+  min-width: 100px;
+  max-width: 170px;
 }
 .zoom-1 .row div.card {
+  max-width: 94px;
+}
+.zoom-1 .row div.card.state_tapped {
   max-width: 130px;
 }
 .zoom-1 .company-character-reosurces {
   min-height: 130px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="1"] {
-  width: 102px;
+  width: 110px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="2"] {
-  width: 124px;
+  width: 125px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="3"] {
   width: 140px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="4"] {
-  width: 153px;
+  width: 155px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="5"] {
-  width: 168px;
+  width: 170px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="6"] {
-  width: 183px;
+  width: 185px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="7"] {
   width: 200px;
@@ -1023,7 +1029,7 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
   width: 240px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="10"] {
-  width: 260px;
+  width: 255px;
 }
 .zoom-1 .company-character-reosurces[data-stack-size="11"] {
   width: 270px;
@@ -1045,6 +1051,7 @@ img.card-icon {
   min-height: 100px;
   display: flex;
   flex-direction: column;
+  margin-right: 5px;
 }
 .company-character-reosurces .card {
   margin-top: -80px;

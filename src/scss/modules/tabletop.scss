@@ -176,7 +176,15 @@ a {
         margin: 0 50px;
         height: 100%;
 
-        div.card { display: inline-block; max-width: 90px }
+        div.card { 
+            display: inline-block; 
+            max-width: 72px;
+            
+            &.state_tapped
+            {
+                max-width: 100px;
+            }
+        }
     }
 
     .companies {
