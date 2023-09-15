@@ -1311,7 +1311,7 @@ body.on-show-map-window .location-icon {
   height: 400px;
   max-height: 40%;
 }
-.card-infobox .card-infobox-image::before {
+.card-infobox .card-infobox-image-animation::before {
   position: absolute;
   left: 0;
   top: 0;

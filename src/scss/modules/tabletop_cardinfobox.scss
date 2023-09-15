@@ -11,7 +11,9 @@
         position: relative;
         height: 400px;
         max-height: 40%;
-
+    }
+    
+    .card-infobox-image-animation {
         &::before {
             position: absolute;
             left: 0;
