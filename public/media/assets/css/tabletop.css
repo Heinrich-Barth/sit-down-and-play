@@ -591,7 +591,7 @@ img.card-icon {
 .state_tapped img,
 .state_tapped_fixed img,
 .tapped {
-  transform: rotate(90deg);
+  transform: rotate(270deg);
 }
 
 .rot180,
@@ -601,7 +601,7 @@ img.card-icon {
 }
 
 .rot270 {
-  transform: rotate(270deg);
+  transform: rotate(90deg);
 }
 
 .state_rot270 img {
