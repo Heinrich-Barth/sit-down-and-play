@@ -24,7 +24,7 @@ class CheckForCardsPlayed {
 
     getCardsFromList(list)
     {
-        let jList = [];
+        const jList = [];
 
         for (let elem of list)
         {
@@ -72,8 +72,8 @@ class CheckForCardsPlayed {
         if (this.vsAfter.length === 0)
             return [];
 
-        let vsNew = [];
-        let nSize = this.vsAfter.length;
+        const vsNew = [];
+        const nSize = this.vsAfter.length;
         for (let i = 0; i < nSize; i++)
         {
             if (!this.vsBefore.includes(this.vsAfter[i]))
