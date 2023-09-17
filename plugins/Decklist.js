@@ -207,7 +207,6 @@ const updateCardImages = function(imageProvider)
         const list = getDeckCodeList(data.deck);
         for (let code of list)
         {
-            console.log(code);
             const img = imageProvider.getImageByCode(code);
             if (typeof img === "string" && img !== "")
                 data.images[code] = img;
