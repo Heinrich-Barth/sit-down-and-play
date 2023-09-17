@@ -50,6 +50,18 @@ class GamePreferences extends Preferences {
             document.body.classList.remove("zoom-1");
     }
 
+    _toggleStackStage(isActive)
+    {
+        const elem = document.querySelector(".table");
+        if (elem === null)
+            return;
+
+        if (isActive && !elem.classList.contains("table-stage-stacking"))
+            elem.classList.add("table-stage-stacking");
+        else if (!isActive && elem.classList.contains("table-stage-stacking"))
+            elem.classList.remove("table-stage-stacking");
+    }
+
     _togglePaddingBottom(isActive)
     {
         const table = document.querySelector(".area-player");
@@ -194,7 +206,12 @@ class GamePreferences extends Preferences {
         this.createEntry0("toggle_zoom");
 
         if (!bWatcher)
+        {
             this.createEntry0("game_dices");
+
+            this._toggleStackStage(true);
+            this.createEntry0("toggle_stack_stage");
+        }
 
         this.createEntry0("game_sfx");
 
@@ -216,6 +233,8 @@ class GamePreferences extends Preferences {
     
             this.createSection("General");
             this.createEntry0("viewpile_open");
+
+            
         }
 
         this.createEntry0("show_chat");
@@ -251,6 +270,8 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("game_autosave", "Save game at first player's turn", true, this._autosave);
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
+
+        this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this._toggleStackStage);
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)

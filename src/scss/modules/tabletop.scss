@@ -357,34 +357,7 @@ img.card-icon {
     }
 }
 
-/* COMPANY AREA */
-.staging-area {
-    position: relative;
-    display: table-cell;
-    vertical-align: top;
-    padding-left: 55px;
-    width: 25%;
-
-    .staging-area-drop {
-        display: none;
-    }
-
-    &.staging-area-opponent {
-        padding: 20px 50px 0 0;
-        text-align: right;
-    }
-
-    .card {
-        display: inline-block;
-        margin-left: 2px;
-
-        img.card-icon {
-            width: auto;
-        }
-    }
-
-}
-
+@import "tabletop_stage.scss";
 
 .companies {
     white-space: nowrap;

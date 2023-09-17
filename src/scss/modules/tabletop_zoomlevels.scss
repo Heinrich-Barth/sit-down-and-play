@@ -30,9 +30,20 @@
     }
 
     .staging-area {
-        width: auto;
         min-width: 100px;
-        max-width: 170px;
+        max-width: 170px;       
+    }
+
+    .table-stage-stacking {
+        .staging-area-area {
+            div.card {
+                margin-top: -90px;
+
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+        }
     }
 
     .row div.card { 

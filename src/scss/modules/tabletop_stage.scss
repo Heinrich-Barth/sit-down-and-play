@@ -1,0 +1,50 @@
+
+/* COMPANY AREA */
+.staging-area {
+    position: relative;
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 55px;
+    width: 25%;
+
+    .staging-area-drop {
+        display: none;
+    }
+
+    &.staging-area-opponent {
+        padding: 20px 50px 0 0;
+        text-align: right;
+    }
+
+    .card {
+        display: inline-block;
+        margin-left: 2px;
+
+        img.card-icon {
+            width: auto;
+        }
+    }
+}
+
+.table-stage-stacking {
+
+    .staging-area-area {
+        max-width: 95px;
+        display: inline-block;
+        vertical-align: top;
+
+        div.card {
+            float: left;
+            margin-top: -75px;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+        }
+
+        &::after {
+            clear: both;
+        }
+    }
+}

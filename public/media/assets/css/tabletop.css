@@ -824,6 +824,22 @@ img.card-icon {
   width: auto;
 }
 
+.table-stage-stacking .staging-area-area {
+  max-width: 95px;
+  display: inline-block;
+  vertical-align: top;
+}
+.table-stage-stacking .staging-area-area div.card {
+  float: left;
+  margin-top: -75px;
+}
+.table-stage-stacking .staging-area-area div.card:first-child {
+  margin-top: 0;
+}
+.table-stage-stacking .staging-area-area::after {
+  clear: both;
+}
+
 .companies {
   white-space: nowrap;
   flex: 1 79%;
@@ -988,9 +1004,14 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
   height: 130px;
 }
 .zoom-1 .staging-area {
-  width: auto;
   min-width: 100px;
   max-width: 170px;
+}
+.zoom-1 .table-stage-stacking .staging-area-area div.card {
+  margin-top: -90px;
+}
+.zoom-1 .table-stage-stacking .staging-area-area div.card:first-child {
+  margin-top: 0;
 }
 .zoom-1 .row div.card {
   max-width: 94px;
