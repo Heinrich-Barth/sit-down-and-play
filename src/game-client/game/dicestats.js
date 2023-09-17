@@ -3,7 +3,7 @@ class DiceStats {
 
     static addColumnCell(pBody, type, name)
     {
-        let pTh = document.createElement(type);
+        const pTh = document.createElement(type);
         pTh.innerText = name;
         pBody.appendChild(pTh);
         return pTh;
