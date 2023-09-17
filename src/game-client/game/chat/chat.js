@@ -48,7 +48,7 @@ class ChatBox {
             return;
 
         const text = document.createElement("div");
-        text.innerHTML = "<b>" + ChatBox.getTimer() + sFrom + ":</b> " + this.ensureLength(sText, 200);
+        text.innerHTML = "<b>" + sFrom + "</b> " + this.ensureLength(sText, 200);
         let objDiv = document.getElementById("chatbox");
         objDiv.prepend(text);
 
