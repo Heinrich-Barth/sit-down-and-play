@@ -1,6 +1,3 @@
-
-
-
 class BackgroundChooser extends PreferenceChoise 
 {
     getHeadline()
@@ -32,7 +29,7 @@ class BackgroundChooser extends PreferenceChoise
 
         document.body.classList.add(sNew)
 
-        let list = document.body.classList;
+        const list = document.body.classList;
         for (let _name of list)
         {
             if (_name !== sNew && _name.indexOf("bg-") === 0)
