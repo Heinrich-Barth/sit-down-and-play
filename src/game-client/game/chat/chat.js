@@ -48,8 +48,12 @@ class ChatBox {
             return;
 
         const text = document.createElement("div");
-        text.innerHTML = "<b>" + sFrom + "</b> " + this.ensureLength(sText, 200);
-        let objDiv = document.getElementById("chatbox");
+        if (sFrom !== "(unknown)")
+            text.innerHTML = "<b>" + sFrom + "</b> " + this.ensureLength(sText, 200);
+        else
+            text.innerText = this.ensureLength(sText, 200);
+    
+        const objDiv = document.getElementById("chatbox");
         objDiv.prepend(text);
 
         this.reduceMessages(objDiv);
