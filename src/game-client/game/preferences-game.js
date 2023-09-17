@@ -106,18 +106,21 @@ class GamePreferences extends Preferences {
 
     _backgroundDarkness(isActive)
     {
-        const list = document.getElementsByClassName("table");
-        if (list ===  null || list.length < 1)
-            return;
-
-        const elem = list[0];
+        const elem = document.getElementById("table-dark");
         if (isActive)
         {
-            if (!elem.classList.contains("table-dark"))
-                elem.classList.add("table-dark");
+            if (elem !== null)
+                return;
+
+            const obj = document.createElement("div");
+            obj.setAttribute("class", "table-dark");
+            obj.setAttribute("id", "table-dark");
+            document.body.prepend(obj);
         }
-        else if (elem.classList.contains("table-dark"))
-            elem.classList.remove("table-dark");
+        else if (elem !== null)
+        {
+            elem.parentElement.removeChild(elem);
+        }
     }
 
     _volumeChange(val)
@@ -203,6 +206,8 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
+        this._backgroundDarkness(true);
+        
         this.createEntry0("toggle_zoom");
 
         if (!bWatcher)
