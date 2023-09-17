@@ -95,13 +95,10 @@ class GamePreferences extends Preferences {
             else if (elem.webkitRequestFullscreen) /* Safari */
                 elem.webkitRequestFullscreen();
         }
-        else
-        {
-            if (document.exitFullscreen) 
-                document.exitFullscreen();
-            else if (document.webkitExitFullscreen)  /* Safari */
-                document.webkitExitFullscreen();
-        }
+        else if (document.exitFullscreen) 
+            document.exitFullscreen();
+        else if (document.webkitExitFullscreen)  /* Safari */
+            document.webkitExitFullscreen();
     }
 
     _backgroundDarkness(isActive)
