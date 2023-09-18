@@ -1000,29 +1000,33 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
   opacity: 0.7;
 }
 
-.zoom-1 .company-character-reosurces .card,
-.zoom-2 .company-character-reosurces .card {
-  margin-top: -105px;
-}
 .zoom-1 .card-hands .card-hand img.card-icon,
+.zoom-2 .card-hands .card-hand img.card-icon {
+  height: 100px !important;
+}
 .zoom-1 .arda-card-hands .card-hand img.card-icon,
-.zoom-2 .card-hands .card-hand img.card-icon,
 .zoom-2 .arda-card-hands .card-hand img.card-icon {
   height: 80px !important;
 }
+.zoom-1 .table-stage-stacking .staging-area-area div.card,
+.zoom-2 .table-stage-stacking .staging-area-area div.card {
+  margin-top: -90px;
+}
+.zoom-1 .table-stage-stacking .staging-area-area div.card:first-child,
+.zoom-2 .table-stage-stacking .staging-area-area div.card:first-child {
+  margin-top: 0;
+}
+.zoom-1 .view-card-list-container img.card-icon,
+.zoom-2 .view-card-list-container img.card-icon {
+  height: 185px;
+}
 
+.zoom-1 .company-character-reosurces .card {
+  margin-top: -105px;
+}
 .zoom-1 .company-site-list,
 .zoom-1 img.card-icon {
   height: 130px;
-}
-.zoom-1 .view-card-list-container img.card-icon {
-  height: 185px;
-}
-.zoom-1 .table-stage-stacking .staging-area-area div.card {
-  margin-top: -90px;
-}
-.zoom-1 .table-stage-stacking .staging-area-area div.card:first-child {
-  margin-top: 0;
 }
 .zoom-1 .row div.card {
   max-width: 94px;
@@ -1070,9 +1074,57 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
   width: 285px;
 }
 
+.zoom-2 .company-character-reosurces .card {
+  margin-top: -115px;
+}
 .zoom-2 .company-site-list,
 .zoom-2 img.card-icon {
   height: 150px;
+}
+.zoom-2 .row div.card {
+  max-width: 94px;
+}
+.zoom-2 .row div.card.state_tapped {
+  max-width: 130px;
+}
+.zoom-2 .company-character-reosurces {
+  min-height: 150px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="1"] {
+  width: 135px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="2"] {
+  width: 150px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="3"] {
+  width: 165px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="4"] {
+  width: 180px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="5"] {
+  width: 195px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="6"] {
+  width: 210px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="7"] {
+  width: 225px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="8"] {
+  width: 240px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="9"] {
+  width: 255px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="10"] {
+  width: 270px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="11"] {
+  width: 285px;
+}
+.zoom-2 .company-character-reosurces[data-stack-size="12"] {
+  width: 300px;
 }
 
 img.card-icon {

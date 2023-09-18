@@ -93,7 +93,7 @@ class Preferences extends PreferencesStorable {
         }
     }
 
-    addConfigSlider(id, title, initialValue, icon, pCallback)
+    addConfigSlider(id, title, max, initialValue, icon, pCallback)
     {
         if (typeof pCallback === "undefined")
             pCallback = Preferences._emptyCallback;
@@ -104,6 +104,7 @@ class Preferences extends PreferencesStorable {
             callback : pCallback,
             type_on: icon,
             type_off: icon,
+            max_val: max,
             type: Preferences.Type.SLIDER
         }
     }
@@ -147,7 +148,7 @@ class Preferences extends PreferencesStorable {
 
             this._html += `<div class="preference">
                 <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
-                <input type="range" name="${sInputName}" min="0" max="100" value="${Preferences.config[id].value}" id="${_id}">
+                <input type="range" name="${sInputName}" min="0" max="${Preferences.config[id].max_val}" value="${Preferences.config[id].value}" id="${_id}">
             </div>`;      
         }
         else

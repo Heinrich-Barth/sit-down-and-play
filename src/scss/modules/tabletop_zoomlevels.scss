@@ -2,35 +2,12 @@
 .zoom-1,
 .zoom-2 {
 
-    .company-character-reosurces {
-
-        .card
-        {
-            margin-top: -105px;
-        }
+    .card-hands .card-hand img.card-icon {
+        height: 100px !important;
     }
     
-    .card-hands,
-    .arda-card-hands
-    {
-        .card-hand img.card-icon {
-            height: 80px !important;
-        }
-
-    }
-    
-
-}
-
-.zoom-1 {
-
-    .company-site-list,
-    img.card-icon {
-        height: 130px;
-    }
-
-    .view-card-list-container img.card-icon {
-        height: 185px;
+    .arda-card-hands .card-hand img.card-icon {
+        height: 80px !important;
     }
 
     .table-stage-stacking {
@@ -43,6 +20,22 @@
                 }
             }
         }
+    }
+
+    .view-card-list-container img.card-icon {
+        height: 185px;
+    }
+}
+
+.zoom-1 {
+
+    .company-character-reosurces .card {
+        margin-top: -105px;
+    }
+
+    .company-site-list,
+    img.card-icon {
+        height: 130px;
     }
 
     .row div.card { 
@@ -104,14 +97,78 @@
         &[data-stack-size="12"] {
             width: 285px
         }
-    }     
+    }
 }
 
 .zoom-2 {
+    .company-character-reosurces .card {
+        margin-top: -115px;
+    }
 
     .company-site-list,
     img.card-icon {
         height: 150px;
+    }
+
+    .row div.card { 
+        max-width: 94px;
+
+        &.state_tapped {
+            max-width: 130px;
+        }
+    }
+
+    .company-character-reosurces {
+        min-height: 150px;
+    
+        // this is the size of the stacked cards and the contianer width
+        &[data-stack-size="1"] {
+            width: 135px
+        }
+    
+        &[data-stack-size="2"] {
+            width: 150px
+        }
+    
+        &[data-stack-size="3"] {
+            width: 165px
+        }
+    
+        &[data-stack-size="4"] {
+            width: 180px
+        }
+    
+        &[data-stack-size="5"] {
+            width: 195px
+        }
+    
+        &[data-stack-size="6"] {
+            width: 210px
+        }
+    
+        &[data-stack-size="7"] {
+            width: 225px
+        }
+    
+        &[data-stack-size="8"] {
+            width: 240px
+        }
+    
+        &[data-stack-size="9"] {
+            width: 255px
+        }
+    
+        &[data-stack-size="10"] {
+            width: 270px
+        }
+    
+        &[data-stack-size="11"] {
+            width: 285px
+        }
+    
+        &[data-stack-size="12"] {
+            width: 300px
+        }
     }
 }
 

@@ -38,16 +38,36 @@ class GamePreferences extends Preferences {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
     }
 
-    _toggleCardZoom(isActive)
+    _zoomChange(val)
     {
-        if (isActive)
-        {
-            if (!document.body.classList.contains("zoom-1"))
-                document.body.classList.add("zoom-1");
+        const rem = [];
+        let add = "";
 
+        const num = parseInt(val);
+        if (num === 2)
+        {
+            rem.push("zoom-1");
+            add = "zoom-2";
         }
-        else if (document.body.classList.contains("zoom-1"))
-            document.body.classList.remove("zoom-1");
+        else if (num === 1)
+        {
+            rem.push("zoom-2");
+            add = "zoom-1";
+        }
+        else 
+        {
+            rem.push("zoom-1");
+            rem.push("zoom-2");
+        }
+
+        if (add !== "")
+            document.body.classList.add(add);
+
+        for (let elem of rem)
+        {
+            if (document.body.classList.contains(elem))
+                document.body.classList.remove(elem)
+        }
     }
 
     _toggleStackStage(isActive)
@@ -274,7 +294,8 @@ class GamePreferences extends Preferences {
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
-        this.addConfigSlider("game_sfx", "Sound volume", 20, "fa-volume-up", this._volumeChange.bind(this));
+        this.addConfigSlider("game_sfx", "Sound volume", 100, 20, "fa-volume-up", this._volumeChange.bind(this));
+        this.addConfigSlider("toggle_zoom", "Zoom Level", 2, 1, "fa-search-plus slider-short", this._zoomChange.bind(this));
         this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
@@ -290,7 +311,7 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)
-        this.addConfigToggle("toggle_zoom", "Large cards on the table", true, this._toggleCardZoom);
+        // this.addConfigToggle("toggle_zoom", "Large cards on the table", true, this._toggleCardZoom);
 
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
         this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));

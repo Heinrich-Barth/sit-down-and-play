@@ -32,15 +32,18 @@
 #config-panel {
     overflow: auto;
     position: fixed;
-    padding: 10px;
-    left: 15%;
-    padding-left: 20px;
-    max-height: 70%;
-    width: 70%;
+    padding: 10px 20px;
+    max-height: 80%;
 }
 
+#config-panel {
+    left: 60px;
+    top: 35px;
+}
 #dices-panel-content
 {
+    left: 15%;
+    width: 70%;
     top: 20%;
     text-align: center;
 }
@@ -110,6 +113,11 @@ display: none;
 .config-panel input[type="range"] {
     display: inline-block;
     width: 55%;
+}
+
+.config-panel input[name="toggle_zoom"]
+{
+    width: 30%;
 }
 
 #restore-game {
