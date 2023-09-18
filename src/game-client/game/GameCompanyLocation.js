@@ -113,10 +113,32 @@ class GameCompanyLocation
             return;
 
         const jSiteContaienr = companyElem.querySelector(".sites");
+        this.removeDuplicateRegions(jSiteContaienr);
+
         ArrayList(jSiteContaienr).find(".site-current .card-icon").each(this.revealCard);
         ArrayList(jSiteContaienr).find(".site-regions .card-icon").each(this.revealCard);
         ArrayList(jSiteContaienr).find(".site-target .card-icon").each(this.revealCard);
         ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.add("hide"));
+    }
+
+    removeDuplicateRegions(jSiteContaienr)
+    {
+        const list = jSiteContaienr.querySelectorAll(".site-regions .card");
+        if (list === null || list.length < 2)
+            return;
+
+        const codes = [];
+        for (let elem of list)
+        {
+            const _code = elem.hasAttribute("data-card-code") ? elem.getAttribute("data-card-code") : "";
+            if (_code === "")
+                continue;
+
+            if (!codes.includes(_code))
+                codes.push(_code);
+            else
+                elem.classList.add("hidden");
+        }
     }
 
     /**
