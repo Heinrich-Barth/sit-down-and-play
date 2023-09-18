@@ -12,14 +12,15 @@
     overflow-y: hidden;
 }
 .chatbox:hover {
-    height: auto;
     max-height: 50%;
-    width: 50%;
+    max-width: 50%;
     overflow-y: auto;
     background: #000;
+    height: auto;
+    width: auto;
     z-index: 401;
-    font-size: 1.5em;
-    line-height: 1.2em;
+    font-size: 1.2em;
+    line-height: 1.4em;
 }
 .chatbox div { line-break: normal;  }
 .chatbox span { font-size: 0.8em; padding-right: 3px;}
