@@ -257,3 +257,6 @@ div#arda_mps_hand {
     max-width: 76%;
   }
 }
+.game-arda .table .row {
+  padding-right: 100px;
+}

@@ -5,6 +5,7 @@
     display: table-cell;
     vertical-align: top;
     padding-left: 55px;
+    min-width: 100px;
     width: 25%;
 
     .staging-area-drop {
@@ -30,6 +31,9 @@
 
     .staging-area {
         text-align: center;
+        min-width: 100px;
+        max-width: 200px;
+        white-space: nowrap;  
     }
   
     .staging-area-area {

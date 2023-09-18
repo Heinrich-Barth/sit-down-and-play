@@ -808,6 +808,7 @@ img.card-icon {
   display: table-cell;
   vertical-align: top;
   padding-left: 55px;
+  min-width: 100px;
   width: 25%;
 }
 .staging-area .staging-area-drop {
@@ -827,6 +828,9 @@ img.card-icon {
 
 .table-stage-stacking .staging-area {
   text-align: center;
+  min-width: 100px;
+  max-width: 200px;
+  white-space: nowrap;
 }
 .table-stage-stacking .staging-area-area {
   max-width: 95px;
@@ -1013,10 +1017,6 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 }
 .zoom-1 .view-card-list-container img.card-icon {
   height: 185px;
-}
-.zoom-1 .staging-area {
-  min-width: 100px;
-  max-width: 170px;
 }
 .zoom-1 .table-stage-stacking .staging-area-area div.card {
   margin-top: -90px;
