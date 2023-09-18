@@ -612,7 +612,7 @@ img.card-icon {
   z-index: 400;
   padding: 5px;
   max-width: 90%;
-  min-width: 480px;
+  min-width: 290px;
   min-height: 84px;
 }
 .card-hands .card-generic,
@@ -1082,7 +1082,7 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
   height: 150px;
 }
 .zoom-2 .row div.card {
-  max-width: 94px;
+  max-width: 108px;
 }
 .zoom-2 .row div.card.state_tapped {
   max-width: 130px;
