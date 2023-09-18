@@ -707,7 +707,13 @@ class GameStandard extends GamePlayers
 
     scoreDoubleMisc(userid, _socket, data)
     {
-        this.publishToPlayers("/game/score/doublemisc", userid, { "misc": data.misc === true });
+        const bYes = data.misc === true;
+        this.publishToPlayers("/game/score/doublemisc", userid, { "misc": bYes });
+
+        if (bYes)
+            this.publishChat(userid, " allows misc points to be doubled", true);
+        else
+            this.publishChat(userid, " defines that misc points will not be doubled", false);
     }
 
     scoreAdd(userid, _socket, data)
