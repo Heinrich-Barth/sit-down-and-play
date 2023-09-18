@@ -67,7 +67,7 @@ let Arda = {
         const link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
         link.setAttribute("type", "text/css");
-        link.setAttribute("href","/media/assets/css/game-arda.css");
+        link.setAttribute("href","/media/assets/css/game-arda.css?version=" + Date.now());
         document.head.appendChild(link);
         document.body.classList.add("game-arda");
     },
