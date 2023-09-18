@@ -29,27 +29,65 @@
   right: 5px;
   z-index: 400;
   padding: 5px;
-  min-width: 200px;
+  min-width: 60px;
   max-width: 360px;
   min-height: 84px;
   overflow-y: auto;
   max-height: 200px;
 }
+.arda-card-hands .arda-hand-card-actions {
+  display: block;
+}
+.arda-card-hands .arda-actions {
+  display: none;
+}
+.arda-card-hands:hover .arda-inline {
+  margin-right: 60px;
+}
+.arda-card-hands:hover .card-hand {
+  margin-right: 0px !important;
+}
+.arda-card-hands:hover .arda-actions {
+  display: inline-block;
+}
+.arda-card-hands .arda-inline {
+  display: inline-block;
+  margin-right: 0px;
+}
+.arda-card-hands .arda-inline:last-of-type {
+  margin-right: 0;
+}
+.arda-card-hands.arda-card-hand-mps .arda-inline {
+  margin-right: 60px;
+}
+.arda-card-hands.arda-card-hand-mps .arda-inline:last-of-type {
+  margin-right: 0;
+}
 .arda-card-hands.arda-card-hand-minor, .arda-card-hands.arda-card-hand-charackters {
   opacity: 0.3;
 }
+.arda-card-hands.arda-card-hand-minor .arda-actions,
 .arda-card-hands.arda-card-hand-minor .arda-hand-card-actions,
-.arda-card-hands.arda-card-hand-minor .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions,
+.arda-card-hands.arda-card-hand-minor .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters .arda-actions,
+.arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions,
 .arda-card-hands.arda-card-hand-charackters .arda-card-hands-sizer {
   display: none;
 }
 .arda-card-hands.arda-card-hand-minor .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions > .arda-inline {
   margin-right: 0;
 }
+.arda-card-hands.arda-card-hand-minor .card-hand, .arda-card-hands.arda-card-hand-charackters .card-hand {
+  margin-right: -30px;
+}
+.arda-card-hands.arda-card-hand-minor .card-hand:last-of-type, .arda-card-hands.arda-card-hand-charackters .card-hand:last-of-type {
+  margin-right: 0;
+}
 .arda-card-hands.arda-card-hand-minor:hover, .arda-card-hands.arda-card-hand-charackters:hover {
   opacity: 1;
 }
-.arda-card-hands.arda-card-hand-minor:hover .arda-hand-card-actions, .arda-card-hands.arda-card-hand-charackters:hover .arda-hand-card-actions {
+.arda-card-hands.arda-card-hand-minor:hover .arda-actions,
+.arda-card-hands.arda-card-hand-minor:hover .arda-hand-card-actions, .arda-card-hands.arda-card-hand-charackters:hover .arda-actions,
+.arda-card-hands.arda-card-hand-charackters:hover .arda-hand-card-actions {
   display: inline-block;
 }
 .arda-card-hands.arda-card-hand-minor:hover .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters:hover .arda-card-hands-sizer {
@@ -96,11 +134,6 @@ div#arda_mps_hand {
 }
 .arda-hand-card-actions-fl::after {
   clear: both;
-}
-
-.arda-inline {
-  display: inline-block;
-  margin-right: 60px;
 }
 
 .arda-card-hands .arda-card-hand,

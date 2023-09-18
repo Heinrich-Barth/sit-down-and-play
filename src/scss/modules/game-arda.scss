@@ -30,22 +30,77 @@
     right: 5px;
     z-index: 400;
     padding: 5px;
-    min-width: 200px;
+    min-width: 60px;
     max-width: 360px;
     min-height: 84px;
     overflow-y: auto;
     max-height: 200px;
+    
+    .arda-hand-card-actions {
+        display: block;
+    }
+
+    .arda-actions {
+        display: none;
+    }
+
+    &:hover {
+        .arda-inline {
+            margin-right: 60px;
+        }
+
+        .card-hand {
+            margin-right: 0px !important;
+        }
+
+        .arda-actions {
+            display: inline-block
+        }
+    }
+
+    .arda-inline {
+        display: inline-block;
+        margin-right: 0px;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+
+    &.arda-card-hand-mps {
+        .arda-inline {
+            margin-right: 60px;
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+    } 
 
     &.arda-card-hand-minor,
     &.arda-card-hand-charackters
     {
         opacity: 0.3;
+
+        .arda-actions,
         .arda-hand-card-actions,
         .arda-card-hands-sizer{ display: none; }
-        .arda-hand-card-actions > .arda-inline { margin-right: 0;}
+        .arda-hand-card-actions > .arda-inline { 
+            margin-right: 0;
+        }
+
+        .card-hand {
+            margin-right: -30px;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+        
+       
         &:hover {
             opacity: 1;
 
+            .arda-actions,
             .arda-hand-card-actions { display: inline-block;}
             .arda-card-hands-sizer{ display: block; }
             .arda-hand-card-actions > .arda-inline { margin-right: 60px;}
@@ -93,11 +148,6 @@ div#arda_mps_hand {
     &::after {
         clear: both;
     }
-}
-
-.arda-inline {
-    display: inline-block;
-    margin-right: 60px;
 }
 
 .arda-card-hands .arda-card-hand,
