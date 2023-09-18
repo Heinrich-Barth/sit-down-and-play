@@ -40,7 +40,7 @@ body {
 }
 
 h1, h2 {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: 300;
   text-decoration: none;
   text-transform: uppercase;
@@ -59,7 +59,7 @@ h2 {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   cursor: pointer;
 }
@@ -163,7 +163,7 @@ h2 {
 }
 .content .arda-text {
   display: block;
-  color: #ffa500;
+  color: #F0C648;
 }
 .content .arda-text input {
   width: auto;
@@ -215,16 +215,16 @@ h2 {
   color: #ff0;
 }
 .content .deck-list .deck-list-entries .selected-deck {
-  color: #ffa500;
+  color: #F0C648;
 }
 .content details[open] summary {
-  color: #ffa500;
+  color: #F0C648;
 }
 
 .converter h2,
 h3 {
   font-size: 1em;
-  color: #ffa500;
+  color: #F0C648;
   margin-bottom: 0;
 }
 
@@ -232,7 +232,7 @@ h3 {
   margin: 2em auto;
   background: transparent;
   color: #fff;
-  border-bottom: 1px solid #ffa500;
+  border-bottom: 1px solid #F0C648;
 }
 .converter .content {
   min-height: 100vh;

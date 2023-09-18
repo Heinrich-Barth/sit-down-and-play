@@ -39,7 +39,7 @@ body {
 }
 
 h1, h2 {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: 300;
   text-decoration: none;
   text-transform: uppercase;
@@ -58,7 +58,7 @@ h2 {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   cursor: pointer;
 }
@@ -93,7 +93,7 @@ body {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
 }
 a:hover {
@@ -241,7 +241,7 @@ a:hover {
 }
 .trade-panel .config-panel .offered-list {
   min-height: 85px;
-  border-bottom: 2px dotted #ffa500;
+  border-bottom: 2px dotted #F0C648;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -467,7 +467,7 @@ a:hover {
 .location-icon-image:hover {
   opacity: 1;
   color: #fff;
-  background-color: #ffa500;
+  background-color: #F0C648;
 }
 
 .company:hover .location-icon-image {
@@ -570,7 +570,7 @@ img.card-icon {
   color: white;
 }
 .card-bar a:hover {
-  color: #ffa500;
+  color: #F0C648;
 }
 
 .hand span,
@@ -636,7 +636,7 @@ img.card-icon {
   position: absolute;
   left: 9px;
   top: 13px;
-  color: #ffa500;
+  color: #F0C648;
   text-transform: uppercase;
   font-size: 12px;
 }
@@ -687,7 +687,7 @@ img.card-icon {
   visibility: hidden;
 }
 .view-card-list-container .container-title-bar .container-title-bar-shuffle:hover {
-  color: #ffa500;
+  color: #F0C648;
 }
 .view-card-list-container img.card-icon {
   width: auto;
@@ -907,7 +907,7 @@ img.card-icon {
   left: 0px;
   height: 3px;
   width: 0px;
-  background: #ffa500;
+  background: #F0C648;
   display: none;
 }
 .companies .company.company-mark-current .company-site-list-border {
@@ -1073,6 +1073,10 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 .zoom-1 .company-character-reosurces[data-stack-size="12"] {
   width: 285px;
 }
+.zoom-1 .site-regions .card,
+.zoom-1 .site-onguard .card {
+  margin-left: -75px;
+}
 
 .zoom-2 .company-character-reosurces .card {
   margin-top: -115px;
@@ -1125,6 +1129,10 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 }
 .zoom-2 .company-character-reosurces[data-stack-size="12"] {
   width: 300px;
+}
+.zoom-2 .site-regions .card,
+.zoom-2 .site-onguard .card {
+  margin-left: -80px;
 }
 
 img.card-icon {
@@ -1252,7 +1260,7 @@ img.card-icon {
 }
 
 div.card img:hover {
-  box-shadow: 0px 0px 10px 2px #ff0;
+  box-shadow: 0px 0px 10px 2px #F0C648;
 }
 
 .card-dice {
@@ -1336,7 +1344,7 @@ div#opponent_table .company {
   margin-left: 10px;
 }
 .card-hands-sizer i {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: bold;
   padding: 0 5px;
 }
@@ -1401,7 +1409,7 @@ body.on-show-map-window .location-icon {
   top: 0;
   display: inline-block;
   content: " ";
-  border-top: 3px solid #ffa500;
+  border-top: 3px solid #F0C648;
   animation: infobox-moving-line 2s 10 forwards;
 }
 .card-infobox img {

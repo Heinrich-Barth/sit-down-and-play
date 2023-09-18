@@ -48,7 +48,7 @@ body, input, textarea, select {
     font-family: "Titillium Web", "Helvetica Neue", sans-serif;
     font-weight: 300;
     line-height: 1.75em;
-    color: #ffa500;
+    color: #F0C648;
     letter-spacing: 0.025em;
 }
 
@@ -71,7 +71,7 @@ strong, b {
 }
 
 a {
-    color: #ffa500; 
+    color: #F0C648; 
     text-decoration: none;
     cursor: pointer;
 }
@@ -190,14 +190,14 @@ table td{
 table th{
     padding: 20px;
     font-size: 2em;
-    color: #ffa500;
-    border-bottom: 1px solid #ffa500;
+    color: #F0C648;
+    border-bottom: 1px solid #F0C648;
     cursor: default;
 }
 
 table tbody tr:hover
 {
-    border: 1px solid #ffa500;
+    border: 1px solid #F0C648;
 }
 
 
@@ -217,7 +217,7 @@ nav a:hover
     vertical-align: top;
     border-radius: 5px;
     background-color: #fff;
-    color: #ffa500;
+    color: #F0C648;
     margin-left: 10px;
     margin-bottom: 10px;
     border: 1px solid #fff
@@ -227,7 +227,7 @@ nav a:hover
 .linklist li:hover{
     color: #fff;
     background-color: rgba(255,165,0,0.35);
-    border: 1px solid #ffa500
+    border: 1px solid #F0C648
 }
 .linklist li a { display: block; color: #000; }
 .linklist li:hover a,
@@ -289,7 +289,7 @@ div.d_container {
 #pool { color: #ff0;}
 
 .decklist h3
-{ padding-top: 10px; border-bottom: 1px dotted #ffa500; }
+{ padding-top: 10px; border-bottom: 1px dotted #F0C648; }
 
 div.w48 { width: 49.9%; }
 .mr-20 { margin-right: 20px; }
@@ -340,7 +340,7 @@ td.w100 { width: 100px; }
 .card_deck_title { color: #fff; }
 .card_of_deck_construct:hover { 
     background-color: rgba(255,165,0,0.35);
-    border: 1px solid #ffa500
+    border: 1px solid #F0C648
 }
 
 .card_of_deck_construct { border: 1px solid transparent; border-radius: 5px; }
@@ -356,8 +356,8 @@ td.w100 { width: 100px; }
 #deck_card_view img {
     border-radius: 5px;
     background-color: rgba(255,165,0,0.35);
-    border: 1px solid #ffa500;
-    box-shadow: 0px 3px 6px 4px #ffa500;
+    border: 1px solid #F0C648;
+    box-shadow: 0px 3px 6px 4px #F0C648;
     position: relative;
     height: 100%;
     max-height: 100%;

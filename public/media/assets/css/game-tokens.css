@@ -4,7 +4,7 @@ div.card[data-token]:after {
     bottom: 5px;
     padding: 2px;
     font-size: 0.8em;
-    background: #ffa500;
+    background: #F0C648;
     border-radius: 15px;
     line-height: 1em;
     content: "10+";

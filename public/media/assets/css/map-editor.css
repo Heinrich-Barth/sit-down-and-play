@@ -28,4 +28,4 @@
 .mapchooser select { width: 200px; display: inline; }
 .mapchooser span { margin-left: 10px; font-size: 1em; color: white }
 
-.mapchooser span:hover { color: #ffa500; cursor: pointer;}
+.mapchooser span:hover { color: #F0C648; cursor: pointer;}

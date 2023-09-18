@@ -43,13 +43,13 @@
 
 @keyframes glowYellow {
     0% {
-        box-shadow: 0 0 10px -10px #ffa500;
+        box-shadow: 0 0 10px -10px #F0C648;
       }
       50% {
-          box-shadow: 0 0 10px 10px #ffa500;
+          box-shadow: 0 0 10px 10px #F0C648;
       }
       99% {
-          box-shadow: 0 0 10px -10px #ffa500;
+          box-shadow: 0 0 10px -10px #F0C648;
       }
       100% {
           box-shadow: none;

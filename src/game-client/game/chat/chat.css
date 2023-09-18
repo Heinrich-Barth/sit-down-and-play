@@ -23,5 +23,5 @@
 }
 .chatbox div { line-break: normal;  }
 .chatbox span { font-size: 0.8em; padding-right: 3px;}
-.chatbox b { color: #ffa500; }
+.chatbox b { color: #F0C648; }
 #chatbox.hide { visibility: hidden; }

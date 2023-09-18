@@ -15,13 +15,13 @@ h1 { font-size: 1.5em; text-align: center; margin-bottom: 10px;
 }
 
 h1, h2, h3, h4,
-a, a:active, a:visited { color: #ffa500; text-decoration: none; font-weight: normal; }
+a, a:active, a:visited { color: #F0C648; text-decoration: none; font-weight: normal; }
 
 table.shortcuts { border-spacing: 0px; width: 100%; }
 .shortcuts
 {
  tr th:first-child { width: 200px;}
- th { border-bottom: 1px solid  #ffa500;}
+ th { border-bottom: 1px solid  #F0C648;}
  td { padding-right: 10px; line-height: 1em; }
  pre { margin: 0.5em; }
  tbody tr:hover td { background-color: rgba(255,255,255,0.2);}

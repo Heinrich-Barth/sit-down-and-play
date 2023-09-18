@@ -19,8 +19,8 @@
     animation-fill-mode: forwards;
 }
 
-.dice-content span.who  { color: #ffa500; }
-.dice-content span.big { font-size: 2em; color: #ffa500; padding: 0 10px; } 
+.dice-content span.who  { color: #F0C648; }
+.dice-content span.big { font-size: 2em; color: #F0C648; padding: 0 10px; } 
 .dice-content span.dice-info { font-style: italic; }
 
 .dice-content img.dice-icon { filter: invert(100%); width: 30px; }

@@ -39,7 +39,7 @@ body {
 }
 
 h1, h2 {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: 300;
   text-decoration: none;
   text-transform: uppercase;
@@ -58,7 +58,7 @@ h2 {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   cursor: pointer;
 }
@@ -168,7 +168,7 @@ button:active {
   padding-left: 10px;
 }
 .tournament-result table {
-  border-bottom: 1px solid #ffa500;
+  border-bottom: 1px solid #F0C648;
 }
 .tournament-result table:last-of-type {
   border-bottom: 0;

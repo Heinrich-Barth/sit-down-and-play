@@ -21,7 +21,7 @@ body {
     font-family: "Titillium Web", "Helvetica Neue", sans-serif;
     font-weight: 300;
     line-height: 1.75em;
-    color: #ffa500;
+    color: #F0C648;
     letter-spacing: 0.025em;
 }
 
@@ -233,7 +233,7 @@ textarea {
     margin-top: 0;
     padding-top: 0;
     cursor: pointer;
-    color: #ffa500;
+    color: #F0C648;
     display: block;
     width: 100%;
 }

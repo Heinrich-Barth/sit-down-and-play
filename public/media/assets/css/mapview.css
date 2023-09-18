@@ -39,7 +39,7 @@ body {
 }
 
 h1, h2 {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: 300;
   text-decoration: none;
   text-transform: uppercase;
@@ -58,7 +58,7 @@ h2 {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   cursor: pointer;
 }
@@ -135,7 +135,7 @@ input {
   background-color: #ffffff;
 }
 input.next {
-  border: 1px solid #ffa500;
+  border: 1px solid #F0C648;
 }
 
 table.site_leaflet td {
@@ -207,7 +207,7 @@ table.site_leaflet td:nth-child(even) {
   font-size: 35px !important;
 }
 .map-action-image:hover {
-  color: #ffa500;
+  color: #F0C648;
 }
 
 div.panel-buttons {
@@ -258,7 +258,7 @@ div.panel-buttons {
 
 .map-search {
   padding: 5px;
-  color: #ffa500;
+  color: #F0C648;
   right: 20px;
   z-index: 501;
   width: auto;
@@ -276,7 +276,7 @@ img.map-region-icon {
 }
 
 .colorOrange {
-  color: #ffa500;
+  color: #F0C648;
   font-size: 1.1em;
 }
 

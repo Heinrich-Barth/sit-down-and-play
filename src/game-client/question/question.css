@@ -57,14 +57,14 @@
     padding-top: 12px;
     float: left;
     font-size: 7em;
-    color: #ffa500;
+    color: #F0C648;
 }
 
 .question-game .question-answers {
     padding-left: 140px;
     padding-top: 20px;
 }
-.question-game h3 { color: #ffa500; }
+.question-game h3 { color: #F0C648; }
 
 .question-game input[type="button"]:hover { background-color: #a8cea4; }
 

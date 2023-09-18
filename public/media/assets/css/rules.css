@@ -23,7 +23,7 @@ h1 {
 
 h1, h2, h3, h4,
 a, a:active, a:visited {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   font-weight: normal;
 }
@@ -37,7 +37,7 @@ table.shortcuts {
   width: 200px;
 }
 .shortcuts th {
-  border-bottom: 1px solid #ffa500;
+  border-bottom: 1px solid #F0C648;
 }
 .shortcuts td {
   padding-right: 10px;

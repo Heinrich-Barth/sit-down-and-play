@@ -39,7 +39,7 @@ body {
 }
 
 h1, h2 {
-  color: #ffa500;
+  color: #F0C648;
   font-weight: 300;
   text-decoration: none;
   text-transform: uppercase;
@@ -58,7 +58,7 @@ h2 {
 }
 
 a {
-  color: #ffa500;
+  color: #F0C648;
   text-decoration: none;
   cursor: pointer;
 }
@@ -254,7 +254,7 @@ body h4 {
 .linklist ul a:hover {
   color: #fff;
   background-color: rgba(255, 165, 0, 0.35);
-  border: 1px solid #ffa500;
+  border: 1px solid #F0C648;
 }
 .linklist:after {
   content: "";
@@ -266,7 +266,7 @@ body h4 {
   position: fixed;
   right: 20px;
   bottom: 20px;
-  color: #ffa500;
+  color: #F0C648;
   padding: 10px;
   font-size: 2em;
   z-index: 10;
@@ -345,13 +345,13 @@ body h4 {
 }
 .deck-builder .decklist label {
   padding-top: 10px;
-  border-bottom: 1px dotted #ffa500;
+  border-bottom: 1px dotted #F0C648;
   display: block;
   cursor: pointer;
   text-transform: uppercase;
   font-size: 0.9em;
   margin: 1em 0;
-  color: #ffa500;
+  color: #F0C648;
 }
 .deck-builder .decklist label:hover {
   color: #fff;
@@ -437,7 +437,7 @@ body h4 {
   color: #fff;
   position: absolute;
   border-radius: 10px;
-  background: #ffa500;
+  background: #F0C648;
   padding: 5px;
   font-weight: bold;
   font-size: 15px;
@@ -461,7 +461,7 @@ body h4 {
   color: #fff;
 }
 .deck-builder .category .image .actions a:hover {
-  color: #ffa500;
+  color: #F0C648;
 }
 
 .deck_move_pool,
