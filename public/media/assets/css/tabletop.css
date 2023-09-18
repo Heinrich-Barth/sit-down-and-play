@@ -796,6 +796,10 @@ img.card-icon {
   margin: 0;
   height: 20px;
   left: 25%;
+  visibility: hidden;
+}
+#playercard_hand_container:hover a.discardpile {
+  visibility: visible;
 }
 
 /* COMPANY AREA */
@@ -838,6 +842,10 @@ img.card-icon {
 }
 .table-stage-stacking .staging-area-area::after {
   clear: both;
+}
+
+.table-companies-left .companies {
+  text-align: left;
 }
 
 .companies {
@@ -1002,6 +1010,9 @@ body.on-drag-event-site .area-player .company-character-host .card img, body.on-
 .zoom-1 .company-site-list,
 .zoom-1 img.card-icon {
   height: 130px;
+}
+.zoom-1 .view-card-list-container img.card-icon {
+  height: 185px;
 }
 .zoom-1 .staging-area {
   min-width: 100px;
