@@ -52,14 +52,23 @@ class GamePreferences extends Preferences {
 
     _toggleStackStage(isActive)
     {
-        const elem = document.querySelector(".table");
-        if (elem === null)
+        this._toggleClass(document.querySelector(".table"), isActive, "table-stage-stacking");
+    }
+
+    _toggleClass(elem, isActive, className)
+    {
+        if (elem === null || className === "")
             return;
 
-        if (isActive && !elem.classList.contains("table-stage-stacking"))
-            elem.classList.add("table-stage-stacking");
-        else if (!isActive && elem.classList.contains("table-stage-stacking"))
-            elem.classList.remove("table-stage-stacking");
+        if (isActive && !elem.classList.contains(className))
+            elem.classList.add(className);
+        else if (!isActive && elem.classList.contains(className))
+            elem.classList.remove(className);
+    }
+
+    _toggleAlignCompaniesLeft(isActive)
+    {
+        this._toggleClass(document.querySelector(".table"), isActive, "table-companies-left");
     }
 
     _togglePaddingBottom(isActive)
@@ -203,7 +212,7 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
-        this._backgroundDarkness(true);
+        // this._backgroundDarkness(true);
         
         this.createEntry0("toggle_zoom");
 
@@ -213,6 +222,9 @@ class GamePreferences extends Preferences {
 
             this._toggleStackStage(true);
             this.createEntry0("toggle_stack_stage");
+
+            this._toggleAlignCompaniesLeft(true);
+            this.createEntry0("toggle_align_companies_left");
         }
 
         this.createEntry0("game_sfx");
@@ -273,7 +285,8 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
-        this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this._toggleStackStage);
+        this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this._toggleStackStage.bind(this));
+        this.addConfigToggle("toggle_align_companies_left", "Align companies to the left", true, this._toggleAlignCompaniesLeft.bind(this));
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)

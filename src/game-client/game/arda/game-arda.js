@@ -69,6 +69,7 @@ let Arda = {
         link.setAttribute("type", "text/css");
         link.setAttribute("href","/media/assets/css/game-arda.css");
         document.head.appendChild(link);
+        document.body.classList.add("game-arda");
     },
 
     updateSinglePlayer : function()
