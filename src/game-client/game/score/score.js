@@ -211,6 +211,7 @@ const SCORING_INGAME =
     _scores: { },
     _hexIdMap : {},
     _names : {},
+    _doubleMisc : false,
 
     removeInGame : function(sHexId)
     {
@@ -629,6 +630,9 @@ const SCORING_INGAME =
         if (ptsByCategory["kill"] !== undefined)
             delete ptsByCategory["kill"];
 
+        if (!this._doubleMisc && ptsByCategory["misc"] !== undefined)
+            delete ptsByCategory["misc"];
+
         return ptsByCategory;
     },
 
@@ -663,6 +667,13 @@ const SCORING_INGAME =
             return;
         
         this.updatedStoredData(list);
+        this.calculateDoubles();
+        this.doUpdateInGameScores();
+    },
+
+    setDoubleMisc(bDouble)
+    {
+        this._doubleMisc = bDouble === true;
         this.calculateDoubles();
         this.doUpdateInGameScores();
     },
@@ -1372,6 +1383,11 @@ const SCORE_API = {
     updateInGameScores : function(list)
     {
         SCORING_INGAME.updateInGameScores(list);
+    },
+
+    setDoubleMisc : function(bDouble)
+    {
+        SCORING_INGAME.setDoubleMisc(bDouble);
     },
 
     showScoreSheet : function(jData)

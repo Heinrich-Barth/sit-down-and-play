@@ -111,6 +111,11 @@ class GamePreferences extends Preferences {
             document.body.removeAttribute("data-autosave");
     }
 
+    _doubleMiscPoints(isActive)
+    {
+        MeccgApi.send("/game/score/doublemisc", { misc: isActive === true });
+    }
+
     _toggleFullscreen(isActive)
     {
         const elem = document.documentElement;
@@ -253,9 +258,13 @@ class GamePreferences extends Preferences {
         {
             this.createSection("Game");
             this.createEntry0("game_addcards");   
+            
             if (this.isAdmin())
+            {
+                this.createEntry0("score_double_misc");
                 this.createEntry0("game_autosave");
-    
+            }
+                
             this.createEntry0("game_save");
             this.createEntry0("game_load");
             this.createEntry0("images_errata_dc");
@@ -297,6 +306,7 @@ class GamePreferences extends Preferences {
         this.addConfigSlider("game_sfx", "Sound volume", 100, 20, "fa-volume-up", this._volumeChange.bind(this));
         this.addConfigSlider("toggle_zoom", "Zoom Level", 2, 1, "fa-search-plus slider-short", this._zoomChange.bind(this));
         this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
+        this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this._doubleMiscPoints);
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 

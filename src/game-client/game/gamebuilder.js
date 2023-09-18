@@ -679,6 +679,8 @@ const GameBuilder = {
                 GameBuilder.Scoring.showScoreSheet(jData);
         });
 
+        MeccgApi.addListener("/game/score/doublemisc", (bIsMe, jData) => GameBuilder.Scoring.setDoubleMisc(jData.misc === true));
+
         MeccgApi.addListener("/game/score/show/current", (_bIsMe, data) => GameBuilder.Scoring.updateInGameScores(data));
 
         MeccgApi.addListener("/game/score/watch", (_bIsMe, jData) => GameBuilder.Scoring.showScoreSheetWatch(jData));
