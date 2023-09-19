@@ -1576,9 +1576,10 @@ div#table-dark {
   body .preview-container .preview-bottom .preview-right img,
   body .preview-container .preview-left img,
   body .preview-container .preview-top img {
-    width: 100%;
+    width: auto;
     max-height: 40%;
     height: auto;
+    position: fixed;
   }
   body.mapwindow .preview-container {
     display: none !important;

@@ -144,9 +144,10 @@ body {
             bottom: auto;
             max-width: 100% !important;
             img {
-                width: 100%;
+                width: auto;
                 max-height: 40%;
                 height: auto;
+                position: fixed;
             }
         }
     }
