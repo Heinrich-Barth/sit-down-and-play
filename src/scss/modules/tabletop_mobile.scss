@@ -145,9 +145,16 @@ body {
             max-width: 100% !important;
             img {
                 width: 100%;
-                max-height: auto;
+                max-height: 40%;
                 height: auto;
             }
+        }
+    }
+
+    &.mapwindow {
+        .preview-container 
+        {
+            display: none !important;
         }
     }
 }

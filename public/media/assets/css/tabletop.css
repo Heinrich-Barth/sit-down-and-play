@@ -1577,7 +1577,10 @@ div#table-dark {
   body .preview-container .preview-left img,
   body .preview-container .preview-top img {
     width: 100%;
-    max-height: auto;
+    max-height: 40%;
     height: auto;
+  }
+  body.mapwindow .preview-container {
+    display: none !important;
   }
 }
