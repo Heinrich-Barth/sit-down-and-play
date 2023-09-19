@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "description": "Sit down and play MECCG",
   "engines": {
-    "node": "12.x"
+    "node": ">=v18.x",
+    "npm": ">=8.x"
   },
   "main": "index.js",
   "scripts": {
