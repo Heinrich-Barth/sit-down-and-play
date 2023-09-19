@@ -26,6 +26,38 @@
     </head>
     <body class="bg-game large-preview zoom-1" data-is-game="true" data-use-dce="{TPL_USE_DCE}" data-connected-count="{TPL_CON_COUNT}" data-is-watcher="{TPL_IS_VISITOR}" data-dice="{TPL_DICE}" data-is-singleplayer="{TPL_IS_SINGLEPLAYER}" data-game-arda="{TPL_IS_ARDA}">
 
+        <div id="lidles-eye">
+            <img src="/media/assets/images/splash-eye.png" alt="Waiting" title="Waiting...">
+        </div>
+
+        <div class="table table-dark">
+            <div class="area area-opponent" data-opponent-id="opp1">
+                <div class="row" id="opponent_table">
+                    <!-- STAGING AREA -->
+                    <div class="staging-area staging-area-opponent rot180">
+                        <div class="staging-area-resources staging-area-area" id="staging_area_resources_opponent"></div>
+                        <div class="staging-area-hazard staging-area-area" id="staging_area_hazards_opponent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="area area-player table-padding-bottom" data-turn-phase="">
+                <div class="row">
+                    <!-- STAGING AREA -->
+                    <div class="staging-area staging-area-player" id="staging-area-player">
+                        <div class="staging-area-drop" id="staging_area_drop"></div>
+                        <div class="staging-area-resources staging-area-area" id="staging_area_resources_player"></div>
+                        <div class="staging-area-hazard staging-area-area" id="staging_area_hazards_player"></div>
+                    </div>
+
+                    <!-- main table area for playing -->
+                    <div class="companies" id="player_companies">
+                        <div class="company tableCell emptyContainer create-new-company" id="create_new_company"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="interface" data-time="{TPL_JOINED_TIMESTAMP}">
 
             <div class="player-selector-box">
@@ -109,34 +141,6 @@
             </div>
         </div>
 
-        <div class="table table-dark">
-            <div class="area area-opponent" data-opponent-id="opp1">
-                <div class="row" id="opponent_table">
-                    <!-- STAGING AREA -->
-                    <div class="staging-area staging-area-opponent rot180">
-                        <div class="staging-area-resources staging-area-area" id="staging_area_resources_opponent"></div>
-                        <div class="staging-area-hazard staging-area-area" id="staging_area_hazards_opponent"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="area area-player table-padding-bottom" data-turn-phase="">
-                <div class="row">
-                    <!-- STAGING AREA -->
-                    <div class="staging-area staging-area-player" id="staging-area-player">
-                        <div class="staging-area-drop" id="staging_area_drop"></div>
-                        <div class="staging-area-resources staging-area-area" id="staging_area_resources_player"></div>
-                        <div class="staging-area-hazard staging-area-area" id="staging_area_hazards_player"></div>
-                    </div>
-
-                    <!-- main table area for playing -->
-                    <div class="companies" id="player_companies">
-                        <div class="company tableCell emptyContainer create-new-company" id="create_new_company"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div id="view_card_list_container" class="hidden">
             <div class="view-card-list-container blue-box" data-class="view-card-list-container blue-box" >
                 <div class="container-title-bar smallCaps">
@@ -150,10 +154,6 @@
             </div>
         </div>
         
-        <div id="lidles-eye">
-            <img src="/media/assets/images/splash-eye.png" alt="Waiting" title="Waiting...">
-        </div>
-
         <script type="text/javascript" nonce="START">
             const g_sDisplayName = "{TPL_DISPLAYNAME}";
             const g_lTimeJoined = {TPL_TIME};
