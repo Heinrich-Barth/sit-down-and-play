@@ -1437,42 +1437,42 @@ div#table-dark {
 }
 
 @media only screen and (max-width: 400px) {
-  body:not(.game-watch-only) .table {
+  body .table {
     height: auto;
     min-height: 0.5vh;
     padding-top: 100px;
   }
-  body:not(.game-watch-only) .card-bar {
+  body .card-bar {
     top: auto;
   }
-  body:not(.game-watch-only) .card-bar a.icon {
+  body .card-bar a.icon {
     display: inline-block;
   }
-  body:not(.game-watch-only) .card-bar,
-  body:not(.game-watch-only) .player-selector-box {
+  body .card-bar,
+  body .player-selector-box {
     position: relative !important;
     top: auto !important;
   }
-  body:not(.game-watch-only) .chatbox {
+  body .chatbox {
     left: 5px;
     right: 5px;
     width: auto !important;
   }
-  body:not(.game-watch-only) #visitor-wrapper,
-  body:not(.game-watch-only) .config-wrapper-game,
-  body:not(.game-watch-only) #lobby-wrapper {
+  body #visitor-wrapper,
+  body .config-wrapper-game,
+  body #lobby-wrapper {
     top: 66px !important;
   }
-  body:not(.game-watch-only) #lobby-wrapper {
+  body #lobby-wrapper {
     left: 30px !important;
   }
-  body:not(.game-watch-only) .config-wrapper-game {
+  body .config-wrapper-game {
     left: 90px !important;
   }
-  body:not(.game-watch-only) #visitor-wrapper {
+  body #visitor-wrapper {
     left: 60px;
   }
-  body:not(.game-watch-only) .staging-area {
+  body .staging-area {
     display: block !important;
     width: 100% !important;
     min-height: 100px !important;
@@ -1481,31 +1481,34 @@ div#table-dark {
     padding-left: 0 !important;
     position: relative;
   }
-  body:not(.game-watch-only) .table .companies {
+  body .table .row {
+    margin: 0 !important;
+  }
+  body .table .companies {
     display: block !important;
   }
-  body:not(.game-watch-only) .companies .company {
+  body .companies .company {
     margin-right: 0 !important;
     border-top: 2px dotted #efefef;
   }
-  body:not(.game-watch-only) .company-host, body:not(.game-watch-only) .company {
+  body .company-host, body .company {
     padding-right: 0 !important;
   }
-  body:not(.game-watch-only).on-drag-event-hazard .staging-area-drop, body:not(.game-watch-only).on-drag-event-resource .staging-area-drop {
+  body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
     display: block !important;
     left: 0px;
     right: 0;
     top: 0;
     bottom: 0 !important;
   }
-  body:not(.game-watch-only) .companies .create-new-company {
+  body .companies .create-new-company {
     display: block !important;
     max-height: 40px !important;
     min-height: 40px !important;
     width: 90% !important;
     max-width: 90% !important;
   }
-  body:not(.game-watch-only) .card-hands {
+  body .card-hands {
     position: relative !important;
     left: auto;
     bottom: auto;
@@ -1514,42 +1517,67 @@ div#table-dark {
     min-width: auto;
     min-height: auto;
   }
-  body:not(.game-watch-only) .table .area-player.table-padding-bottom {
+  body .table .area-player.table-padding-bottom {
     padding-bottom: 0 !important;
   }
-  body:not(.game-watch-only) .area-player::after {
+  body .area-player::after {
     display: none !important;
   }
-  body:not(.game-watch-only) .view-card-list-container {
+  body .view-card-list-container {
     left: 5%;
     top: 5%;
     right: 5%;
     bottom: 5%;
     background-color: #000;
   }
-  body:not(.game-watch-only) .hand-card-actions {
+  body .hand-card-actions {
     position: absolute;
   }
-  body:not(.game-watch-only) .scoring-sheet-ingame {
+  body .scoring-sheet-ingame {
     position: relative !important;
   }
-  body:not(.game-watch-only) #dices-panel-content,
-  body:not(.game-watch-only) #config-panel {
+  body .scoring-sheet-ingame table {
+    width: 100%;
+  }
+  body #dices-panel-content,
+  body #config-panel {
     left: 5% !important;
     top: 5% !important;
     right: 5%;
     background: #000;
   }
-  body:not(.game-watch-only) .scoring-sheet .view-score-victory-container,
-  body:not(.game-watch-only) .scoring-sheet .view-score-container {
+  body .scoring-sheet .view-score-victory-container,
+  body .scoring-sheet .view-score-container {
     position: relative;
     left: 0;
     top: 0;
   }
-  body:not(.game-watch-only) .scoring-sheet .view-card-list-container {
+  body .scoring-sheet .view-card-list-container {
     position: relative;
     left: 0;
     top: 0;
     width: auto;
+  }
+  body .preview-container .preview-top {
+    top: 5px !important;
+  }
+  body .preview-container .preview-bottom {
+    bottom: 5px !important;
+  }
+  body .preview-container .preview-bottom .preview-right,
+  body .preview-container .preview-left,
+  body .preview-container .preview-top {
+    left: 5px;
+    right: 5px;
+    height: auto !important;
+    bottom: auto;
+    max-width: 100% !important;
+  }
+  body .preview-container .preview-bottom .preview-right img,
+  body .preview-container .preview-left img,
+  body .preview-container .preview-top img {
+    width: 100%;
+    max-height: auto;
+    height: auto;
   }
 }

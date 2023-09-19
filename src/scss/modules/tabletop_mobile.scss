@@ -1,6 +1,6 @@
 
 @media only screen and (max-width: 400px) {
-body:not(.game-watch-only) {
+body {
     .table { 
         height: auto; min-height: 0.5vh;
         padding-top: 100px;
@@ -38,9 +38,14 @@ body:not(.game-watch-only) {
         position: relative;
     }
 
-    .table .companies {
-        display: block !important;
-    }
+    .table {
+        .row {
+            margin: 0 !important;
+        }
+        .companies {
+            display: block !important;
+        }
+    } 
 
 
     .companies .company { margin-right: 0 !important; border-top: 2px dotted #efefef;}
@@ -92,6 +97,7 @@ body:not(.game-watch-only) {
 
     .scoring-sheet-ingame {
         position: relative !important;
+        table { width: 100%; }
     }
 
     #dices-panel-content,
@@ -117,9 +123,32 @@ body:not(.game-watch-only) {
             top: 0;
             width: auto;
         }
-    }
-    
+    }  
 
-    
+    .preview-container 
+    {
+        .preview-top{
+            top: 5px !important;
+        }
+        .preview-bottom{
+            bottom: 5px !important;
+        }
+        .preview-bottom
+        .preview-right,
+        .preview-left,
+        .preview-top {
+            
+            left: 5px;
+            right: 5px;
+            height: auto !important;
+            bottom: auto;
+            max-width: 100% !important;
+            img {
+                width: 100%;
+                max-height: auto;
+                height: auto;
+            }
+        }
+    }
 }
 }
