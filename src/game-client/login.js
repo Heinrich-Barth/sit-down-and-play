@@ -906,7 +906,7 @@ const g_pDeckTextFields = new DeckTextFields();
     .then(onLoadDecks)
     .catch((err) => 
     {
-        console.log(err);
+        console.error(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
     });
 
@@ -930,7 +930,7 @@ const g_pDeckTextFields = new DeckTextFields();
         //else 
         //    insertSocialMedia(false);
     })
-    .catch(console.log);
+    .catch(console.error);
 
 })();
 
