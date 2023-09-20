@@ -146,7 +146,7 @@ CreateCardsMeta.prototype.createUniqueList = function(cards, properts, target)
     for (let card of cards) 
     {
         const arr = card[properts];
-        if (arr === null || arr.length === 0)
+        if (arr === null || arr === undefined || arr.length === 0)
             continue;
 
         for (let _val of arr)
