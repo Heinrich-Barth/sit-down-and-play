@@ -128,8 +128,20 @@ CardList.prototype.getImageByCode = function(code, sDefault)
     else if (this.useImagesIC() && image.errata_ic !== undefined && image.errata_ic !== "")
         return image.errata_ic;
 
-    return image.image
+    return this.getLocalisedImage(image.image);
 };
+
+CardList.prototype.getLocalisedImage = function(image)
+{
+    if (typeof image !== "string" || image === "" || sessionStorage.getItem("cards_es") !== "yes")
+        return image;
+    
+    if (image.indexOf("/en-remaster/") === -1)
+        return image;
+    else
+        return image.replace("/en-remaster/", "/es-remaster/");
+} 
+
 
 CardList.prototype.getImageErratumDc = function(image)
 {

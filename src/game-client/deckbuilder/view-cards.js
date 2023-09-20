@@ -413,7 +413,10 @@ const ViewCards =
         fetch("/data/list/cards")
         .then((response) => response.json())
         .then(this.onCardResult.bind(this))
-        .catch((err) => document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Something went wrong. Error is : " + err.message })))
+        .catch((err) =>{
+            console.error(err);
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Something went wrong. Error is : " + err.message }));
+        })
         .finally(() => {
             const elem = document.getElementById("loading-line-counter");
             if (elem !== null)
@@ -565,6 +568,23 @@ const ViewCards =
         div.appendChild(grp);
         div.setAttribute("class", "row-cols");
 
+        const labelLang = document.createElement("label");
+        labelLang.setAttribute("for", "card-lang");
+        labelLang.innerText = "Use Spanish cards (if available)";
+
+        const inputLang = document.createElement("input");
+        inputLang.setAttribute("id", "card-lang");
+        inputLang.setAttribute("type", "checkbox");
+        if (sessionStorage.getItem("cards_es") === "yes")
+            inputLang.setAttribute("checked", "checked");
+        inputLang.onchange = () => sessionStorage.setItem("cards_es", document.getElementById("card-lang")?.checked === true ? "yes" : "no");
+
+        grp = document.createElement("div");
+        grp.setAttribute("class", "row-col");
+        grp.appendChild(inputLang);
+        grp.appendChild(labelLang);
+        div.appendChild(grp);
+        
         const divP = document.getElementById("view-preferences");
         if (divP !== null)
         {

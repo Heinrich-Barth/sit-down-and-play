@@ -932,6 +932,15 @@ const g_pDeckTextFields = new DeckTextFields();
     })
     .catch(console.error);
 
+    sessionStorage.setItem("cards_es", "no");
+    const toggleLang = document.getElementById("toggle_use_spanish");
+    if (toggleLang !== null)
+    {
+        toggleLang.onchange = (e) => {
+            const useSpanish = e.target?.checked === true ? "yes" : "no";
+            sessionStorage.setItem("cards_es", useSpanish);
+        }
+    }       
 })();
 
 document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);

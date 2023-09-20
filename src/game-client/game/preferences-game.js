@@ -116,6 +116,11 @@ class GamePreferences extends Preferences {
         MeccgApi.send("/game/score/doublemisc", { misc: isActive === true });
     }
 
+    _toggleSpanishCards(isActive)
+    {
+        sessionStorage.setItem("cards_es", isActive ? "yes" : "no");
+    }
+
     _toggleFullscreen(isActive)
     {
         const elem = document.documentElement;
@@ -237,6 +242,7 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds/Customise");
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
+        this.createEntry0("toggle_spanishcards");
         // this._backgroundDarkness(true);
         
         this.createEntry0("toggle_zoom");
@@ -309,6 +315,8 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this._doubleMiscPoints);
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
+
+        this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available) - needs browser refresh.", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards);
 
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
