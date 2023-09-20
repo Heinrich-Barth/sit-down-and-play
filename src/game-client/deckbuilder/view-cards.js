@@ -49,20 +49,14 @@ const ViewCards =
 
             if (this._quantities.hasTypeLimitation(card.Secondary))
                 _limit = this._quantities.getTypeLimit(card.Secondary, 0);
-            else
+            else if (card.uniqueness)
             {
-                if (card.uniqueness)
-                {
-                    if (!bHasLimits || _limit > this._quantities.getUnique())
-                        _limit = this._quantities.getUnique();
-                }
-                else
-                {
-                    if (!bHasLimits) /** some cards may be available > default */
-                        _limit = this._quantities.getLimit(card.title);
-                }
+                if (!bHasLimits || _limit > this._quantities.getUnique())
+                    _limit = this._quantities.getUnique();
             }
-
+            else if (!bHasLimits) /** some cards may be available > default */
+                _limit = this._quantities.getLimit(card.title);
+        
             if (bHasLimits && _limit === 0)
                 _limit = -1;
 
