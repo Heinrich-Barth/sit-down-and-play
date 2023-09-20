@@ -168,7 +168,7 @@ CardList.prototype.getMostRecentCardCode = function(_code)
     _code = this.removeSetInformation(_code);
     for (let key in this._list)
     {
-        if (key.indexOf(_code) === 0)
+        if (key.startsWith(_code))
             return key;
     }
 
