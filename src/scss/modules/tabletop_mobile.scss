@@ -158,5 +158,48 @@ body {
             display: none !important;
         }
     }
+
+    #contextmenu
+    {
+        position: fixed;
+        left: 10%;
+        right: 10%;
+        top: 10%;
+        background-color: #000;
+    }
+
+    &.on-drag-event-generic .mobile-action-area
+    {
+        display: block;
+    }
 }
+}
+
+body.force-mobile-helper.on-drag-event-generic .mobile-action-area
+{
+    display: block;
+}
+
+.mobile-action-area {
+    position: fixed;
+    right: 0;
+    z-index: 900;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 3px dashed #000 !important;
+    border-radius: 5px !important;
+    font-size: 3em;
+    color: #F0C648;
+    text-align: center;
+    padding: 5px;
+    display: none;
+
+    &.mobile-action-area-leftclick
+    {
+        top: 30%;
+    }
+    
+    &.mobile-action-area-rightclick
+    {
+        top: 50%;
+    }
 }

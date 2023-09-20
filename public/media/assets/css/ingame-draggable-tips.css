@@ -158,7 +158,7 @@ body.on-drag-event-generic .area-opponent .site-target:before
 }
 
 
-
+.mobile-action-area.on-drag-over,
 body.on-drag-event-generic .card-bar .on-drag-over,
 body.on-drag-event-generic .area .on-drag-over,
 .company-character .ui-droppable-active.on-drag-over,

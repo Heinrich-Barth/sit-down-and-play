@@ -131,7 +131,7 @@ class DropableAreas {
     {
         return DropableAreas.get("playercard-hand-content");
     }
-    
+   
     static victory() 
     { 
         return DropableAreas.get("icon_bar_victory"); 
@@ -261,6 +261,38 @@ const DropFunctions = {
 
         DropFunctions.removeDraggable(ui);
         DropFunctions.getApi().send("/game/card/move", {uuid: uuid, target: "outofplay", source: src, drawTop : false});
+        return false;
+    },
+
+    dropOnMobileActionAreaLeftClick : function( _event, ui ) 
+    {
+        const elem = ui.draggable.get();
+        const img = elem?.length === 0 ? null : elem[0].querySelector("img");
+        if (img !== null)
+            img.dispatchEvent(new Event("click"));
+
+        return false;
+    },
+
+    dropOnMobileActionAreaLeftClickRight : function( _event, ui ) 
+    {
+        const elem = ui.draggable.get();
+        const img = elem?.length === 0 ? null : elem[0].querySelector("img");
+        if (img === null)
+            return false;
+
+        const ev3 = new MouseEvent("contextmenu", {
+            bubbles: false,
+            cancelable: true,
+            view: window,
+            button: 2,
+            buttons: 0,
+            clientX: 0,
+            clientY: 0
+        });
+
+        img.dispatchEvent(ev3);
+
         return false;
     },
     
@@ -1036,6 +1068,41 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
             return true;
         }
     });
+
+    if (document.body.getAttribute("data-is-watcher") !== "true")
+    {
+        let elem = document.createElement("div");
+        elem.setAttribute("id", "mobile-action-area-left");
+        elem.setAttribute("class", "mobile-action-area mobile-action-area-leftclick");
+        document.body.appendChild(elem);
+
+        let icon = document.createElement("i");
+        icon.setAttribute("class", "fa fa-repeat");
+        elem.appendChild(icon);
+
+        jQuery(document.getElementById("mobile-action-area-left")).droppable({
+            tolerance: "pointer",
+            classes: HandCardsDraggable.droppableParams,
+            drop: DropFunctions.dropOnMobileActionAreaLeftClick,
+            accept: () => true
+        });
+
+        elem = document.createElement("div");
+        elem.setAttribute("id", "mobile-action-area-right");
+        elem.setAttribute("class", "mobile-action-area mobile-action-area-rightclick");
+        document.body.appendChild(elem);
+
+        icon = document.createElement("i");
+        icon.setAttribute("class", "fa fa-bars");
+        elem.appendChild(icon);
+
+        jQuery(document.getElementById("mobile-action-area-right")).droppable({
+            tolerance: "pointer",
+            classes: HandCardsDraggable.droppableParams,
+            drop: DropFunctions.dropOnMobileActionAreaLeftClickRight,
+            accept: () => true
+        });
+    }
 
     HandCardsDraggable.setupCardPreviewElements();
     return HandCardsDraggable;

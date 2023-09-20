@@ -91,6 +91,11 @@ class GamePreferences extends Preferences {
         this._toggleClass(document.querySelector(".table"), isActive, "table-companies-left");
     }
 
+    _toggleTouchHelper(isActive)
+    {
+        this._toggleClass(document.body, isActive, "force-mobile-helper");
+    }
+
     _togglePaddingBottom(isActive)
     {
         const table = document.querySelector(".area-player");
@@ -243,7 +248,7 @@ class GamePreferences extends Preferences {
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
         this.createEntry0("toggle_spanishcards");
-        // this._backgroundDarkness(true);
+        this.createEntry0("toggle_touch_help");
         
         this.createEntry0("toggle_zoom");
 
@@ -333,6 +338,7 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
         this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
+        this.addConfigToggle("toggle_touch_help", "Use mobile touch support", false, this._toggleTouchHelper.bind(this));
 
         this._toggleCardPreview();
     }
