@@ -78,7 +78,7 @@ CreateCardsMeta.prototype.updateSecondaries = function (cards)
         _secondariesCards[card.Secondary].push(card.index);
     }
 
-    _secondaries.sort();
+    _secondaries.sort(this.sortAlphabetically);
 
     this._listSecondaries = {};
     for (let _secondary of _secondaries)
@@ -101,7 +101,7 @@ CreateCardsMeta.prototype.updateAlign = function (cards)
         _secondariesCards[card.alignment].push(card.index);
     }
 
-    _secondaries.sort();
+    _secondaries.sort(this.sortAlphabetically);
 
     for (let _secondary of _secondaries)
         this._listAlignments[_secondary] = _secondariesCards[_secondary];
@@ -124,7 +124,7 @@ CreateCardsMeta.prototype.updateTypes = function (cards)
         _secondariesCards[_type].push(card.index);
     }
 
-    _secondaries.sort();
+    _secondaries.sort(this.sortAlphabetically);
 
     for (let _secondary of _secondaries)
         this._listType[_secondary] = _secondariesCards[_secondary];
@@ -160,7 +160,7 @@ CreateCardsMeta.prototype.createUniqueList = function(cards, properts, target)
         }
     }
 
-    _list.sort();
+    _list.sort(this.sortAlphabetically);
 
     for (let _secondary of _list)
         target[_secondary] = _secondariesCards[_secondary];
@@ -190,9 +190,14 @@ CreateCardsMeta.prototype.updateHazardOrResource = function (cards)
             this._listNonHazardTypes.push(card.Secondary);
     }
 
-    this._listHazardTypes.sort();
-    this._listNonHazardTypes.sort();
+    this._listHazardTypes.sort(this.sortAlphabetically);
+    this._listNonHazardTypes.sort(this.sortAlphabetically);
 };
+
+CreateCardsMeta.prototype.sortAlphabetically = function (a,b) 
+{
+    return a.localeCompare(b, 'en', { sensitivity: 'base' });
+}
 
 CreateCardsMeta.prototype.saveMeta = function () 
 {
