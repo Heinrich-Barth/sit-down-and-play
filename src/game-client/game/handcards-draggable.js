@@ -1102,6 +1102,23 @@ function createHandCardsDraggable(_CardPreview, _MeccgApi)
             drop: DropFunctions.dropOnMobileActionAreaLeftClickRight,
             accept: () => true
         });
+
+        const bar = document.getElementById("progression-phase-box");
+        if (bar !== null)
+        {
+            const a = document.createElement("a");
+            a.setAttribute("class", "icon taskbar-pin fa fa-thumb-tack");
+            a.onclick = () => {
+                if (document.body.classList.contains("taskbar-pin-pin"))
+                    document.body.classList.remove("taskbar-pin-pin");
+                else
+                    document.body.classList.add("taskbar-pin-pin");
+
+                return false;
+            }
+
+            bar.prepend(a);
+        }
     }
 
     HandCardsDraggable.setupCardPreviewElements();

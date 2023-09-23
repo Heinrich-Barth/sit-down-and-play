@@ -1394,6 +1394,7 @@ body.on-show-map-window .location-icon {
   position: fixed;
   left: 100px;
   top: 100px;
+  z-index: 1001;
 }
 .card-infobox.card-infobox-hidden {
   display: none;
@@ -1437,11 +1438,6 @@ div#table-dark {
 }
 
 @media screen and (max-width: 500px) {
-  body .table {
-    height: auto;
-    min-height: 0.5vh;
-    padding-top: 100px;
-  }
   body .card-bar {
     top: auto;
   }
@@ -1481,32 +1477,70 @@ div#table-dark {
     padding-left: 0 !important;
     position: relative;
   }
+  body .table {
+    height: auto;
+    min-height: 0.5vh;
+    padding-top: 100px;
+  }
   body .table .row {
     margin: 0 !important;
   }
   body .table .companies {
     display: block !important;
+    padding: 0 20px;
+  }
+  body .table .location-icon-image {
+    visibility: visible !important;
   }
   body .companies .company {
-    margin-right: 0 !important;
     border-top: 2px dotted #efefef;
+  }
+  body .companies .company.nonEmptyContainer {
+    min-width: 40% !important;
   }
   body .company-host, body .company {
     padding-right: 0 !important;
   }
   body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
     display: block !important;
-    left: 0px;
+    position: fixed !important;
+    width: 50px !important;
+    height: 50px !important;
+    top: 400px !important;
+    right: 0px !important;
+    left: auto;
+  }
+  body.on-drag-event-hazard .staging-area-drop::before, body.on-drag-event-resource .staging-area-drop::before {
+    color: #fff;
+    content: "Events";
+  }
+  body.on-drag-event-generic .card-bar.card-bar-play .icons #icon_bar_discardpile,
+  body.on-drag-event-generic .card-bar.card-bar-play .icons #icon_hand {
+    position: fixed;
     right: 0;
-    top: 0;
-    bottom: 0 !important;
+    left: auto;
+  }
+  body.on-drag-event-generic .card-bar.card-bar-play .icons #icon_hand {
+    bottom: 150px;
+  }
+  body.on-drag-event-generic .card-bar.card-bar-play .icons #icon_bar_discardpile {
+    bottom: 250px;
+  }
+  body div#staging-area-player:before {
+    position: fixed;
+    left: auto;
+    top: 390px;
+    right: 0px;
   }
   body .companies .create-new-company {
+    position: fixed;
     display: block !important;
-    max-height: 40px !important;
-    min-height: 40px !important;
-    width: 90% !important;
-    max-width: 90% !important;
+    right: 0;
+    left: auto;
+    height: 145px;
+    top: 300px;
+    max-height: 145px !important;
+    width: 50px !important;
   }
   body .card-hands {
     position: relative !important;
@@ -1594,9 +1628,28 @@ div#table-dark {
   body.on-drag-event-generic .mobile-action-area {
     display: block;
   }
+  body .taskbar-pin {
+    display: inline-block !important;
+    color: #fff;
+  }
+  body .taskbar-pin:hover {
+    color: #F0C648;
+  }
+  body.taskbar-pin-pin .taskbar-pin {
+    color: #F0C648;
+  }
+  body.taskbar-pin-pin #playercard_hand {
+    position: fixed !important;
+    left: 0;
+    bottom: 0;
+    z-index: 500;
+  }
 }
 body.force-mobile-helper.on-drag-event-generic .mobile-action-area {
   display: block;
+}
+body.force-mobile-helper .location-icon-image {
+  visibility: visible !important;
 }
 
 .mobile-action-area {
@@ -1610,11 +1663,17 @@ body.force-mobile-helper.on-drag-event-generic .mobile-action-area {
   color: #F0C648;
   text-align: center;
   padding: 5px;
+  width: 50px;
+  height: 50px;
   display: none;
 }
 .mobile-action-area.mobile-action-area-leftclick {
-  top: 30%;
+  top: 100px;
 }
 .mobile-action-area.mobile-action-area-rightclick {
-  top: 50%;
+  top: 170px;
+}
+
+body .taskbar-pin {
+  display: none;
 }

@@ -1,11 +1,6 @@
 
 @media screen and (max-width: 500px) {
 body {
-    .table { 
-        height: auto; min-height: 0.5vh;
-        padding-top: 100px;
-    }
-
     .card-bar {
         top: auto;
 
@@ -39,34 +34,77 @@ body {
     }
 
     .table {
+        height: auto; min-height: 0.5vh;
+        padding-top: 100px;
+
         .row {
             margin: 0 !important;
         }
         .companies {
             display: block !important;
+            padding: 0 20px;
+        }
+
+        .location-icon-image {
+            visibility: visible !important;
         }
     } 
 
-
-    .companies .company { margin-right: 0 !important; border-top: 2px dotted #efefef;}
+    .companies .company { border-top: 2px dotted #efefef;
+        &.nonEmptyContainer {
+            min-width: 40% !important;
+        }
+    }
     .company-host, .company { padding-right: 0 !important;}
 
     &.on-drag-event-hazard .staging-area-drop,
     &.on-drag-event-resource .staging-area-drop {
         display: block !important;
-        left: 0px;
-        right: 0;
-        top: 0;
-        bottom: 0 !important;
+        position: fixed !important;
+        width: 50px !important;
+        height: 50px !important;
+        top: 400px !important;
+        right: 0px !important;
+        left: auto;
+
+        &::before {
+            color: #fff;
+            content: "Events";
+        }
+    }
+
+    &.on-drag-event-generic {
+        .card-bar.card-bar-play .icons #icon_bar_discardpile,
+        .card-bar.card-bar-play .icons #icon_hand {
+            position: fixed;
+            right: 0;
+            left: auto;
+        }
+        .card-bar.card-bar-play .icons #icon_hand {
+            bottom: 150px;
+        }
+        .card-bar.card-bar-play .icons #icon_bar_discardpile {
+            bottom: 250px;
+        }
+    }
+
+    div#staging-area-player:before {
+        position: fixed;
+        left: auto;
+        top: 390px;
+        right: 0px;
     }
 
     .companies .create-new-company
     { 
+        position: fixed;
         display: block !important;
-        max-height: 40px !important;
-        min-height: 40px !important;
-        width: 90% !important;
-        max-width: 90% !important;
+        right: 0;
+        left: auto;
+        height: 145px;
+        top: 300px;
+        max-height: 145px !important;
+        width: 50px !important;
     }
 
     .card-hands {
@@ -172,12 +210,42 @@ body {
     {
         display: block;
     }
+
+    .taskbar-pin {
+        display: inline-block !important;
+        color: #fff;
+
+        &:hover {
+            color: #F0C648;
+        }
+    }
+
+    &.taskbar-pin-pin
+    {
+        .taskbar-pin {
+            color: #F0C648;
+        }
+    
+        #playercard_hand {
+            position: fixed !important;
+            left: 0;
+            bottom: 0;
+            z-index: 500;
+        }
+    }
 }
 }
 
-body.force-mobile-helper.on-drag-event-generic .mobile-action-area
+body.force-mobile-helper
 {
-    display: block;
+    &.on-drag-event-generic .mobile-action-area
+    {
+        display: block;
+    }
+    
+    .location-icon-image {
+        visibility: visible !important;
+    }
 }
 
 .mobile-action-area {
@@ -191,15 +259,21 @@ body.force-mobile-helper.on-drag-event-generic .mobile-action-area
     color: #F0C648;
     text-align: center;
     padding: 5px;
+    width: 50px;
+    height: 50px;
     display: none;
 
     &.mobile-action-area-leftclick
     {
-        top: 30%;
+        top: 100px;
     }
     
     &.mobile-action-area-rightclick
     {
-        top: 50%;
+        top: 170px;
     }
+}
+
+body .taskbar-pin {
+    display: none;
 }
