@@ -124,6 +124,35 @@ class GamePreferences extends Preferences {
     _toggleSpanishCards(isActive)
     {
         sessionStorage.setItem("cards_es", isActive ? "yes" : "no");
+
+        const list = document.body.getElementsByClassName("card-icon");
+        if (list === null || list.length === 0)
+            return;
+
+        for (let elem of list)
+            this._replaceImageLanguage(elem, !isActive);
+    }
+
+    _replaceImageLanguage(img, useEnglish)
+    {
+        this._replaceImageLanguageAttribute(img, useEnglish, "src");
+        this._replaceImageLanguageAttribute(img, useEnglish, "data-image-backside");
+        this._replaceImageLanguageAttribute(img, useEnglish, "data-img-image");
+    }
+
+    _replaceImageLanguageAttribute(img, useEnglish, attribName)
+    {
+        if (!img.hasAttribute(attribName))
+            return;
+
+        const val = img.getAttribute(attribName);
+        if (useEnglish)
+        {
+            if (val.indexOf("/es-remaster/") !== -1)
+                img.setAttribute(attribName, val.replace("/es-remaster/", "/en-remaster/"));
+        }
+        else if (val.indexOf("/en-remaster/") !== -1)
+            img.setAttribute(attribName, val.replace("/en-remaster/", "/es-remaster/"));
     }
 
     _toggleFullscreen(isActive)
@@ -307,8 +336,7 @@ class GamePreferences extends Preferences {
     }
 
     addConfiguration()
-    {
-        
+    {        
         this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
         this.addConfigToggle("images_errata_dc", "Use CoE Errata", this.getUseDCByDefault());
         
@@ -321,7 +349,7 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
 
-        this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available) - needs browser refresh.", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards);
+        this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available).", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards.bind(this));
 
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
