@@ -119,6 +119,11 @@ div#arda_minors_hand {
 
 div#arda_mps_hand {
     bottom: 10px;
+    
+}
+
+.arda-card-hand-mps {
+    max-width: 34%;
 }
 
 .arda-card-hands-sizer {
@@ -281,4 +286,55 @@ div#arda_mps_hand {
 
 .game-arda .table .row {
     padding-right: 100px;
+}
+
+
+@media screen and (max-width: 500px) {body {
+
+    .arda-hand-wrapper { display: none;}
+    .arda-card-hands {
+        position: relative !important;
+        right: auto;
+        z-index: 400;
+        padding: 5px;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        min-height: 84px;
+        max-height: 200px;
+        overflow-y: auto;
+        top: auto !important;
+        opacity: 1 !important;
+        margin-bottom: 20px;
+        margin-right: 0 !important;
+    }
+
+    #playercard_hand.card-hands {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .arda-inline {
+        margin-right: 60px;
+    }
+
+    .card-hand {
+        margin-right: 0px !important;
+    }
+
+    .arda-actions,
+    .arda-hand-card-actions { display: inline-block !important}
+    .arda-card-hands-sizer{ display: block !important; }
+    .arda-hand-card-actions > .arda-inline { margin-right: 60px !important;}
+}}
+
+body.force-mobile-helper
+{
+    &.on-drag-event-generic .mobile-action-area
+    {
+        display: block;
+    }
+    
+    .location-icon-image {
+        visibility: visible !important;
+    }
 }

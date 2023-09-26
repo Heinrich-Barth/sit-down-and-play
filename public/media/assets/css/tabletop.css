@@ -1468,6 +1468,9 @@ div#table-dark {
   body #visitor-wrapper {
     left: 60px;
   }
+  body #playercard-hand-content {
+    background-color: #000;
+  }
   body .staging-area {
     display: block !important;
     width: 100% !important;
