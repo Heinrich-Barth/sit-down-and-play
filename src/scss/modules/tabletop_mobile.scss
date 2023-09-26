@@ -118,6 +118,13 @@ body {
         min-height: auto;
     }
 
+    .playercard-hand-container {
+
+        .card-hand {
+            margin-left: 0 !important;
+        }
+    }
+
     .table .area-player.table-padding-bottom { padding-bottom: 0 !important;}
 
     .area-player::after {

@@ -411,9 +411,15 @@ const GameCompanies = {
                 if (pThis !== null)
                 {
                     if (bIsTapped)
+                    {
+                        pThis.classList.remove("state_ready");
                         pThis.classList.add("state_tapped");
+                    }
                     else
+                    {
                         pThis.classList.remove("state_tapped");
+                        pThis.classList.add("state_ready");
+                    }
                 }
             });
         });
@@ -679,7 +685,13 @@ const GameCompanies = {
     
     onMenuActionReady: function (uuid)
     {
-        this.onMenuActionClear(document.querySelector('div.card[data-uuid="' + uuid + '"]'));
+        const elem = document.querySelector('div.card[data-uuid="' + uuid + '"]');
+        if (elem === null)
+            return;
+
+        this.onMenuActionClear(elem);
+        if (!elem.classList.contains("state_ready"))
+            elem.classList.add("state_ready");
     },
 
     onMenuActionTap: function (uuid, _code, bForced)

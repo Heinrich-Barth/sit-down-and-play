@@ -585,24 +585,41 @@ img.card-icon {
   font-size: 11px;
 }
 
+.state_ready img {
+  transform: rotate(0);
+  transition: all 0.2s ease-in;
+}
+
 .state_tapped img,
 .state_tapped_fixed img,
 .tapped {
-  transform: rotate(270deg);
+  transform: rotate(-90deg);
+  transition: all 0.2s ease-in;
 }
 
 .rot180,
 .state_wounded img,
 .wounded {
-  transform: rotate(180deg);
+  transform: rotate(-180deg);
+  transition: all 0.2s ease-in;
 }
 
-.rot270 {
-  transform: rotate(90deg);
-}
-
+.rot270,
 .state_rot270 img {
-  transform: rotate(-90deg);
+  transform: rotate(-270deg);
+  transition: all 0.2s ease-in;
+}
+
+.playercard-hand-container .card-hand {
+  margin-left: -40px;
+}
+.playercard-hand-container .card-hand:first-of-type {
+  margin-left: 0;
+}
+
+.on-drag-event-generic .playercard-hand-content .card-hand,
+.playercard-hand-content:hover .card-hand {
+  margin-left: 0;
 }
 
 .card-hands {
@@ -1554,6 +1571,9 @@ div#table-dark {
     min-width: auto;
     min-height: auto;
   }
+  body .playercard-hand-container .card-hand {
+    margin-left: 0 !important;
+  }
   body .table .area-player.table-padding-bottom {
     padding-bottom: 0 !important;
   }
@@ -1679,4 +1699,12 @@ body.force-mobile-helper .location-icon-image {
 
 body .taskbar-pin {
   display: none;
+}
+
+.card img.card-icon {
+  transition: all 0.2s ease-in;
+}
+
+.card:hover .card-icon {
+  scale: 1.15;
 }
