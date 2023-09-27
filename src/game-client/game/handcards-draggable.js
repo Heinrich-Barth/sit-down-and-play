@@ -592,8 +592,6 @@ const HandCardsDraggable = {
         const redrawReceivingCompanyId = receivingCharacter.company_uuid;
         let redrawDonatingCompanyId = "";
         
-        console.log("dragging " + elemDraggable.getAttribute("data-card-type"));
-
         if (elemDraggable.getAttribute("data-card-type") === "site")
         {
             const code = elemDraggable.getAttribute("data-card-code");
