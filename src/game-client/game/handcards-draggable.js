@@ -577,15 +577,23 @@ const HandCardsDraggable = {
             return "";
     },
 
+    findFirstCharacterDiv:function(elem)
+    {
+        return elem === null ? null : elem.querySelector('div[data-card-type="character"]');
+    },
+
     onCardCharacterHostOnDrop : function(_event, ui)
     {
         const elemDraggable = ui.draggable[0];
+        const droppableArea = HandCardsDraggable.findFirstCharacterDiv(this);
         const source = elemDraggable.getAttribute("data-location");
-        const receivingCharacter = HandCardsDraggable.getCompanyPath(this);
-        receivingCharacter.character_uuid = this.getAttribute("data-uuid");
+        const receivingCharacter = HandCardsDraggable.getCompanyPath(droppableArea);
+        receivingCharacter.character_uuid = droppableArea.getAttribute("data-uuid");
         const redrawReceivingCompanyId = receivingCharacter.company_uuid;
         let redrawDonatingCompanyId = "";
         
+        console.log("dragging " + elemDraggable.getAttribute("data-card-type"));
+
         if (elemDraggable.getAttribute("data-card-type") === "site")
         {
             const code = elemDraggable.getAttribute("data-card-code");
@@ -604,34 +612,36 @@ const HandCardsDraggable = {
                     fromHand : source === "hand"
             };
                 
+            if (params.targetcharacter === params.uuid)
+                return;
+
             CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
             HandCardsDraggable.getApi().send("/game/character/join/character", params, true);
         }
         else if (source === "hand" || source === "stagingarea")
         {
             CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-            HandCardsDraggable.onAddResourcesToCharacter(elemDraggable.getAttribute("data-uuid"), this, true);
+            HandCardsDraggable.onAddResourcesToCharacter(elemDraggable.getAttribute("data-uuid"), droppableArea, true);
         }
         else 
         {
             const donatingCharacter = HandCardsDraggable.getCompanyPath(elemDraggable);
-            donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
-            
             if (donatingCharacter.character_uuid === receivingCharacter.character_uuid) /* oneself cannot be the target */
                 return;
 
+            donatingCharacter.character_uuid = elemDraggable.getAttribute("data-uuid");
             if (donatingCharacter.company_uuid !== receivingCharacter.company_uuid)
                 redrawDonatingCompanyId = donatingCharacter.company_uuid;
             
             if (elemDraggable.getAttribute("data-card-type") === "resource")
             {
                 CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), this, false);
+                HandCardsDraggable.onAddResourceToCharacter(elemDraggable.getAttribute("data-uuid"), droppableArea, false);
             }
             else if (elemDraggable.getAttribute("data-card-type") === "hazard")
             {   
                 CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
-                HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), this, source === "hand");
+                HandCardsDraggable.onAddHazardsToCharacter(elemDraggable.getAttribute("data-uuid"), droppableArea, source === "hand");
             }
         }
 
@@ -703,7 +713,7 @@ const HandCardsDraggable = {
         const isHost = this.characterIsHostingCharacter(cardDiv);
         if (isHost) /* if this character is a host, he/she may accept characters under direct influence */
         {
-            jQuery(cardDiv).droppable(
+            jQuery(cardDiv.parentNode).droppable(
             {
                 tolerance: "pointer",
                 classes: HandCardsDraggable.droppableParams,
@@ -713,7 +723,7 @@ const HandCardsDraggable = {
         }
         else /* influenced character */
         {
-            jQuery(cardDiv).droppable(
+            jQuery(cardDiv.parentNode).droppable(
             {
                 tolerance: "pointer",
                 classes: HandCardsDraggable.droppableParams,
