@@ -114,6 +114,14 @@ const createCharacterHtml = function(jsonCard, id)
     iDice.onclick = rollCharacterDice;
     characterDiv.appendChild(iDice);
 
+    const iMarker = document.createElement("i");
+    iMarker.setAttribute("class", "character-mark-toggle fa fa-thumb-tack ");
+    iMarker.setAttribute("data-code", jsonCard.code);
+    iMarker.setAttribute("data-uuid", jsonCard.uuid);
+    iMarker.setAttribute("title", "Mark/Unmark " + jsonCard.code);
+    iMarker.onclick = markCharacter;
+    characterDiv.appendChild(iMarker);
+
     pCharDiv.appendChild(characterDiv);
     pCharacterContainer.appendChild(pCharDiv);
 
@@ -130,6 +138,19 @@ function rollCharacterDice(e)
     const code = e.target.getAttribute("data-code");
     const uuid = e.target.getAttribute("data-uuid");
     TaskBarCards.rollDiceCharacter(uuid, code);
+}
+
+function markCharacter(e)
+{
+    const code = e.target.getAttribute("data-code");
+    const uuid = e.target.getAttribute("data-uuid");
+
+    const pElem = document.querySelector('div.card[data-uuid="' + uuid + '"]');
+    if (pElem === null)
+        return;
+
+    const isMarked = pElem.classList.contains("card-highlight-mark");
+    MeccgApi.send("/game/card/state/mark", {uuid : uuid, code: code, mark: !isMarked });  
 }
 
 function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
@@ -743,6 +764,18 @@ const GameCompanies = {
         const pElem = document.querySelector('div.card[data-uuid="' + uuid + '"] img.card-icon');
         if (!pElem.classList.contains("card-highlight"))
             plem.classList.add("card-highlight");
+    },
+
+    onMenuActionMark : function(uuid, bMark)
+    {
+        const pElem = document.querySelector('div.card[data-uuid="' + uuid + '"]');
+        if (pElem === null)
+            return;
+
+        if (bMark && !pElem.classList.contains("card-highlight-mark"))
+            pElem.classList.add("card-highlight-mark");
+        else if (!bMark && pElem.classList.contains("card-highlight-mark"))
+            pElem.classList.remove("card-highlight-mark");
     },
 
     onMenuActionRevealCard: function (uuid = "", reveal = true)

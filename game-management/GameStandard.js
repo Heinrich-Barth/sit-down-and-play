@@ -25,6 +25,7 @@ class GameStandard extends GamePlayers
 
         this.getMeccgApi().addListener("/game/card/state/set", this.onGameCardStateSet.bind(this)); 
         this.getMeccgApi().addListener("/game/card/state/glow", this.onGameStateGlow.bind(this));
+        this.getMeccgApi().addListener("/game/card/state/mark", this.onGameStateMark.bind(this));
         this.getMeccgApi().addListener("/game/card/state/reveal", this.onGameCardStateReveal.bind(this));
         this.getMeccgApi().addListener("/game/card/draw", this.onCardDraw.bind(this));
         this.getMeccgApi().addListener("/game/card/draw/single", this.onCardDrawSingle.bind(this));
@@ -356,6 +357,15 @@ class GameStandard extends GamePlayers
     {
         this.publishToPlayers("/game/card/state/glow", userid, data);
         this.publishChat(userid, "marks/unmarks " + data.code, false);
+    }
+
+    onGameStateMark(userid, _socket, data)
+    {
+        this.publishToPlayers("/game/card/state/mark", userid, data);
+        if (data.mark)
+            this.publishChat(userid, "marks " + data.code, false);
+        else
+            this.publishChat(userid, "unmarks " + data.code, false);
     }
 
     onCardDraw(userid, _socket, _obj)

@@ -560,6 +560,7 @@ const GameBuilder = {
         MeccgApi.addListener("/game/card/reveal", (_bIsMe, jData) => GameBuilder.CompanyManager.onMenuActionRevealCard(jData.uuid, jData.reveal));          
         MeccgApi.addListener("/game/card/state/glow", (_bIsMe, jData) =>GameBuilder.CompanyManager.onMenuActionGlow(jData.uuid));
         MeccgApi.addListener("/game/card/state/highlight", (_bIsMe, jData) => GameBuilder.CompanyManager.onMenuActionHighlight(jData.uuid));
+        MeccgApi.addListener("/game/card/state/mark", (_bIsMe, jData) => GameBuilder.CompanyManager.onMenuActionMark(jData.uuid, jData.mark));
 
         MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => {
             GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary);

@@ -890,18 +890,44 @@ img.card-icon {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
+.companies .company .company-character:hover .character-mark-toggle,
 .companies .company .company-character:hover .character-card-dice {
   visibility: visible;
 }
+.companies .company .character-mark-toggle,
 .companies .company .character-card-dice {
   position: absolute;
-  left: 30px;
-  bottom: 2px;
+  bottom: 10%;
   width: 30px;
   height: 20px;
-  background-size: contain;
   cursor: pointer;
   visibility: hidden;
+  text-align: center;
+  display: inline-block;
+  max-height: 30px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+}
+.companies .company .character-mark-toggle {
+  transition: all 0.2s ease-in;
+}
+.companies .company .card-highlight-mark img {
+  box-shadow: 0px 0px 10px 2px #F0C648;
+}
+.companies .company .card-highlight-mark .character-mark-toggle {
+  visibility: visible;
+  color: #F0C648;
+  transform: rotate(24deg);
+}
+.companies .company .character-card-dice {
+  left: 10%;
+  background-size: contain;
+}
+.companies .company .character-mark-toggle {
+  right: 10%;
+}
+.companies .company .character-mark-toggle:hover {
+  color: #F0C648;
 }
 .companies .company .company-site-list {
   min-height: 80px;
@@ -1266,6 +1292,7 @@ img.card-icon {
   transform: rotate(180deg);
 }
 
+.card-highlight-mark img,
 div.card img:hover {
   box-shadow: 0px 0px 10px 2px #F0C648;
 }
@@ -1287,14 +1314,6 @@ div#opponent_table .company {
   bottom: 13px;
   height: 80px;
   overflow: hidden;
-}
-
-.card-generic.card-dice {
-  display: inline-block;
-  width: 60px;
-  height: 30px;
-  max-height: 30px;
-  min-height: 30px;
 }
 
 #draw_card {
