@@ -698,10 +698,22 @@ div#table-dark {
 
 @import "tabletop_mobile.scss";
 
+.site-regions,
 .card img.card-icon {
     transition: all 0.2s ease-in;
 }
 .card:hover .card-icon 
 {
-    scale: 1.15;
+    scale: 1.05;
+}
+.site-regions
+{
+    &:hover {
+        scale: 1.05;
+    }
+
+    .card:hover .card-icon 
+    {
+        scale: none;
+    }
 }

@@ -1703,10 +1703,18 @@ body .taskbar-pin {
   display: none;
 }
 
+.site-regions,
 .card img.card-icon {
   transition: all 0.2s ease-in;
 }
 
 .card:hover .card-icon {
-  scale: 1.15;
+  scale: 1.05;
+}
+
+.site-regions:hover {
+  scale: 1.05;
+}
+.site-regions .card:hover .card-icon {
+  scale: none;
 }
