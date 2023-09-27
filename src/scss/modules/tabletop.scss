@@ -412,9 +412,11 @@ img.card-icon {
         margin-right: 20px;
         border-radius: 20px;
         position: relative;
+        transition: all 0.2s ease-in;
 
         &:hover {
             background: rgba(255, 255, 255, 0.15);
+            scale: 1.05;
 
             .company-site-list
             {

@@ -889,9 +889,11 @@ img.card-icon {
   margin-right: 20px;
   border-radius: 20px;
   position: relative;
+  transition: all 0.2s ease-in;
 }
 .companies .company:hover {
   background: rgba(255, 255, 255, 0.15);
+  scale: 1.05;
 }
 .companies .company:hover .company-site-list {
   border-bottom: 3px dashed black;

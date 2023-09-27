@@ -152,6 +152,11 @@ body.on-drag-event-generic .area-opponent .site-target:before
     transform: rotate(180deg);
 }
 
+body.on-drag-event-generic .area-player .company,
+body.on-drag-event-generic .area-player .company:hover {
+    scale: 1;
+}
+
 #player_companies .company-characters-add
 {
     background-color: rgba(0,0,0,0.2) !important;
@@ -169,7 +174,7 @@ body.on-drag-event-generic .area .on-drag-over,
 body.on-drag-event-generic .card-bar .on-drag-over img,
 body.on-drag-event-generic .area .on-drag-over img
 {
-    visibility: hidden;
+    visibility: visible;
 }
 
 body.on-drag-event-generic div.card img:hover
@@ -178,5 +183,5 @@ body.on-drag-event-generic div.card img:hover
 }
 
 .company-character .ui-droppable-active.on-drag-over img {
-    opacity: 0.4 !important;
+    opacity: 0.3 !important;
 }
