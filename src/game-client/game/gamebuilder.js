@@ -748,6 +748,7 @@ const GameBuilder = {
                     break;
                 case "organisation":
                     GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
+                    GameBuilder.CompanyManager.onRemoveAllMarkings();
                     
                     if (bIsMe && g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
                         MeccgApi.send("/game/save/auto", {});
@@ -755,10 +756,13 @@ const GameBuilder = {
                     break;
                 case "movement":
                     GameBuilder.CompanyManager.onEnterMovementHazardPhase(bIsMe);
+                    GameBuilder.CompanyManager.onRemoveAllMarkings();
                     break;
                 case "site":
                     GameBuilder.CompanyManager.onEnterSitePhase(sCurrent, bIsMe);
+                    GameBuilder.CompanyManager.onRemoveAllMarkings();
                     break;
+
                 case "longevent":
                 case "eotdiscard":
                 case "eot":

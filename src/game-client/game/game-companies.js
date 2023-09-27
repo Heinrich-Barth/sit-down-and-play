@@ -660,6 +660,19 @@ const GameCompanies = {
         /** not needed here */
     },
 
+    onRemoveAllMarkings: function ()
+    {
+        const list = document.getElementsByClassName("company-character");
+        for (let elem of list)
+        {
+            ArrayList(elem).find("div.card").each((e) =>
+            {
+                if (e.classList.contains("card-highlight-mark"))
+                    e.classList.remove("card-highlight-mark");
+            });
+        }
+    },
+
     onEnterSitePhase: function (sCurrent, bIsMe)
     {
         if (bIsMe)
