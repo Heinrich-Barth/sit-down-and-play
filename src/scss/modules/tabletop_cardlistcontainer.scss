@@ -9,6 +9,29 @@
     background-color: rgba(0,0,0,0.3);
     z-index: 1000;
     cursor: pointer;
+
+    visibility: visible;
+    opacity: 1;
+
+    transition: all 0.3s ease-in-out;
+
+    .view-card-list-container
+    {
+        scale: 1;
+        transition: all 0.2s ease-in-out;
+    }
+
+    &.hidden {
+
+        display: block !important;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s ease-out 0.3s, opacity 0.3s ease-out, scale 0.3s ease-in-out;
+
+        .view-card-list-container {
+            scale: 0;
+        }
+    }
 }
 
 .view-card-list-container 
