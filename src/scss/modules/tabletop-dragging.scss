@@ -61,7 +61,7 @@ body {
     &.on-drag-event-generic .area-opponent .site-target,
     &.on-drag-event-generic .area-player .ui-droppable-active,
     &.on-drag-event-generic .card-bar .ui-droppable-active {
-        background-color: rgba(0, 0, 0, 0.3) !important;
+        background-color: rgba(0, 0, 0, 0.2) !important;
         border: 3px dashed #000 !important;
         border-radius: 5px !important;
         z-index: 900;

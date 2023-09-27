@@ -154,9 +154,8 @@ body.on-drag-event-generic .area-opponent .site-target:before
 
 #player_companies .company-characters-add
 {
-    background-color: rgba(0,0,0,0.3) !important;
+    background-color: rgba(0,0,0,0.2) !important;
 }
-
 
 .mobile-action-area.on-drag-over,
 body.on-drag-event-generic .card-bar .on-drag-over,
@@ -164,7 +163,7 @@ body.on-drag-event-generic .area .on-drag-over,
 .company-character .ui-droppable-active.on-drag-over,
 #player_companies .company-characters-add.on-drag-over
 {
-    background-color: rgba(101, 152, 81, 0.99) !important
+    background-color: rgba(101, 152, 81, 0.3) !important
 }
 
 body.on-drag-event-generic .card-bar .on-drag-over img,
