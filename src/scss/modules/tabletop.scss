@@ -269,25 +269,6 @@ img.card-icon {
     transition: all .2s ease-in;
 }
 
- .playercard-hand-container {
-
-    .card-hand {
-        margin-left: -40px;
-
-        &:first-of-type {
-            margin-left: 0;
-        }
-    }
-}
-.on-drag-event-generic .playercard-hand-content,
-.playercard-hand-content:hover {
-    .card-hand {
-        margin-left: 0;
-    }   
-}  
-
-
-
 .card-hands {
     position: fixed;
     left: 55px;
