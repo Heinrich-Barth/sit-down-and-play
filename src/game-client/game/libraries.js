@@ -61,7 +61,7 @@ class MeccgUtils {
     
     static logInfo(e)
     {
-        console.log(e);
+        console.info(e);
     }
 }
 

@@ -301,7 +301,7 @@ const SavedGameManager =
         catch (err)
         {
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not save game." }));
-            console.log(err);
+            console.error(err);
             callback(null);
         }
     }
