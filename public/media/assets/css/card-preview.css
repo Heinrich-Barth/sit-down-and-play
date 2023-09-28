@@ -4,7 +4,7 @@
     z-index: 1001;
     height: 100%;
     max-height: 60%;
-    max-width: 49%;
+    max-width: 45%;
 }
 
 .large-preview .preview-container div {
@@ -12,33 +12,20 @@
 }
 
 .preview-container img {
-    height: 100%;
+    height: auto;
+    width: 100%;
     border-radius: 5%;
 }
 
-.preview-left { left: 45px; }
+.preview-left { left: 10px; }
 .preview-bottom { bottom: 10px; }
 .preview-top { top: 10px; }
 .preview-right { right: 10px; }
 
-.mapwindow .preview-container img 
+.mapwindow .preview-container div
 {
-    width: auto !important;
-    max-height: 90%;
+    max-height: 70%;
+    max-width: 50%;
 }
 
-.mapwindow .preview-top { top: 120px; }
-.mapwindow .preview-right { right: 225px; }
-
-.mapwindow .preview-right.preview-top
-{
-    max-height: 90%;
-    height: 90%;
-    bottom: 20px;
-}
-.mapwindow .preview-left.preview-top
-{
-    max-height: 90%;
-    height: 90%;
-}
 .on-drag-event-generic .preview-container { display: none; }

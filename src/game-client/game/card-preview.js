@@ -132,8 +132,8 @@ CardPreview.hideAll = function()
 
 CardPreview.initMapViewCard = function(elem)
 {
-    elem.onmouseover = () => CardPreview.show(elem.src, false, true);
-    elem.onmouseout = () => CardPreview.hide(false, true);
+    elem.onmouseover = CardPreview._doHoverOnGuard;
+    elem.onmouseout = CardPreview.hideAll;
 };
 
 CardPreview.initGeneric = function(cardDiv)
@@ -198,7 +198,7 @@ CardPreview._doHoverOnGuard = function(e)
 
 CardPreview.isOnLeft = function(e)
 {
-    const elemLeft = e.clientX - window.scrollX;
+    const elemLeft = e.clientX + 10;
     const windowHalf = window.innerWidth / 2;
     return elemLeft <= windowHalf;
 };
@@ -213,8 +213,7 @@ CardPreview.showImage = function(elem, isLeft)
 
     if (elem !== null)
     {
-        const isRight = !CardPreview.getElementPositionIsLeft(elem);
-        CardPreview.show(CardPreview._getImage(elem), isRight, true);
+        CardPreview.show(CardPreview._getImage(elem), !isLeft, true);
         CardPreview.onHoverCharacter(elem);
     }
 };

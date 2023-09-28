@@ -172,7 +172,9 @@ table.site_leaflet td:nth-child(even) {
 }
 
 .site-list img {
-  height: 80px;
+  height: 130px;
+  width: auto;
+  max-width: unset;
 }
 
 .clear {
@@ -309,8 +311,8 @@ img.map-region-icon {
 .preferred-sites-container {
   position: fixed;
   z-index: 300;
-  left: 2%;
-  bottom: 2%;
+  left: 0;
+  bottom: 0;
   width: auto;
   padding: 20px;
   text-align: center;
@@ -318,7 +320,6 @@ img.map-region-icon {
   cursor: pointer;
   overflow: auto;
   max-height: 50%;
-  max-width: 98%;
 }
 .preferred-sites-container .preferred-image-list img {
   display: inline;
