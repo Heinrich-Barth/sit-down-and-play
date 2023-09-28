@@ -162,8 +162,8 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
 
     if (bIsPlayer)
     {
-        const pNew = document.getElementById("create_new_company");
-        pNew.parentElement.insertBefore(pDiv, pNew);
+        const pNew = document.getElementById("player_companies");
+        pNew.append(pDiv);
     }
     else
     {
@@ -370,11 +370,8 @@ const GameCompanies = {
 
     removeAllEmptyCompanies : function()
     {
-        ArrayList(document).find(".company").each((company) => {
-
-            if (company.classList.contains("create-new-company") || company.getAttribute("id") === "create_new_company")
-                return;
-            
+        ArrayList(document).find(".company").each((company) => 
+        {
             if (ArrayList(company).find(".company-character-host").size() === 0)
                 DomUtils.removeNode(company);
         });
@@ -810,12 +807,7 @@ const GameCompanies = {
 
     onRemoveEmptyCompanies: function ()
     {
-        ArrayList(document).find(".company").each(function (e)
-        {
-            if (e.getAttribute("id") !== "create_new_company")
-                GameCompanies.onRemoveEmptyCompaniesCheckChars(e.querySelector(".company-characters"));
-        });
-
+        ArrayList(document).find(".company").each((e) => GameCompanies.onRemoveEmptyCompaniesCheckChars(e.querySelector(".company-characters")));
         GameCompanies.removeAllEmptyCompanies();
     },
 

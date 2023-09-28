@@ -111,3 +111,12 @@
     padding: 5px 2px;
     z-index: 901;
 }
+
+.game-watch-only .companies
+{
+    white-space: normal !important;
+}
+
+.game-watch-only .table .row {
+    margin: 0 50px;
+}

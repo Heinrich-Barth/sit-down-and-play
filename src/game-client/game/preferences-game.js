@@ -133,6 +133,14 @@ class GamePreferences extends Preferences {
             this._replaceImageLanguage(elem, !isActive);
     }
 
+    _toogleCompanyLineBreak(isActive)
+    {
+        if (isActive && !document.body.classList.contains("table-companies-breakline"))
+            document.body.classList.add("table-companies-breakline");
+        else if (!document.body && document.body.classList.contains("table-companies-breakline"))
+            document.body.classList.remove("table-companies-breakline");
+    }
+
     _replaceImageLanguage(img, useEnglish)
     {
         this._replaceImageLanguageAttribute(img, useEnglish, "src");
@@ -277,7 +285,11 @@ class GamePreferences extends Preferences {
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
         this.createEntry0("toggle_spanishcards");
-        this.createEntry0("toggle_touch_help");
+        if (!bWatcher)
+        {
+            this.createEntry0("toggle_touch_help");
+            this.createEntry0("toggle_company_break");
+        }
         
         this.createEntry0("toggle_zoom");
 
@@ -348,6 +360,7 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this._doubleMiscPoints);
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
         this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
+        this.addConfigToggle("toggle_company_break", "Expand companies over multiple lines", false, this._toogleCompanyLineBreak.bind(this));
 
         this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available).", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards.bind(this));
 

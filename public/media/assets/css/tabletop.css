@@ -492,10 +492,6 @@ a:hover {
   width: 100%;
   height: 100%;
 }
-.table .area {
-  display: table;
-  width: 100%;
-}
 .table .area-player {
   position: relative;
   min-height: 30%;
@@ -506,7 +502,7 @@ a:hover {
 .table .area-opponent {
   margin-bottom: 20px;
   position: relative;
-  min-height: 30%;
+  min-height: 20%;
 }
 .table .area-opponent .ui-draggable-dragging {
   transform: rotate(180deg);
@@ -519,8 +515,7 @@ a:hover {
   vertical-align: bottom;
 }
 .table .row {
-  display: table-row;
-  margin: 0 50px;
+  margin: 0 0 0 50px;
   height: 100%;
 }
 .table .row div.card {
@@ -530,9 +525,25 @@ a:hover {
 .table .row div.card.state_tapped {
   max-width: 100px;
 }
+.table .area {
+  display: block;
+}
+.table .area.area-player .row {
+  grid-template-columns: 260px 75px auto;
+  grid-template-rows: repeat(1, minmax(300px, auto));
+}
+.table .area.area-opponent .row {
+  grid-template-columns: 260px auto;
+  grid-template-rows: repeat(1, minmax(100px, auto));
+}
+.table .area .row {
+  display: grid;
+  grid-column-gap: 10px;
+}
+.table .area .companies {
+  display: block;
+}
 .table .companies {
-  display: table-cell;
-  vertical-align: top;
   position: relative;
   text-align: center;
 }
@@ -556,8 +567,12 @@ img.card-icon {
 .company-host,
 .company {
   padding-right: 20px;
-  height: 100%;
+  min-height: 100px;
   min-width: 60px !important;
+}
+
+body.table-companies-breakline .companies {
+  white-space: normal;
 }
 
 .card-bar {
@@ -826,18 +841,22 @@ img.card-icon {
 /* COMPANY AREA */
 .staging-area {
   position: relative;
-  display: table-cell;
-  vertical-align: top;
-  padding-left: 55px;
   min-width: 100px;
-  width: 25%;
 }
 .staging-area .staging-area-drop {
   display: none;
+  position: absolute;
+  left: 0px;
+  right: 0;
+  top: 0;
+  height: 200px;
 }
 .staging-area.staging-area-opponent {
   padding: 20px 50px 0 0;
   text-align: right;
+}
+.staging-area .staging-area-resources {
+  padding-right: 10px;
 }
 .staging-area .card {
   display: inline-block;
@@ -850,7 +869,6 @@ img.card-icon {
 .table-stage-stacking .staging-area {
   text-align: center;
   min-width: 100px;
-  max-width: 200px;
   white-space: nowrap;
 }
 .table-stage-stacking .staging-area-area {
@@ -894,6 +912,7 @@ img.card-icon {
   border-radius: 20px;
   position: relative;
   transition: all 0.2s ease-in;
+  white-space: nowrap;
 }
 .companies .company:hover {
   background: rgba(255, 255, 255, 0.15);
@@ -926,6 +945,10 @@ img.card-icon {
 }
 .companies .company .character-mark-toggle {
   transition: all 0.2s ease-in;
+  right: 10%;
+}
+.companies .company .character-mark-toggle:hover {
+  color: #F0C648;
 }
 .companies .company .card-highlight-mark img {
   box-shadow: 0px 0px 10px 2px #F0C648;
@@ -938,12 +961,6 @@ img.card-icon {
 .companies .company .character-card-dice {
   left: 10%;
   background-size: contain;
-}
-.companies .company .character-mark-toggle {
-  right: 10%;
-}
-.companies .company .character-mark-toggle:hover {
-  color: #F0C648;
 }
 .companies .company .company-site-list {
   min-height: 80px;
@@ -974,16 +991,6 @@ img.card-icon {
   left: 0;
   width: 100%;
   height: 96px;
-}
-.companies .create-new-company {
-  background: rgba(0, 0, 0, 0.2);
-  height: 100%;
-  width: 60px !important;
-  border: 3px dashed #000;
-  border-radius: 5px;
-  max-width: 60px !important;
-  min-height: 270px;
-  visibility: hidden;
 }
 
 @keyframes company-moving-line {
@@ -1033,15 +1040,10 @@ body.on-drag-event-site .area-player .company-character-influenced .company-char
 }
 body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop {
   display: block;
-  position: absolute;
-  left: 70px;
-  right: 0;
-  top: 0;
-  height: 200px;
 }
 body.on-drag-event-hazard .staging-area-drop, body.on-drag-event-resource .staging-area-drop, body.on-drag-event-hazard .area-opponent .company-character-host, body.on-drag-event-hazard .area-opponent .site-regions, body.on-drag-event-generic .area-opponent .site-target, body.on-drag-event-generic .area-player .ui-droppable-active, body.on-drag-event-generic .card-bar .ui-droppable-active {
   background-color: rgba(0, 0, 0, 0.2) !important;
-  border: 3px dashed #000 !important;
+  border: 2px dotted #000 !important;
   border-radius: 5px !important;
   z-index: 900;
 }
@@ -1705,7 +1707,7 @@ body.force-mobile-helper .location-icon-image {
   right: 0;
   z-index: 900;
   background-color: rgba(0, 0, 0, 0.3) !important;
-  border: 3px dashed #000 !important;
+  border: 2px dotted #000 !important;
   border-radius: 5px !important;
   font-size: 3em;
   color: #F0C648;

@@ -2,20 +2,23 @@
 /* COMPANY AREA */
 .staging-area {
     position: relative;
-    display: table-cell;
-    vertical-align: top;
-    padding-left: 55px;
     min-width: 100px;
-    width: 25%;
 
     .staging-area-drop {
         display: none;
+        position: absolute;
+        left: 0px;
+        right: 0;
+        top: 0;
+        height: 200px;
     }
 
     &.staging-area-opponent {
         padding: 20px 50px 0 0;
         text-align: right;
     }
+
+    .staging-area-resources { padding-right: 10px; }
 
     .card {
         display: inline-block;
@@ -32,7 +35,6 @@
     .staging-area {
         text-align: center;
         min-width: 100px;
-        max-width: 200px;
         white-space: nowrap;  
     }
   

@@ -86,15 +86,6 @@ class CreateHandCardsDraggableUtils {
     }
 }
 
-class HandCardsDraggableBoard {
-
-    static getCompanyAreaPlayerAddNew()
-    {
-        return document.getElementById("create_new_company");
-    }
-
-}
-
 class DropableAreas {
 
     static getCompanyAreaPlayerAddNew()
