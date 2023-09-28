@@ -73,5 +73,5 @@ const Navigation = {
 
 (function()
 {
-    fetch("/data/navigation").then((response) => response.json().then(Navigation.init)).catch(console.log);
+    fetch("/data/navigation").then((response) => response.json().then(Navigation.init)).catch(console.error);
 })();

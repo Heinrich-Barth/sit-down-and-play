@@ -84,7 +84,6 @@ class MapViewMovement extends MapViewMovementSelection {
                 for (let i = 0; i < len; i++)
                 {
                     _key = _keys[i];
-                    console.log("through " + _site[_key]["code"])
                     if (_site[_key]["code"] !== undefined && _site[_key]["code"] === sCode)
                         return _site[_key];
                 }
@@ -290,14 +289,14 @@ class MapViewMovement extends MapViewMovementSelection {
         const jRegion = this.getRegionByCode(sRegionCode);
         if (jRegion === null)
         {
-            console.log("Cannot find region by its code " + sRegionCode);
+            console.warn("Cannot find region by its code " + sRegionCode);
             return;
         }
         
         let jElem = MapViewMovement._MovementContainerOtherRegions().querySelector("[data-code='" + sRegionCode + "']"); 
         if (jElem !== null)
         {
-            console.log("Allready there " + sRegionCode);
+            console.warn("Allready there " + sRegionCode);
             return;
         }
         
@@ -379,12 +378,12 @@ class MapViewMovement extends MapViewMovementSelection {
         
         if (jRegion === null)
         {
-            console.log("Cannot load site region " + sStartLocationCode);
+            console.warn("Cannot load site region " + sStartLocationCode);
             return false;
         }
         else if (jSite === null)
         {
-            console.log("Cannot load site " + sStartLocationCode);
+            console.warn("Cannot load site " + sStartLocationCode);
             return false;
         }
         

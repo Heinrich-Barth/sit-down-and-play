@@ -185,7 +185,7 @@ const isAlphaNumeric = function(sInput)
 
 const showFetchError = function(err)
 {
-    console.log(err);
+    console.error(err);
     document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not fetch game list." }));
 };
 
@@ -237,7 +237,7 @@ const fetchAndUpdateGames = function()
         }
         catch(err)
         {
-            console.log(err);
+            console.error(err);
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": err }));
         }
     }

@@ -367,7 +367,7 @@ const onDownloadDeck0 = function(name, data)
     }
     catch (err)
     {
-        console.log(err);
+        console.error(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
     }
 }
@@ -388,7 +388,7 @@ const onDownloadDeck = function(e)
     })
     .catch(err =>
     {
-        console.log(err);
+        console.error(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not download deck" }));
     });
 
@@ -420,7 +420,7 @@ const onChallengeDeckChosen = function(e)
     })
     .catch(err =>
     {
-        console.log(err);
+        console.error(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not load"}));
     });
 }

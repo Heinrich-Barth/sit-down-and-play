@@ -245,7 +245,7 @@ class RegionMapPreferences extends Preferences {
             case "dragonlord":
                 return this.isTrue("dragon");
             default:
-                console.log("Unknown site alignment " + sAlignment);
+                console.warn("Unknown site alignment " + sAlignment);
                 break;
         }
         return true;

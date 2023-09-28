@@ -35,7 +35,7 @@ const SaveJsonAsDialog = {
         }
         catch (err)
         {
-            console.log(err);
+            console.error(err);
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
         }
     }
