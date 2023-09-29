@@ -349,9 +349,10 @@ Of cource, this project would not be possible without the work of others, and cr
 
 The following third-party libraries. Be aware of their respective licenses.
 
-* Node.JS - Socket.io (MIT License)
-* Node.JS - Express (MIT License)
-* Node.JS - Express cookie-parser (MIT License)
+* Node.JS - express (MIT License)
+* Node.JS - express cookie-parser (MIT License)
+* Node.JS - socket.io (MIT License)
+* Node.JS - winston (MIT License)
 * jQuery 3.5.1 (MIT License), only used in connection to jQuery UI
 * jQuery UI v1.12.1 - 2021-03-20 (widget.js, data.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/mouse.js, MIT License)
 * jQuery UI Touch Punch (MIT License)
