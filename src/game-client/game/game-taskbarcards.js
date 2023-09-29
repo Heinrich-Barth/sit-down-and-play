@@ -326,11 +326,6 @@ class TaskBarCards
         MeccgApi.send("/game/view-cards/list", type);
     }
 
-    static OnShowOnHover() 
-    {
-        TaskBarCards._cardPreview.showImage(this.querySelector("img.card-icon"));
-    }
-
     static onShowVictorySheet(e) 
     {
         const vsList = e === undefined ? null : e.detail;
@@ -344,15 +339,7 @@ class TaskBarCards
         const hov = elem.querySelectorAll(".card-hand");
         const len = hov.length;
         for (let i = 0; i < len; i++)
-        {
-            hov[i].onmouseover = TaskBarCards.OnShowOnHover;
-            hov[i].onmouseout = TaskBarCards.OnMouseOut;
-        }
-    }
-
-    static OnMouseOut()
-    {
-        TaskBarCards._cardPreview.hideAll();
+            TaskBarCards._cardPreview.initGeneric(hov[i]);
     }
 
     onShow(jData) 
@@ -491,10 +478,7 @@ class TaskBarCards
         {
             const res = elem.querySelectorAll(".card-hand");
             for (let _elem of res)
-            {
-                _elem.onmouseover = TaskBarCards.OnShowOnHover;
-                _elem.onmouseout = TaskBarCards.OnMouseOut;
-            }
+                TaskBarCards._cardPreview.initGeneric(_elem);
         }
 
         return elem;
