@@ -1,5 +1,5 @@
-
 const PlayboardManagerStagingArea = require("./PlayboardManagerStagingArea");
+const Logger = require("../Logger");
 
 class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 {
@@ -220,8 +220,8 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
          let targetCompany = this.companies[targetCompanyId];
          if (typeof targetCompany === "undefined")
          {
-             console.warn("Target company does not exist: " + targetCompanyId);
-             return false;
+            Logger.warn("Target company does not exist: " + targetCompanyId);
+            return false;
          }
  
          let listAdded = [];
@@ -263,7 +263,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const pDeck = super.getPlayerDeck(playerId);
         if (pDeck === null)
         {
-            console.log("Cannot find player deck");
+            Logger.warn("Cannot find player deck");
             return false;
         }
 
@@ -285,7 +285,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const card = this.popCompanyCharacter(uuid);
         if (!this.addCompanyCharacterToCompany(companyId, "", card))
         {
-            console.log("Character " + uuid + " cannot join company " + companyId);
+            Logger.warn("Character " + uuid + " cannot join company " + companyId);
             return false;
         }
         else
@@ -326,7 +326,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         if (!this.addCompanyCharacterToCompany(targetCompany, targetcharacter, card))
         {
             const sNew = this.getCardCode(uuid, "Unknown character");
-            console.warn("Character " + sNew + " cannot join company " + targetCompany);
+            Logger.warn("Character " + sNew + " cannot join company " + targetCompany);
             return false;
         }
         else
@@ -453,7 +453,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     {
         if (!this.companyExists(companyUuid))
         {
-            console.warn("Cannot find company " + companyUuid);
+            Logger.warn("Cannot find company " + companyUuid);
             return false;
         }
 
@@ -682,7 +682,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const pCompany = this.getCompanyById(companyId);
         if (pCompany === null)
         {
-            console.warn("Cannot find company by its id " + companyId + " (GetFirstCompanyCharacterCardByCompanyId)");
+            Logger.warn("Cannot find company by its id " + companyId + " (GetFirstCompanyCharacterCardByCompanyId)");
             return null;
         }
 
@@ -701,14 +701,14 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const _card = this.GetCardByUuid(jsonChar.uuid);
         if (_card === null)
         {
-            console.warn("Cannot get card from " + jsonChar.uuid);
+            Logger.warn("Cannot get card from " + jsonChar.uuid);
             return;
         }
 
         const pChar = this.getCharacterByUuid(jsonChar.uuid);
         if (pChar === null)
         {
-            console.warn("Cannot find character by it " + jsonChar.uuid);
+            Logger.warn("Cannot find character by it " + jsonChar.uuid);
             return;
         }
 
@@ -744,7 +744,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         const pCompany = this.getCompanyById(companyId);
         if (pCompany === null)
         {
-            console.warn("Cannot find company by its id " + companyId + " (GetFullCompanyByCompanyId)");
+            Logger.info("Cannot find company by its id " + companyId + " (GetFullCompanyByCompanyId). Probaly removed.");
             return null;
         }
 

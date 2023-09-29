@@ -1,7 +1,5 @@
-
 const PlayboardManagerCompanies = require("./PlayboardManagerCompanies");
-
-
+const Logger = require("../Logger");
 
 class PlayboardManager extends PlayboardManagerCompanies
 {
@@ -73,14 +71,14 @@ class PlayboardManager extends PlayboardManagerCompanies
     {
         if (companyId === "" || !this.companyExists(companyId))
         {
-            console.warn("Cannot find company by its id " + companyId + " (GetFullCompanyCharacter)");
+            Logger.warn("Cannot find company by its id " + companyId + " (GetFullCompanyCharacter)");
             return null;
         }
 
         const pCharacter = this.getCharacterByUuid(uuid);
         if (pCharacter === null)
         {
-            console.warn("Character " + uuid + " does not exist.");
+            Logger.warn("Character " + uuid + " does not exist.");
             return null;
         }
 
@@ -114,7 +112,7 @@ class PlayboardManager extends PlayboardManagerCompanies
 
         if (!this.removeCardFromDeckOrCompany(jCard.owner, uuid))
         {
-            console.info("Could not remove card " + uuid + " from deck of company/staging area nor from location on guard lists");
+            Logger.info("Could not remove card " + uuid + " from deck of company/staging area nor from location on guard lists");
             return false
         } 
         else

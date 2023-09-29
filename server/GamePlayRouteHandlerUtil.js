@@ -1,4 +1,5 @@
 const ClearCookies = require("./ClearCookies");
+const Logger = require("../Logger");
 
 const UTILS = require("../meccg-utils");
 
@@ -78,7 +79,7 @@ class GamePlayRouteHandlerUtil
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.warn(err.message);
         }
 
         return false;

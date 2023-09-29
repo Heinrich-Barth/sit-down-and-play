@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 /**
  * Handle basic Socket.IO data message handling.
@@ -41,7 +42,7 @@ class GameAPI
     {
         if (path === "" || typeof this._funcs[path] === "undefined")
         {
-            console.log("no endpint available at requested path (not printed for security reasons).");
+            Logger.info("no endpint available at requested path (not printed for security reasons).");
             return;
         }
 
@@ -51,8 +52,8 @@ class GameAPI
         } 
         catch (e)
         {
-            console.log("An unexpected exception occurred...");
-            console.log(e);
+            Logger.warn("An unexpected exception occurred...");
+            Logger.error(e);
         }
     }
 

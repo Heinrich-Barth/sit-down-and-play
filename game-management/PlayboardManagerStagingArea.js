@@ -1,5 +1,5 @@
-
 const PlayboardManagerCharacters = require("./PlayboardManagerCharacters");
+const Logger = require("../Logger");
 
 class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 {
@@ -85,7 +85,7 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 
         if (!this.removeCardFromDeckOrCompany(playerSourceId, uuid))
         {
-            console.log("Could not remove card " + uuid + " from deck of company/staging area");
+            Logger.warn("Could not remove card " + uuid + " from deck of company/staging area");
             return false;
         }
 

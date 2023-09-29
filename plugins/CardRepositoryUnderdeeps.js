@@ -1,3 +1,5 @@
+const Logger = require("../Logger");
+
 class CardRepositoryUnderdeeps 
 {
     create(cards)
@@ -19,7 +21,7 @@ class CardRepositoryUnderdeeps
         }
 
         if (count > 0)
-            console.info("\t- " + count + " surface sites available");
+            Logger.info("\t- " + count + " surface sites available");
     }
 
     cloneArray(input)
@@ -76,7 +78,7 @@ class CardRepositoryUnderdeeps
             }
         }
 
-        console.info("\t- " + count + " underdeeps");
+        Logger.info("\t- " + count + " underdeeps");
     }
     
     getListOfCodes(cards)
@@ -110,11 +112,11 @@ class CardRepositoryUnderdeeps
     {
         if (sitesUnderdeeps.length === 0)
         {
-            console.info("\t- no underdeep sites available.");
+            Logger.info("\t- no underdeep sites available.");
             return { };
         }
 
-        console.info("\t- creating underdeep adjacent site list.");
+        Logger.info("\t- creating underdeep adjacent site list.");
 
         let surfaceSites = { };
         let nAssigned = 0;
@@ -137,7 +139,7 @@ class CardRepositoryUnderdeeps
 
             if (connectedSitesList.length === 0 && connectedSurfaces.length)
             {
-                console.warn(site.code + " has neither surface nor connected underdeep sites");
+                Logger.warn(site.code + " has neither surface nor connected underdeep sites");
                 continue;
             }
 
@@ -164,7 +166,7 @@ class CardRepositoryUnderdeeps
             }
         }
 
-        console.info("\t- " + nAssigned + " sites have been assigned surface and/or adajacent sites");
+        Logger.info("\t- " + nAssigned + " sites have been assigned surface and/or adajacent sites");
         return surfaceSites;
     }
 
@@ -215,7 +217,7 @@ class CardRepositoryUnderdeeps
             added |= this.addSurfaceSitesNormalised(code, MapDataUnderdeeps.normalizeString(surfaceSiteTitle.title), sitesByTitle, targetList);
 
             if (!added)
-                console.warn("Cannot find surface site by title " + surfaceSiteTitle.title);
+                Logger.warn("Cannot find surface site by title " + surfaceSiteTitle.title);
         }
     }
 

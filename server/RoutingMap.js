@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 const getTappedSites = function(SERVER, cookies)
 {
@@ -8,7 +9,7 @@ const getTappedSites = function(SERVER, cookies)
     }
     catch(e)
     {
-        console.error(e);
+        Logger.error(e);
     }
 
     return { };

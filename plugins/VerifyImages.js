@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const Logger = require("../Logger");
 
 const getImageList = function(cards)
 {
@@ -41,7 +42,7 @@ const isFile = function(file)
     }
     catch (err)
     {
-        console.warn(err.message);
+        Logger.warn(err.message);
     }
 
     return false;
@@ -59,7 +60,7 @@ module.exports.validateImages = function(cards)
     }
 
     if (notFound.length === 0)
-        console.info("\t-- all images available");
+        Logger.info("\t-- all images available");
     else
-        console.warn("\t-- some images are missing:\n" + notFound.join("\n"));
+        Logger.warn("\t-- some images are missing:\n" + notFound.join("\n"));
 }

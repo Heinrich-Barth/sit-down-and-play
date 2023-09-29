@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 
 function isAlphaNumeric(sInput)
 {
@@ -62,6 +62,13 @@ const AuthenticationManagement = {
 
         socket.on("/game/rejoin/reconnected", (data) =>
         {
+            /* make sure the socket userid exists after the reconnect */
+            if (socket.userid === undefined && data.userid)
+            {
+                socket.userid = data.userid;
+                Logger.info("Restoring userid");
+            }
+
             if (!AuthenticationManagement.userManager.rejoinAfterReconnect(data.userid, data.room, socket))
             {
                 socket.auth = false;
@@ -72,7 +79,7 @@ const AuthenticationManagement = {
         /**
          * Player is now at their table
          */
-        socket.on('/game/rejoin', () => console.log("# deprectaed /game/rejoin"));
+        socket.on('/game/rejoin', () => { });
     },
 
     setUserManager : function(pUserManager) {

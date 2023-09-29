@@ -1,3 +1,5 @@
+const Logger = require("../Logger");
+
 class SaveGameEvaluation 
 {
     constructor(assignments)
@@ -28,10 +30,7 @@ class SaveGameEvaluation
         {
             const _formerOwner = _map[_cardId].owner;
             if (this.assignments[_formerOwner] === undefined)
-            {
-                console.log("Cannot find former owner " + _formerOwner + " of card " + _cardId + ". Removing card.");
                 delete _map[_cardId];
-            }
         }
 
         return Object.keys(_map).length > 0;
@@ -39,18 +38,30 @@ class SaveGameEvaluation
 
     evaluateOwnerMap(siteMap, type)
     {
+        if (type === undefined)
+            return false;
+
         const cardIds = Object.keys(siteMap);
         for (let _cardId of cardIds)
         {
             const _formerOwner = _cardId;
             if (this.assignments[_formerOwner] === undefined)
             {
-                console.log("Cannot find former " + type + " owner " + _formerOwner + " of " + _cardId + ". Removing card.");
+                Logger.warn("Cannot find former " + type + " owner " + _formerOwner + " of " + _cardId + ". Removing card.");
                 delete siteMap[_cardId];
             }
         }
 
         return Object.keys(siteMap).length > 0;
+    }
+
+    clearMap(siteMap)
+    {
+        const cardIds = Object.keys(siteMap);
+        for (let _cardId of cardIds)
+            delete siteMap[_cardId];
+
+        return true;
     }
 
     evaluateCompanies(companies)
@@ -59,16 +70,16 @@ class SaveGameEvaluation
         for (let companyId of companyIds)
         {
             const _formerOwner = companies[companyId].playerId;
+            if (_formerOwner === undefined)
+                continue;
+            
             if (this.assignments[_formerOwner] === undefined)
             {
-                console.log("Cannot find former owner " + _formerOwner + " of company " + companyId + ". Removing card.");
+                Logger.warn("Cannot find former owner " + _formerOwner + " of company " + companyId + ". Removing card.");
                 delete companies[companyId];
             }
             else if (companies[companyId].characters.length === 0)
-            {
-                console.log("Removing empty company " + companyId);
                 delete companies[companyId];
-            }
         }
         
         return Object.keys(companies).length > 0;
@@ -102,9 +113,8 @@ class SaveGameEvaluation
             return null;
         }
 
-        this.evaluateOwnerMap(game.playboard.decks.siteMap);
+        this.clearMap(game.playboard.decks.siteMap);
         this.evaluateCompanies(game.playboard.companies);
-
 
         return game;
     }

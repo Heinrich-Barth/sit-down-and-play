@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 const Scores = require("./Scores");
 
 const GameBase = require("./GameBase");
@@ -224,7 +225,7 @@ class GamePlayers extends GameBase
             this.players.current--;
 
         /** all done. the player has left the game and we can now send the update */
-        console.info("Player kicked from index list: " + userId)
+        Logger.info("Player kicked from index list: " + userId)
         this.publishToPlayers("/game/player/remove", "", { userid: userId });
         return true;
     }

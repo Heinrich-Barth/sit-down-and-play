@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 let g_jsonList = [];
 (function()
@@ -7,7 +8,7 @@ let g_jsonList = [];
     {
         if (err) 
         {
-            console.log("No sample user names available.");
+            Logger.info("No sample user names available.");
             return;
         }
 
@@ -20,11 +21,11 @@ let g_jsonList = [];
                     g_jsonList.push(elem.trim());
             }
 
-            console.log(g_jsonList.length + " sample player names avaiable");
+            Logger.info(g_jsonList.length + " sample player names avaiable");
         }
         catch (ex)
         {
-            console.warn(ex.message);
+            Logger.error(ex);
         }
     });
 })();
@@ -42,7 +43,7 @@ function _register(pEventManager)
         const SampleList = ["AmonHen", "Anduin", "Arnor", "Baranduin", "Beleriand", "Bree", "Bruinen", "Erebor", "EredLuin", "EredMithrin", "EredNimrais", "Eriador", "Esgaroth", "Fangorn", "Gondor", "GreatEastRoad", "Harad", "HelmsDeep", "Isengard", "Khazaddum", "Lothlorien", "Mirkwood", "MistyMountains", "Mordor", "MountDoom", "NorthSouthRoad", "Numenor", "Rhovanion", "Rhun", "Rivendell", "Rohan", "TheShire", "Weathertop"]
         SampleList.sort();
         SampleList.forEach((e) => targetList.push(e));
-        console.log("Sample room names loaded: " + SampleList.length);
+        Logger.info("Sample room names loaded: " + SampleList.length);
     });
 
     pEventManager.addEvent("add-sample-names", function(targetList)

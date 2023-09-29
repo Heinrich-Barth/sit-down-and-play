@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 
 /**
  * Read the score json object
@@ -30,7 +30,7 @@ const loadScoreStats = function()
     }
     catch (err)
     {
-        console.log(err);
+        Logger.error(err);
     }
 
     return {};

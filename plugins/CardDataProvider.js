@@ -1,10 +1,10 @@
-
 const fs = require('fs');
 const CardsMeta = require("./CreateCardsMeta");
 const CardRepository = require("./CardRepository");
 const DeckValidator = require("./DeckValidator");
 const ImageList = require("./ImageList");
 const VerifyImages = require("./VerifyImages");
+const Logger = require("../Logger");
 
 class CardDataProvider extends CardRepository {
    
@@ -39,13 +39,13 @@ class CardDataProvider extends CardRepository {
     {
         try 
         {
-            console.log("Loading local card data from " + file);
+            Logger.info("Loading local card data from " + file);
             this.onCardsReceived(fs.readFileSync(file, 'utf8'));
             return true;
         } 
         catch (error) 
         {
-            console.warn(error.message);
+            Logger.warn(error.message);
         }
         
         return false;
@@ -53,7 +53,7 @@ class CardDataProvider extends CardRepository {
 
     loadFromUrl(cardsUrl)
     {
-        console.log("Loading data from url " + cardsUrl);
+        Logger.info("Loading data from url " + cardsUrl);
         const pThis = this;
 
         const https = require('https');
@@ -64,14 +64,14 @@ class CardDataProvider extends CardRepository {
             res.on("data", (chunk) => body += chunk);
             res.on("end", () => pThis.onCardsReceived(body));
         
-        }).on("error", (error) => console.error(error.message));
+        }).on("error", (error) => Logger.error(error.message));
     }
 
     load() 
     {
         if (this.cardsUrl === "")
         {
-            console.warn("No Cards URL/Path provided.");
+            Logger.warn("No Cards URL/Path provided.");
             return;
         }
 
@@ -79,11 +79,11 @@ class CardDataProvider extends CardRepository {
         {
             if (this.loadLocally(this.cardsUrl))
             {
-                console.log("\t-- successfully loaded card data from local file " + this.cardsUrl + " --");
+                Logger.info("\t-- successfully loaded card data from local file");
                 return;
             }
             else
-               console.log("Could not load locally");
+                Logger.warn("Could not load locally");
         }
         
         this.loadFromUrl(this.cardsUrl);
@@ -96,7 +96,6 @@ class CardDataProvider extends CardRepository {
             if (jDeck[k] === 0)
                 continue;
     
-            console.log(k);
             const _code = this.getVerifiedCardCode(k.replace(/"/g, '').toLowerCase());
             if (this.isAvatar(_code))
                 return _code;

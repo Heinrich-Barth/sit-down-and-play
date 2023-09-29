@@ -1,4 +1,5 @@
 const DeckCommons = require("./DeckCommons");
+const Logger = require("../Logger");
 
 /**
  * Deck for standard game
@@ -162,7 +163,7 @@ class DeckDefault extends DeckCommons {
         const _entry = this.createCardEntry(code, false, gameCardProvider);
         if (_entry === null)
         {
-            console.log("Cannot register card " + code + " to game.");
+            Logger.info("Cannot register card " + code + " to game.");
             return "";
         }
 
@@ -213,7 +214,7 @@ class DeckDefault extends DeckCommons {
                 _entry = this.createCardEntry(card.code, this.isAgent(card.code, listAgents), gameCardProvider);
                 if (_entry === null)
                 {
-                    console.log("Cannot register card " + card.code + " to sideboard.");
+                    Logger.info("Cannot register card " + card.code + " to sideboard.");
                     break;
                 }
                 
@@ -452,9 +453,9 @@ class DeckDefault extends DeckCommons {
         nSize += this.add(jsonDeck["sideboard"], this.sideboard, _cardMap, listAgents, gameCardProvider);
         
         if (nSize == MAX_CARDS_PER_DECK)
-            console.info("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
-        else
-            console.info("Added " + nSize + " cards to " + this.getPlayerId() + "'s deck.");
+            Logger.info("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
+        else if (nSize > 0)
+            Logger.info("Added " + nSize + " cards to " + this.getPlayerId() + "'s deck.");
     }
 }
 

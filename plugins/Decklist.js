@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Logger = require("../Logger");
 
 const g_vpDedckList = [];
 const g_pDeckById = { };
@@ -48,7 +49,7 @@ const getFileList = function(sDirectory)
     }
     catch(err)
     {
-        console.warn(err.message);
+        Logger.error(err);
     }
 
     return [];
@@ -85,7 +86,7 @@ const createDecks = function(_list, sDirectory, sReplacePrefix)
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.warn(err.message);
         }
     }
     
@@ -141,11 +142,11 @@ const loadDeckList = function(sDir)
     }
     catch (err)
     {
-        console.warn(err.message);
+        Logger.warn(err.message);
     }
 
     if (g_lId > 0)
-        console.info(g_lId + " deck(s) available");
+        Logger.info(g_lId + " deck(s) available");
 }
 
 const identifyCardCode = function(line)
@@ -170,7 +171,7 @@ const identifyCardCode = function(line)
     }
     catch(err)
     {
-        console.error(err);
+        Logger.error(err);
     }
 
     return ""

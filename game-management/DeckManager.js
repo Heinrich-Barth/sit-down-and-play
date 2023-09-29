@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 const CARD_STATE = { };
 
 Object.defineProperties(CARD_STATE, {
@@ -136,10 +136,10 @@ class DeckManager {
 
         this.preprocessRestore(decks);
 
-        console.log("restore HOST deck");
+        Logger.info("restore HOST deck");
         this.restoreDeck(decks, true);
 
-        console.log("restore GUEST deck(s)");
+        Logger.info("restore GUEST deck(s)");
         this.restoreDeck(decks, false);
 
         this.uuid_count = Date.now();
@@ -199,7 +199,7 @@ class DeckManager {
     addCardsToSideboardDuringGame(playerId, jsonDeck, listAgents, gameCardProvider)
     {
         if (typeof this._deck[playerId] === "undefined")
-            console.log("Could not find deck " + playerId);
+            Logger.info("Could not find deck " + playerId);
 
         return typeof this._deck[playerId] === "undefined" ? -1 : this._deck[playerId].registerCardsToSideboard(jsonDeck, listAgents, this._cardMap, gameCardProvider);
     }
@@ -208,12 +208,12 @@ class DeckManager {
     {
         if (typeof this._deck[playerId] === "undefined")
         {
-            console.log("Could not find deck " + playerId);
+            Logger.info("Could not find deck " + playerId);
             return false;
         }
         else if (code === "")
         {
-            console.log("Invalid code provded.");
+            Logger.info("Invalid code provded.");
             return false;
         }
         else
@@ -241,7 +241,7 @@ class DeckManager {
     {
         if (typeof this._deck[playerId] === "undefined")
         {
-            console.warn("Cannot find deck of player " + playerId);
+            Logger.warn("Cannot find deck of player " + playerId);
             return null;
         }
         else
@@ -262,7 +262,7 @@ class DeckManager {
         if (typeof playerId !== "undefined" && typeof this._siteMap[playerId] !== "undefined")
         {
             this._siteMap[playerId] = {};
-            console.log("cleared tapped sites.")
+            Logger.info("cleared tapped sites.")
         }
     }
     
@@ -376,7 +376,7 @@ class DeckManager {
         if (uuid === "" || typeof this._cardMap[uuid] === "undefined")
         {
             if (uuid !== "_site")
-                console.warn("Cannot find card by uuid " + uuid);
+                Logger.warn("Cannot find card by uuid " + uuid);
                 
             return null;
         }

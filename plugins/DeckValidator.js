@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 /**
  * Check if given object is empty
@@ -225,12 +226,12 @@ exports.validateArda = function(jDeck, pCardRepository)
         jDeck.chars_mind7 = extractCharactersMindMin7(jDeck.playdeck, pCardRepository);
         jDeck.chars_others = extractCharacters(jDeck.playdeck, pCardRepository);
 
-        console.log("Arda deck summary:");
-        console.log("- Minor Items: " + Object.keys(jDeck.minors).length);
-        console.log("- Marshalling point cards: " + Object.keys(jDeck.mps).length);
-        console.log("- Characters with mind of > 5: " + Object.keys(jDeck.chars_mind7).length);
-        console.log("- Characters with mind of < 6: " + (Object.keys(jDeck.chars_others).length + Object.keys(jDeck.chars_special).length));
-        console.log("- Cards in playdeck: " + Object.keys(jDeck.playdeck).length);
+        Logger.info("Arda deck summary:");
+        Logger.info("- Minor Items: " + Object.keys(jDeck.minors).length);
+        Logger.info("- Marshalling point cards: " + Object.keys(jDeck.mps).length);
+        Logger.info("- Characters with mind of > 5: " + Object.keys(jDeck.chars_mind7).length);
+        Logger.info("- Characters with mind of < 6: " + (Object.keys(jDeck.chars_others).length + Object.keys(jDeck.chars_special).length));
+        Logger.info("- Cards in playdeck: " + Object.keys(jDeck.playdeck).length);
     }
 
     return jDeck;

@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 const GameStandard = require("./GameStandard");
 
 class GameArda extends GameStandard
@@ -196,7 +196,7 @@ class GameArda extends GameStandard
             const deck = this.getDeckManager().getPlayerDeck(_id);
             if (deck === null)
             {
-                console.warn("Could not obtain trading deck #" + _id);
+                Logger.warn("Could not obtain trading deck #" + _id);
                 continue;
             }
 
@@ -249,7 +249,7 @@ class GameArda extends GameStandard
             const deck = this.getDeckManager().getPlayerDeck(trader.id);
             if (deck === null)
             {
-                console.warn("Could not obtain trader deck #" + _id);
+                Logger.warn("Could not obtain trader deck #" + _id);
                 continue;
             }
             
@@ -493,7 +493,7 @@ class GameArda extends GameStandard
         const deck = this.getDeckManager().getPlayerDeck(userid);
         if (deck === null)
         {
-            console.log("Cannot find deck of player " + userid);
+            Logger.warn("Cannot find deck of player " + userid);
             return;
         }
 

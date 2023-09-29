@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 const CookiePreferences = require("./CookiePreferences");
 
 const pCookiePreferences = new CookiePreferences("game");
@@ -34,7 +34,7 @@ module.exports = function(SERVER, isProduction, g_pAuthentication)
         }
         catch (e)
         {
-            console.error(e);
+            Logger.error(e);
         }
 
         res.setHeader('Content-Type', 'text/plain');

@@ -1,4 +1,5 @@
 const DeckChecksum = require("./DeckChecksum");
+const Logger = require("../Logger");
 
 class Player
 {
@@ -59,7 +60,7 @@ class Player
         }
         catch (err)
         {
-            console.error(err);
+            Logger.error(err);
         }
 
     }

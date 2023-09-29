@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const Logger = require("../Logger");
 
 /**
  * This is a simple wrapper to send a chat message
@@ -75,7 +76,7 @@ class Chat {
      */
     send(userid, text, saveGameLog = false)
     {
-        console.warn("deprecated chat.send");
+        Logger.warn("deprecated chat.send");
         this.sendMessage(userid, text, saveGameLog);
     }
 
@@ -162,7 +163,7 @@ class Chat {
         fs.appendFile(this._gameLogFileUri, this._log.join("\n"), function (err) 
         {
             if (err)
-                console.error(err.message);
+                Logger.error(err.message);
         });
 
         this._log = [""];

@@ -1,5 +1,5 @@
-
 const PlayboardManagerDeck = require("./PlayboardManagerDeck");
+const Logger = require("../Logger");
 
 class PlayboardManagerCharacters extends PlayboardManagerDeck
 {
@@ -250,7 +250,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     {
         if (!this.characterExists(uuid))
         {
-            console.log("character does not exist: " + uuid);
+            Logger.warn("character does not exist: " + uuid);
         }
         else
         {
@@ -277,14 +277,14 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         const pDeck = super.getPlayerDeck(playerId);
         if (pDeck === null)
         {
-            console.log("Cannot get player deck " + playerId);
+            Logger.warn("Cannot get player deck " + playerId);
             return false;
         }
 
         // remove chard from deck, character or staging area
         if (!this.removeCardFromDeckOrCompany(playerId, uuid))
         {
-            console.log("Could not remove card " + uuid);
+            Logger.warn("Could not remove card " + uuid);
             return false;
         }
 
@@ -360,24 +360,24 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
          const pTargetChar = this.characters[targetCharacter];
          if (typeof pTargetChar === "undefined")
          {
-             console.log("Undefinied target character "+ targetCharacter);
+             Logger.warn("Undefinied target character "+ targetCharacter);
              return false;
          }
  
          const pCard = this.GetCardByUuid(cardUuid);
          if (pCard === null)
          {
-             console.log("Cannot find card " + cardUuid);
+             Logger.warn("Cannot find card " + cardUuid);
              return false;
          }
          else if (pCard.type !== "hazard" && pCard.type !== "resource")
          {
-             console.log("Can only transfer hazards or resources");
+             Logger.warn("Can only transfer hazards or resources");
              return false;
          }
          else if (!this.removeCardFromDeckOrCompany(playerId, cardUuid))
          {
-             console.log("Cannot remove card form source owner");
+             Logger.warn("Cannot remove card form source owner");
              return false;
          }
  

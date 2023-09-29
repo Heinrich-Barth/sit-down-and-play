@@ -3,6 +3,8 @@ const TurnTimer = require("./TurnTimer");
 const GamePlayers = require("./GamePlayers");
 const SaveGameEvaluation = require("./SaveGameEvaluation");
 
+const Logger = require("../Logger");
+
 class GameStandard extends GamePlayers
 {
     constructor(_MeccgApi, _Chat, _playboardManager)
@@ -751,7 +753,11 @@ class GameStandard extends GamePlayers
     onGameDrawCompanies(userid, _socket, _data)
     {
         for (let _company of this.getPlayboardManager().GetCompanyIds(userid))
-            this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(_company));
+        {
+            const _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(_company);
+            if (_temp !== null)
+                this.publishToPlayers("/game/player/draw/company", userid, _temp);
+        }
     }
 
     onCharacterHostCard(userid, _socket, obj)
@@ -763,7 +769,7 @@ class GameStandard extends GamePlayers
 
         if (!this.getPlayboardManager().CharacterHostCard(company, character, uuid, bFromHand, userid))
         {
-            console.info("character cannot host card.");
+            Logger.info("character cannot host card.");
             return false;
         }
 
@@ -836,7 +842,7 @@ class GameStandard extends GamePlayers
 
         if (!this.getPlayboardManager().JoinCompany(_uuid, _source, _companyId, userid))
         {
-            console.info("Character " + _uuid + " cannot join the company " + _companyId);
+            Logger.info("Character " + _uuid + " cannot join the company " + _companyId);
             return;
         }
 
@@ -907,7 +913,11 @@ class GameStandard extends GamePlayers
     onRedrawCompany(userid, companyId)
     {
         if (userid !== undefined && userid !== "" && companyId !== undefined && companyId !== "")
-            this.publishToPlayers("/game/player/draw/company", userid, this.getPlayboardManager().GetFullCompanyByCompanyId(companyId));
+        {
+            const _temp = this.getPlayboardManager().GetFullCompanyByCompanyId(companyId);
+            if (_temp !== null)
+                this.publishToPlayers("/game/player/draw/company", userid, _temp);
+        }
     }
 
     onGameCompanyMarkAsCurrent(userid, _socket, jData)
@@ -1055,7 +1065,7 @@ class GameStandard extends GamePlayers
         }
         catch(err)
         {
-            console.error(err);
+            Logger.error(err);
         }
 
         return null;
@@ -1362,7 +1372,7 @@ class GameStandard extends GamePlayers
     {
         if (this.players.ids.length !== Object.keys(assignments).length)
         {
-            console.warn("Player count missmatch");
+            Logger.warn("Player count missmatch");
             return false;
         }
         
@@ -1373,7 +1383,7 @@ class GameStandard extends GamePlayers
         {
             if (!this.players.ids.includes(assignments[id]) || assignments[id] === "")
             {
-                console.warn("Expected player id is not part of this room: " + assignments[id]);
+                Logger.warn("Expected player id is not part of this room: " + assignments[id]);
                 success = false;
             }
         }
@@ -1396,7 +1406,7 @@ class GameStandard extends GamePlayers
         }
         catch(err)
         {
-            console.error(err);
+            Logger.error(err);
         }
         
         return { };
@@ -1413,7 +1423,7 @@ class GameStandard extends GamePlayers
         }
         catch(err)
         {
-            console.error(err);
+            Logger.error(err);
         }
 
         this.publishChat(userid, " savegame is invalid. Could not decode saved game.", false);
@@ -1437,9 +1447,9 @@ class GameStandard extends GamePlayers
         for (let _cardId in _map)
         {
             const _formerOwner = _map[_cardId].owner;
-            if (assignments[_formerOwner] !== undefined)
+            if (_formerOwner !== undefined && assignments[_formerOwner] !== undefined)
                 _map[_cardId].owner = assignments[_formerOwner];
-            else
+            else if (_formerOwner)
                 throw new Error("Cannot find former owner " + _formerOwner + " of card " + _cardId + ". Cannot restore game.");
         }
     }
@@ -1549,7 +1559,7 @@ class GameStandard extends GamePlayers
         }
         catch (err)
         {
-            console.error(err);
+            Logger.error(err);
 
             if (this._fnEndGame !== null)
                 this._fnEndGame();

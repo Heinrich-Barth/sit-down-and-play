@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 /**
  * Commpn playdeck 
@@ -91,7 +92,7 @@ class DeckCommons {
                 _entry = this.createCardEntry(key, this.isAgent(key, listAgents), gameCardProvider);
                 if (_entry === null)
                 {
-                    console.log("Cannot add card " + key + " to deck.");
+                    Logger.warn("Cannot add card " + key + " to deck.");
                     break;
                 }
                 else
@@ -104,7 +105,7 @@ class DeckCommons {
         }
     
         if (nSize === MAX_CARDS_PER_DECK)
-            console.log("Will not add more than " + MAX_CARDS_PER_DECK + " cards for safety reasons.");
+            Logger.info("Will not add more than " + MAX_CARDS_PER_DECK + " cards for safety reasons.");
             
         return nSize;
     }
@@ -307,14 +308,14 @@ class DeckCommons {
     {
         if (typeof code === "undefined")
         {
-            console.log("Invalid code");
+            Logger.info("Invalid code");
             return null;
         }
 
         const sType = gameCardProvider.getCardType(code);
         if (sType === "")
         {
-            console.log("Invalid card type");
+            Logger.info("Invalid card type");
             return null;
         }
 

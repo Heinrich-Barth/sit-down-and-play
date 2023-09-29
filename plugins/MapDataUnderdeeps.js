@@ -1,3 +1,5 @@
+const Logger = require("../Logger");
+
 class MapDataUnderdeeps {
 
     constructor(cards)
@@ -8,7 +10,7 @@ class MapDataUnderdeeps {
         const res = this.createAdjacentSiteList(cards);
         this.adjacents = res.adjacents;
         this.alignments = res.alignments;
-        console.info("\t- " + Object.keys(this.adjacents).length + " sites avialable for underdeeps map in total");
+        Logger.info("\t- " + Object.keys(this.adjacents).length + " sites avialable for underdeeps map in total");
     }
 
     get(_imageList)
@@ -133,7 +135,7 @@ class MapDataUnderdeeps {
             added |= this.addSurfaceSitesNormalised(code, MapDataUnderdeeps.normalizeString(surfaceSiteTitle.title), sitesByTitle, targetList);
 
             if (!added)
-                console.warn("Cannot find surface site by title " + surfaceSiteTitle.title);
+                Logger.warn("Cannot find surface site by title " + surfaceSiteTitle.title);
         }
     }
 }

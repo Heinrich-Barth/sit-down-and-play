@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 class HandManager 
 {
@@ -10,12 +11,12 @@ class HandManager
     {
         if (typeof this.DECKS._deck[playerId] === "undefined")
         {
-            console.warn("Cannod find deck of player #" + playerId);
+            Logger.warn("Cannod find deck of player #" + playerId);
             return [];
         }
         else if (typeof this.DECKS._deck[playerId][type] === "undefined")
         {
-            console.warn("Cannod find " + type + " pile of player #" + playerId);
+            Logger.warn("Cannod find " + type + " pile of player #" + playerId);
             return [];
         }
         else 
@@ -28,7 +29,7 @@ class HandManager
     {
         if (typeof this.DECKS._deck[playerId] === "undefined")
         {
-            console.warn("decksize: Cannod find deck of player #" + playerId);
+            Logger.warn("decksize: Cannod find deck of player #" + playerId);
             return null;
         }
         else

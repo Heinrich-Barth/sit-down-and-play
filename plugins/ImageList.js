@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 
 class ImageList {
 
@@ -48,9 +49,9 @@ class ImageList {
         for (let card of jsonCards) 
             list[card.code] = this.newImage(card, imageUrl);
 
-        console.log("\t- image url prefix: " + imageUrl);
-        console.log("\t- IC errata images available: " + this.g_nCountErrataIC);
-        console.log("\t- DC errata images available: " + this.g_nCountErrataDC);
+        Logger.info("\t- image url prefix: " + imageUrl);
+        Logger.info("\t- IC errata images available: " + this.g_nCountErrataIC);
+        Logger.info("\t- DC errata images available: " + this.g_nCountErrataDC);
 
         return list;
     }
@@ -97,7 +98,7 @@ class ImageList {
             }
         }
 
-        console.log("\t- Flipped cards available: " + Object.keys(quests).length);
+        Logger.info("\t- Flipped cards available: " + Object.keys(quests).length);
         return quests;
     }
 

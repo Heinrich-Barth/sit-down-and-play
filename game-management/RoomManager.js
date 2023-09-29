@@ -1,4 +1,5 @@
 const GameRoom = require("./GameRoom");
+const Logger = require("../Logger");
 
 /**
  * Create a new room if necessary
@@ -91,7 +92,7 @@ class RoomManager {
     {
         if (userid === undefined || userid === "")
         {
-            console.warn("invalid input.");
+            Logger.warn("invalid input.");
             return { };
         }
 
@@ -100,7 +101,7 @@ class RoomManager {
             return pRoom.getGame().getTappedSites(userid);
         else
         {
-            console.log("cannot get tapped sites. room does not exist: " + room);
+            Logger.warn("Cannot get tapped sites. room does not exist: " + room);
             return { };
         }
     }
@@ -365,7 +366,7 @@ class RoomManager {
         for (let spectator of list)
         {
             if (pRoom.removeVisitor(spectator.id))
-                console.log("Specator " + spectator.name + " removed from game.");
+                Logger.info("Specator " + spectator.name + " removed from game.");
         }
     }
 
@@ -412,7 +413,7 @@ class RoomManager {
             {
                 /** make sure to remove game from events */
                 pThis._eventManager.trigger("game-remove", room, fileLog);
-                console.log("Game room " + room + " is empty and was destroyed.");
+                Logger.info("Game room " + room + " is empty and was destroyed.");
             }
 
         }, 2000 * 60);
@@ -459,8 +460,6 @@ class RoomManager {
             this._rooms[room].publish("/game/player/remove", "", { userid: userId });
             this._rooms[room].getGame().removePlayer(userId);
         }
-        else
-            console.log("will not remove the administrator.");
     }
 
 
@@ -468,7 +467,7 @@ class RoomManager {
     {
         if (this._rooms[room] === undefined)
         {
-            console.warn("Room is not available");
+            Logger.warn("Room is not available: " + room);
             return false;
         }
         
@@ -477,7 +476,7 @@ class RoomManager {
         const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
         if (pPlayer === undefined)
         {
-            console.warn("Player not available");
+            Logger.warn("Player not available");
             return false;
         }
 
@@ -501,7 +500,7 @@ class RoomManager {
         }
         catch (err)
         {
-            console.error(err);
+            Logger.error(err);
             pRoom.getGame().removePlayer(userid);
         }
         
@@ -525,7 +524,7 @@ class RoomManager {
         const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
         if (pPlayer === undefined)
         {
-            console.warn("Player is undefined: rejoinAfterBreak");
+            Logger.warn("Player is undefined: rejoinAfterBreak");
             return false;
         }
 
@@ -551,19 +550,19 @@ class RoomManager {
             {
                 pRoom.publish("/game/player/indicator", "", { userid: userid, connected: true });
                 pRoom.sendMessage(userid, " joined the game.");
-                console.info("User " + pPlayer.getName() + " rejoined the game " + room);
+                Logger.info("User " + pPlayer.getName() + " rejoined the game " + room);
             }
             else
             {
                 pRoom.sendMessage(userid, pPlayer.getName() + " joined as spectator.");
-                console.info("Spectator " + pPlayer.getName() + " rejoined the game " + room);
+                Logger.info("Spectator " + pPlayer.getName() + " rejoined the game " + room);
             }
 
             return true;
         }
         catch (err)
         {
-            console.error(err);
+            Logger.error(err);
             pRoom.getGame().removePlayer(userid);
         }
 
@@ -622,7 +621,7 @@ class RoomManager {
             this._eventManager.trigger("game-finished", room, scores);
 
         this._eventManager.trigger("game-remove", room, logfile);
-        console.info("Game " + room + " has ended.");
+        Logger.info("Game " + room + " has ended.");
     }
 
     /**
@@ -649,7 +648,7 @@ class RoomManager {
         if (pPlayer === undefined)
             return false;
 
-        console.log(pPlayer.getName() + " removed from game.");
+        Logger.info(pPlayer.getName() + " removed from game.");
 
         pPlayer.disconnect();
 
@@ -681,7 +680,7 @@ class RoomManager {
             
         if (!this.isValidAccessToken(room, userId, player_access_token_once))
         {
-            console.log("Invalid access token (once");
+            Logger.warn("Invalid access token (once)");
             return false;
         }
         else if (bIsPlayer)

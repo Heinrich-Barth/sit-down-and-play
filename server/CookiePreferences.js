@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 
 class CookiePreferences
 {
@@ -60,12 +60,10 @@ class CookiePreferences
             const val = this.sanatizeValue(jData.value);
             if (this.isAvailable(jData.name))
                 res.cookie(this.prefix + jData.name, val, this.isProduction);
-            else
-                console.log("Unknown cookie type " + jData.name);
         }
         catch (e)
         {
-            console.warn(e.message);
+            Logger.warn(e.message);
         }
     }
 }

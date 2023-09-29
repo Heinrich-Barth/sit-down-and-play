@@ -1,5 +1,6 @@
 const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
 const CardRepositoryUnderdeeps = require("./CardRepositoryUnderdeeps")
+const Logger = require("../Logger");
 
 const getRemovableKeysArray = function()
 {
@@ -11,7 +12,7 @@ const getRemovableKeysArray = function()
     }
     catch (err)
     {
-        console.warn(err);
+        Logger.error(err);
     }
 
     return [];
@@ -189,7 +190,7 @@ class CardRepository {
             }
         }
         
-        console.info("\t- Avatars: " + nCount);
+        Logger.info("\t- Avatars: " + nCount);
     }
 
     identifyQuests()
@@ -202,7 +203,7 @@ class CardRepository {
                 nCount++;
         }
         
-        console.info("\t- Quests: " + nCount);
+        Logger.info("\t- Quests: " + nCount);
     }
 
     identifyInLieuItems()
@@ -240,7 +241,7 @@ class CardRepository {
         }
 
         if (rem > 0)
-            console.log("\t- properties removed from cards: " + rem);
+            Logger.info("\t- properties removed from cards: " + rem);
     }
 
     removeFlavourText()
@@ -273,7 +274,7 @@ class CardRepository {
         }
 
         if (rem > 0)
-            console.log("\t- flavour texts removed from cards: " + rem);
+            Logger.info("\t- flavour texts removed from cards: " + rem);
     }
 
     removeUnwantedCardRepository(_raw)
@@ -292,9 +293,9 @@ class CardRepository {
         }
 
         if (countUl > 0)
-            console.log("\t- cards removed (unlimited): " + countUl);
+            Logger.info("\t- cards removed (unlimited): " + countUl);
         if (countAL > 0)
-            console.log("\t- cards removed (AL): " + countAL);
+            Logger.info("\t- cards removed (AL): " + countAL);
 
         return _arr;
     }
@@ -324,7 +325,7 @@ class CardRepository {
             addInvalid(card, "normalizedtitle");
         }
 
-        console.error("\t- invalid card(s) found: " + Object.keys(invalids).length);
+        Logger.info("\t- invalid card(s) found: " + Object.keys(invalids).length);
     }
 
     updateMps()
@@ -405,7 +406,7 @@ class CardRepository {
 
     setup(_raw)
     {
-        console.log("Setting up card data.");
+        Logger.info("Setting up card data.");
 
         this._raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
@@ -425,7 +426,7 @@ class CardRepository {
         this.createAgentList();
         this.createCardNameCodeSuggestionsList();
 
-        console.log("\t- " + this._raw.length + " cards available in total.");
+        Logger.info("\t- " + this._raw.length + " cards available in total.");
         return this._raw;
     }    
 
@@ -551,7 +552,7 @@ class CardRepository {
         this.identifyInLieuItems();
         this.removeUnusedFields();
         this.removeFlavourText();
-        console.log("\t-- all data card loaded --");
+        Logger.info("\t-- all data card loaded --");
     }
 
     isAgent(card)
@@ -575,7 +576,7 @@ class CardRepository {
                 this._agentList.push(card.code);
         }
 
-        console.log("\t- " + this._agentList.length + " agents identified.");
+        Logger.info("\t- " + this._agentList.length + " agents identified.");
     }
 
     getAgents()
@@ -598,7 +599,7 @@ class CardRepository {
         } 
         catch (error) 
         {
-            console.error(error);
+            Logger.error(error);
         }
     }
 

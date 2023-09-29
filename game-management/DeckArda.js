@@ -1,4 +1,5 @@
 const DeckDefault = require("./DeckDefault");
+const Logger = require("../Logger");
 
 /**
  * Arda deck. Besides the standard deck features, it has common
@@ -124,22 +125,22 @@ class DeckArda extends DeckDefault {
         nSize = this.add(jsonDeck["minors"], this.handMinorItems, _cardMap, [], gameCardProvider);
         this.copyIds(this.handMinorItems, this.typesMinors);
 
-        console.log("Added " + nSize + " minor items");
+        Logger.info("Added " + nSize + " minor items");
         
         nSize = this.add(jsonDeck["mps"], this.playdeckMP, _cardMap, [], gameCardProvider);
         this.copyIds(this.playdeckMP, this.typesMPs);
         this.shuffleAnyTimes(this.playdeckMP, 3);
-        console.log("Added " + nSize + " marshalling points cards");
+        Logger.info("Added " + nSize + " marshalling points cards");
 
         nSize = this.add(jsonDeck["chars_mind7"], this.playDeckCharacters7, _cardMap, listAgents, gameCardProvider);
         this.copyIds(this.playDeckCharacters7, this.typesCharacters);
         this.shuffleAnyTimes(this.playDeckCharacters7, 3);
-        console.log("Added " + nSize + " characters with mind of 6+");
+        Logger.info("Added " + nSize + " characters with mind of 6+");
 
         nSize = this.add(jsonDeck["chars_others"], this.playdeckCharacters, _cardMap, listAgents, gameCardProvider);
         this.copyIds(this.playdeckCharacters, this.typesCharacters);
         this.shuffleAnyTimes(this.playdeckCharacters, 3);
-        console.log("Added " + nSize + " characters with mind of 5-");
+        Logger.info("Added " + nSize + " characters with mind of 5-");
 
         this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
     }
@@ -513,16 +514,16 @@ class DeckArda extends DeckDefault {
             this.sideboard = pAdmin.sideboard;
             this.playdeck = pAdmin.playdeck;
         
-            console.log("Linked marshalling points");
+            Logger.info("Linked marshalling points");
             this.playdeckMP = pAdmin.playdeckMP;
             this.discardPileMP = pAdmin.discardPileMP;
 
-            console.log("Linked roving characers");
+            Logger.info("Linked roving characers");
             this.handCardsCharacters = pAdmin.handCardsCharacters;
             this.discardPileCharacters = pAdmin.discardPileCharacters;
             this.playdeckCharacters = pAdmin.playdeckCharacters;
 
-            console.log("Linked common minor items");
+            Logger.info("Linked common minor items");
             this.handMinorItems = pAdmin.handMinorItems;
             this.discardPileMinorItems = pAdmin.discardPileMinorItems;
 

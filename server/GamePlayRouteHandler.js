@@ -1,3 +1,4 @@
+const Logger = require("../Logger");
 const fs = require('fs');
 const UTILS = require("../meccg-utils");
 
@@ -28,7 +29,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
         catch (err)
         {
-            console.error(err);
+            Logger.error(err);
         }
 
         return "";
@@ -265,7 +266,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
         catch (e) 
         {
-            console.warn(e.message);
+            Logger.error(e);
             this.createExpireResponse(res).redirect("/error/login");
         }
     }
@@ -291,7 +292,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         const room = req.room;
         if (this.getServerInstance().roomManager.tooManyRooms() || this.getServerInstance().roomManager.tooManyPlayers(room))
         {
-            console.log("Too many rooms or too many players in room " + room);
+            Logger.info("Too many rooms or too many players in room " + room);
             this.createExpireResponse(res).redirect("/error/login");
             return;
         }
@@ -299,7 +300,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         const nPlayers = this.getServerInstance().roomManager.countPlayersInRoom(room);
         if (GamePlayRouteHandler.maxPlayersPerRoom > 0 && nPlayers > GamePlayRouteHandler.maxPlayersPerRoom)
         {
-            console.log("Too crowded in room " + room);
+            Logger.info("Too crowded in room " + room);
             this.createExpireResponse(res).redirect("/error/login");
             return;
         }
@@ -365,7 +366,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         }
         catch (e) 
         {
-            console.warn(e.message);
+            Logger.error(e);
             this.createExpireResponse(res).redirect("/error/login");
         }
     }

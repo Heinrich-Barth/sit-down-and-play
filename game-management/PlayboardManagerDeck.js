@@ -1,5 +1,6 @@
 const PlayboardManagerBase = require("./PlayboardManagerBase");
 const DeckManagerDefault = require("./DeckManagerDefault");
+const Logger = require("../Logger");
 
 class PlayboardManagerDeck extends PlayboardManagerBase {
 
@@ -318,7 +319,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
     {
         const pDeck = this.getDecks().getPlayerDeck(playerId);
         if (pDeck === null)
-            console.warn("Cannot get player deck " + playerId);
+            Logger.warn("Cannot get player deck " + playerId);
 
         return pDeck;
     }
@@ -410,7 +411,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
                 return pDeck.push().toHand(uuid);
 
             default:
-                console.warn("Unknown target pile " + target);
+                Logger.warn("Unknown target pile " + target);
                 break;
         }
 
@@ -452,7 +453,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
                 return pDeck.push().toOutOfPlay(cardUuid);
 
             default:
-                console.log("Unknown target hand list " + target);
+                Logger.warn("Unknown target hand list " + target);
                 break;
         }
 
@@ -524,7 +525,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
                 return true;
 
             default:
-                console.log("Invalid target " + target);
+                Logger.warn("Invalid target " + target);
                 break;
         }
 

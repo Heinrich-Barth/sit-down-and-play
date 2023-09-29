@@ -1,5 +1,6 @@
 const path = require('path');
 const rootDir = path.join(__dirname, "/..");
+const Logger = require("../Logger");
 
 module.exports = function(SERVER, g_pExpress)
 {
@@ -21,7 +22,7 @@ module.exports = function(SERVER, g_pExpress)
 
     SERVER.instance.post("/csp-violation", (req, res) => 
     {
-        console.warn("CSP violation at " + (req.headers.referrer || req.headers.referer));
+        Logger.warn("CSP violation at " + (req.headers.referrer || req.headers.referer));
         res.status(204).end();
     });
     

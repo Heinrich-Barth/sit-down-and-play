@@ -1,3 +1,5 @@
+const Logger = require("../Logger");
+
 class GameBase {
 
     constructor(_MeccgApi, _Chat, playboardManager)
@@ -26,7 +28,7 @@ class GameBase {
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.error(err);
         }
     }            
 
@@ -68,7 +70,7 @@ class GameBase {
         else if (obj === "outofplay")
             list = this.getPlayboardManager().GetCardsInOutOfPlay();
         else
-            console.log("unknown target card list " + obj);
+            Logger.warn("unknown target card list " + obj);
         
         return list;
     }

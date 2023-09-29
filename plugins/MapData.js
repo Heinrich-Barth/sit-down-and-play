@@ -1,4 +1,4 @@
-
+const Logger = require("../Logger");
 
 const isAlignment = (card, type) => card["alignment"] === type;
 const isFallenWizard = (card) => isAlignment(card, "Fallen-wizard");
@@ -80,7 +80,7 @@ class MapData
         }
         catch(err)
         {
-            console.warn(err.message);
+            Logger.error(err);
         }
 
         return  { };
@@ -211,8 +211,8 @@ class MapData
 
         if (count > 0)
         {
-            console.log("\t- " + count + " regions available.");
-            console.log("\t- " + added + " missing regions added to map data.");
+            Logger.info("\t- " + count + " regions available.");
+            Logger.info("\t- " + added + " missing regions added to map data.");
         }
     }
 
@@ -287,12 +287,12 @@ class MapData
             count++;
             if (typeof jMapData[card.Region] === "undefined")
             {
-                console.warn("Region " + card.Region + " is missing in map data");
+                Logger.warn("Region " + card.Region + " is missing in map data");
                 continue;
             }
             else if (typeof jMapData[card.Region].sites === "undefined")
             {
-                console.warn("Region " + card.Region + " does not have sites property.");
+                Logger.warn("Region " + card.Region + " does not have sites property.");
                 continue;
             }
             else if (typeof jMapData[card.Region].sites[card.title] === "undefined") 
@@ -318,7 +318,7 @@ class MapData
         }
 
         if (count > 0)
-            console.log("\t- " + count + " sites available");
+            Logger.info("\t- " + count + " sites available");
     }
 
     replaceMapSiteCodesReplaceWithNew(jCards, region)
@@ -538,7 +538,7 @@ class MapData
             case "H":
                 return "Haven";
             default:
-                console.warn("Unknown site type: " + card.site_type);
+                Logger.warn("Unknown site type: " + card.site_type);
                 break;
 
         }
@@ -577,7 +577,7 @@ class MapData
         }
 
         if (posAdded > 0)
-            console.log("\t- " + posAdded + " site(s) in " + posRegions + " region(s) added to the map.");
+            Logger.info("\t- " + posAdded + " site(s) in " + posRegions + " region(s) added to the map.");
 
         return jMapData;
     }

@@ -10,6 +10,8 @@ const GameStandard = require("./GameStandard");
 const GameArda = require("./GameArda");
 const USE_GAME_LOG = process.env.GAMELOGS === undefined || isNaN(process.env.GAMELOGS) ? 0 : parseInt(process.env.GAMELOGS);
 
+const Logger = require("../Logger");
+
 class GameRoom 
 {
     constructor(io, room, fnEndGame)
@@ -279,7 +281,7 @@ class GameRoom
         }
         catch (err)
         {
-            console.log(err);
+            Logger.error(err);
         }
     }
 
@@ -329,7 +331,7 @@ class GameRoom
         }
         catch(err)
         {
-            console.error(err);
+            Logger.error(err);
         }
     }
 
@@ -382,11 +384,11 @@ class GameRoom
     static newGame(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
     {
         if (isSinglePlayer)
-            console.info("Setting up single player game " + room);
+            Logger.info("Setting up single player game " + room);
         else if (isArda)
-            console.info("Setting up arda game " + room);
+            Logger.info("Setting up arda game " + room);
         else
-            console.info("Setting up game " + room);
+            Logger.info("Setting up game " + room);
 
         const pRoomInstance = new GameRoom(io, room, fnEndGame);
         pRoomInstance.createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);

@@ -5,6 +5,7 @@
 const fs = require('fs');
 const Configiration = require("./Configuration");
 const ResultToken = require("./game-management/ResultToken");
+const Logger = require("./Logger");
 
 if (!fs.existsSync("./logs"))
     fs.mkdirSync("./logs");
@@ -207,7 +208,7 @@ SERVER.onListenSetupSocketIo = function ()
     SERVER._io = require('socket.io')(SERVER._http);
     SERVER._io.on('connection', SERVER.onIoConnection.bind(SERVER));
 
-    SERVER._io.engine.on("connection_error", (err) => console.error("There is a connection error ("+ err.code + "): " + err.message));
+    SERVER._io.engine.on("connection_error", (err) => Logger.error("There is a connection error ("+ err.code + "): " + err.message));
 
     SERVER._io.use((socket, next) => 
     {
@@ -233,7 +234,7 @@ SERVER.onListenSetupSocketIo = function ()
         }
         catch(err)
         {
-            console.log(err);
+            Logger.log(err);
         }
 
         next(null, false);
@@ -246,32 +247,32 @@ SERVER.doShutdown = function()
 
         try 
         {
-            console.log("- shutdown IO http server.");
+            Logger.info("- shutdown IO http server.");
             SERVER._io.httpServer.close();
         }
         catch (e) 
         {
-            console.error(e);
+            Logger.error(e);
         }
 
         try 
         {
-            console.log("- shutdown IO.");
+            Logger.info("- shutdown IO.");
             SERVER._io.close();
         }
         catch (e) 
         {
-            console.error(e);
+            Logger.error(e);
         }
 
         try 
         {
-            console.log("- shutdown server.");
+            Logger.info("- shutdown server.");
             SERVER.instanceListener.close();
         }
         catch (e) 
         {
-            console.error(e);
+            Logger.error(e);
         }
     }
     finally
@@ -279,7 +280,7 @@ SERVER.doShutdown = function()
         SERVER._io = null;
         SERVER.instanceListener = null;
     
-        console.log("- stop application.");
+        Logger.info("- stop application.");
         process.exit(0);
     }
 };
@@ -289,7 +290,7 @@ SERVER.doShutdown = function()
  */
 SERVER.shutdown = function () 
 {
-    console.log("\nShutting down game server.");
+    Logger.info("\nShutting down game server.");
 
     /** send save game instruction to running games */
     if (SERVER.roomManager.sendShutdownSaving())
@@ -298,7 +299,7 @@ SERVER.shutdown = function ()
             return new Promise((resolve) => setTimeout(resolve, time));
         }
             
-        sleep(2000).then(SERVER.doShutdown).catch(console.error);
+        sleep(2000).then(SERVER.doShutdown).catch(Logger.error);
     }
     else
         SERVER.doShutdown();
@@ -464,7 +465,7 @@ const getRefererPath = function(url)
     }
     catch(err)
     {
-        console.warn(err);
+        Logger.warn(err);
     }
 
     return "";
@@ -509,7 +510,7 @@ SERVER.onIoConnection = function (socket)
     {
         if (!socket.auth) 
         {
-            console.log("Disconnected unauthenticated session " + socket.id);
+            Logger.info("Disconnected unauthenticated session " + socket.id);
         }
         else 
         {
@@ -560,7 +561,7 @@ SERVER.instance.use(function(_req, res, _next)
 SERVER.instance.use(function(err, _req, res, _next) 
 {
     if (err)
-        console.error(err);
+        Logger.error(err);
 
     res.status(500);
 
@@ -589,22 +590,22 @@ SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVE
 
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {
-    console.error(err);
+    Logger.error(err);
     socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-console.log("Server started at port " + SERVER.configuration.port());
+Logger.info("Server started at port " + SERVER.configuration.port());
 
 process.on('beforeExit', code => {
     setTimeout(() => {
-        console.log(`Process will exit with code: ${code}`)
+        Logger.info(`Process will exit with code: ${code}`)
         process.exit(code)
     }, 100)
 })
   
-process.on('exit', code => console.log(`Process exited with code: ${code}`));
-process.on('uncaughtException', err => console.error(err));
-process.on('unhandledRejection', (err, promise) => console.warn('Unhandled rejection at ', promise, `reason: ${err.message}`));
+process.on('exit', code => Logger.info(`Process exited with code: ${code}`));
+process.on('uncaughtException', err => Logger.error(err));
+process.on('unhandledRejection', (err, promise) => Logger.warn('Unhandled rejection at ', promise, `reason: ${err.message}`));
   
 /**
  * allow CTRL+C

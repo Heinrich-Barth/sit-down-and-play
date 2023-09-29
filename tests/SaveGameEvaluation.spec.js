@@ -42,7 +42,7 @@ describe('SaveGameEvaluation', () => {
         expect(instance.evaluateCardMap(playboard)).toBeTruthy();
     });
 
-    it("evaluateOwnerMap(siteMap)", () => 
+    it("clearMap(siteMap)", () => 
     {
         let instance = new SaveGameEvaluation({"a" : "b"});
         let siteMap = {
@@ -50,15 +50,17 @@ describe('SaveGameEvaluation', () => {
                 "MySite [H] (TW)": true
             }
         };
-        expect(instance.evaluateOwnerMap({ })).toBeFalsy();
-        expect(instance.evaluateOwnerMap(siteMap)).toBeFalsy();
+
+        expect(Object.keys(siteMap).length).toEqual(1);
+        expect(instance.clearMap(siteMap)).toBeTruthy();
+        expect(Object.keys(siteMap).length).toEqual(0);
 
         siteMap = {
             "a": {
                 "MySite [H] (TW)": true
             }
         };
-        expect(instance.evaluateOwnerMap(siteMap)).toBeTruthy();
+        expect(instance.clearMap(siteMap)).toBeTruthy();
     });
 
     it("evaluateCompanies(companies)", () =>

@@ -1,5 +1,6 @@
-
 const https = require('https');
+const Logger = require("../Logger");
+
 const HOOK_URL = process.env.DISCORD === undefined ? "" : process.env.DISCORD;
 const PLATFORM_URL = process.env.PLATFORMURL === undefined ? "" : process.env.PLATFORMURL;
 
@@ -71,7 +72,6 @@ class Discord
     {
         try
         {
-
             if (data !== "")
             {
                 const id = JSON.parse(data).id;
@@ -81,7 +81,7 @@ class Discord
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.error(err);
         }
 
         return "";
@@ -161,7 +161,7 @@ class Discord
             
         try 
         {
-            const req = https.request(this.getPostOptions(room, hookUrl)).on("error", (err) => console.warn(err.message));
+            const req = https.request(this.getPostOptions(room, hookUrl)).on("error", (err) => Logger.warn(err.message));
             req.write(JSON.stringify({
                 content: message
             }));
@@ -170,7 +170,7 @@ class Discord
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.warn(err.message);
         }
         return false;
     }
@@ -211,7 +211,7 @@ class Discord
                     res.on('end', ()  => pThis.saveDiscordMessageId(thisRoom, body));    
                 }
 
-            }).on("error", (err) => console.warn(err.message));
+            }).on("error", (err) => Logger.warn(err.message));
             req.write(JSON.stringify({
                 content: prevMessage
             }));
@@ -219,7 +219,7 @@ class Discord
         }
         catch (err)
         {
-            console.warn(err.message);
+            Logger.warn(err.message);
         }
     }
 
