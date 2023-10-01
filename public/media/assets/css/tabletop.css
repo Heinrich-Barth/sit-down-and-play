@@ -1315,8 +1315,17 @@ div.card img:hover {
   box-shadow: 0px 0px 10px 2px #F0C648;
 }
 
+.playercard-hand-content {
+  position: relative;
+}
+.playercard-hand-content .hand-card-actions {
+  position: absolute;
+}
+
 .card-dice {
   background: url("/media/assets/images/icons/icon-dices.png") 0 0 no-repeat;
+  width: 60px;
+  height: 30px;
 }
 .card-dice:hover {
   background: url("/media/assets/images/icons/icon-dices-hover.png") 0 0 no-repeat;
@@ -1742,4 +1751,56 @@ body .taskbar-pin {
 }
 .site-regions .card:hover .card-icon {
   scale: none;
+}
+
+div.card[data-token]:after {
+  position: absolute;
+  right: 10%;
+  top: 10%;
+  padding: 5px;
+  font-size: 0.8em;
+  background: #F0C648;
+  border-radius: 50%;
+  line-height: 1em;
+  content: "10+";
+}
+
+div.card[data-token="1"]:after {
+  content: "1";
+}
+
+div.card[data-token="2"]:after {
+  content: "2";
+}
+
+div.card[data-token="3"]:after {
+  content: "3";
+}
+
+div.card[data-token="4"]:after {
+  content: "4";
+}
+
+div.card[data-token="5"]:after {
+  content: "5";
+}
+
+div.card[data-token="6"]:after {
+  content: "6";
+}
+
+div.card[data-token="7"]:after {
+  content: "7";
+}
+
+div.card[data-token="8"]:after {
+  content: "8";
+}
+
+div.card[data-token="9"]:after {
+  content: "9";
+}
+
+div.card[data-token="10"]:after {
+  content: "10";
 }
