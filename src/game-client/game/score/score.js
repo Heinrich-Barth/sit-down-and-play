@@ -233,6 +233,11 @@ const SCORING_INGAME =
         for (let id in avatars)
             this._avatars[id] = avatars[id];
 
+        this.updateAvatarImages();
+    },
+
+    updateAvatarImages:function()
+    {
         const table = document.getElementById("scoring-sheet-ingame");
         if (table === null)
             return;
@@ -241,7 +246,6 @@ const SCORING_INGAME =
         if (list === null || list.length === 0)
             return;
 
-        
         for (let img of list)
         {
             const id = img.getAttribute("data-player-id");
@@ -692,6 +696,12 @@ const SCORING_INGAME =
             return g_Game.CardList.getBackside();
         else
             return g_Game.CardList.getImage(this._avatars[id]);
+    },
+
+    registerAvatar: function(id, code)
+    {
+        if (this._avatars[id] === undefined)
+            this._avatars[id] = code;
     },
 
     addInGame : function(sName, _playerId, sHexId, isMe)
@@ -1360,6 +1370,11 @@ document.body.addEventListener("meccg-players-updated", (e) =>
     SCORING_INGAME.updateAvatars(e.detail.avatars);
 }, false);
 
+document.body.addEventListener("meccg-register-avatar", (e) => 
+{
+    SCORING_INGAME.registerAvatar(e.detail.userid, e.detail.code);
+    SCORING_INGAME.updateAvatarImages();
+},  false);
 
 document.body.addEventListener("meccg-score-card", (e) => SCORING.scoreCard(e.detail), false);
 

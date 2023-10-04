@@ -101,6 +101,17 @@ class GamePlayers extends GameBase
         this.scoring.add(sId);
     }
 
+    setAvatar(sId, avatar)
+    {
+        if (sId !== undefined && this.players.ids.includes(sId) && avatar !== undefined && avatar !== "")
+        {
+            this.players.avatars[sId] = avatar;
+            return true;
+        }
+        else
+            return false;
+    }
+
     getCurrentPlayerId()
     {
         return this.players.ids[this.players.current];

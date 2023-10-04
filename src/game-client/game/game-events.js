@@ -234,9 +234,9 @@ class GameEvents
         }
      }
 
-    registerEventCode(code, callback)
+    registerEventCode(code, ...callbacks)
     {
-        this.eventCodes[code] = callback;
+        this.eventCodes[code] = callbacks;
     }
 
     triggerEvent(code, isMe, type, data)
@@ -244,7 +244,11 @@ class GameEvents
         try
         {
             if (code !== undefined && code !== "" && this.eventCodes[code] !== undefined)
-                this.eventCodes[code](isMe, type, data);
+            {
+                const list = this.eventCodes[code];
+                for (let callback of list)
+                    callback(isMe, type, data);
+            }
         }
         catch (err)
         {
@@ -264,9 +268,32 @@ class GameEvents
         }
     }
 
+    onArdaEventWizardPlayed(isMe, type, data)
+    {
+        if (GameEvents.Type_Enter !== type)
+            return;
+
+        document.body.dispatchEvent(new CustomEvent("meccg-register-avatar", { "detail": {
+            userid : data.user,
+            code: data.code
+        } }));
+
+        if (isMe)
+            MeccgApi.send("/game/avatar/set", { code: data.code }); 
+    }
+
     setupEvents()
     {
-        this.registerEventCode("pallando [h] (tw)", this.onEventPallando.bind(this));
+        if ("true" === document.body.getAttribute("data-game-arda"))
+        {
+            this.registerEventCode("pallando [h] (tw)", this.onEventPallando.bind(this), this.onArdaEventWizardPlayed.bind(this));
+            this.registerEventCode("alatar [h] (tw)", this.onArdaEventWizardPlayed.bind(this));
+            this.registerEventCode("gandalf [h] (tw)", this.onArdaEventWizardPlayed.bind(this));
+            this.registerEventCode("radagast [h] (tw)", this.onArdaEventWizardPlayed.bind(this));
+            this.registerEventCode("saruman [h] (tw)", this.onArdaEventWizardPlayed.bind(this));
+        }
+        else
+            this.registerEventCode("pallando [h] (tw)", this.onEventPallando.bind(this));
     }
 
     onEventPallando(isMe, type, data)

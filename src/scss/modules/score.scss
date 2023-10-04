@@ -342,7 +342,6 @@
     }
 }
 
-
 .scoring-sheet-ingame {
     position: fixed;
     right: 0;
@@ -358,7 +357,7 @@
 
     th.scoring-sheet-ingame-icon-openclose::before { content: '\00BB' }
 
-    &.scoring-arda,
+    &.scoring-arda { bottom: 135px; }
     &.scoring-single { display: none; }
 
     color: #fff;

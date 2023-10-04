@@ -93,7 +93,8 @@ class GameStandard extends GamePlayers
 
         this.getMeccgApi().addListener("/game/watch/hand", this.onWatchUpdateHand.bind(this));
         this.getMeccgApi().addListener("/game/watch/victory", this.onWatchUpdateVictory.bind(this));
-        
+
+        this.getMeccgApi().addListener("/game/avatar/set", this.onAvatarSet.bind(this));
     }
 
     /**
@@ -556,6 +557,13 @@ class GameStandard extends GamePlayers
 
         if (res.length > 0)
             this.replyToPlayer("/game/card/hand", socket, { cards: res });
+    }
+
+    onAvatarSet(userid, _socket, obj)
+    {
+        const avatar = obj.code;
+        if (avatar && this.setAvatar(userid, avatar))
+            this.publishChat(userid, "Updated their avatar to " + avatar, false);
     }
 
     onCardMove(userid, socket, obj)

@@ -53,6 +53,10 @@
     display: block !important;
 }
 
+.game-watch-only .scoring-sheet-ingame.scoring-arda {
+    bottom: 0 !important;
+}
+
 .game-watch-only div#opponent_table .company,
 .game-watch-only .staging-area-opponent.rot180
 {
