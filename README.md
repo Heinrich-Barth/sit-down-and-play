@@ -368,10 +368,14 @@ The following third-party libraries. Be aware of their respective licenses.
 * All icon licenses are "free for commercial use" with no link back Icons were taken from https://www.iconfinder.com/
 * The background image was taken from https://www.pexels.com/ Unfotunately, I cannot remember the link exactly anymore.
 
-## Copyright License
+## Copyright & License Information
 
 This program is provided under the GNU General Public License version 2 only. See this [license file](LICENSE) for more information.
 	
 All contributions to this program are subject to this license model.
 
 In addition, other licenses may also apply, for example, see third party library section for more details.
+
+*Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. This is not affiliated with Middle-earth Enterprises or Iron Crown Enterprises.*
+
+*MECCG* assets are not included in this repository. Please respect the copyright and trademak. 
