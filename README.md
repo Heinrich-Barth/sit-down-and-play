@@ -374,4 +374,4 @@ This program is provided under the GNU General Public License version 2 only. Se
 	
 All contributions to this program are subject to this license model.
 
-In addition, other licenses may also apply - see third party library section for more details.
+In addition, other licenses may also apply, for example, see third party library section for more details.
