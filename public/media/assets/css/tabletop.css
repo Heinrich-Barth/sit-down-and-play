@@ -269,6 +269,32 @@ a:hover {
   cursor: pointer;
 }
 
+#config-panel {
+  left: 40px;
+}
+#config-panel.config-panel {
+  max-width: 80%;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+#config-panel.config-panel .preference-section {
+  display: inline-block;
+}
+
+.config-panel .preference-section-pad {
+  border-bottom: 1px dotted;
+}
+
+@media (max-width: 750px) {
+  #config-panel.config-panel {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  #config-panel .preference-section {
+    display: block;
+  }
+}
 .taskbar {
   display: inline-block;
   margin-bottom: 5px;

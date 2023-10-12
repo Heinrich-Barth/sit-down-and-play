@@ -209,3 +209,38 @@
         }
     }
 }
+
+#config-panel {
+
+    left: 40px;
+    
+    &.config-panel 
+    {
+        max-width: 80%;
+        margin: 0 auto;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+        .preference-section { display: inline-block;}
+    }
+}
+
+.config-panel .preference-section-pad {
+    border-bottom: 1px dotted;
+}
+
+@media (max-width: 750px) {
+
+    #config-panel 
+    {
+        &.config-panel 
+        {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        .preference-section  
+        {
+            display: block;
+        }
+    }
+    
+}

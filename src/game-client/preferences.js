@@ -40,7 +40,8 @@ class Preferences extends PreferencesStorable {
     {
         super();
 
-        this._html = "";
+        this._htmlCurrentSection = null;
+        this._html = [];
     }
 
     static _id = 0;
@@ -134,34 +135,44 @@ class Preferences extends PreferencesStorable {
         let sCheck = Preferences.config[id].value ? "checked" : "";
         let sCss = Preferences.config[id].value ? Preferences.config[id].type_on : Preferences.config[id].type_off;
         let _id = "preference_id_" + (++Preferences._id);
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "preference");
+
         if (Preferences.config[id].type === Preferences.Type.CHECKBOX)
         {
-            this._html += `<div class="preference">
+            div.innerHTML = `
                 <input type="checkbox" id="${_id}" name="${sInputName}" ${sCheck}>
-                <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
-            </div>`;      
+                <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>`;      
         }
         else if (Preferences.config[id].type === Preferences.Type.SLIDER)
         {
             if (Preferences.config[id].max <= Preferences.config[id].min)
                 return
 
-            this._html += `<div class="preference">
+            div.innerHTML = `
                 <label data-type="check" for="${_id}"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
-                <input type="range" name="${sInputName}" min="0" max="${Preferences.config[id].max_val}" value="${Preferences.config[id].value}" id="${_id}">
-            </div>`;      
+                <input type="range" name="${sInputName}" min="0" max="${Preferences.config[id].max_val}" value="${Preferences.config[id].value}" id="${_id}">`;      
         }
         else
         {
-            this._html += `<div class="preference">
-                <label data-id="${sInputName}" class="pref-hover" data-type="action"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>
-            </div>`;      
+            div.innerHTML = `<label data-id="${sInputName}" class="pref-hover" data-type="action"><i class="fa ${sCss}" data-on="${Preferences.config[id].type_on}" data-off="${Preferences.config[id].type_off}" aria-hidden="true"></i>  ${sTitle}</label>`;
         }
+
+        if (this._htmlCurrentSection !== null)
+            this._htmlCurrentSection.append(div);
     }
 
     createSection(sTitle)
     {
-        this._html += `<div class="preference-section preference-section-pad">${sTitle}</div>`;
+        this._htmlCurrentSection = document.createElement("div")
+        this._htmlCurrentSection.setAttribute("class", "preference-section");
+        this._html.push(this._htmlCurrentSection);
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "preference-section-pad");
+        div.innerText = sTitle;
+        this._htmlCurrentSection.append(div);
     }
 
     getEntries()
@@ -238,11 +249,11 @@ class Preferences extends PreferencesStorable {
         if (document.getElementById("config-panel") !== null)
             return;
         
-        this._html = "";
+        this._html = [];
         this.addConfiguration();
         this.getEntries();
 
-        if (this._html === "")
+        if (this._html.length === 0)
             return;
         
         const div = document.createElement("div");
@@ -256,8 +267,11 @@ class Preferences extends PreferencesStorable {
                         </div>`;
         document.body.appendChild(div);
 
-        document.getElementById("config-panel").innerHTML = this._html;
-        this._html = null;
+        const target = document.getElementById("config-panel");
+        for (let elem of this._html)
+            target.append(elem);
+        
+        this._html = [];
         
         document.getElementById("prefs").onclick = () => setTimeout(function() { document.getElementById("preferences-wrapper").classList.remove("hide"); }, 500);
         document.getElementById("config-panel-overlay").onclick = () => document.getElementById("preferences-wrapper").classList.add("hide");

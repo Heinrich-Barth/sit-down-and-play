@@ -281,60 +281,65 @@ class GamePreferences extends Preferences {
     getEntries()
     {
         const bWatcher = GamePreferences.isWatching();
-        this.createSection("Backgrounds/Customise");
-        this.createEntry0("bg_default");
-        this.createEntry0("bg_shawod");
-        this.createEntry0("toggle_spanishcards");
-        if (!bWatcher)
-        {
-            this.createEntry0("toggle_touch_help");
-            this.createEntry0("toggle_company_break");
-        }
-        
-        this.createEntry0("toggle_zoom");
+        this.createSection("Backgrounds / Customise");
 
         if (!bWatcher)
-        {
             this.createEntry0("game_dices");
 
+        this.createEntry0("bg_default");
+        this.createEntry0("bg_shawod");
+        this.createEntry0("game_sfx");
+
+        this.createSection("Look & Feel");
+        this.createEntry0("toggle_zoom");
+        if (!bWatcher)
+        {
+            this.createEntry0("toggle_company_break");
             this._toggleStackStage(true);
             this.createEntry0("toggle_stack_stage");
 
             this._toggleAlignCompaniesLeft(true);
             this.createEntry0("toggle_align_companies_left");
+            this.createEntry0("use_padding_bottom");
         }
+        
+        this.createEntry0("toggle_fullscreen");
 
-        this.createEntry0("game_sfx");
+        this.createSection("Accessibility / Language");
+        this.createEntry0("toggle_spanishcards");
+        if (!bWatcher)
+            this.createEntry0("toggle_touch_help");
+
 
         if (!bWatcher)
         {
-            this.createSection("Game");
+            this.createSection("Save/Load");
+            this.createEntry0("game_save");
+            this.createEntry0("game_load");
+            if (this.isAdmin())
+                this.createEntry0("game_autosave");
+
+            this.createSection("Game & DC Settings");
             this.createEntry0("game_addcards");   
             
             if (this.isAdmin())
             {
                 this.createEntry0("score_double_misc");
-                this.createEntry0("game_autosave");
             }
                 
-            this.createEntry0("game_save");
-            this.createEntry0("game_load");
             this.createEntry0("images_errata_dc");
-            this.createEntry0("leave_game");
     
             this.createSection("Social Media");
             this.createEntry0("share_play");
             this.createEntry0("share_watch");                    
-    
-            this.createSection("General");
-            this.createEntry0("viewpile_open");
-
-            
         }
 
+        this.createSection("General");
+        if (!bWatcher)
+            this.createEntry0("viewpile_open");
+        
         this.createEntry0("show_chat");
-        this.createEntry0("use_padding_bottom");
-        this.createEntry0("toggle_fullscreen");
+        
     }
 
     static isWatching()
@@ -349,7 +354,7 @@ class GamePreferences extends Preferences {
 
     addConfiguration()
     {        
-        this.addConfigToggle("viewpile_open", "I can see my own card piles (when reavling to opponent etc.)", true);
+        this.addConfigToggle("viewpile_open", "I can see my own card piles (reavling to opponent...)", true);
         this.addConfigToggle("images_errata_dc", "Use CoE Errata", this.getUseDCByDefault());
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
@@ -359,7 +364,7 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
         this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this._doubleMiscPoints);
         this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
-        this.addConfigToggle("show_chat", "Show chat window", true, this._chat);
+        this.addConfigToggle("show_chat", "Show game log window", true, this._chat);
         this.addConfigToggle("toggle_company_break", "Expand companies over multiple lines", false, this._toogleCompanyLineBreak.bind(this));
 
         this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available).", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards.bind(this));
@@ -375,7 +380,6 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)
-        // this.addConfigToggle("toggle_zoom", "Large cards on the table", true, this._toggleCardZoom);
 
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
         this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
