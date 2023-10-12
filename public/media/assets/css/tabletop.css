@@ -944,9 +944,6 @@ body.table-companies-breakline .companies {
   background: rgba(255, 255, 255, 0.15);
   scale: 1.05;
 }
-.companies .company:hover .company-site-list {
-  border-bottom: 3px dashed black;
-}
 .companies .company .company-character:hover {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
@@ -991,7 +988,6 @@ body.table-companies-breakline .companies {
 .companies .company .company-site-list {
   min-height: 80px;
   padding: 5px;
-  border-bottom: 3px dashed transparent;
 }
 .companies .company .company-site-list-border {
   position: absolute;
@@ -1005,9 +1001,6 @@ body.table-companies-breakline .companies {
 .companies .company.company-mark-current .company-site-list-border {
   display: inline-block;
   animation: company-moving-line 5s 10 forwards;
-}
-.companies .company .company-character {
-  border: 3px dashed transparent;
 }
 .companies .company .company-characters-add {
   margin-left: 0;

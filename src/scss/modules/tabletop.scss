@@ -417,11 +417,6 @@ body.table-companies-breakline .companies {
         &:hover {
             background: rgba(255, 255, 255, 0.15);
             scale: 1.05;
-
-            .company-site-list
-            {
-                border-bottom: 3px dashed black;
-            }
         }
 
         .company-character:hover {
@@ -480,7 +475,6 @@ body.table-companies-breakline .companies {
         .company-site-list {
             min-height: 80px;
             padding: 5px;
-            border-bottom: 3px dashed transparent;
         }
         
         .company-site-list-border {
@@ -499,10 +493,6 @@ body.table-companies-breakline .companies {
                 display: inline-block;
                 animation: company-moving-line 5s 10 forwards;
             }
-        }
-
-        .company-character {
-            border: 3px dashed transparent;
         }
 
         .company-characters-add {
