@@ -368,6 +368,13 @@ The following third-party libraries. Be aware of their respective licenses.
 * All icon licenses are "free for commercial use" with no link back Icons were taken from https://www.iconfinder.com/
 * The background image was taken from https://www.pexels.com/ Unfotunately, I cannot remember the link exactly anymore.
 
-## License
+## Copyright License
 
-All information is given in a dedicated [README_license.md](README_license.md).
+This program is provided under the GNU General Public License version 2 only,
+according with:
+
+    [LICENSE](LICENSE)
+	
+All contributions to this program are subject to this license model.
+
+In addition, other licenses may also apply - see third party library section for more details.
