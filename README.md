@@ -370,10 +370,7 @@ The following third-party libraries. Be aware of their respective licenses.
 
 ## Copyright License
 
-This program is provided under the GNU General Public License version 2 only,
-according with:
-
-    [LICENSE](LICENSE)
+This program is provided under the GNU General Public License version 2 only. See this [license file](LICENSE) for more information.
 	
 All contributions to this program are subject to this license model.
 
