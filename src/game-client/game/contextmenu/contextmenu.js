@@ -163,29 +163,30 @@ const ContextMenu = {
         else
             return "tap";
     },
+
+    isSiteOfOrigin : function(img)
+    {
+        const elem = img?.parentElement?.parentElement;
+        return elem?.classList?.contains("site-current");
+    },
     
     contextActions : {
 
-        onDoubleClickSite : function(e)
+        onClickSiteOrigin : function(img, companyid)
         {
-            e.preventDefault();
-            e.stopPropagation();
+            ContextMenu.callbacks.doRotate("_site", ContextMenu._getCardCode(img), ContextMenu.cardGetTapClass(img, false));
+        },
 
-            if (e.target === null)
-                return false;
-
-            const companyid = e.target.getAttribute("data-contextmenu-site-arrive-company");
-            if (!e.target.getAttribute("src").startsWith("/data/backside"))
+        onClickSiteTarget : function(img, companyid)
+        {
+            if (companyid === "")
             {
-                if (companyid !== "")
-                {
-                    /** removing the attribute value is necessary, since the DOM element will be moved, so this callback will handle any click event */
-                    e.target.setAttribute("data-contextmenu-site-arrive-company", "");
-                    MeccgApi.send("/game/company/arrive", {company : companyid });
-                }
-                else
-                    ContextMenu.callbacks.doRotate("_site", ContextMenu._getCardCode(e.target), ContextMenu.cardGetTapClass(e.target, false));
-
+                ContextMenu.callbacks.doRotate("_site", ContextMenu._getCardCode(img), ContextMenu.cardGetTapClass(img, false));
+                return;
+            }
+            else if (!img.getAttribute("src").startsWith("/data/backside"))
+            {
+                MeccgApi.send("/game/company/arrive", {company : companyid });
                 return;
             }
 
@@ -196,6 +197,23 @@ const ContextMenu = {
                 link.click();
             else
                 MeccgApi.send("/game/company/arrive", {company : companyid });
+        },
+
+        onDoubleClickSite : function(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.target === null)
+                return false;
+              
+            const companyid = e.target.getAttribute("data-contextmenu-site-arrive-company");
+            if (ContextMenu.isSiteOfOrigin(e.target))
+                ContextMenu.contextActions.onClickSiteOrigin(e.target, companyid);
+            else
+                ContextMenu.contextActions.onClickSiteTarget(e.target, companyid);
+
+            return true;
         },
 
         onDoubleClickSiteArrive : function(e)
