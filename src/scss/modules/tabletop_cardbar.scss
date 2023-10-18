@@ -12,6 +12,17 @@
         }
     }
 
+    &.card-bar-shared a,
+    &.card-bar-play a
+    {
+        transition: all 0.2s ease-in;
+
+        &:hover {
+            scale: 1.2;
+        }
+    }
+    
+
     &.card-bar-play {
 
         a {

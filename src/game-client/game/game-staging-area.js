@@ -59,19 +59,26 @@ class StagingArea
         return jDiv;
     }
 
-    getTargetContainer(isPlayer, isResource)
+    getTargetContainer(isPlayer, isResource, isFaction)
     {
         const area = isPlayer ? StagingArea.areaPlayer : StagingArea.areaOpponent;
-        return isResource ? area.resources() : area.hazards();
+        if (!isResource)
+            return area.hazards();
+        else if (isFaction)
+            return area.factions();
+        else
+            return area.resources();
     }
 
     static areaOpponent = {
         resources : function() { return document.getElementById("staging_area_resources_opponent"); },
+        factions : function() { return document.getElementById("staging_area_factions_opponent"); },
         hazards : function() { return document.getElementById("staging_area_hazards_opponent"); }
     }
         
     static areaPlayer = {
         resources : function() { return document.getElementById("staging_area_resources_player"); },
+        factions : function() { return document.getElementById("staging_area_factions_player"); },
         hazards : function() { return document.getElementById("staging_area_hazards_player"); }
     }
 
@@ -102,7 +109,15 @@ class StagingArea
         if (res === null)
             return "";
 
-        this.getTargetContainer(isPlayer, isResource).prepend(res);
+        const isFacion = isResource && secondary.toLowerCase() === "faction";
+        const container = this.getTargetContainer(isPlayer, isResource, isFacion);
+        if (container === null)
+            return "";
+
+        if (isFacion)
+            container.append(res);
+        else
+            container.prepend(res);
         return id;
     }
 

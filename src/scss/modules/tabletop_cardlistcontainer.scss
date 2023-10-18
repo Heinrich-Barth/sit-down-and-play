@@ -73,6 +73,12 @@
         margin-bottom: 20px;
         min-width: 107px;
         min-height: 153px;
+
+        transition: all 0.2s ease-in;
+
+        &:hover {
+            scale: 1.2;
+        }
     }
     
     .view-card-list-actions { 

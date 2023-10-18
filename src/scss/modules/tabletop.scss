@@ -181,12 +181,12 @@ a {
         display: block;
         
         &.area-player .row{
-            grid-template-columns: 260px 75px auto;
+            grid-template-columns: 230px 75px auto;
             grid-template-rows: repeat(1, minmax(300px, auto));
         }
 
         &.area-opponent .row{
-            grid-template-columns: 260px auto;
+            grid-template-columns: 230px auto;
             grid-template-rows: repeat(1, minmax(100px, auto));
         }
 

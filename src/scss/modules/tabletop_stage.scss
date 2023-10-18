@@ -14,11 +14,11 @@
     }
 
     &.staging-area-opponent {
-        padding: 20px 50px 0 0;
+        padding: 20px 0 0 0;
         text-align: right;
     }
 
-    .staging-area-resources { padding-right: 10px; }
+    .staging-area:last-of-type { padding-right: 10px; }
 
     .card {
         display: inline-block;
@@ -30,18 +30,25 @@
     }
 }
 
+.table .staging-area-factions .mark-red img 
+{
+    border: 0px;
+}
+
 .table-stage-stacking {
+    
+    padding-left: 10px;
 
     .staging-area {
-        text-align: center;
         min-width: 100px;
-        white-space: nowrap;  
     }
   
     .staging-area-area {
         max-width: 95px;
         display: inline-block;
         vertical-align: top;
+
+        margin-right: 10px;
 
         div.card {
             float: left;

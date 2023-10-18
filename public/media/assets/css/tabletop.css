@@ -111,6 +111,12 @@ a:hover {
   height: auto;
   width: auto;
 }
+.card-bar.card-bar-shared a, .card-bar.card-bar-play a {
+  transition: all 0.2s ease-in;
+}
+.card-bar.card-bar-shared a:hover, .card-bar.card-bar-play a:hover {
+  scale: 1.2;
+}
 .card-bar.card-bar-play a {
   background: none !important;
 }
@@ -555,11 +561,11 @@ a:hover {
   display: block;
 }
 .table .area.area-player .row {
-  grid-template-columns: 260px 75px auto;
+  grid-template-columns: 230px 75px auto;
   grid-template-rows: repeat(1, minmax(300px, auto));
 }
 .table .area.area-opponent .row {
-  grid-template-columns: 260px auto;
+  grid-template-columns: 230px auto;
   grid-template-rows: repeat(1, minmax(100px, auto));
 }
 .table .area .row {
@@ -761,6 +767,10 @@ body.table-companies-breakline .companies {
   margin-bottom: 20px;
   min-width: 107px;
   min-height: 153px;
+  transition: all 0.2s ease-in;
+}
+.view-card-list-container .card-hand:hover {
+  scale: 1.2;
 }
 .view-card-list-container .view-card-list-actions.icons {
   padding: 5px;
@@ -878,10 +888,10 @@ body.table-companies-breakline .companies {
   height: 200px;
 }
 .staging-area.staging-area-opponent {
-  padding: 20px 50px 0 0;
+  padding: 20px 0 0 0;
   text-align: right;
 }
-.staging-area .staging-area-resources {
+.staging-area .staging-area:last-of-type {
   padding-right: 10px;
 }
 .staging-area .card {
@@ -892,15 +902,21 @@ body.table-companies-breakline .companies {
   width: auto;
 }
 
+.table .staging-area-factions .mark-red img {
+  border: 0px;
+}
+
+.table-stage-stacking {
+  padding-left: 10px;
+}
 .table-stage-stacking .staging-area {
-  text-align: center;
   min-width: 100px;
-  white-space: nowrap;
 }
 .table-stage-stacking .staging-area-area {
   max-width: 95px;
   display: inline-block;
   vertical-align: top;
+  margin-right: 10px;
 }
 .table-stage-stacking .staging-area-area div.card {
   float: left;
