@@ -174,21 +174,28 @@ const ContextMenu = {
             if (e.target === null)
                 return false;
 
-            const code = ContextMenu._getCardCode(e.target);
+            const companyid = e.target.getAttribute("data-contextmenu-site-arrive-company");
             if (!e.target.getAttribute("src").startsWith("/data/backside"))
             {
-                ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
+                if (companyid !== "")
+                {
+                    /** removing the attribute value is necessary, since the DOM element will be moved, so this callback will handle any click event */
+                    e.target.setAttribute("data-contextmenu-site-arrive-company", "");
+                    MeccgApi.send("/game/company/arrive", {company : companyid });
+                }
+                else
+                    ContextMenu.callbacks.doRotate("_site", ContextMenu._getCardCode(e.target), ContextMenu.cardGetTapClass(e.target, false));
+
                 return;
             }
 
-            const companyid = e.target.getAttribute("data-contextmenu-site-arrive-company");
             const companyContainer = companyid === "" ? null : document.getElementById("company_" + companyid);
             const isAgent = companyContainer !== null && GameCompanies.detectIsAgentCompany(companyContainer);
             const link = isAgent || companyContainer === null ? null : companyContainer.querySelector(".location-reveal");
             if (link !== null)
                 link.click();
             else
-                ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
+                MeccgApi.send("/game/company/arrive", {company : companyid });
         },
 
         onDoubleClickSiteArrive : function(e)
