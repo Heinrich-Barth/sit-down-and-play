@@ -84,7 +84,7 @@ ul li, ol li {
 body {
   background-color: #000;
   color: #fff;
-  background-image: url("/media/assets/backgrounds/home.webp");
+  background-image: url("/media/assets/backgrounds/hill.webp");
 }
 body.lantern {
   background-image: url("/media/assets/backgrounds/forrest.webp");
