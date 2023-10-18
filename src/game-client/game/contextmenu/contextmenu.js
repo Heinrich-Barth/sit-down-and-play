@@ -175,7 +175,20 @@ const ContextMenu = {
                 return false;
 
             const code = ContextMenu._getCardCode(e.target);
-            ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
+            if (!e.target.getAttribute("src").startsWith("/data/backside"))
+            {
+                ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
+                return;
+            }
+
+            const companyid = e.target.getAttribute("data-contextmenu-site-arrive-company");
+            const companyContainer = companyid === "" ? null : document.getElementById("company_" + companyid);
+            const isAgent = companyContainer !== null && GameCompanies.detectIsAgentCompany(companyContainer);
+            const link = isAgent || companyContainer === null ? null : companyContainer.querySelector(".location-reveal");
+            if (link !== null)
+                link.click();
+            else
+                ContextMenu.callbacks.doRotate("_site", code, ContextMenu.cardGetTapClass(e.target, false));
         },
 
         onDoubleClickSiteArrive : function(e)

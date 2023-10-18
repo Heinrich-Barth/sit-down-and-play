@@ -8,7 +8,8 @@ class GameCompanyLocation
         this.CARDID_PREFIX = CARDID_PREFIX;
     }
 
-    static TITLE_SITE_DEST = "Destination site. Drop hazards to play onguard or to the site or DOUBLECLICK to let arrive";
+    static TITLE_SITE_DEST = "Click to let player arrive or drop hazards to play onguard.";
+    static TITLE_SITE_DEST_PLAYER = "Click to reveal or tap if already revealed.";
     static TITLE_SITE_ORIGIN = "Site of origin/current site";
 
 
@@ -84,7 +85,7 @@ class GameCompanyLocation
         const pContainerTarget = companyElem.querySelector(".site-target");
 
         DomUtils.removeAllChildNodes(pContainerTarget);
-        const pCardDiv = this.createLocationCard(code, img, bIsPlayer, GameCompanies.TITLE_SITE_DEST);
+        const pCardDiv = this.createLocationCard(code, img, bIsPlayer, bIsPlayer ? GameCompanyLocation.TITLE_SITE_DEST_PLAYER : GameCompanyLocation.TITLE_SITE_DEST);
         pContainerTarget.appendChild(pCardDiv);
         
         if (!bIsPlayer)
