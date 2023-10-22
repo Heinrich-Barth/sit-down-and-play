@@ -73,9 +73,11 @@ module.exports = {
             res.status(403).send(pInstance.getLoginPageData());
     },
 
-    signInFromPWA : function(_req, res, next)
+    signInFromPWA : function(req, res, next)
     {
-        pInstance.signInFromPWA(res);
+        if (!pInstance.isSignedInPlay(req))
+            pInstance.signInFromPWA(res);
+
         next();
     },
 

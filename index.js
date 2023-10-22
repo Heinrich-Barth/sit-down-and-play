@@ -432,9 +432,12 @@ require("./plugins/Navigation")(SERVER, g_pExpress, g_pAuthentication, __dirname
 /**
   * Home Page redirects to "/play"
   */
-SERVER.instance.get("/", (_req, res) => {
+SERVER.instance.get("/", (req, res) => {
     res.header("Cache-Control", "no-store");
-    res.redirect("/play")
+    if (g_pAuthentication.isSignedIn(req))
+        res.redirect("/play")
+    else
+        res.redirect("/login")
 });
 
 const getRefererPath = function(url)

@@ -64,7 +64,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     setupRoutes()
     {
-        this.getServerInstance().instance.use(this.contextRoot, this.pAuthentication.isSignedInPlay);
+        this.getServerInstance().instance.use(this.contextRoot, this.pAuthentication.signInFromPWA);
 
         /**
          * Home
