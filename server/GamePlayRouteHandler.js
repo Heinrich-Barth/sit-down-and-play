@@ -386,7 +386,12 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     requireUserId(req)
     {
-        return this.hasValidUserId(req) ? req.cookies.userId : UTILS.generateUuid();
+        if (this.hasValidUserId(req))
+            return req.cookies.userId;
+
+        const id = UTILS.generateUuid();
+        Logger.info("No userid set yet. Creating new one; " + id);
+        return id;
     }
 
     updateCookieUser(res, userId, displayName)
