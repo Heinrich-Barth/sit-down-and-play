@@ -564,7 +564,10 @@ SERVER.instance.use(function(_req, res, _next)
 SERVER.instance.use(function(err, _req, res, _next) 
 {
     if (err)
+    {
         Logger.error(err);
+        console.error(err);
+    }
 
     res.status(500);
 
