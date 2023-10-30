@@ -456,6 +456,8 @@ class DeckDefault extends DeckCommons {
             Logger.info("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
         else if (nSize > 0)
             Logger.info("Added " + nSize + " cards to " + this.getPlayerId() + "'s deck.");
+        else
+            Logger.error("No cards available for user #" + this.getPlayerId());
     }
 }
 
