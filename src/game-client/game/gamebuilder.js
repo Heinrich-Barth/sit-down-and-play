@@ -697,6 +697,8 @@ const GameBuilder = {
             MeccgApi.disconnect();                    
             GameBuilder.Scoring.showFinalScore(jData.score, jData.stats, jData.token, false);
             document.body.dispatchEvent(new CustomEvent("meccg-sfx", { "detail": "endgame" }));
+            
+            MeccgApi.clearLocalStorage();
         });
 
         MeccgApi.addListener("/game/score/final-only", function(_bIsMe, jData)

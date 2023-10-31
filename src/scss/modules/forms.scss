@@ -1,11 +1,4 @@
 
-.button,
-button
-{
-    cursor: pointer;
-    text-align: center;
-}
-
 select,
 input {
     border: solid 2px #e5e6e7;
@@ -31,14 +24,22 @@ button {
 
 .button,
 button {
-
+    cursor: pointer;
+    text-align: center;
     color: $color-white;
     background-color: #98c593;
     overflow: hidden;
-    text-align: center;
+
     &:hover,
     &:active{
         background-color: #a8cea4;
     }
+}
 
+button.buttonCancel {
+    background-color: #c32222;
+
+    &:hover {
+    background-color: #dc2600;
+    }
 }

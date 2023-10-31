@@ -117,12 +117,6 @@ h2 {
   margin-top: 1.5em;
 }
 
-.button,
-button {
-  cursor: pointer;
-  text-align: center;
-}
-
 select,
 input {
   border: solid 2px #e5e6e7;
@@ -148,15 +142,23 @@ button {
 
 .button,
 button {
+  cursor: pointer;
+  text-align: center;
   color: #fff;
   background-color: #98c593;
   overflow: hidden;
-  text-align: center;
 }
 .button:hover, .button:active,
 button:hover,
 button:active {
   background-color: #a8cea4;
+}
+
+button.buttonCancel {
+  background-color: #c32222;
+}
+button.buttonCancel:hover {
+  background-color: #dc2600;
 }
 
 .tournament-result th {

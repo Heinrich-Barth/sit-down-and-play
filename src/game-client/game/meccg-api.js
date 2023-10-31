@@ -386,6 +386,9 @@ const MeccgApi =
         try
         {
             localStorage.removeItem("meccg_map_settings");
+
+            if (g_sRoom)
+                sessionStorage.removeItem("meccg_" + g_sRoom);
         }
         catch (errIgnore)
         {

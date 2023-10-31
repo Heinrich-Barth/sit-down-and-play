@@ -239,15 +239,19 @@ const SavedGameManager =
 
     onSaveGameAuto : function(jGame)
     {
-        this.doSaveGame(jGame, (data) => {
-            if (data !== null)
-            {
-                SavedGameManager._autosave = data;
-                document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
-                    name : "System",
-                    message : "Created autosave."
-                }}));
-            }
+        this.doSaveGame(jGame, (data) => 
+        {
+            if (data === null)
+                return;
+            
+            SavedGameManager._autosave = data;
+            document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+                name : "System",
+                message : "Autosaved current game."
+            }}));
+
+            if (g_sRoom)
+                sessionStorage.setItem("meccg_" + g_sRoom, JSON.stringify(data));
         });
     },
 

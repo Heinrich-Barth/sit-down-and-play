@@ -256,3 +256,18 @@ a.link-replace-invalid-code {
     from { width: 0%; }
     to { width: 100%; }
 }
+.dialog-autosave::backdrop {
+    background-color: rgba(0,0,0,0.4);
+
+}
+
+dialog {
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,0,0);
+
+    button:first-of-type {
+        margin-bottom: 1em;
+    }
+}

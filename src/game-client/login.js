@@ -976,3 +976,79 @@ const preloadGameData = function()
     });
     
 }
+
+const saveAutosave = async function(name, data)
+{
+    const filename = name + "-" + new Date().toISOString().split(".")[0].replace("T","-").replaceAll(":", "-");
+    const opts = {
+        types: [
+        {
+            description: "Save game to file",
+        }],
+        suggestedName: filename + ".meccg-savegame",
+    };
+
+    const fileHandle = await window.showSaveFilePicker(opts);
+    const writable = await fileHandle.createWritable();
+
+    // Write the contents of the file to the stream.
+    await writable.write(data);
+
+    // Close the file and write the contents to disk.
+    await writable.close();
+
+    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Saved to " + filename }));
+    sessionStorage.removeItem("meccg_" + name);
+}
+
+/** check if there has been an autosave (due to aborted game) or server timeout */
+const retrieveAutoSave = async function()
+{
+    const name = getRoomName().toLowerCase();
+    const data = sessionStorage.getItem("meccg_" + name);
+
+    if (data === null)
+        return;
+    
+    try
+    {
+        const dialog = document.createElement("dialog");
+        dialog.setAttribute("class", "dialog-autosave");
+
+        const button = document.createElement("button");
+        button.autofocus = true;
+        button.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i> Save game`;
+        button.onclick = () => 
+        {
+            dialog.close();
+            saveAutosave(name, data);
+        }
+
+        const buttonCancel = document.createElement("button");
+        buttonCancel.setAttribute("class", "buttonCancel");
+        buttonCancel.innerHTML = `<i class="fa fa-trash" aria-hidden="true"></i> Discard autosave`;
+        buttonCancel.onclick = () => 
+        {
+            dialog.close();
+            sessionStorage.removeItem("meccg_" + name);
+        }
+        
+
+        const h1 = document.createElement("h2");
+        h1.innerText = "Save latest autosave?";
+
+        const p = document.createElement("p");
+        p.innerText = "There is an autosave available. You may want to save it.";
+
+        dialog.append(h1, p, button, buttonCancel);
+        document.body.append(dialog);
+        dialog.showModal();   
+    }
+    catch (err)
+    {
+        console.error(err);
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not save autosave to file" }));
+    }
+}
+
+retrieveAutoSave();
