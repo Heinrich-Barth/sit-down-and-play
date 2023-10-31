@@ -316,6 +316,7 @@ class GamePreferences extends Preferences {
             this.createSection("Save/Load");
             this.createEntry0("game_save");
             this.createEntry0("game_load");
+            
             if (this.isAdmin())
                 this.createEntry0("game_autosave");
 
@@ -371,7 +372,10 @@ class GamePreferences extends Preferences {
 
         this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
-        this.addConfigToggle("game_autosave", "Save game at first player's turn", true, this._autosave);
+
+        if(this.isAdmin())
+            this.addConfigToggle("game_autosave", "Save game at the beginning of a player's turn", true, this._autosave);
+
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 

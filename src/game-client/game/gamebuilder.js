@@ -750,7 +750,7 @@ const GameBuilder = {
                     GameBuilder.CompanyManager.onEnterOrganisationPhase(sCurrent, bIsMe);
                     GameBuilder.CompanyManager.onRemoveAllMarkings();
                     
-                    if (bIsMe && g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
+                    if (g_sLobbyToken !== "" && document.body.hasAttribute("data-autosave"))
                         MeccgApi.send("/game/save/auto", {});
 
                     break;
