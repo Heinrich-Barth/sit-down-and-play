@@ -518,9 +518,9 @@ const getSocialMediaAction = function()
     const shareOpenChallenge = document.getElementById("toggle_social_open");
     const shareVisitor = document.getElementById("toggle_social_visitor");
 
-    if (shareOpenChallenge !== null && shareOpenChallenge.checked)
+    if (shareOpenChallenge?.checked)
         return "openchallenge";
-    else if (shareVisitor !== null && shareVisitor.checked)
+    else if (shareVisitor?.checked)
         return "visitor";
     else
         return "none";
