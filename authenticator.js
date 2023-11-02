@@ -14,6 +14,11 @@ class Authenticator {
         return true;
     }
 
+    isSignedIn()
+    {
+        return true;
+    }
+
     isSignedInDeckbuilder() {
         return true;
     }
