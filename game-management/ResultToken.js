@@ -1,6 +1,21 @@
 const crypto = require('crypto');
 
-const TOKEN_CHECKSUM = typeof process.env.SECRET_RESULTTOKEN !== "undefined" ? process.env.SECRET_RESULTTOKEN : "" + Date.now();
+const hasEvgSecretToken = function()
+{
+    return typeof process.env.SECRET_RESULTTOKEN === "string" && process.env.SECRET_RESULTTOKEN.trim() !== "";
+}
+
+const getSecretToken = function()
+{
+    if (hasEvgSecretToken()) 
+        return process.env.SECRET_RESULTTOKEN.trim();
+    else
+        return "" + Date.now();
+}
+
+const TOKEN_CHECKSUM = getSecretToken();
+if (!hasEvgSecretToken())
+    console.warn("PLEASE SET A SECRET RESULT TOKEN");
 
 /**
  * Calculate hash
