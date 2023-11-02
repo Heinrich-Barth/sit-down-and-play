@@ -84,5 +84,10 @@ module.exports = {
     isSignedInPWA : function(req)
     {
         return pInstance.isSignedInPWA(req);
+    },
+
+    isSignedIn: function(req)
+    {
+        return pInstance.isSignedIn(req);
     }
 };
