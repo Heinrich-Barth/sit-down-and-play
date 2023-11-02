@@ -38,8 +38,35 @@ const SaveJsonAsDialog = {
             console.error(err);
             document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
         }
+    },
+
+    onSaveSessionToFile: function()
+    {
+        try
+        {
+            const content = sessionStorage.getItem("meccg_" + g_sRoom);
+            if (content === null)
+                return;
+                       
+            const a = document.createElement('a');
+            a.href = window.URL.createObjectURL(new Blob([content], {"type": "application/json"}));
+            a.download = g_sRoom + "-autosave.meccg-savegame";
+            a.click();    
+        }
+        catch (err)
+        {
+            console.error(err);
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not store deck" }));
+        }
+    },
+
+    onSaveSession: function(data)
+    {
+        sessionStorage.setItem("meccg_" + g_sRoom, JSON.stringify(data.detail.data));
     }
 };
 
 document.body.addEventListener("meccg-saveas-deck", SaveJsonAsDialog.onSaveDeck, false);
 document.body.addEventListener("meccg-saveas-file", SaveJsonAsDialog.onSaveFile, false);
+document.body.addEventListener("meccg-saveas-file-autosave", SaveJsonAsDialog.onSaveSessionToFile, false);
+document.body.addEventListener("meccg-saveas-autosave", SaveJsonAsDialog.onSaveSession, false);

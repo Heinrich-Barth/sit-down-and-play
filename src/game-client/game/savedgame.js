@@ -2,11 +2,11 @@
 const SavedGameManager = 
 {
     _currentGame : null,
-    _autosave: null,
+    _autosave: false,
 
     hasAutoSave()
     {
-        return SavedGameManager._autosave !== null;
+        return SavedGameManager._autosave;
     },
 
     onRestoreSavedGame : function()
@@ -69,6 +69,7 @@ const SavedGameManager =
             fetch("/data/hash", options)
             .then((response) => response.json())
             .then((response) => {
+                console.log(response.value,jGame.check);
                 if (response.value !== jGame.check)
                     throw new Error("Invalid savegame signature");
                 else
@@ -87,6 +88,7 @@ const SavedGameManager =
     {
         let pPlayersCurrent = MeccgPlayers.getPlayers();
         let pPlayersSaved = jGame.players;
+        console.info(jGame)
         const sizeSaved = Object.keys(pPlayersSaved).length;
         const sizeCurrent = Object.keys(pPlayersCurrent).length;
         if (sizeSaved !== sizeCurrent)
@@ -199,10 +201,10 @@ const SavedGameManager =
 
     onRequestSaveAuto : function()
     {
-        if (SavedGameManager._autosave === null)
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "No autosave available." }));
+        if (SavedGameManager._autosave)
+            document.body.dispatchEvent(new CustomEvent("meccg-saveas-file-autosave"));
         else
-            document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": SavedGameManager._autosave}));
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "No autosave available." }));
     },
 
     obtainSaveName : function(jGame)
@@ -243,21 +245,20 @@ const SavedGameManager =
         {
             if (data === null)
                 return;
-            
-            SavedGameManager._autosave = data;
+
+            SavedGameManager._autosave = true;
+            document.body.dispatchEvent(new CustomEvent("meccg-saveas-autosave", { "detail": data}));
             document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
                 name : "System",
                 message : "Autosaved current game."
             }}));
-
-            if (g_sRoom)
-                sessionStorage.setItem("meccg_" + g_sRoom, JSON.stringify(data));
         });
     },
 
     onSaveGame : function(jGame)
     {
-        this.doSaveGame(jGame, (data) => {
+        this.doSaveGame(jGame, (data) => 
+        {
             if (data !== null)
                 document.body.dispatchEvent(new CustomEvent("meccg-saveas-file", { "detail": data}));
         });
@@ -285,7 +286,8 @@ const SavedGameManager =
                 }
             };
 
-            SavedGameManager.digestMessage(base64).then((digestHex) => {
+            SavedGameManager.digestMessage(base64).then((digestHex) => 
+            {
                 const options = {
                     method: 'POST',
                     body: JSON.stringify({ value: digestHex }),
@@ -296,10 +298,13 @@ const SavedGameManager =
             
                 fetch("/data/hash", options)
                 .then((response) => response.json())
-                .then((response) => {
-                    det.data.check = response.value;
-                    callback(det);
-                });
+                .then((response) => det.data.check = response.value)
+                .catch(err => 
+                {
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not autosave." }));
+                    console.error(err);
+                })
+                .finally(() => callback(det));
             });
         }
         catch (err)
