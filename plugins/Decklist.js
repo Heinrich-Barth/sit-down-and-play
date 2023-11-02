@@ -3,6 +3,8 @@ const Logger = require("../Logger");
 
 const g_vpDedckList = [];
 const g_pDeckById = { };
+const g_pDeckSummaries = { };
+
 let g_lId = 0;
 const g_pId = require("crypto").randomUUID().toString();
 
@@ -104,8 +106,24 @@ const load0 = function(name, _data)
 {
     g_vpDedckList.push({
         name: name,
-        decks : _data
+        decks : _data,
+        meta: { }
     });
+}
+
+const saveDeckMetadata = function(id, meta)
+{
+    for (let data of g_vpDedckList)
+    {
+        for (let key in data.decks)
+        {
+            if (data.decks[key] === id)
+            {
+                data.meta[id] = meta;
+                return;
+            }
+        }
+    }
 }
  
 /**
@@ -138,7 +156,7 @@ const loadDeckList = function(sDir)
         {
             const dir = sDir + "/" + folder;
             load0(folder, getDecks(dir));
-        }    
+        }
     }
     catch (err)
     {
@@ -192,7 +210,7 @@ const getDeckCodeList = function(content)
         if (first === "#" || first === "=")
             continue;
 
-        const card = identifyCardCode(line);
+        const card = identifyCardCode(line).toLowerCase();
         if (card !== "" && !list.includes(card))
             list.push(card);
     }
@@ -200,24 +218,126 @@ const getDeckCodeList = function(content)
     return list;
 }
 
+const extractPart = function(content, delim)
+{
+    const pattern = "#\n" + delim + "\n#";
+    const pos = content.indexOf(pattern);
+    if (pos === -1)
+        return "";
+
+    const pos2 = content.indexOf("\n##", pos + pattern.length);
+    if (pos2 === -1)
+        return content.substring(pos + pattern.length);
+    else
+        return content.substring(pos + pattern.length, pos2);
+}
+
+const loadDeckMetadata = function(content)
+{
+    const result = {
+        avatar: "",
+        pool: countDeck(extractPart(content, "Pool")),
+        sideboard: countDeck(extractPart(content, "Pool")),
+        character: 0,
+        resources: 0,
+        hazards: 0,
+        summary: ""
+    }
+
+    const identifiers = {
+        "# Hazard": "hazards",
+        "# Character": "character",
+        "# Resource": "resources",
+    }
+    
+    let key = "";
+
+    for (let line of extractPart(content, "Deck").split("\n"))
+    {
+        if (line.length < 4)
+            continue;
+
+        if (line.startsWith("# "))
+        {
+            const pos = line.lastIndexOf(" (");
+            if (pos === -1)
+                key = "";
+            else
+            {
+                const _t = line.substring(0, pos).trim();
+                key = identifiers[_t] === undefined ? "" : identifiers[_t];
+            }
+                
+            continue;
+        }
+
+        if (key === "" || !line.endsWith(")") && !line.endsWith("]") || line.startsWith("="))
+            continue;
+
+        const first = line.substring(0,1);
+        const val = parseInt(first);
+        if (!isNaN(val))
+            result[key] += val;
+    }
+
+    return result;
+}
+
+const countDeck = function(data)
+{
+    let count = 0;
+    for (let line of data.split("\n"))
+    {
+        if (line.length < 4 || !line.endsWith(")") && !line.endsWith("]"))
+            continue;
+
+        const first = line.substring(0,1);
+        if (first === "#" || first === "=")
+            continue;
+
+        const val = parseInt(first);
+        if (!isNaN(val))
+            count += val;
+    }
+    return count;
+}
+
 const updateCardImages = function(imageProvider)
 {
     for (let key in g_pDeckById)
     {
         const data = g_pDeckById[key];
+
+        const meta = loadDeckMetadata(data.deck);
         const list = getDeckCodeList(data.deck);
         for (let code of list)
         {
             const img = imageProvider.getImageByCode(code);
             if (typeof img === "string" && img !== "")
+            {
                 data.images[code] = img;
-        }
-    }
 
+                if (meta.avatar === "" && imageProvider.isAvatar(code))
+                    meta.avatar = img;
+            }
+        }
+
+        saveDeckMetadata(key, meta);
+    }
 }
 
 
 loadDeckList(__dirname + "/../public/decks");
+
+exports.getDeckList = function()
+{
+    if (g_vpDedckList.length > 0)
+        g_vpDedckList.splice(0, g_vpDedckList.length);
+    
+    loadDeckList(__dirname + "/../public/decks");
+    console.log(g_pDeckById)
+    return g_vpDedckList;
+}
 
 /**
   * Load deck files in given directory
@@ -231,20 +351,19 @@ exports.load = function(SERVER)
     if (g_lId === 0)
     {
         SERVER.instance.get("/data/decks", (_req, res) => res.json([]).status(200));
+        return;
     }
-    else
-    {
-        updateCardImages(SERVER.cards);
 
-        SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
-        SERVER.instance.get("/data/decks/:id", SERVER.caching.expires.jsonCallback, (req, res) => 
-        {
-            res.status(200);
-            if (req.params.id && g_pDeckById[req.params.id])
-                res.json(g_pDeckById[req.params.id]);
-            else
-                res.json({})
-        });
-    }
+    updateCardImages(SERVER.cards);
+
+    SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
+    SERVER.instance.get("/data/decks/:id", SERVER.caching.expires.jsonCallback, (req, res) => 
+    {
+        res.status(200);
+        if (req.params.id && g_pDeckById[req.params.id])
+            res.json(g_pDeckById[req.params.id]);
+        else
+            res.json({})
+    });
 }
  
