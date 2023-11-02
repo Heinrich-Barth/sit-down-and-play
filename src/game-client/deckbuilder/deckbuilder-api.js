@@ -129,7 +129,7 @@ const DeckbuilderApi =
             DeckList.removeExisting();
             ViewCards.resetCounter();
        
-            if (jDeck !== undefined && jDeck.notes !== undefined)
+            if (jDeck?.notes !== undefined)
                 sNotes = jDeck.notes;
 
             vsMissing = DeckbuilderApi.initAddCards(jDeck);
@@ -232,13 +232,10 @@ const DeckbuilderApi =
                     else
                         sNotFound += "\n" + count + " " + key;
                 }
+                else if (target !== "" && target !== undefined)
+                    DeckbuilderApi.onInitAddCard(card, count, target);
                 else
-                {
-                    if (target !== "" && target !== undefined)
-                        DeckbuilderApi.onInitAddCard(card, count, target);
-                    else
-                        doAddCard(card, count);
-                }
+                    doAddCard(card, count);
             }
     
             return sNotFound;
