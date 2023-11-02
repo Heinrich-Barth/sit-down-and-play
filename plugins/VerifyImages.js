@@ -8,9 +8,9 @@ const getImageList = function(cards)
     for (let key in cards)
     {
         const card = cards[key];
-        if (card.image && card.image.startsWith("/"))
+        if (card.image?.startsWith("/"))
             list.push(card.image);
-        if (card.ImageNameErrataDC && card.ImageNameErrataDC.startsWith("/"))
+        if (card.ImageNameErrataDC?.startsWith("/"))
             list.push(card.ImageNameErrataDC);
     }
 
@@ -24,11 +24,10 @@ const readFolder = function(dir, listResult)
     {
         file = dir + '/' + file;
         const stat = fs.statSync(file);
-        if (stat && stat.isFile()) { 
+        if (stat?.isFile()) 
             readFolder(file, listResult);
-        } else { 
+        else 
             listResult.push(file.replace(__dirname, ""));
-        }
     });
 }
 
@@ -37,8 +36,7 @@ const isFile = function(file)
     try
     {
         const uri = path.resolve(__dirname + "/../public" + file);
-        const stat = fs.statSync(uri);
-        return stat && stat.isFile();
+        return fs.statSync(uri)?.isFile();
     }
     catch (err)
     {
