@@ -3,13 +3,14 @@
 
 body {
     padding: 0;
-    background-image: url("/media/assets/backgrounds/hill.webp"); 
+    background-image: url("/media/assets/backgrounds/hill.webp");
 }
 
 h1 {
     text-align: center;
     padding-top: 2em;
 }
+
 h2 {
     font-size: 1.2em;
     padding-top: 1.5em;
@@ -18,19 +19,19 @@ h2 {
 .ǵame-join-screen .content .inner-content {
     padding-top: 10em;
 }
+
 .content {
     color: $color-white;
-    background:linear-gradient(179deg, transparent, rgb(0, 0, 0) 80%);
+    background: linear-gradient(179deg, transparent, rgb(0, 0, 0) 80%);
     border-top: 0;
     padding: 0;
     min-height: 100vh;
-    .inner-content 
-    {
+
+    .inner-content {
         padding: 5em;
     }
 
-    .fields-join 
-    {
+    .fields-join {
         input {
             width: 60%;
             display: inline-block;
@@ -45,10 +46,12 @@ h2 {
     .arda-text {
         display: block;
         color: $color-orange;
+
         input {
             width: auto;
             height: auto;
         }
+
         label {
             padding: 0 2em 0 0.4em;
             cursor: pointer;
@@ -70,51 +73,141 @@ h2 {
 
     .deck-list {
 
-        .challenge-deck {
-            padding: 0.3em 0;
-            cursor: pointer;
-            &:hover {
-                color: $color-yellow;
-            }
-
-        }
-
         .load-deck-file {
             margin-top: 0.5em;
             font-size: 0.9em;
             width: auto;
         }
 
-        .deck-list-entries
-        {
-            margin-top: 3em;
-
-            details {
-                border-top: 1px solid;
-                margin-bottom: 0.3em;
-                padding-top: 0.3em;
-                max-width: 90%;
-            }
-
-            details:first-of-type { border-top: 0;}
-
-            summary {
-                cursor: pointer;
-
-                &:hover {
-                    color: $color-yellow;
-                }
-            }
-
-            .selected-deck {
-                color: $color-orange;
-            }
-        }
     }
 
     details[open] {
         summary {
             color: $color-orange;
+        }
+    }
+}
+
+.deck-list-grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.deck-info {
+    align-self: center;
+    position: relative;
+
+    a {
+        color: #FFF;
+        background-color: $color-orange;
+        border-radius: 50%;
+        display: inline-block;
+        text-align: center;
+
+    }
+
+    i {
+        padding: 5px;
+    }
+}
+
+.selected-deck-icon {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    display: none;
+    background: green;
+    border-radius: 50%;
+    padding: 5px;
+    scale: 2;
+}
+
+
+.challenge-deck {
+    padding: 0.3em 0;
+    align-self: auto;
+    display: grid;
+
+    flex: 0 0 300px;
+    grid-template-columns: 100px auto 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+
+    transition: all 0.5s ease-in-out;
+
+    &:hover {
+        color: $color-yellow;
+        background: rgba(0, 0, 0, 1);
+        scale: 1.2;
+        z-index: 50
+    }
+
+    a {
+        color: #fff;
+    }
+}
+
+.deck-list-entries {
+
+    details {
+        border-top: 1px solid;
+        margin-bottom: 0.3em;
+        padding-top: 0.3em;
+    }
+
+    details:first-of-type {
+        border-top: 0;
+    }
+
+    summary {
+        cursor: pointer;
+
+        &:hover {
+            color: $color-yellow;
+        }
+    }
+
+    .selected-deck {
+        .selected-deck-icon {
+            display: block;
+        }
+
+        a {
+            color: #fff;
+        }
+    }
+
+    .avatar {
+        max-width: 100px;
+        position: relative;
+        height: 100px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-left: 10px;
+        margin-top: 25px;
+
+        img {
+            width: 100%;
+            scale: 1.7;
+            object-position: 0 11px;
+
+            &.avatar-backside {
+                object-position: 0 0;
+                scale: 1.5;
+            }
+        }
+
+
+    }
+
+    .deck-data {
+        padding-left: 10px;
+
+        p {
+            padding: 0;
         }
     }
 }
@@ -136,8 +229,109 @@ h3 {
         border-bottom: 1px solid $color-orange;
     }
 
-    .content{
+    .content {
         min-height: 100vh;
+    }
+}
+
+.game-login {
+
+    .content {
+        min-height: auto;
+
+        h1 {
+            padding-top: 1em;
+        }
+
+        .inner-content {
+            padding-bottom: 1em;
+        }
+    }
+
+    .deck-edit-details{
+        max-width: 90%;
+        margin: 0 auto;
+        padding-top: 2em;
+
+        summary { cursor: pointer;}
+
+        .fields { 
+            display: inline-block;
+            width: 48%;
+            margin-right: 5px;
+
+            textarea {
+                line-height: 1em;
+                font-size: 0.9;
+                padding: 0;
+            };
+        }
+
+        button {
+            padding: 0 2em;
+            display: inline-block;
+            width: auto;
+        }
+    }
+    .deck-edit-details summary,
+    .cookie_notice  {
+        color: #fff;
+    }
+}
+
+.deck-label {
+    font-size: 0.8em;
+    grid-column: span 3;
+    padding: 0 10px;
+    text-align: right;
+    display: inline-block;
+
+    span {
+        color: #fff;
+        padding: 2px 10px;
+        border-radius: 5px;
+
+        &.deck-label-pink {
+            background-color: #dd2cce;
+        }
+
+        &.deck-label-red {
+            background-color: red;
+        }
+
+        &.deck-label-green {
+            background-color: green;
+        }
+
+        &.deck-label-blue {
+            background-color: blue;
+        }
+
+        &.deck-label-yellow {
+            background-color: yellow;
+            color: #000;
+        }
+    }
+
+}
+
+.deck-filter-list {
+    padding: 10px;
+    text-align: center;
+    .deck-label {
+        font-size: 1.2em;
+        transition: all 0.5s ease-in-out;
+        &:hover { 
+            transform: scale(1.2);
+        }
+
+    }
+    h3 { padding-bottom: 10px;}
+    span {
+
+
+        cursor: pointer;
+        
     }
 }
 
@@ -145,7 +339,9 @@ h3 {
     display: flex;
     align-items: flex-start;
     flex-flow: row wrap;
-    gap: 10px 10px; /* row-gap column gap */
+    gap: 10px 10px;
+    /* row-gap column gap */
+    padding: 0 20px;
 
     .deck-list {
         flex: 30%;
@@ -156,21 +352,29 @@ h3 {
 
         display: flex;
         flex-flow: row wrap;
-        gap: 10px 10px; /* row-gap column gap */
+        gap: 10px 10px;
+        /* row-gap column gap */
         align-items: flex-start;
 
-        h2 { flex: 99%; }
+        h2 {
+            flex: 99%;
+        }
+
         .fields {
             flex: 30%;
         }
 
     }
+
+    h3 {
+        text-transform: uppercase;
+    }
+
 }
 
-@media (max-width: 540px) 
-{
-    .content .fields-join 
-    {
+@media (max-width: 540px) {
+    .content .fields-join {
+
         input,
         button {
             width: 100%;
@@ -184,28 +388,20 @@ h3 {
 }
 
 /* Responsive layout - makes a one column layout instead of a two-column layout */
-@media (max-width: $md-max) 
-{
+@media (max-width: $md-max) {
     .deck-grid {
         display: block;
-    
-        .deck-list, 
+
+        .deck-list,
         .deck-fields {
             display: block;
-    
+
             h2,
             .fields {
                 display: block;
             }
         }
 
-        .deck-list-entries {
-            margin-top: 1em !important;
-        }
-    }
-
-    details{
-        max-width: 99% !important;
     }
 
     .label-after {
@@ -225,7 +421,7 @@ h3 {
         text-transform: uppercase;
         margin-top: 5px;
 
-        &:first-of-type{
+        &:first-of-type {
             margin-top: 0;
         }
     }
@@ -235,16 +431,14 @@ a.link-replace-invalid-code {
     margin-left: 5px;
     padding: 0 5px;
 
-    &:hover
-    {
+    &:hover {
         color: #ff0;
     }
 }
 
-.loading-line-counter
-{
+.loading-line-counter {
     height: 5px;
-    background-color: rgba(255,165,0,0.8);
+    background-color: rgba(255, 165, 0, 0.8);
     width: 1%;
     position: fixed;
     left: 0;
@@ -252,22 +446,71 @@ a.link-replace-invalid-code {
     z-index: 5;
     animation: loading-line-preload 3s infinite forwards;
 }
-@keyframes loading-line-preload {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-.dialog-autosave::backdrop {
-    background-color: rgba(0,0,0,0.4);
 
+@keyframes loading-line-preload {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.dialog-autosave::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+.deck-view {
+    text-align: left;
+
+    h3 {
+        text-transform: uppercase;
+    }
+
+    img {
+        max-height: 200px;
+    }
 }
 
 dialog {
     color: #fff;
     text-align: center;
     padding: 20px;
-    background: rgba(0,0,0);
+    background: rgba(0, 0, 0);
 
     button:first-of-type {
         margin-bottom: 1em;
+    }
+}
+
+.click-to-close {
+    cursor: pointer;
+}
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (min-width: $md-max) {
+    .sticky {
+        position: -webkit-sticky;
+        /* Safari */
+        position: sticky;
+        top: 0;
+        z-index: 100;
+
+        background-color: #000;
+    }
+
+}
+
+@media (max-width: $md-max) {
+    .challenge-deck {
+        flex: 0 0 50%;
+    }
+}
+
+@media (max-width: $sm-max) {
+    .challenge-deck {
+        flex: 0 0 100%;
     }
 }

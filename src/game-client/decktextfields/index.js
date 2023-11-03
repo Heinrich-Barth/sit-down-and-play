@@ -55,6 +55,7 @@ class DeckTextFields {
     createFieldsDiv(id) {
         const h3 = document.createElement("h3");
         h3.innerText = id.toUpperCase();
+        h3.setAttribute("data-label", id.toUpperCase());
 
         const div = document.createElement("div");
         div.setAttribute("class", "fields");

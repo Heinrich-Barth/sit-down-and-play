@@ -105,12 +105,7 @@ const populateDeck = function(jData)
     populateField(jData.sites, "sites", true);
 
     addDeckNotes(jData.notes);
-
-    window.scrollTo({
-        top: 0,
-        left: 0, 
-        behavior: 'smooth'
-    }); 
+    populateCardImages();
 
     if (getCategoryCount(jData.hazards) + getCategoryCount(jData.hazard) >= 150)
     {
@@ -129,6 +124,77 @@ const removeQuotes = function(sCode)
     else
         return sCode.replace(/"/g, '');
 };
+
+let g_sViewDeckId = "";
+
+const populateCardImages = function()
+{
+    if (g_sViewDeckId === "")
+        return;
+
+    const images = g_pDeckMap[g_sViewDeckId]?.images;
+    g_sViewDeckId = "";
+    if (images === undefined)
+        return;
+
+    const divImages = document.getElementById("deck-view-cards");
+    if (divImages !== null)
+    {
+        while(divImages.firstChild)
+            divImages.removeChild(divImages.firstChild);
+    }
+
+    divImages.append(
+        createImageListFromTextarea("pool", images),
+        createImageListFromTextarea("characters", images),
+        createImageListFromTextarea("resources", images),
+        createImageListFromTextarea("hazards", images),
+        createImageListFromTextarea("sideboard", images),
+        createImageListFromTextarea("sites", images)
+    );
+
+    const view = document.getElementById("deck-view");
+    if (view !== null)
+    {
+        view.onclick = () => view.close();
+        view.showModal();
+    }
+}
+
+const createImageListFromTextarea = function(id, imageMap)
+{
+    const data = document.getElementById(id)?.value;
+    if (data === undefined || data === "")
+        return document.createDocumentFragment();
+
+    const target = document.createDocumentFragment();
+    const h3 = document.createElement("h3");
+    h3.innerText = id;
+    target.append(h3);
+
+    for (let _line of data.split("\n"))
+    {
+        if (_line === "" || _line.length < 3)
+            continue;
+
+        const val = parseInt(_line.substring(0, 1));
+        const code = _line.substring(1).trim().toLowerCase();
+        const src = isNaN(val) || imageMap[code] === undefined ? "" : imageMap[code];
+        if (src === "")
+            continue;
+
+        for (let i = 0; i < val; i++)
+        {
+            const img = document.createElement("img");
+            img.setAttribute("src", src);
+            img.setAttribute("title", code);
+            img.setAttribute("loading", "lazy");
+            target.append(img);
+        }
+    }
+
+    return target;
+}
 
 const getCardCodeList = function()
 {
@@ -264,47 +330,125 @@ const isEmpty = function(jDeck)
 let g_jDecks = { };
 const g_pDeckMap = {};
 
+const createLabelDiv = function(title, color, count)
+{
+    const _span = document.createElement("span");
+    _span.setAttribute("class", "deck-label-" + color);
+    _span.setAttribute("data-deck-group", title.toLowerCase());
+
+    if (count > 0)
+        _span.innerText = title + " (" + count + ")";
+    else
+        _span.innerText = title;
+
+    const _label = document.createElement("div");
+    _label.setAttribute("class", "deck-label");
+    _label.append(_span);
+    
+    return _label;
+}
+
+
+const processLabelFilters = function(div)
+{
+    const h3 = document.createElement("h3");
+    h3.innerText = "Filter/Limit deck list";
+
+    div.setAttribute("id", "deck-list-filter");
+    div.prepend(h3);
+    div.querySelectorAll("span").forEach(_span => _span.onclick = onClickFilterSpan)
+}
+
+const onClickFilterSpan = function(e)
+{
+    const val = e.target.getAttribute("data-deck-group").toLowerCase();
+
+    document.getElementById("deck-list-filter")?.querySelectorAll(".active")?.classList?.remove("active");
+    e.target.classList.add("active");
+
+    document.getElementById("deck-grid")?.querySelectorAll(".challenge-deck").forEach(_deck => 
+    {
+        if (_deck.getAttribute("data-deck-group") === val)
+            _deck.classList.remove("hidden");
+        else if (!_deck.classList.contains("selected-deck"))
+            _deck.classList.add("hidden");
+    });
+}
+
 const onLoadDecks = function(data)
 {
     g_jDecks = data;
 
-    let openFirst = data.length === 1;
+    const divFilterList = document.createElement("div");
+    divFilterList.setAttribute("class", "deck-filter-list");
 
-    let divGroup = document.createDocumentFragment();
+    const divGroup = document.createElement("div");
+    divGroup.setAttribute("class", "deck-grid");
+    divGroup.setAttribute("id", "deck-grid");
+
+    const labelColors = ["red", "green", "blue", "yellow", "pink"]
     for (let deck of g_jDecks)
     {
-        const label = document.createElement("details");
-        divGroup.appendChild(label);
+        const labelColor = labelColors.shift();
+        labelColors.push(labelColor);
 
-        if (openFirst)
-        {
-            label.open = true;
-            openFirst = false;
-        }
-        
-        const summary = document.createElement("summary");
-        summary.innerText = " " + deck.name + " (" + Object.keys(deck.decks).length + ")";
-        label.appendChild(summary);
-
+        let _count = 0;
         for (let key in deck.decks)
         {
+            const meta = deck.meta[deck.decks[key]];
+            if (meta === undefined)
+                continue;
+
+            const _deckid = deck.decks[key];
             const divDeck = document.createElement("div");
+            divGroup.append(divDeck);
             divDeck.setAttribute("class", "challenge-deck");
-            divDeck.setAttribute("data-deck-id", deck.decks[key]);
+            divDeck.setAttribute("data-deck-id", _deckid);
             divDeck.setAttribute("data-deck-name", key);
-            divDeck.setAttribute("title", "Click to select or right click to download");
-            divDeck.onclick = onChallengeDeckChosen;
+            divDeck.setAttribute("data-deck-group", deck.name.toLowerCase());
+            divDeck.setAttribute("id", _deckid);
             divDeck.oncontextmenu = onDownloadDeck;
-            divDeck.innerText = key;
-            label.appendChild(divDeck);
+
+            const img = meta?.avatar !== "" ? `<img src="${meta.avatar}">`: '<img src="/data/backside" class="avatar-backside">';
+
+            divDeck.innerHTML = `
+                <a class="avatar" title="Click to choose this deck for your game">${img}</a>
+                <a class="deck-data" title="Click to choose this deck for your game">
+                    <h3>${key}</h3>
+                    <p>
+                        Deck: ${meta?.resources} / ${meta?.hazards}
+                        <br>Characters: ${meta?.character}
+                        <br>Sideboard: ${meta?.sideboard}
+                    </p>
+                </a>
+                <div class="deck-info">
+                    <a href="#" data-action="view" title="Click to view cards in this deck and deck notes">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="fa fa-check selected-deck-icon" aria-hidden="true"></i>
+            `;
+
+            divDeck.appendChild(createLabelDiv(deck.name, labelColor, -1));
+            _count++;
         }
 
-        divGroup.appendChild(label);
+        divFilterList.append(createLabelDiv(deck.name, labelColor, _count));
+
     }
 
-    document.querySelector(".deck-list-entries").appendChild(divGroup);
+    divGroup.querySelectorAll("a").forEach(_a => 
+    {
+        if (_a.hasAttribute("data-action"))
+            _a.onclick = onChallengeDeckChosenView;
+        else
+            _a.onclick = onChallengeDeckChosen;
+    });
 
-    const divParent = document.querySelector(".deck-list");
+    processLabelFilters(divFilterList);
+    document.querySelector(".deck-list-entries").append(divFilterList, divGroup);
+
+    const divParent = document.getElementById("deck-text-fields");
 
     const divHtml = document.createElement("h2");
     divHtml.innerText = "Choose your deck";
@@ -322,8 +466,7 @@ const onLoadDecks = function(data)
     divFile.setAttribute("id", "load_deck_file");
     divFile.onchange = readSingleFromInput;
 
-    divParent.appendChild(divButton);
-    divParent.appendChild(divFile);
+    divParent.append(divButton, divFile);
 }
 
 const readSingleFromInput = function(e)
@@ -350,7 +493,7 @@ const readSingleFromInput = function(e)
 
 const removeSelectedDeck = function()
 {
-    let elem = document.querySelector(".selected-deck");
+    const elem = document.querySelector(".selected-deck");
     if (elem !== null)
         elem.classList.remove("selected-deck");
 };
@@ -395,12 +538,41 @@ const onDownloadDeck = function(e)
     return false;
 }
 
+const onChallengeDeckChosenView = function(e)
+{
+    g_sViewDeckId = onDeckChosenFindDeckId(e.target);
+
+    onChallengeDeckChosen(e);
+
+    const dialog = document.getElementById("notes");
+    if (dialog !== null)
+    {
+        dialog.onclick = () => dialog.close();
+        dialog.showModal();
+    }
+}
+
+const onDeckChosenFindDeckId = function(elem)
+{
+    if (elem === null)
+        return "";
+
+    const deckid = elem.hasAttribute("data-deck-id") ? elem.getAttribute("data-deck-id") : "";
+    if (deckid !== null && deckid !== "")
+        return deckid;
+    else
+        return onDeckChosenFindDeckId(elem.parentElement);
+}
+
 const onChallengeDeckChosen = function(e)
 {
-    const deckid = e.target.getAttribute("data-deck-id");
-
+    const deckid = onDeckChosenFindDeckId(e.target);
     removeSelectedDeck();
-    e.target.classList.add("selected-deck");
+
+    const elemDeck = document.getElementById(deckid);
+    if (elemDeck !== null)
+        elemDeck.classList.add("selected-deck");
+
     document.getElementById("toggle_isstandard").click();
 
     if (g_pDeckMap[deckid] !== undefined)
@@ -703,7 +875,7 @@ const CalculateDeckCategory =
         if (h3 === null)
             return;
     
-        const label = this.stripCount(h3.innerText);
+        const label = this.stripCount(h3.hasAttribute("data-label") ? h3.getAttribute("data-label") : h3.innerText);
         const size = this.countList(elem.value.trim());
 
         h3.innerText = label + " (" + size + ")";
@@ -874,6 +1046,17 @@ const g_pDeckTextFields = new DeckTextFields();
 (function () {
     g_pDeckTextFields.insert("deck-text-fields", "Deck Details", "w50");
 
+    {
+        const _det = document.getElementById("deck-text-fields");
+        const _summary = _det?.querySelector("summary");
+        if (_det && _summary)
+        {
+            _det.removeChild(_summary);
+            _det.prepend(_summary);
+            _det.classList.add("deck-edit-details");
+        }
+    }
+
     const sUserName = document.getElementById("user").value;
     if (sUserName === "")
     {
@@ -889,9 +1072,9 @@ const g_pDeckTextFields = new DeckTextFields();
 
     const forms = document.getElementById("deckform");
     forms.onsubmit = (e) => {
-            document.getElementById("host").dispatchEvent(new Event('click'));
-            e.preventDefault();
-            return false;
+        document.getElementById("host").dispatchEvent(new Event('click'));
+        e.preventDefault();
+        return false;
     }
 
     CalculateDeckCategory.init();
