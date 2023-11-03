@@ -264,7 +264,7 @@ h3 {
                 line-height: 1em;
                 font-size: 0.9;
                 padding: 0;
-            };
+            }
         }
 
         button {
@@ -363,7 +363,6 @@ h3 {
         .fields {
             flex: 30%;
         }
-
     }
 
     h3 {
@@ -489,7 +488,6 @@ dialog {
     cursor: pointer;
 }
 
-/* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (min-width: $md-max) {
     .sticky {
         position: -webkit-sticky;
