@@ -375,6 +375,40 @@ const onClickFilterSpan = function(e)
     });
 }
 
+const createChallengeDeckCard = function(deck, key, meta, labelColor)
+{
+    const _deckid = deck.decks[key];
+    const divDeck = document.createElement("div");
+    divDeck.setAttribute("class", "challenge-deck");
+    divDeck.setAttribute("data-deck-id", _deckid);
+    divDeck.setAttribute("data-deck-name", key);
+    divDeck.setAttribute("data-deck-group", deck.name.toLowerCase());
+    divDeck.setAttribute("id", _deckid);
+    divDeck.oncontextmenu = onDownloadDeck;
+
+    const img = meta?.avatar !== "" ? `<img src="${meta.avatar}">`: '<img src="/data/backside" class="avatar-backside">';
+    divDeck.innerHTML = `
+        <a class="avatar" title="Click to choose this deck for your game">${img}</a>
+        <a class="deck-data" title="Click to choose this deck for your game">
+            <h3>${key}</h3>
+            <p>
+                Deck: ${meta?.resources} / ${meta?.hazards}
+                <br>Characters: ${meta?.character}
+                <br>Sideboard: ${meta?.sideboard}
+            </p>
+        </a>
+        <div class="deck-info">
+            <a href="#" data-action="view" title="Click to view cards in this deck and deck notes">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="fa fa-check selected-deck-icon" aria-hidden="true"></i>
+    `;
+
+    divDeck.appendChild(createLabelDiv(deck.name, labelColor, -1));
+    return divDeck;
+}
+
 const onLoadDecks = function(data)
 {
     g_jDecks = data;
@@ -396,45 +430,14 @@ const onLoadDecks = function(data)
         for (let key in deck.decks)
         {
             const meta = deck.meta[deck.decks[key]];
-            if (meta === undefined)
-                continue;
-
-            const _deckid = deck.decks[key];
-            const divDeck = document.createElement("div");
-            divGroup.append(divDeck);
-            divDeck.setAttribute("class", "challenge-deck");
-            divDeck.setAttribute("data-deck-id", _deckid);
-            divDeck.setAttribute("data-deck-name", key);
-            divDeck.setAttribute("data-deck-group", deck.name.toLowerCase());
-            divDeck.setAttribute("id", _deckid);
-            divDeck.oncontextmenu = onDownloadDeck;
-
-            const img = meta?.avatar !== "" ? `<img src="${meta.avatar}">`: '<img src="/data/backside" class="avatar-backside">';
-
-            divDeck.innerHTML = `
-                <a class="avatar" title="Click to choose this deck for your game">${img}</a>
-                <a class="deck-data" title="Click to choose this deck for your game">
-                    <h3>${key}</h3>
-                    <p>
-                        Deck: ${meta?.resources} / ${meta?.hazards}
-                        <br>Characters: ${meta?.character}
-                        <br>Sideboard: ${meta?.sideboard}
-                    </p>
-                </a>
-                <div class="deck-info">
-                    <a href="#" data-action="view" title="Click to view cards in this deck and deck notes">
-                        <i class="fa fa-eye" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="fa fa-check selected-deck-icon" aria-hidden="true"></i>
-            `;
-
-            divDeck.appendChild(createLabelDiv(deck.name, labelColor, -1));
-            _count++;
+            if (meta !== undefined)
+            {
+                divGroup.append(createChallengeDeckCard(deck, key, meta, labelColor));
+                _count++;
+            }
         }
 
         divFilterList.append(createLabelDiv(deck.name, labelColor, _count));
-
     }
 
     divGroup.querySelectorAll("a").forEach(_a => 
@@ -449,6 +452,8 @@ const onLoadDecks = function(data)
     document.querySelector(".deck-list-entries").append(divFilterList, divGroup);
 
     const divParent = document.getElementById("deck-text-fields");
+    if (divParent === null)
+        return;
 
     const divHtml = document.createElement("h2");
     divHtml.innerText = "Choose your deck";
@@ -550,6 +555,8 @@ const onChallengeDeckChosenView = function(e)
         dialog.onclick = () => dialog.close();
         dialog.showModal();
     }
+
+    return false;
 }
 
 const onDeckChosenFindDeckId = function(elem)
@@ -579,7 +586,7 @@ const onChallengeDeckChosen = function(e)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_pDeckMap[deckid].deck }));
         setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
-        return;
+        return false;
     }
     
     fetch("/data/decks/" + deckid)
@@ -595,6 +602,8 @@ const onChallengeDeckChosen = function(e)
         console.error(err);
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not load"}));
     });
+
+    return false;
 }
 
 const stripHashFromUrl = function()
@@ -1134,6 +1143,17 @@ const preloadGameData = function()
     if (form !== null)
         form.setAttribute("class", "hidden");
 
+    {
+        const _t = document.getElementById("deck-text-fields");
+        if (_t !== null)
+            _t.classList.add("hidden");
+    }
+    {
+        const _t = document.getElementById("deck-grid-all");
+        if (_t !== null)
+            _t.classList.add("hidden");
+    }
+            
     const div = document.createElement("div");
     div.setAttribute("class", "loading-line-counter");
     document.body.appendChild(div);

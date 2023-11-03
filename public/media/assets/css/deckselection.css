@@ -233,7 +233,7 @@ h2 {
   display: grid;
   flex: 0 0 300px;
   grid-template-columns: 100px auto 30px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   position: relative;
   cursor: pointer;
@@ -264,6 +264,7 @@ h2 {
   color: #ff0;
 }
 .deck-list-entries .selected-deck .selected-deck-icon {
+  color: #fff;
   display: block;
 }
 .deck-list-entries .selected-deck a {
@@ -507,6 +508,10 @@ a.link-replace-invalid-code:hover {
 }
 .deck-view img {
   max-height: 200px;
+  transition: all 0.3s ease-in-out;
+}
+.deck-view img:hover {
+  scale: 2;
 }
 
 dialog {
@@ -523,7 +528,6 @@ dialog button:first-of-type {
   cursor: pointer;
 }
 
-/* Responsive layout - makes a one column layout instead of a two-column layout */
 @media (min-width: 767.98px) {
   .sticky {
     position: -webkit-sticky;

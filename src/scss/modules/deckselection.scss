@@ -131,7 +131,7 @@ h2 {
 
     flex: 0 0 300px;
     grid-template-columns: 100px auto 30px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     position: relative;
     cursor: pointer;
@@ -172,6 +172,7 @@ h2 {
 
     .selected-deck {
         .selected-deck-icon {
+            color: #fff;
             display: block;
         }
 
@@ -470,6 +471,11 @@ a.link-replace-invalid-code {
 
     img {
         max-height: 200px;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            scale: 2
+        }
     }
 }
 
