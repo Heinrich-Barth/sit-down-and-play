@@ -191,8 +191,21 @@
             max-height: 70px;
         }
 
+        img.scoring-ingame-avatar
+        {
+            scale: 4;
+            object-position: 0px 12px;
+        }
+
         th {
             text-align: left;
+        }
+
+        td.image {
+            border-radius: 50%;
+            overflow: hidden;
+            height: 100px;
+            width: 100px;
         }
 
         thead th,

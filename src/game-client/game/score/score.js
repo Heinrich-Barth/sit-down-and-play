@@ -312,6 +312,7 @@ const SCORING_INGAME =
             img.setAttribute("src", SCORING_INGAME.getAvatar(id));
             img.setAttribute("class", "scoring-ingame-avatar");
             const td1 = document.createElement("td");
+            td1.setAttribute("class", "image");
             td1.append(img);
             images.append(td1);
 
