@@ -9,9 +9,8 @@
         <meta name="theme-color" content="#000000"/>
         <link rel="icon" type="image/png" href="/media/assets/favicon.png">
         <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="/media/assets/css/home.css?version=23415" />
+        <link rel="stylesheet" href="/media/assets/css/home.css?version=231113" />
 
-        <script src="/media/assets/js/jquery.min.js"></script>
         <script src="/client/httpsonly.js"></script>
         <base target="_self">
     </head>
@@ -36,11 +35,12 @@
             
                 <h1>Start a Game</h1>
                 
-                <div>
-                    <div class="enter-room-input-container">
-
+                <div class="room-image-wrapper">
+                    <div class="room-image">
+                        <img src="/data/backside" id="enter_room_image" alt="Ambience room image">
+                    </div>
+                    <div class="room-text">
                         <p class="center">Choose your game name and click on <i>Start Game</i> or <a href="/help">check out how to play</a>.</p>
-                        
                         <input id="enter_room"  placeholder="Your game name here (a-zA-Z0-9)"  type="text" value="">
                         <button id="start_game" type="button"><i class="fa fa-play-circle" aria-hidden="true"></i> Start Game</button>
                     
@@ -69,12 +69,13 @@
 
         <div class="game-list-counter line-countdown-10s" id="game-list-counter"></div>        
         
-        <script src="/client/home/home.js?version=23415"></script>
-        <script src="/client/home/whatsnew.js?version=23415"></script>
+        <script src="/client/home/home.js?version=231113"></script>
+        <script src="/client/home/whatsnew.js?version=231113"></script>
         <script async src="/client/navigation/navigation.js"></script>
-        <script async src="/client/notification/notification.js?version=23415"></script>
-        <script async src="/client/onready.js"></script>
-        <script async src="/client/home/history.js?version=23415"></script>
-        <script async src="/pwa/pwa.js?version=23415"></script>
+        <script async src="/client/notification/notification.js?version=231113"></script>
+        <script async src="/client/onready.js?version=231113"></script>
+        <script async src="/client/home/history.js?version=231113"></script>
+        <script async src="/pwa/pwa.js?version=231113"></script>
+        <script async src="/media/assets/js/jquery.min.js"></script>
     </body>
 </html>

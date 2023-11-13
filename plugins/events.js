@@ -1,34 +1,35 @@
 const Logger = require("../Logger");
+const fs = require("fs");
 
-let g_jsonList = [];
-(function()
+const readJson = function(file)
 {
-    const fs = require('fs')
-    fs.readFile(__dirname + '/namelist.json', 'utf8', function (err,data) 
+    try
     {
-        if (err) 
-        {
-            Logger.info("No sample user names available.");
-            return;
-        }
+        return JSON.parse(fs.readFileSync(file, "utf8"));
+    }
+    catch (err)
+    {
+        Logger.warn(err);
+    }
 
-        try
-        {
-            const json = JSON.parse(data);
-            for (let elem of json)
-            {
-                if (elem !== "" && typeof elem === "string")
-                    g_jsonList.push(elem.trim());
-            }
+    return [];
+}
 
-            Logger.info(g_jsonList.length + " sample player names avaiable");
-        }
-        catch (ex)
-        {
-            Logger.error(ex);
-        }
-    });
-})();
+const capitalizeLetter = function(input)
+{
+    const pos = input.lastIndexOf("/");
+    const dot = input.lastIndexOf('.');
+    return input.substring(pos+1, dot);
+}
+
+const stripNonAlpha = function(input)
+{
+    input.name = capitalizeLetter(input.image);
+    return input;
+}
+
+const g_jsonList = readJson(__dirname + '/namelist.json');
+const g_roomNames = readJson(__dirname + '/../data-local/roomlist.json');
 
 const Arda = require("./game-arda");
 const Discord = require("./discord");
@@ -40,16 +41,13 @@ function _register(pEventManager)
 {
     pEventManager.addEvent("add-sample-rooms", function(targetList)
     {
-        const SampleList = ["AmonHen", "Anduin", "Arnor", "Baranduin", "Beleriand", "Bree", "Bruinen", "Erebor", "EredLuin", "EredMithrin", "EredNimrais", "Eriador", "Esgaroth", "Fangorn", "Gondor", "GreatEastRoad", "Harad", "HelmsDeep", "Isengard", "Khazaddum", "Lothlorien", "Mirkwood", "MistyMountains", "Mordor", "MountDoom", "NorthSouthRoad", "Numenor", "Rhovanion", "Rhun", "Rivendell", "Rohan", "TheShire", "Weathertop"]
-        SampleList.sort();
-        SampleList.forEach((e) => targetList.push(e));
-        Logger.info("Sample room names loaded: " + SampleList.length);
+        g_roomNames.forEach(_e => targetList.push(stripNonAlpha(_e)));
+        Logger.info("Sample room names loaded: " + targetList.length);
     });
 
     pEventManager.addEvent("add-sample-names", function(targetList)
     {
-        for (let elem of g_jsonList)
-            targetList.push(elem);
+        g_jsonList.forEach(targetList.push.bind(targetList));
     });
 
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));

@@ -1,0 +1,26 @@
+.room-image-wrapper 
+{
+    position: relative;
+
+    .room-image {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 130px;
+        width: 130px;
+        border-radius: 50%;
+        overflow: hidden;
+
+        img {
+            position: absolute;
+            left: -10px;
+            top: 5px;
+            width: 150px;
+            scale: 1.4;
+        }
+    }
+
+    .room-text {
+        margin-left: 140px;
+    }
+}

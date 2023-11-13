@@ -48,64 +48,9 @@ body, p
     }
 }
 
-.game-list 
-{
-    padding: 2em;
-    margin-top: 0.5em;
 
-    table { 
-        width: 100%; 
-        border-spacing: 0; 
-    }
-
-    tr 
-    { 
-        vertical-align: middle; 
-
-        &:nth-child(2)
-        {
-            margin-top: 20px;
-        }
-        
-        &:hover { 
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        td {
-            text-align: left;
-
-            &:first-child 
-            {
-                padding-right: 10px;
-            }
-        }
-
-        .game-link a { display: inline-block; }
-
-        .game-duration { margin-left: 10px; font-size: 0.85em;}
-
-        .action {
-            width: 100px;
-        }
-
-        .name {
-            width: 40%;
-        }
-
-    }
-
-    a { 
-        display: block; 
-
-        text-transform: uppercase;
-        color: $color-yellow;
-
-        &:hover
-        {
-            color: $color-orange;
-        }
-    }
-}
+@import "./room-image-wrapper.scss";
+@import "./game-list.scss";
 
 .game-list-counter
 {
@@ -181,6 +126,8 @@ body, p
     }
 
 }
+
+
 
 footer {
     font-size: 0.8em;

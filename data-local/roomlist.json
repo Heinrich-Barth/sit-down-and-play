@@ -1,0 +1,278 @@
+[
+    {
+        "name": "amonhen",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/AmonHen.jpg"
+    },
+    {
+        "name": "bagend",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/BagEnd.jpg"
+    },
+    {
+        "name": "banditlair",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/BanditLair.jpg"
+    },
+    {
+        "name": "barad-dur",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Baraddur.jpg"
+    },
+    {
+        "name": "barrow-downs",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Barrowdowns.jpg"
+    },
+    {
+        "name": "beornshouse",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/BeornsHouse.jpg"
+    },
+    {
+        "name": "bluemountaindwarf-hold",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/BlueMountainDwarfhold.jpg"
+    },
+    {
+        "name": "bree",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Bree.jpg"
+    },
+    {
+        "name": "buhrwidu",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/BuhrWidu.jpg"
+    },
+    {
+        "name": "camethbrin",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/CamethBrin.jpg"
+    },
+    {
+        "name": "carndum",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/CarnDum.jpg"
+    },
+    {
+        "name": "cavesofulund",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/CavesofUlund.jpg"
+    },
+    {
+        "name": "cirithgorgor",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/CirithGorgor.jpg"
+    },
+    {
+        "name": "cirithungol",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/CirithUngol.jpg"
+    },
+    {
+        "name": "dale",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Dale.jpg"
+    },
+    {
+        "name": "deadmarshes",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DeadMarshes.jpg"
+    },
+    {
+        "name": "dimrilldale",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DimrillDale.jpg"
+    },
+    {
+        "name": "dolamroth",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DolAmroth.jpg"
+    },
+    {
+        "name": "dolguldur",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DolGuldur.jpg"
+    },
+    {
+        "name": "druadanforest",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DruadanForest.jpg"
+    },
+    {
+        "name": "dunharrow",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Dunharrow.jpg"
+    },
+    {
+        "name": "dunnishclan-hold",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/DunnishClanhold.jpg"
+    },
+    {
+        "name": "easterlingcamp",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/EasterlingCamp.jpg"
+    },
+    {
+        "name": "edoras",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Edoras.jpg"
+    },
+    {
+        "name": "ettenmoors",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Ettenmoors.jpg"
+    },
+    {
+        "name": "geanna-lisch",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/GeannaLisch.jpg"
+    },
+    {
+        "name": "gladdenfields",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/GladdenFields.jpg"
+    },
+    {
+        "name": "glitteringcaves",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/GlitteringCaves.jpg"
+    },
+    {
+        "name": "gobelmirlond",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/GobelMirlond.jpg"
+    },
+    {
+        "name": "goblin-gate",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Goblingate.jpg"
+    },
+    {
+        "name": "gondmaeglom",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Gondmaeglom.jpg"
+    },
+    {
+        "name": "haudh-in-gwanur",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/HaudhinGwanur.jpg"
+    },
+    {
+        "name": "hennethannun",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/HennethAnnun.jpg"
+    },
+    {
+        "name": "hermitshill",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/HermitsHill.jpg"
+    },
+    {
+        "name": "ironhilldwarf-hold",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/IronHillDwarfhold.jpg"
+    },
+    {
+        "name": "isengard",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Isengard.jpg"
+    },
+    {
+        "name": "lake-town",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Laketown.jpg"
+    },
+    {
+        "name": "londgalen",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/LondGalen.jpg"
+    },
+    {
+        "name": "lossadancairn",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/LossadanCairn.jpg"
+    },
+    {
+        "name": "lossadancamp",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/LossadanCamp.jpg"
+    },
+    {
+        "name": "minasmorgul",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/MinasMorgul.jpg"
+    },
+    {
+        "name": "minastirith",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/MinasTirith.jpg"
+    },
+    {
+        "name": "moria",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Moria.jpg"
+    },
+    {
+        "name": "mountdoom",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/MountDoom.jpg"
+    },
+    {
+        "name": "mountgram",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/MountGram.jpg"
+    },
+    {
+        "name": "mountgundabad",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/MountGundabad.jpg"
+    },
+    {
+        "name": "nurniagcamp",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/NurniagCamp.jpg"
+    },
+    {
+        "name": "ost-in-edhil",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/OstinEdhil.jpg"
+    },
+    {
+        "name": "pelargir",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Pelargir.jpg"
+    },
+    {
+        "name": "raider-hold",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Raiderhold.jpg"
+    },
+    {
+        "name": "ruinedsignaltower",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/RuinedSignalTower.jpg"
+    },
+    {
+        "name": "sarngoriwing",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/SarnGoriwing.jpg"
+    },
+    {
+        "name": "shelobslair",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/ShelobsLair.jpg"
+    },
+    {
+        "name": "shrel-kain",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/ShrelKain.jpg"
+    },
+    {
+        "name": "southronoasis",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/SouthronOasis.jpg"
+    },
+    {
+        "name": "stone-circle",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Stonecircle.jpg"
+    },
+    {
+        "name": "tharbad",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Tharbad.jpg"
+    },
+    {
+        "name": "thelonelymountain",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/TheLonelyMountain.jpg"
+    },
+    {
+        "name": "thestones",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/TheStones.jpg"
+    },
+    {
+        "name": "thewhitetowers",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/TheWhiteTowers.jpg"
+    },
+    {
+        "name": "thewindthrone",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/TheWindThrone.jpg"
+    },
+    {
+        "name": "theworthyhills",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/TheWorthyHills.jpg"
+    },
+    {
+        "name": "thranduilshalls",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/ThranduilsHalls.jpg"
+    },
+    {
+        "name": "urlurtsunurn",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/UrlurtsuNurn.jpg"
+    },
+    {
+        "name": "valeoferech",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/ValeofErech.jpg"
+    },
+    {
+        "name": "variagcamp",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/VariagCamp.jpg"
+    },
+    {
+        "name": "woodmen-town",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/Woodmentown.jpg"
+    },
+    {
+        "name": "wosepassage-hold",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/WosePassagehold.jpg"
+    },
+    {
+        "name": "zarakdum",
+        "image": "https://raw.githubusercontent.com/council-of-rivendell/meccg-remaster/master/en-remaster/le/ZarakDum.jpg"
+    }
+]

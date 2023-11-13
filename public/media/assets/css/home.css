@@ -162,41 +162,70 @@ body, p {
   align-items: flex-start;
 }
 
+.room-image-wrapper {
+  position: relative;
+}
+.room-image-wrapper .room-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 130px;
+  width: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.room-image-wrapper .room-image img {
+  position: absolute;
+  left: -10px;
+  top: 5px;
+  width: 150px;
+  scale: 1.4;
+}
+.room-image-wrapper .room-text {
+  margin-left: 140px;
+}
+
 .game-list {
   padding: 2em;
   margin-top: 0.5em;
 }
-.game-list table {
-  width: 100%;
-  border-spacing: 0;
+.game-list .game_list-grid {
+  display: grid;
+  grid-template-columns: 47% 47%;
+  grid-template-rows: auto;
+  column-gap: 3%;
 }
-.game-list tr {
-  vertical-align: middle;
-}
-.game-list tr:nth-child(2) {
-  margin-top: 20px;
-}
-.game-list tr:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-.game-list tr td {
+.game-list .room-text {
   text-align: left;
 }
-.game-list tr td:first-child {
-  padding-right: 10px;
+.game-list .room-text h3 {
+  margin-top: 0;
 }
-.game-list tr .game-link a {
+.game-list .room-text h3 span {
+  color: #fff;
+  font-size: 0.7em;
+}
+.game-list .room-text .audio {
+  font-size: 0.7em;
+}
+.game-list .game-link a {
   display: inline-block;
 }
-.game-list tr .game-duration {
+.game-list .game-duration {
   margin-left: 10px;
   font-size: 0.85em;
 }
-.game-list tr .action {
-  width: 100px;
+.game-list .room-image-wrapper {
+  height: 140px;
+  padding-top: 5px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
 }
-.game-list tr .name {
-  width: 40%;
+.game-list .room-image-wrapper:hover {
+  background-color: rgb(0, 0, 0);
+}
+.game-list .room-image {
+  top: 5px;
 }
 .game-list a {
   display: block;
@@ -205,6 +234,39 @@ body, p {
 }
 .game-list a:hover {
   color: #F0C648;
+}
+.game-list .deck-label {
+  font-size: 0.8em;
+  grid-column: span 3;
+  padding: 0 10px;
+  text-align: right;
+  display: inline-block;
+}
+.game-list .deck-label span {
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 5px;
+}
+.game-list .deck-label span.deck-label-green {
+  background-color: green;
+}
+.game-list .deck-label span.deck-label-blue {
+  background-color: blue;
+}
+.game-list .space-right {
+  margin-right: 90px;
+}
+.game-list .actions {
+  position: absolute;
+  width: 90px;
+  bottom: 0px;
+  top: 0;
+  right: 0;
+  text-align: left;
+  padding-top: 30px;
+}
+.game-list .actions a {
+  margin-bottom: 2em;
 }
 
 .game-list-counter {

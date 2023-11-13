@@ -18,19 +18,37 @@ const randomNumber = function(max)
     return max <= 1 ? 0 : Math.floor(Math.random() * max);
 };
 
+
+const g_jsonRoomNames = [];
+const g_jsonRoomImages = { };
+
 const loadSampleRooms = function(existing)
 {
-    if (document.getElementById("enter_room").value !== "")
+    if (document.getElementById("enter_room").value !== "" || g_jsonRoomNames.length === 0)
         return;
 
-    fetch("/data/samplerooms").then((response) => response.json())
-    .then((_rooms) => 
+    const filtered = g_jsonRoomNames.filter((candidate) => !existing.includes(candidate.name.toLowerCase()));
+    if (filtered.length === 0)
+        return;
+
+    let name = "";
+    let image = "";
+
+    const _index = randomNumber(filtered.length);
+    const randomRoom = filtered[_index];
+    if (typeof randomRoom === "string") /** cache might be a problem, so allow backward compatibility */
     {
-        const filtered = _rooms.filter((candidate) => !existing.includes(candidate));
-        if (filtered.length > 0)
-            document.getElementById("enter_room").value = filtered[randomNumber(filtered.length)];
-    })
-    .catch(console.error);
+        name = randomRoom;
+    }
+    else
+    {
+        name = randomRoom.name;
+        image = randomRoom.image;
+    }
+
+    document.getElementById("enter_room").value = name;
+    if (image !== "")
+        document.getElementById("enter_room_image")?.setAttribute("src", image);
 }
 
 const toNumberString = function(nValue)
@@ -59,33 +77,83 @@ const addGameType = function(value, isArda)
 
     const since = getGameTypeDuration(isArda, value.time);
     
-    const _tr = document.createElement("tr");
-    const tdRoom = document.createElement("td");
+    const _tr = document.createElement("div");
+    _tr.setAttribute("class", "room-image-wrapper");
+
+    {   
+        const tdImage = document.createElement("div");
+        _tr.appendChild(tdImage);
+        tdImage.setAttribute("class", "room-image");
+    
+        const _img = document.createElement("img");
+        const imgSrc = g_jsonRoomImages[_room.toLowerCase()];
+
+        if (imgSrc)
+            _img.setAttribute("src", imgSrc);
+        else
+            _img.setAttribute("src", "/data/backside");
+
+        tdImage.appendChild(_img);
+    }
+    
+    const tdRoom = document.createElement("div");
+    tdRoom.setAttribute("class", "room-text");
     _tr.appendChild(tdRoom);
-    tdRoom.setAttribute("class", "name game-link");
-    if (value.accessible)
-        tdRoom.innerHTML = `<a href="/${_context}/${_room}" title="Click to join this game" class="fa fa-sign-in"> ${_room}</a> <span class="game-duration fa fa-clock-o"> ${since}</span>`;
-    else
-        tdRoom.innerHTML = `${_room} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
 
-    const tdJitsi = document.createElement("td");
-    _tr.appendChild(tdJitsi);
-    tdJitsi.setAttribute("class", "action");
+    tdRoom.innerHTML = `<h3>${_room.toUpperCase()} <span class="game-duration fa fa-clock-o"> ${since}</span></h3>
+    <p>${_players}</p>`;
+
     if (value.jitsi)
-        tdJitsi.innerHTML = `<a href="https://meet.jit.si/${_room}" title="Click to join audio chat" class="fa fa-microphone" target="_blank"> via Jitsi</a> `;
+    {
+        const _a = document.createElement("a");
+        _a.setAttribute("href", "https://meet.jit.si/" + _room);
+        _a.setAttribute("title", "Click to join audio chat");
+        _a.setAttribute("class", "fa fa-microphone audio");
+        _a.innerText = " Jitsi";
+        tdRoom.append(_a);
+    }
     else
-        tdJitsi.innerHTML = `<span class="fa fa-microphone"> via Discord</span> `;
+    {
+        const _a = document.createElement("div");
+        _a.setAttribute("class", "fa fa-microphone audio");
+        _a.innerText = " Discord";
+        tdRoom.append(_a);
+    }
 
-    const tdWatch = document.createElement("td");
-    _tr.appendChild(tdWatch);
-    tdWatch.setAttribute("class", "action");
-    if (value.visitors)
-        tdWatch.innerHTML = `<a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a>`;
+    const span = document.createElement("span");
+    if (isArda)
+    {
+        span.setAttribute("class", "deck-label-green")
+        span.innerText = "Arda";
+    }
+    else
+    {
+        span.setAttribute("class", "deck-label-blue")
+        span.innerText = "Standard | DC";
+    }
+    
+    const label = document.createElement("div");
+    label.setAttribute("class", "deck-label");
+    label.appendChild(span);
+    tdRoom.appendChild(label);
 
-    const tdPlayers = document.createElement("td");
-    _tr.appendChild(tdPlayers);
-    tdPlayers.setAttribute("class", "players");
-    tdPlayers.innerText = _players;
+    if (value.accessible || value.visitors)
+    {
+        tdRoom.classList.add("space-right");
+
+        const actions = document.createElement("div");
+        _tr.append(actions);
+        actions.setAttribute("class", "actions");
+        
+        const _r = [];
+        if (value.accessible)
+            _r.push(`<a href="/${_context}/${_room}" title="Click to join" class="fa fa-plus-square"> play</a>`);
+        
+        if (value.visitors)
+            _r.push(`<a href="/${_context}/${_room}/watch" title="Click to watch" class="fa fa-eye"> watch</a>`);
+
+        actions.innerHTML= _r.join("");
+    }
 
     return _tr;
 }
@@ -151,6 +219,9 @@ const onResult = function(data)
     if (pContainer === null)
         return;
 
+    if (!pContainer.classList.contains("game_list-grid"))
+        pContainer.classList.add("game_list-grid");
+
     emptyNode(pContainer);
 
     if (data === undefined || data.length === 0)
@@ -164,13 +235,11 @@ const onResult = function(data)
     data.sort(function(a, b) { return a.room.toLowerCase().localeCompare(b.room.toLowerCase()); });
 
     const existing = [];
-    const table = document.createElement("table")
-    const container = document.createElement("tbody")
+    const table = document.createDocumentFragment();
 
-    addGameTypes(container, data, false, existing);
-    addGameTypes(container, data, true, existing);
+    addGameTypes(table, data, false, existing);
+    addGameTypes(table, data, true, existing);
 
-    table.appendChild(container);
     pContainer.appendChild(table);
 
     showContainer("active_games");
@@ -261,7 +330,17 @@ const fetchAndUpdateGames = function()
 
     document.getElementById("enter_room").focus();
 
-    fetchAndUpdateGames();
+    fetch("/data/samplerooms")
+    .then((response) => response.json())
+    .then((_rooms) => 
+    {
+        _rooms.forEach(_e => {
+            g_jsonRoomNames.push(_e);
+            g_jsonRoomImages[_e.name.toLowerCase()] = _e.image;
+        });
+    })
+    .catch(console.error)
+    .finally(fetchAndUpdateGames);
 })();
 
 let g_fetchGamesInterval = setInterval(fetchAndUpdateGames, 10 * 1000);
