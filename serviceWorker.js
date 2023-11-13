@@ -112,5 +112,5 @@ const fetchListener = function(event)
 /**
  * Register listeners
  */
-self.addEventListener("install", installEvent => installEvent.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(assets))));
+self.addEventListener("install", installEvent => installEvent.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(assets)).catch(console.warn)));
 self.addEventListener("fetch", fetchListener);
