@@ -47,7 +47,7 @@ function _register(pEventManager)
 
     pEventManager.addEvent("add-sample-names", function(targetList)
     {
-        g_jsonList.forEach(targetList.push.bind(targetList));
+        g_jsonList.forEach(_e => targetList.push(_e));
     });
 
     pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
