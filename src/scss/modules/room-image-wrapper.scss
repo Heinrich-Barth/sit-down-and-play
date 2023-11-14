@@ -12,6 +12,10 @@
         overflow: hidden;
         border: 2px solid #000;
 
+        &.room-image-top {
+            top: -40px;
+        }
+
         img {
             position: absolute;
             left: -10px;
@@ -23,5 +27,6 @@
 
     .room-text {
         margin-left: 140px;
+        min-height: 110px;
     }
 }

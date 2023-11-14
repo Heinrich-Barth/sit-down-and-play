@@ -175,6 +175,9 @@ body, p {
   overflow: hidden;
   border: 2px solid #000;
 }
+.room-image-wrapper .room-image.room-image-top {
+  top: -40px;
+}
 .room-image-wrapper .room-image img {
   position: absolute;
   left: -10px;
@@ -184,6 +187,7 @@ body, p {
 }
 .room-image-wrapper .room-text {
   margin-left: 140px;
+  min-height: 110px;
 }
 
 .game-list {

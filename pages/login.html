@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="/media/assets/favicon.png">
     <link rel="stylesheet" href="/media/assets/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="/media/assets/css/deckselection.css?version=231102" />
+    <link rel="stylesheet" href="/media/assets/css/deckselection.css?version=231114" />
 
     <script src="/client/httpsonly.js"></script>
     <script src="/media/assets/js/jquery.min.js"></script>
@@ -24,36 +24,48 @@
         <form method="post" action="#" id="deckform">
             <div class="inner-content">
                 <h1>Join the table</h1>
-                <div class="fields-join">
-                    <input type="text" class="w50" name="user" id="user" placeholder="Who are you to the others?"
-                        value="{DISPLAYNAME}" maxlength="20"
-                        placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
-                    <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle"
-                            aria-hidden="true"></i> Create Game</button>
 
-                    <p class="arda-text" id="game-type">
-                        Choose a game type<span class="label-after"></span>
-                        <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label
-                            for="toggle_isarda"><strong>Arda</strong></label><span class="label-after"></span>
-                        <input type="radio" checked="checked" id="toggle_isstandard" value="standard"
-                            name="gameType"><label for="toggle_isstandard"><strong>Standard</strong></label><span
-                            class="label-after"></span>
-                        <input type="radio" id="toggle_issingleplayer" value="singleplayer" name="gameType"><label
-                            for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
-                        <span class="label-newline"></span>
-                        Errata Settings <input type="checkbox" id="toggle_allow_dce" value="true" checked
-                            name="dce_errata"><label for="toggle_allow_dce">Use <strong>DC errata</strong></label>
-                        <span class="label-newline"></span>
-                        Voice Chat Settings <input type="checkbox" id="toggle_jitsi" value="jitsi"
-                            name="voice_jitsi"><label for="toggle_jitsi">Use <strong>Jitsi</strong> instead of
-                            Discord</label><a href="#" class="hidden" id="jitsi_link">(click to join voice chat in a new
-                            tab)</a>
-                        <span class="label-newline"></span>
-                        Card Language <input type="checkbox" id="toggle_use_spanish" value="yes"
-                            name="cards_spanish"><label for="toggle_use_spanish">Use Spanish instead of English cards
-                            (if available)</label>
-                    </p>
+                <div class="room-image-wrapper">
+                    <div class="room-image">
+                        <img src="/data/backside" id="enter_room_image" alt="Ambience room image">
+                    </div>
+                    <div class="room-text fields-join">
+                        <input type="text" class="w50" name="user" id="user" placeholder="Who are you to the others?"
+                            value="{DISPLAYNAME}" maxlength="20"
+                            placeholder="Your Username (a-zA-Z0-9), 2-20 characters*" />
+                        <button type="button" class="button-small" name="start" id="host"><i class="fa fa-check-circle"
+                                aria-hidden="true"></i> Create Game</button>
+
+                        <p class="arda-text" id="game-type">
+                            Choose a game type<span class="label-after"></span>
+                            <input type="radio" id="toggle_isarda" value="arda" name="gameType"><label
+                                for="toggle_isarda"><strong>Arda</strong></label><span class="label-after"></span>
+                            <input type="radio" checked="checked" id="toggle_isstandard" value="standard"
+                                name="gameType"><label
+                                for="toggle_isstandard"><strong>Standard</strong></label><span
+                                class="label-after"></span>
+                            <input type="radio" id="toggle_issingleplayer" value="singleplayer"
+                                name="gameType"><label
+                                for="toggle_issingleplayer"><strong>Singleplayer</strong></label>
+                            <span class="label-newline"></span>
+                            Errata Settings <input type="checkbox" id="toggle_allow_dce" value="true" checked
+                                name="dce_errata"><label for="toggle_allow_dce">Use <strong>DC
+                                    errata</strong></label>
+                            <span class="label-newline"></span>
+                            Voice Chat Settings <input type="checkbox" id="toggle_jitsi" value="jitsi"
+                                name="voice_jitsi"><label for="toggle_jitsi">Use <strong>Jitsi</strong> instead of
+                                Discord</label><a href="#" class="hidden" id="jitsi_link">(click to join voice chat
+                                in a new
+                                tab)</a>
+                            <span class="label-newline"></span>
+                            Card Language <input type="checkbox" id="toggle_use_spanish" value="yes"
+                                name="cards_spanish"><label for="toggle_use_spanish">Use Spanish instead of English
+                                cards
+                                (if available)</label>
+                        </p>
+                    </div>
                 </div>
+
 
             </div>
         </form>
@@ -83,13 +95,13 @@
     <p class="cookie_notice center">By joining, you agree that this site sets <a href="/about"
             target="_blank">cookies</a> necessary to play a game.</p>
 
-    <script src="/client/game/libraries.js?version=231102"></script>
-    <script src="/client/decktextfields/index.js?version=231102"></script>
-    <script defer src="/client/notification/notification.js?version=231102"></script>
-    <script defer src="/client/dropfile-generic.js?version=231102"></script>
-    <script defer src="/client/deck/read.js?version=231102"></script>
-    <script defer src="/client/login.js?version=20230305?version=231102"></script>
-    <script defer src="/client/navigation/navigation.js?version=231102"></script>
+    <script src="/client/game/libraries.js?version=231114"></script>
+    <script src="/client/decktextfields/index.js?version=231114"></script>
+    <script defer src="/client/notification/notification.js?version=231114"></script>
+    <script defer src="/client/dropfile-generic.js?version=231114"></script>
+    <script defer src="/client/deck/read.js?version=231114"></script>
+    <script defer src="/client/login.js?version=20230305?version=231114"></script>
+    <script defer src="/client/navigation/navigation.js?version=231114"></script>
 </body>
 
 </html>

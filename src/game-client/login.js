@@ -596,6 +596,18 @@ const onChallengeDeckChosen = function(e)
     return false;
 }
 
+const getRoomImage = function(list)
+{
+    const key = getRoomName().toLowerCase();
+    for (let elem of list)
+    {
+        if (elem.name.toLowerCase() === key)
+            return elem.image;
+    }
+
+    return "";
+}
+
 const stripHashFromUrl = function()
 {
     let sUrl = window.location.href;
@@ -763,6 +775,9 @@ const getRoomName = function()
     let sUrl = stripHashFromUrl();
     let nPos = sUrl.indexOf("/login")
     
+    if (nPos === -1)
+        nPos = sUrl.indexOf("/watch");
+
     if (nPos === -1)
         return "";
 
@@ -991,11 +1006,14 @@ const randomNumber = function(max)
 
 const loadSampleUserName = function()
 {
-    fetch("/data/samplenames").then((response) => response.json().then((filtered) => 
+    fetch("/data/samplenames")
+    .then((response) => response.json())
+    .then((filtered) => 
     {
         if (filtered.length > 0)
             document.getElementById("user").value = filtered[randomNumber(filtered.length)];
-    }));
+    })
+    .catch(console.error);
 };
 
 const onChangeJitsiSelection = function(e)
@@ -1104,7 +1122,12 @@ const g_pDeckTextFields = new DeckTextFields();
 
             const text = document.getElementById("game-type");
             if (text !== null)
+            {
                 text.classList.add("hidden");
+                const _img = document.getElementById("enter_room_image");
+                if (_img !== null)
+                    _img.parentElement.classList.add("room-image-top");
+            }
 
             if (data.share === true)
                 insertSocialMedia(true);
@@ -1122,7 +1145,18 @@ const g_pDeckTextFields = new DeckTextFields();
             const useSpanish = e.target?.checked === true ? "yes" : "no";
             sessionStorage.setItem("cards_es", useSpanish);
         }
-    }       
+    }
+
+    fetch("/data/samplerooms")
+    .then((response) => response.json())
+    .then((_rooms) => 
+    {
+        const src = getRoomImage(_rooms);
+        const img = document.getElementById("enter_room_image");
+        if (img !== null && src !== "")
+            img.setAttribute("src", src);
+    })
+    .catch(console.error);
 })();
 
 document.body.addEventListener("meccg-deck-available", (e) => populateDeck(e.detail), false);
