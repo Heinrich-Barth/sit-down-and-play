@@ -298,17 +298,7 @@ const createDeck = function()
         sites: toJson("sites")
     };
 
-    if (isEmpty(jDeck.pool))
-    {
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Pool is not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
-        return null;
-    }
-    else if (isEmpty(jDeck.chars))
-    {
-        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Characters are not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
-        return null;
-    }
-    else if (isEmpty(jDeck.hazards))
+    if (isEmpty(jDeck.hazards))
     {
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "The Hazards are not suitable for play. Verify that you have cards for pool, chars, and hazards/resources" }));
         return null;
