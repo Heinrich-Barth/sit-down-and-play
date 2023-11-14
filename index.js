@@ -406,6 +406,7 @@ SERVER.instance.post("/data/decks/check", SERVER.caching.expires.jsonCallback, f
 });
 
 SERVER.instance.get("/data/samplerooms", SERVER.caching.cache.jsonCallback, (_req, res) => res.json(SERVER._sampleRooms).status(200));
+SERVER.instance.get("/data/samplenames", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(SERVER._sampleNames).status(200));
 SERVER.instance.post("/data/hash", (req, res) =>
 {
     const data = req.body.value;
