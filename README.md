@@ -58,13 +58,27 @@ This is a non-profit project made by fans entirely.
 
 Make sure you have [Node.js](http://nodejs.org/) installed. You will find further details about development and adaptation at the end of this page.
 
-Open your terminal and access this project folder. Then run the following commands:
+Open your terminal and access this project folder. 
+
+### Development Mode
+
+Then run the following commands:
 
 ````
 npm install
 npm run dev (run once to build sources, otherwise to development mode)
+````
+### Production Mode
+
+Then run the following commands:
+
+````
+npm install
+npm run build
 npm start
 ````
+
+### General information
 
 Your app should now be running on [localhost:8080](http://localhost:8080/).
 
