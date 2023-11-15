@@ -571,7 +571,10 @@ class GameStandard extends GamePlayers
     {
         const avatar = obj.code;
         if (avatar && this.setAvatar(userid, avatar))
+        {
+            this.publishToPlayers("/game/avatar/set", userid, {code: avatar, userid: userid});
             this.publishChat(userid, "Updated their avatar to " + avatar, false);
+        }
     }
 
     onCardMove(userid, socket, obj)

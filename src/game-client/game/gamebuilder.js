@@ -728,6 +728,18 @@ const GameBuilder = {
             else
                 GameBuilder.onChangeAvatarApp([]);
         });
+
+        MeccgApi.addListener("/game/avatar/set", (isMe, data) => 
+        {
+            if (!isMe && data.code && data.userid)
+            {
+                document.body.dispatchEvent(new CustomEvent("meccg-register-avatar", { "detail": {
+                    userid : data.userid,
+                    code: data.code,
+                    force: true
+                } }));
+            }
+        });
     },
 
 
