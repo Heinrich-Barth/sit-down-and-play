@@ -12,7 +12,7 @@ Open your terminal and access this project folder. THen run the following comman
 
 ````
 npm install
-npm run local
+npm run dev
 ````
 
 Your app should now be running on [localhost:8080](http://localhost:8080/).
