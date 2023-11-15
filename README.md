@@ -88,7 +88,7 @@ Card data and images *are not part of this project* and you will have to provide
 
 ## System Requirements
 
-The project does have a very low resource requirements:
+The project does have a very low resource profile:
 
 * About 50 MB RAM
 * Single Core CPU is enough
