@@ -558,7 +558,7 @@ dialog button:first-of-type {
   top: 0;
   height: 130px;
   width: 130px;
-  border-radius: 50%;
+  border-radius: 5%;
   overflow: hidden;
   border: 2px solid #000;
 }
@@ -568,7 +568,7 @@ dialog button:first-of-type {
 .room-image-wrapper .room-image img {
   position: absolute;
   left: -10px;
-  top: 5px;
+  top: 4px;
   width: 150px;
   scale: 1.4;
 }
