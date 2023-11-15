@@ -68,8 +68,8 @@ const SavedGameManager =
         
             fetch("/data/hash", options)
             .then((response) => response.json())
-            .then((response) => {
-                console.log(response.value,jGame.check);
+            .then((response) => 
+            {
                 if (response.value !== jGame.check)
                     throw new Error("Invalid savegame signature");
                 else

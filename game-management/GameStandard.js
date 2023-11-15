@@ -88,6 +88,8 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/character/receive-card", this.onCharacterReceiveCard.bind(this));
         this.getMeccgApi().addListener("/game/character/join/character", this.onCharacterJoinCharacter.bind(this));
         this.getMeccgApi().addListener("/game/character/join/company", this.onCharacterJoinCompany.bind(this));
+        this.getMeccgApi().addListener("/game/character/list", this.onGetCharacters.bind(this));
+        
 
         this.getMeccgApi().addListener("/game/discardopenly", this.onDiscardOpenly.bind(this));
 
@@ -320,6 +322,12 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " reveals " + data.code, true);
         else
             this.publishChat(userid, " reveals a card", true);
+    }
+
+    onGetCharacters(userid, socket)
+    {
+        const list = this.getPlayboardManager().GetCharacterCodes(userid);
+        this.replyToPlayer("/game/character/list", socket, { codes: list });
     }
 
     onGameCardStateSet(userid, _socket, data)

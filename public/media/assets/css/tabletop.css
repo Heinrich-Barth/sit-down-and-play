@@ -1839,3 +1839,26 @@ div.card[data-token="9"]:after {
 div.card[data-token="10"]:after {
   content: "10";
 }
+
+.chanage-avatar-app {
+  max-width: 90%;
+  max-height: 90%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+}
+.chanage-avatar-app img {
+  width: 200px;
+  border-radius: 5%;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+.chanage-avatar-app img:hover {
+  scale: 1.2;
+}
+.chanage-avatar-app::backdrop {
+  background-color: #000;
+  opacity: 0.75;
+}

@@ -720,6 +720,14 @@ const GameBuilder = {
         });
 
         MeccgApi.addListener("/game/hand/clear", () => DomUtils.removeAllChildNodes(document.getElementById("playercard_hand_container")));
+
+        MeccgApi.addListener("/game/character/list", (_isMe, data) => 
+        {
+            if (Array.isArray(data.codes))
+                GameBuilder.onChangeAvatarApp(data.codes);
+            else
+                GameBuilder.onChangeAvatarApp([]);
+        });
     },
 
 
@@ -831,6 +839,110 @@ const GameBuilder = {
     
     onDisconnected : () => GameBuilder.CompanyManager.updateLastSeen(MeccgPlayers.getChallengerId(), false),
     onConnected : () => GameBuilder.CompanyManager.updateLastSeen(MeccgPlayers.getChallengerId(), true),
-    onError : (error) => console.error('There has been a problem with your fetch operation:', error)
+    onError : (error) => console.error('There has been a problem with your fetch operation:', error),
+
+    onChangeAvatarApp : function(codes)
+    {
+        ChangeAvatarApp.init(codes);
+    }
 };
 
+const ChangeAvatarApp = {
+
+    requireDialogElement : function()
+    {
+        const elem = document.getElementById("chanage-avatar-app");
+        if (elem !== null)
+            return elem;
+
+        const dialogElem = document.createElement("dialog");
+        dialogElem.setAttribute("id", "chanage-avatar-app");
+        dialogElem.setAttribute("class", "chanage-avatar-app");
+
+        return dialogElem;
+    },
+
+    clearChildren : function(parent)
+    {
+        while (parent.firstChild) 
+            parent.removeChild(parent.firstChild);
+    },
+
+    close : function()
+    {
+        const dialogElem = document.getElementById("chanage-avatar-app");
+        if (dialogElem === null)
+            return;
+
+        dialogElem.close();
+        dialogElem.parentElement.removeChild(dialogElem);
+    },
+
+    createImageElement : function(code)
+    {
+        const src = GameBuilder.CardList.getImageByCode(code);
+        if (src === "")
+            return null;
+
+        const img = document.createElement("img");
+        img.setAttribute("src", src);
+        img.setAttribute("title", "Click to choose this avatar");
+        img.setAttribute("data-code", code);
+        img.onclick = this.onselectavatar.bind(this);
+        return img;
+    },
+
+    onselectavatar:function(e)
+    {
+        const code = e.target.getAttribute("data-code");
+        ChangeAvatarApp.close();
+
+        MeccgApi.send("/game/avatar/set", { code: code }); 
+        document.body.dispatchEvent(new CustomEvent("meccg-register-avatar", { "detail": {
+            userid : MeccgPlayers.getChallengerId(),
+            code: code,
+            force: true
+        } }));
+    },
+
+    populateCards : function(codes)
+    {
+        const div = document.createDocumentFragment();
+
+        const h2 = document.createElement("h2");
+        h2.innerText = "Choose your Avatar";
+
+        const p = document.createElement("p");
+        p.innerText = "Click on your avatar/character or press ESC to close";
+
+        div.append(h2, p);
+        for (let code of codes)
+        {
+            const elem = this.createImageElement(code);
+            if (elem !== null)
+                div.append(elem);            
+        }
+        
+        return div;
+    },
+
+    init: function(codes)
+    {
+        if (MeccgPlayers === undefined)
+            return;
+
+        if (codes.length === 0)
+        {
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": "No characters available." }));
+            return;
+        }
+        
+        const dialogElem = this.requireDialogElement();
+        this.clearChildren(dialogElem);
+
+        dialogElem.append(this.populateCards(codes));
+        document.body.append(dialogElem);
+
+        dialogElem.showModal();   
+    }
+};

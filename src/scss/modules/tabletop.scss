@@ -638,8 +638,6 @@ div#opponent_table .company {
     }
 }
 
-
-
 .card-hands-sizer {
     display: inline;
     margin-left: 10px;
@@ -756,3 +754,5 @@ div.card[data-token="7"]:after { content: "7"; }
 div.card[data-token="8"]:after { content: "8"; }
 div.card[data-token="9"]:after { content: "9"; }
 div.card[data-token="10"]:after { content: "10"; }
+
+@import "./tabletop_changeavatar.scss";

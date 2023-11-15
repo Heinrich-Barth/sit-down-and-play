@@ -392,7 +392,7 @@ const createChallengeDeckCard = function(deck, key, meta, labelColor)
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </a>
         </div>
-        <div class="fa fa-check selected-deck-icon" aria-hidden="true"></i>
+        <div class="fa fa-check selected-deck-icon" aria-hidden="true"></div>
     `;
 
     divDeck.appendChild(createLabelDiv(deck.name, labelColor, -1));

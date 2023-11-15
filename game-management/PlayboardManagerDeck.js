@@ -176,6 +176,11 @@ class PlayboardManagerDeck extends PlayboardManagerBase {
             this.getDecks().triceTapCard(uuid);
     }
 
+    GetCharacterCodes(playerid)
+    {
+        return this.getDecks().getCharacters(playerid);
+    }
+
     Size(playerId)
     {
         return this.getDecks().size(playerId);

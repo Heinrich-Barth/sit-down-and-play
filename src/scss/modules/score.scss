@@ -197,6 +197,8 @@
             object-position: 0px 12px;
         }
 
+
+
         th {
             text-align: left;
         }
@@ -431,13 +433,16 @@
         width: 33px;
         height: 23px;
         overflow: hidden;
-        cursor: pointer;
 
         img {
             position: absolute;
             left: -5px;
             top: -5px;
             width: 100%;
+        }
+
+        .scoring-ingame-avatar-clickable {
+            cursor: pointer;
         }
     }
 }

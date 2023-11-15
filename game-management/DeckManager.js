@@ -312,6 +312,22 @@ class DeckManager {
             return this._cardMap[uuid].state === nState;
     }
 
+    getCharacters(playerid)
+    {
+        if (playerid === undefined || playerid === "")
+            return [];
+        
+        const codes = [];
+        Object.keys(this._cardMap).forEach(uuid => 
+        {
+            const card = this._cardMap[uuid];
+            if (card.owner === playerid && (card.type === "character" || card.type === "avatar") && !codes.includes(card.code))
+                codes.push(card.code);
+        })
+
+        return codes;
+    }
+
     tapCard(uuid)
     {
         return this._setCardState(uuid, CARD_STATE.tapped);
