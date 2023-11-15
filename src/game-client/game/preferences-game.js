@@ -236,6 +236,10 @@ class GamePreferences extends Preferences {
         });
     }
 
+    _changeAvatar()
+    {
+        MeccgApi.send("/game/character/list");
+    }
 
     _endGame()
     {
@@ -284,7 +288,10 @@ class GamePreferences extends Preferences {
         this.createSection("Backgrounds / Customise");
 
         if (!bWatcher)
+        {
+            this.createEntry0("change_avatar");
             this.createEntry0("game_dices");
+        }
 
         this.createEntry0("bg_default");
         this.createEntry0("bg_shawod");
@@ -388,7 +395,7 @@ class GamePreferences extends Preferences {
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
         this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
         this.addConfigToggle("toggle_touch_help", "Use mobile touch support", false, this._toggleTouchHelper.bind(this));
-
+        this.addConfigAction("change_avatar", "Change your avatar icon", false, "fa-magic", this._changeAvatar.bind(this));
         this._toggleCardPreview();
     }
 
