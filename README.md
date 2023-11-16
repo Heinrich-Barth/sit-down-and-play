@@ -6,6 +6,12 @@ This project allows you to play MECCG or other Collectible Card Games.
 
 *MECCG* assets are not included in this repository. Please respect the copyright and trademak. 
 
+## Online Community
+
+Make sure to check out the meccg discord server. Other useful links are 
+* https://councilofelrond.org 
+* https://meccg.com
+
 ## Introduction
 
 This project aims to provide an easy way to setup and maintain a card game server to allow you and your friends to play your favourite card game online.
@@ -46,13 +52,7 @@ Special information about *development* can be accessed in a dedicated [README_d
 
 ## Disclaimer
 
-Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises.
-
-The rights belong to their respective owners.
-
-This is a non-profit project made by fans entirely.
-
-*MECCG* assets are not included in this repository. 
+This is a non-profit project made by fans entirely. Middle-earth CCG and LotR are trademarks of Middle-earth Enterprises and/or Iron Crown Enterprises. The rights belong to their respective owners. *MECCG* assets are not included in this repository. 
 
 ## Getting started
 
