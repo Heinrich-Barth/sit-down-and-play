@@ -19,15 +19,14 @@ const randomNumber = function(max)
 };
 
 
-const g_jsonRoomNames = [];
 const g_jsonRoomImages = { };
 
-const loadSampleRooms = function(existing)
+const loadSampleRooms = function()
 {
-    if (document.getElementById("enter_room").value !== "" || g_jsonRoomNames.length === 0)
+    if (document.getElementById("enter_room").value !== "" || SampleRoomApp.isEmpty())
         return;
 
-    const filtered = g_jsonRoomNames.filter((candidate) => !existing.includes(candidate.name.toLowerCase()));
+    const filtered = SampleRoomApp.getAvailable();
     if (filtered.length === 0)
         return;
 
@@ -47,8 +46,7 @@ const loadSampleRooms = function(existing)
     }
 
     document.getElementById("enter_room").value = name;
-    if (image !== "")
-        document.getElementById("enter_room_image")?.setAttribute("src", image);
+    SampleRoomApp.setImage(image);
 }
 
 const toNumberString = function(nValue)
@@ -86,13 +84,7 @@ const addGameType = function(value, isArda)
         tdImage.setAttribute("class", "room-image");
     
         const _img = document.createElement("img");
-        const imgSrc = g_jsonRoomImages[_room.toLowerCase()];
-
-        if (imgSrc)
-            _img.setAttribute("src", imgSrc);
-        else
-            _img.setAttribute("src", "/data/backside");
-
+        _img.setAttribute("src", SampleRoomApp.getRoomImage(_room));
         tdImage.appendChild(_img);
     }
     
@@ -165,7 +157,7 @@ const addGameTypes = function(container, data, isArda, existing)
         if (isArda === value.arda)
         {
             container.appendChild(addGameType(value, isArda));
-            existing.push(value.room);
+            SampleRoomApp.addRoomTaken(value.room);
         }
     }
 };
@@ -180,7 +172,7 @@ const hideContainer = function(id)
 const showContainer = function(id)
 {
     const elem = document.getElementById(id);
-    if (elem !== null && elem.classList.contains("hidden"))
+    if (elem?.classList?.contains("hidden"))
         elem.classList.remove("hidden");
 };
 
@@ -228,23 +220,24 @@ const onResult = function(data)
     {
         hideContainer("active_games");
         showContainer("no_games");
-        loadSampleRooms([]);
+        loadSampleRooms();
         return;
     }
 
     data.sort(function(a, b) { return a.room.toLowerCase().localeCompare(b.room.toLowerCase()); });
 
-    const existing = [];
+    SampleRoomApp.clearTaken();
+
     const table = document.createDocumentFragment();
 
-    addGameTypes(table, data, false, existing);
-    addGameTypes(table, data, true, existing);
+    addGameTypes(table, data, false);
+    addGameTypes(table, data, true);
 
     pContainer.appendChild(table);
 
     showContainer("active_games");
     hideContainer("no_games");
-    loadSampleRooms(existing);
+    loadSampleRooms();
 };
 
 const isAlphaNumeric = function(sInput)
@@ -263,7 +256,7 @@ let g_nCountFechGames = 0;
 const fetchAndUpdateGames = function()
 {
     g_nCountFechGames++;
-    fetch("/data/games").then((response) => response.json().then(onResult)).catch(showFetchError);
+    fetch("/data/games").then((response) => response.json()).then(onResult).catch(showFetchError);
     fetch("/health").then(response => response.json()).then(onAddFooterTime).catch(showFetchError);
     if (g_nCountFechGames === 60)
     {
@@ -277,6 +270,153 @@ const fetchAndUpdateGames = function()
             elem.classList.remove("line-countdown-10s");
             elem.classList.add("line-countdown-60s");
         }
+    }
+};
+
+const SampleRoomApp = 
+{
+    g_jsonRoomNames: [],
+    g_jsonRoomImages: {},
+    g_listRoomsTaken : [],
+
+    getRoomImage : function(room)
+    {
+        const val = this.g_jsonRoomImages[room.toLowerCase()];
+        return typeof val !== "string" ? "/data/backside" : val;
+    },
+
+    isEmpty : function()
+    {
+        return this.g_jsonRoomNames.length === 0;
+    },
+
+    setImage : function(image)
+    {
+        if (image !== "")
+            document.getElementById("enter_room_image")?.setAttribute("src", image);
+    },
+
+    clearTaken : function()
+    {
+        if (SampleRoomApp.g_listRoomsTaken.length > 0)
+            SampleRoomApp.g_listRoomsTaken.splice(0, SampleRoomApp.g_listRoomsTaken.length);
+    },
+
+    getAvailable: function()
+    {
+        return this.g_jsonRoomNames.filter((candidate) => !SampleRoomApp.isTaken(candidate.name));
+    },
+
+    isTaken : function(room)
+    {
+        return this.g_listRoomsTaken.includes(room.toLowerCase());
+    },
+
+    addRoomTaken : function(room)
+    {
+        if (room !== "")
+            this.g_listRoomsTaken.add(room);
+    },
+
+    load : function(rooms)
+    {
+        rooms.forEach(_e => {
+            SampleRoomApp.g_jsonRoomNames.push(_e);
+            SampleRoomApp.g_jsonRoomImages[_e.name.toLowerCase()] = _e.image;
+        });
+
+        const _img = document.getElementById("enter_room_image");
+        if (_img === null)
+            return;
+
+        _img.setAttribute("title", "Click to change room name");
+        _img.onclick = this.onChangeRoom.bind(this);
+    },
+
+    requireDialog : function()
+    {
+        const elem = document.getElementById("choose-room-dialog");
+        if (elem !== null)
+            return this.clearContainer(elem);
+
+        const dialog = document.createElement("dialog");
+        dialog.setAttribute("id", "choose-room-dialog");
+        dialog.setAttribute("class", "choose-room-dialog");
+        dialog.onclose = this.closeDialog.bind(this);
+        document.body.append(dialog);
+        return dialog;
+    },
+
+    clearContainer : function(parent)
+    {
+        while (parent.firstChild)
+            parent.removeChild(parent.firstChild);
+
+        return parent;
+    },
+
+    onChangeRoom : function()
+    {
+        const listAvail = this.getAvailable();
+        if (listAvail.length === 0)
+            return;
+
+        const docList = document.createDocumentFragment();
+        docList.append(
+            this.createElement("h2", "Choose your game room"),
+            this.createElement("p", "Click on a room or pres ESC to close"),
+        )
+        for (let obj of listAvail)
+        {
+            const img = document.createElement("img");
+            img.setAttribute("data-room", obj.name.toLowerCase());
+            img.setAttribute("src", obj.image);
+            img.setAttribute("title", "Click to change room to " + obj.name);
+            img.setAttribute("loading", "lazy");
+            img.onclick = this.onChooseRoom.bind(this);
+
+            const elem = document.createElement("div");
+            elem.appendChild(img);
+            docList.append(elem);
+        }
+        
+        const dialog = this.requireDialog();
+        dialog.onclick = this.closeDialog.bind(this);
+        dialog.append(docList);
+        dialog.showModal();
+    },
+
+    createElement : function(type, text)
+    {
+        const h2 = document.createElement(type);
+        h2.innerText = text;
+        return h2;
+    },
+
+    closeDialog : function()
+    {
+        const elem = document.getElementById("choose-room-dialog");
+        if (elem !== null)
+        {
+            this.clearContainer(elem);
+            elem.close();
+            elem.parentElement.removeChild(elem);
+        }
+    },
+
+    onChooseRoom : function(e)
+    {
+        const room = e.target?.getAttribute("data-room");
+        const src = e.target?.getAttribute("src");
+        if (typeof room !== "string" || typeof src !== "string")
+        {
+            this.closeDialog();
+            return;
+        }
+
+        document.getElementById("enter_room").value = room;
+        this.setImage(e.target?.getAttribute("src"));
+        this.closeDialog();
     }
 };
 
@@ -331,14 +471,8 @@ const fetchAndUpdateGames = function()
     document.getElementById("enter_room").focus();
 
     fetch("/data/samplerooms")
-    .then((response) => response.json())
-    .then((_rooms) => 
-    {
-        _rooms.forEach(_e => {
-            g_jsonRoomNames.push(_e);
-            g_jsonRoomImages[_e.name.toLowerCase()] = _e.image;
-        });
-    })
+    .then(response => response.json())
+    .then(SampleRoomApp.load.bind(SampleRoomApp))
     .catch(console.error)
     .finally(fetchAndUpdateGames);
 })();

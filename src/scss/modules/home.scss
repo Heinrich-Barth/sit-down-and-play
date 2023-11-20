@@ -45,6 +45,8 @@ body, p
         padding: 2em;
         margin-top: 0.5em;
         align-items: flex-start;
+
+        .room-image img { cursor: pointer; }
     }
 }
 
@@ -127,9 +129,35 @@ body, p
 
 }
 
-
-
 footer {
     font-size: 0.8em;
     text-align: center;
+}
+
+.choose-room-dialog {
+
+    max-width: 90%;
+    background-color: #000;
+    color: #fff;
+
+    div {
+        display: inline-block;
+        padding: 10px;
+        
+        position: relative;
+        height: 130px;
+        width: 130px;
+        border-radius: 5%;
+        overflow: hidden;
+        border: 2px solid #000;
+        
+        img {
+            position: absolute;
+            left: -10px;
+            top: 4px;
+            width: 150px;
+            scale: 1.4;
+            cursor: pointer;
+        }
+    }
 }
