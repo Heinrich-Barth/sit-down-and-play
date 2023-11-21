@@ -46,7 +46,23 @@ body, p
         margin-top: 0.5em;
         align-items: flex-start;
 
-        .room-image img { cursor: pointer; }
+        .room-image { cursor: pointer; }
+        .room-image-edit {
+            color: $color-orange;
+            padding: 10px;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 3em;
+            transform: translate(50%, 50%);
+            visibility: hidden;
+            background-color: #000;
+        }
+
+        .room-image-wrapper:hover .room-image-edit {
+            visibility: visible;
+        }
     }
 }
 

@@ -161,8 +161,23 @@ body, p {
   margin-top: 0.5em;
   align-items: flex-start;
 }
-.content .join-game .room-image img {
+.content .join-game .room-image {
   cursor: pointer;
+}
+.content .join-game .room-image-edit {
+  color: #F0C648;
+  padding: 10px;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 3em;
+  transform: translate(50%, 50%);
+  visibility: hidden;
+  background-color: #000;
+}
+.content .join-game .room-image-wrapper:hover .room-image-edit {
+  visibility: visible;
 }
 
 .room-image-wrapper {

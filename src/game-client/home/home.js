@@ -329,8 +329,9 @@ const SampleRoomApp =
         if (_img === null)
             return;
 
-        _img.setAttribute("title", "Click to change room name");
-        _img.onclick = this.onChangeRoom.bind(this);
+        const div = _img.parentElement;
+        div.setAttribute("title", "Click to change room name");
+        div.onclick = this.onChangeRoom.bind(this);
     },
 
     requireDialog : function()
