@@ -315,7 +315,7 @@ const SampleRoomApp =
     addRoomTaken : function(room)
     {
         if (room !== "")
-            this.g_listRoomsTaken.add(room);
+            this.g_listRoomsTaken.push(room);
     },
 
     load : function(rooms)
