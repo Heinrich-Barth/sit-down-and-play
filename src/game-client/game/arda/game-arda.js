@@ -364,9 +364,14 @@ let Arda = {
         containerWrapper.classList.remove("hidden");
         if (!bIsReady)
         {
-            const elem = document.createElement("p");
-            elem.innerText = "Once everybody is at the table, you can start the random character assignment.";
-            container.appendChild(elem);
+            const elem1 = document.createElement("p");
+            elem1.innerText = "Once everybody is at the table, you can start the random character assignment.";
+
+            const elem2 = document.createElement("p");
+            elem2.innerText = "This will add random characters to your hand (and not remove the existing cards in it). You can then choose your wizard and starting company.";
+
+            container.appendChild(elem1);
+            container.appendChild(elem2);
             this.insertOnceAction(container, "fa-users", "Assign random characters to every player.", "randomchars", "arda_ranom", "Assign random characters");
         }
         else if (!bHideDraftCharacters && !bHideDraftMinors)

@@ -329,39 +329,39 @@ Simply choose an arda deck from the right deck offerings (or provide your own de
 
 ![Starting an Arda game](public/readme-data/arda-1.png)
 
+As the game's host, you will find a setup wizard at the upper left part of the screen which guides you through the preparation process.
+
+![Wizard Setup](public/readme-data/arda-2.png)
+
+Please be aware that you should wait until *all* players have joined. Playsers can join the game later, of course, but choosing possible starting characters etc. will be a lot more time consuming and not randomised.
+
 ### Character Draft
 
 Once all players have joined the table (see below) you can randomly assign the 10 starting characters by clicking on the respective box at the right of the screen.
 
-![Starting an Arda game](public/readme-data/arda-2.png)
+![Random character draft](public/readme-data/arda-3.png)
 
-This option is only available once!
+Clicking on this option adds 10 characters to each players hand according to the Arda mechanism. This option is only available once and will add random characters to the players' hand without removing the cards currently held there.
 
-Clicking on this option adds 10 characters to each players hand according to the Arda mechanism. After you have picked your cards, please *discard* the other characters by dragging and dopping them on the discard icon at the right next to your hand.
+Once everybody has chosen their starting characters, you may proceed to the minor item draft. Click on the respective link in the setup wizard. As a consequence, all cards in the players' hand will be discarded and shuffled into the play decks - no need to discard them manually.
 
 ### Minro Item Draft
 
-Now each player picks their minor items from the minor item offering deck. 
+Now each player picks their minor items from the minor item offering deck at the upper right of the screen.
+
+![Minor item draft](public/readme-data/arda-4.png)
 
 ### Starting the Game
 
-To put all characters and minor items back into the playdeck and get a random number of cards, click on the recycle icon above the deck's "Draw Card" icon. 
-
-![Redraw common hand cards](public/readme-data/arda-3.png)
+To start the game and finish the preparation process, click on the link in the wizard dialog. As a consequence, 8 cards will be dealt to each player and the game can start.
 
 ### Joining an Arda Game
 
 To join an Arda game, simply click on the game from the game list.
 
-![Game List](public/readme-data/arda-4.png)
+![Join an arda game](public/readme-data/arda-5.png)
 
-You will be asked to provide only a user name so your fellow players know who you are. The game host will receive a message with your request to join. Once that is granted you will proceed to the table automatically.
-
-### Granting Access
-
-Whenever a player wants to join the table, you will receive a notification and the option to grant or deny access. You will receive a notification once the player has successfully joined the table.
-
-![Game List](public/readme-data/arda-6.png)
+You will be asked to provide only a user name so your fellow players know who you are. 
 
 ## Dependencies
 
