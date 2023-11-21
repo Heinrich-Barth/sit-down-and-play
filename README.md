@@ -119,9 +119,17 @@ A username will be rejected if it contains HTML breaking characters `<` or `>` a
 
 ## Gameplay
 
-It is assumed that the app runs locally at ``localhost:8080``
+It is assumed that the app runs locally at ``localhost:8080``. Screenshots may not represent the current state of the screen design, so please be aware of possible changes.
 
-### Setting up a new game
+### Home / Lobby
+
+You start in the lobby. Here, you will find a list of active games, release notes and you will be able to start your own game.
+
+![Starting a Game](public/readme-data/entry.png)
+
+Depending on the games' setup, you may join and/or watch active games. If the hosts want to keep their games private, you may only see an active game but will neither be able to join nor watch it.
+
+### Starting a new game
 
 There are 2 ways to start a new game:
 
@@ -132,15 +140,15 @@ Each game will be identified by its name in the URL (see *yourgamename* above). 
 
 You will be asked for a username and a deck to use. These are required.
 
-If you are the first player to join a table, you are considered the table's *host*.
+![Starting a Game](public/readme-data/start-game.png)
 
-![Starting a Game](public/readme-data/entry.png)
+If you are the first player to join a table, you are considered the table's *host*.
 
 ### Joining a game
 
-You can join a game simply by accessing the direct URL or via the list provided on the site's home page (e.g. ``localhost:8080/``)
+You can join a game simply by accessing the direct URL or via the list provided on the site's home page. A game's host may deny access to watch or join their game, so please of such restrictions.
 
-Once you chose a username and a deck, you will be redirected to a lobby. There, you will have to wait until the table's *host* grants you access to the table. All you have to do is wait there.
+Once you chose a username and a deck, you can join the game and will be redirected accordingly.
 
 ### Entering the game table
 
