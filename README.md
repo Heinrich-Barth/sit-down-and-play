@@ -240,7 +240,7 @@ This will open a window that lets you choose the category and amount of points.
 
 #### No more hazards
 
-You can signal the end of your hazard play against a company by right clicking on the target site and choosing the respective action.
+You can signal the end of your hazard play against a company by clicking on the target site. This set the destination site as current site and remove the region cards.
 
 ![ ](public/readme-data/nmh-1.png)![ ](public/readme-data/nmh-2.png)
 
