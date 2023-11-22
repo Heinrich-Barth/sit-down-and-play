@@ -15,17 +15,23 @@ const readJson = function(file)
     return [];
 }
 
-const capitalizeLetter = function(input)
+const extractRoomName = function(uri)
 {
-    const pos = input.lastIndexOf("/");
-    const dot = input.lastIndexOf('.');
-    return input.substring(pos+1, dot);
+    const pos = uri.lastIndexOf("/");
+    const dot = uri.lastIndexOf(".");
+
+    if (pos === -1 || dot < pos)
+        return "";
+    else
+        return uri.substring(pos+1, dot);
 }
 
-const stripNonAlpha = function(input)
+const createRoomImageEntry = function(input)
 {
-    input.name = capitalizeLetter(input.image);
-    return input;
+    return {
+        name: extractRoomName(input),
+        image: input
+    }
 }
 
 const g_jsonList = readJson(__dirname + '/namelist.json');
@@ -41,7 +47,7 @@ function _register(pEventManager)
 {
     pEventManager.addEvent("add-sample-rooms", function(targetList)
     {
-        g_roomNames.forEach(_e => targetList.push(stripNonAlpha(_e)));
+        g_roomNames.forEach(_e => targetList.push(createRoomImageEntry(_e)));
         Logger.info("Sample room names loaded: " + targetList.length);
     });
 
