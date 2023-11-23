@@ -327,26 +327,15 @@ const ViewCards =
 
     createOrderdResult : function(listResult)
     {
-        const useCategories = sessionStorage.getItem("card-group-cat") !== "no";
+        listResult.sort((a, b) => b.boost - a.boost);
 
         const vnIndicesCharacters = {};
         for (let elem of listResult)
         {
             if (typeof vnIndicesCharacters[elem.type] === 'undefined' )
-                vnIndicesCharacters[elem.type] = [];
-        }
-
-        listResult.sort((a, b) => b.boost - a.boost);
-        let firstCat = "";
-        for (let elem of listResult)
-        {
-            if (firstCat === "")
-                firstCat = elem.type;
-
-            vnIndicesCharacters[firstCat].push(elem.index);
-
-            if (useCategories)
-                firstCat = "";
+                vnIndicesCharacters[elem.type] = [elem.index];
+            else
+                vnIndicesCharacters[elem.type].push(elem.index);
         }
 
         return vnIndicesCharacters;
@@ -598,7 +587,7 @@ const ViewCards =
         inputUseCategories.setAttribute("id", "card-group-cat");
         inputUseCategories.setAttribute("type", "checkbox");
 
-        if (sessionStorage.getItem("card-group-cat") !== "no")
+        if (sessionStorage.getItem("card-group-cat") === "yes")
             inputUseCategories.setAttribute("checked", "checked");
         else
             document.body.classList.add("deckbuilder-hide-result-categories");

@@ -55,7 +55,7 @@ const SearchResult = {
 
     displayResultSingleList:function(vnIndicesCharacters, hasCardActions)
     {
-        const docFragment = document.createDocumentFragment();
+        const docFragment = [];
         for (let key in vnIndicesCharacters)
         {
             if (key === "" || key === "Region")
@@ -76,13 +76,18 @@ const SearchResult = {
                 const cardCode = CardData.get(pJson, "code", "");
 
                 _entry.appendChild(this.createResultImage(cardCode, hasCardActions, index, pJson));
-                docFragment.append(_entry);
+                docFragment.push({
+                    index: index,
+                    html: _entry
+                });
             }
         }
+
+        docFragment.sort((a,b) => a.index - b.index);
         
         const div = document.createElement("div");
         div.setAttribute("class", "category");
-        div.append(docFragment);
+        docFragment.forEach(e => div.append(e.html));
         document.getElementById("result").appendChild(div);
     },
 
@@ -199,7 +204,7 @@ const SearchResult = {
     displayResult : function(vnIndicesCharacters)
     {
         const hasCardActions = document.getElementById("deck_container") !== null;
-        const useCategories = sessionStorage.getItem("card-group-cat") !== "no";
+        const useCategories = sessionStorage.getItem("card-group-cat") === "yes";
 
         this.clearResultDisplay();
 
