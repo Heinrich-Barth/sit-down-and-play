@@ -55,10 +55,7 @@ const SearchResult = {
 
     displayResultSingleList:function(vnIndicesCharacters, hasCardActions)
     {
-        const list = [];
-
-        let _lastCat = null;
-        let _countCat = 0;
+        const docFragment = document.createDocumentFragment();
         for (let key in vnIndicesCharacters)
         {
             if (key === "" || key === "Region")
@@ -67,12 +64,6 @@ const SearchResult = {
             const _size = vnIndicesCharacters[key].length;
             if (_size === 0)
                 continue;
-
-            if (_lastCat !== key)
-            {
-                _countCat++;
-                _lastCat = key;
-            }
 
             for (let _index = 0; _index < _size; _index++)
             {
@@ -85,20 +76,14 @@ const SearchResult = {
                 const cardCode = CardData.get(pJson, "code", "");
 
                 _entry.appendChild(this.createResultImage(cardCode, hasCardActions, index, pJson));
-                list.push({
-                    index: index,
-                    html : _entry
-                });    
+                docFragment.append(_entry);
             }
         }
-
-        if (_countCat > 1)
-            list.sort((a,b) => a.index - b.index);
         
-        const fragment = document.createElement("div");
-        fragment.setAttribute("class", "category");
-        list.forEach(elem => fragment.appendChild(elem.html));
-        document.getElementById("result").appendChild(fragment);
+        const div = document.createElement("div");
+        div.setAttribute("class", "category");
+        div.append(docFragment);
+        document.getElementById("result").appendChild(div);
     },
 
     createResultImage : function(cardCode, hasCardActions, index, pJson)

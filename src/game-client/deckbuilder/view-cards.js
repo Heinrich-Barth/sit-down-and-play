@@ -327,6 +327,8 @@ const ViewCards =
 
     createOrderdResult : function(listResult)
     {
+        const useCategories = sessionStorage.getItem("card-group-cat") !== "no";
+
         const vnIndicesCharacters = {};
         for (let elem of listResult)
         {
@@ -335,8 +337,17 @@ const ViewCards =
         }
 
         listResult.sort((a, b) => b.boost - a.boost);
+        let firstCat = "";
         for (let elem of listResult)
-            vnIndicesCharacters[elem.type].push(elem.index);
+        {
+            if (firstCat === "")
+                firstCat = elem.type;
+
+            vnIndicesCharacters[firstCat].push(elem.index);
+
+            if (useCategories)
+                firstCat = "";
+        }
 
         return vnIndicesCharacters;
     },
