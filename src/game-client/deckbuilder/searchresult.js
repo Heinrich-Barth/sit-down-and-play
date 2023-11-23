@@ -47,28 +47,139 @@ const SearchResult = {
         document.getElementById("result").appendChild(div);
     },
 
-    clearResultDisplay()
+    clearResultDisplay: function()
     {
         DomUtils.empty(document.getElementById("result"));
         DomUtils.empty(document.getElementById("linklist"));
     },
-        
-    displayResult : function(vnIndicesCharacters)
+
+    displayResultSingleList:function(vnIndicesCharacters, hasCardActions)
     {
-        const hasCardActions = document.getElementById("deck_container") !== null;
+        const list = [];
 
-        this.clearResultDisplay();
-
-
-        const nSize = this.getResultSize(vnIndicesCharacters);
-        document.getElementById("size").innerHTML = nSize;
-
-        if (nSize === 0)
+        let _lastCat = null;
+        let _countCat = 0;
+        for (let key in vnIndicesCharacters)
         {
-            this.insertEmptySearch();
-            return;
+            if (key === "" || key === "Region")
+                continue;
+
+            const _size = vnIndicesCharacters[key].length;
+            if (_size === 0)
+                continue;
+
+            if (_lastCat !== key)
+            {
+                _countCat++;
+                _lastCat = key;
+            }
+
+            for (let _index = 0; _index < _size; _index++)
+            {
+                const _entry = document.createElement("div");
+                _entry.setAttribute("class", "fl image hidden");
+                _entry.setAttribute("id", vnIndicesCharacters[key][_index]);
+
+                const pJson = ViewCards.config.jsonData[vnIndicesCharacters[key][_index]];
+                const index = vnIndicesCharacters[key][_index];
+                const cardCode = CardData.get(pJson, "code", "");
+
+                _entry.appendChild(this.createResultImage(cardCode, hasCardActions, index, pJson));
+                list.push({
+                    index: index,
+                    html : _entry
+                });    
+            }
         }
 
+        if (_countCat > 1)
+            list.sort((a,b) => a.index - b.index);
+        
+        const fragment = document.createElement("div");
+        fragment.setAttribute("class", "category");
+        list.forEach(elem => fragment.appendChild(elem.html));
+        document.getElementById("result").appendChild(fragment);
+    },
+
+    createResultImage : function(cardCode, hasCardActions, index, pJson)
+    {
+        const result = document.createDocumentFragment();
+
+        const _image = document.createElement("img");
+        _image.setAttribute("src", "/data/card-not-found-generic");
+        _image.setAttribute("data-src", getImageUrlByCode(cardCode));
+        _image.setAttribute("title", cardCode);
+        _image.setAttribute("class", "preview");
+        _image.setAttribute("decoding", "async");
+        _image.setAttribute("crossorigin", "anonymous");
+        _image.onmouseover = ViewCards.onViewLargeCardsOver;
+        _image.onmouseout = ViewCards.onViewLargeCardsOut;
+
+        const _tmp = document.createElement("div");
+        _tmp.setAttribute("class", "image_overlay");
+        _tmp.appendChild(_image);
+        result.append(_tmp);
+
+        if (hasCardActions)
+        {
+            let _tmp = document.createElement("div");
+            _tmp.setAttribute("class", "actions");
+            _tmp.setAttribute("id", "count_" + index);
+            _tmp.setAttribute("data-index", index);
+            _tmp.setAttribute("data-count", CardData.get(pJson, "count", ""));
+
+            let _a = document.createElement("a");
+            _a.innerHTML = "&nbsp;"
+            _a.setAttribute("href", "#");
+            _a.setAttribute("class", "icon_add_pool");
+            _a.setAttribute("title", "add to starting pool");
+            _a.setAttribute("data-target", "pool");
+            _a.onclick = SearchResult.onClickLinkAddTo;
+            _tmp.appendChild(_a); 
+
+            _a = document.createElement("a");
+            _a.innerHTML = "&nbsp;"
+            _a.setAttribute("href", "#");
+            _a.setAttribute("class", "icon_add_deck");
+            _a.setAttribute("title", "add to deck");
+            _a.setAttribute("data-target", this.getDataTarget(pJson));
+            _a.onclick = SearchResult.onClickLinkAddTo;
+            _tmp.appendChild(_a); 
+
+            _a = document.createElement("a");
+            _a.innerHTML = "&nbsp;"
+            _a.setAttribute("href", "#");
+            _a.setAttribute("class", "icon_add_sideboard");
+            _a.setAttribute("title", "add to sideboard");
+            _a.setAttribute("data-target", "sideboard");
+            _a.onclick = SearchResult.onClickLinkAddTo;
+            _tmp.appendChild(_a); 
+
+            result.appendChild(_tmp);
+
+            _a = document.createElement("a");
+            _a.innerHTML = "&nbsp;"
+            _a.setAttribute("href", "#");
+            _a.setAttribute("class", "fa fa-solid fa-copy");
+            _a.setAttribute("title", "Copy code");
+            _a.setAttribute("data-target", "");
+            _a.setAttribute("data-code", cardCode);
+            _a.onclick = SearchResult.onClickLinkCopyCode;
+            _tmp.appendChild(_a); 
+
+            result.appendChild(_tmp);
+
+            _tmp = document.createElement("div");
+            _tmp.setAttribute("class", "count_bubble");
+            _tmp.innerHTML = CardData.get(pJson, "count", "");
+            result.appendChild(_tmp);
+        }
+
+        return result;
+    },
+
+    displayResultCategories:function(vnIndicesCharacters, hasCardActions)
+    {
         for (let key in vnIndicesCharacters)
         {
             if (key === "" || key === "Region")
@@ -91,88 +202,46 @@ const SearchResult = {
                 const pJson = ViewCards.config.jsonData[vnIndicesCharacters[key][_index]];
                 const index = vnIndicesCharacters[key][_index];
                 const cardCode = CardData.get(pJson, "code", "");
-                {
-                    const _image = document.createElement("img");
-                    _image.setAttribute("src", "/data/card-not-found-generic");
-                    _image.setAttribute("data-src", getImageUrlByCode(cardCode));
-                    _image.setAttribute("title", cardCode);
-                    _image.setAttribute("class", "preview");
-                    _image.setAttribute("decoding", "async");
-                    _image.setAttribute("crossorigin", "anonymous");
-                    _image.onmouseover = ViewCards.onViewLargeCardsOver;
-                    _image.onmouseout = ViewCards.onViewLargeCardsOut;
 
-                    const _tmp = document.createElement("div");
-                    _tmp.setAttribute("class", "image_overlay");
-                    _tmp.appendChild(_image);
-                    _entry.appendChild(_tmp);
-
-                }
-
-                if (hasCardActions)
-                {
-                    let _tmp = document.createElement("div");
-                    _tmp.setAttribute("class", "actions");
-                    _tmp.setAttribute("id", "count_" + index);
-                    _tmp.setAttribute("data-index", index);
-                    _tmp.setAttribute("data-count", CardData.get(pJson, "count", ""));
-
-                    let _a = document.createElement("a");
-                    _a.innerHTML = "&nbsp;"
-                    _a.setAttribute("href", "#");
-                    _a.setAttribute("class", "icon_add_pool");
-                    _a.setAttribute("title", "add to starting pool");
-                    _a.setAttribute("data-target", "pool");
-                    _a.onclick = SearchResult.onClickLinkAddTo;
-                    _tmp.appendChild(_a); 
-
-                    _a = document.createElement("a");
-                    _a.innerHTML = "&nbsp;"
-                    _a.setAttribute("href", "#");
-                    _a.setAttribute("class", "icon_add_deck");
-                    _a.setAttribute("title", "add to deck");
-                    _a.setAttribute("data-target", this.getDataTarget(pJson));
-                    _a.onclick = SearchResult.onClickLinkAddTo;
-                    _tmp.appendChild(_a); 
-
-                    _a = document.createElement("a");
-                    _a.innerHTML = "&nbsp;"
-                    _a.setAttribute("href", "#");
-                    _a.setAttribute("class", "icon_add_sideboard");
-                    _a.setAttribute("title", "add to sideboard");
-                    _a.setAttribute("data-target", "sideboard");
-                    _a.onclick = SearchResult.onClickLinkAddTo;
-                    _tmp.appendChild(_a); 
-
-                    _entry.appendChild(_tmp);
-
-                    _a = document.createElement("a");
-                    _a.innerHTML = "&nbsp;"
-                    _a.setAttribute("href", "#");
-                    _a.setAttribute("class", "fa fa-solid fa-copy");
-                    _a.setAttribute("title", "Copy code");
-                    _a.setAttribute("data-target", "");
-                    _a.setAttribute("data-code", cardCode);
-                    _a.onclick = SearchResult.onClickLinkCopyCode;
-                    _tmp.appendChild(_a); 
-
-                    _entry.appendChild(_tmp);
-
-                    _tmp = document.createElement("div");
-                    _tmp.setAttribute("class", "count_bubble");
-                    _tmp.innerHTML = CardData.get(pJson, "count", "");
-                    _entry.appendChild(_tmp);
-                }
-                
+                _entry.appendChild(this.createResultImage(cardCode, hasCardActions, index, pJson));               
                 _div.appendChild(_entry);
             }
 
             document.getElementById("result").appendChild(_div);
         }
+    },
+        
+    displayResult : function(vnIndicesCharacters)
+    {
+        const hasCardActions = document.getElementById("deck_container") !== null;
+        const useCategories = sessionStorage.getItem("card-group-cat") !== "no";
+
+        this.clearResultDisplay();
+
+        const nSize = this.getResultSize(vnIndicesCharacters);
+        document.getElementById("size").innerHTML = nSize;
+
+        if (nSize === 0)
+        {
+            this.insertEmptySearch();
+            return;
+        }
+
+        if (useCategories)
+            this.displayResultCategories(vnIndicesCharacters, hasCardActions);
+        else
+            this.displayResultSingleList(vnIndicesCharacters, hasCardActions);
 
         this.displayResultLinkList(vnIndicesCharacters);
 
-        setTimeout(() => {
+        setTimeout(() => 
+        {
+            if (!useCategories)
+            {
+                SearchResult.makeImagesVisible("", true);
+                return;
+            }
+            
             const _tmp = document.getElementById("linklist").querySelector("a.linklist");
             if (_tmp !== null)
                 _tmp.click();
@@ -277,7 +346,7 @@ const SearchResult = {
         const sCode = pLink.getAttribute("data-code");
 
         /* Copy the text inside the text field */
-        if (navigator && navigator.clipboard)
+        if (navigator?.clipboard)
         {
             navigator.clipboard.writeText(sCode).then(() => document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Copied code to clipboard."})), function(err) 
             {
@@ -388,8 +457,16 @@ const SearchResult = {
         return false;
     },
 
-    makeImagesVisible : function(sId)
+    makeImagesVisible : function(sId, ignoreCategories)
     {
+        if (ignoreCategories === true)
+        {
+            SearchResult.removeObserver();
+            const div = document.getElementById("result");
+            if (div.querySelector(".image.hidden") !== null)
+                SearchResult.createObserver(div);
+        }
+
         ArrayList(document.getElementById("result")).findByClassName("category").each(function(pTable)
         {
             if (sId === undefined || sId === pTable.getAttribute("data-id"))

@@ -582,6 +582,9 @@ body {
 .animation-blink img.preview {
     animation: blink-once 0.5s ease-in-out 0s;
 }
+
+.deckbuilder-hide-result-categories .result-container-right .linklist { display: none; }
+
 @keyframes blink-once {
     0% {
         opacity: 1;

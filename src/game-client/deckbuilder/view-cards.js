@@ -537,7 +537,7 @@ const ViewCards =
 
         let label = document.createElement("label");
         label.setAttribute("for", "cards-per-row");
-        label.innerText = "Cards per row: ";
+        label.innerText = "Show ";
 
         let grp = document.createElement("div");
         grp.setAttribute("class", "row-col");
@@ -547,7 +547,7 @@ const ViewCards =
 
         label = document.createElement("label");
         label.setAttribute("for", "card-zoom");
-        label.innerText = "Show large card when cursor hovers over a card."
+        label.innerText = "Cursos shows large card preview."
 
         const input = document.createElement("input");
         input.setAttribute("id", "card-zoom");
@@ -578,7 +578,36 @@ const ViewCards =
         grp.appendChild(inputLang);
         grp.appendChild(labelLang);
         div.appendChild(grp);
-        
+
+        const labelUseCategories = document.createElement("label");
+        labelUseCategories.setAttribute("for", "card-group-cat");
+        labelUseCategories.innerText = "Group results by category";
+
+        const inputUseCategories = document.createElement("input");
+        inputUseCategories.setAttribute("id", "card-group-cat");
+        inputUseCategories.setAttribute("type", "checkbox");
+
+        if (sessionStorage.getItem("card-group-cat") !== "no")
+            inputUseCategories.setAttribute("checked", "checked");
+        else
+            document.body.classList.add("deckbuilder-hide-result-categories");
+
+        inputUseCategories.onchange = () => {
+            sessionStorage.setItem("card-group-cat", document.getElementById("card-group-cat")?.checked === true ? "yes" : "no");
+            
+            if (document.getElementById("card-group-cat")?.checked)
+                document.body.classList.remove("deckbuilder-hide-result-categories");
+            else
+                document.body.classList.add("deckbuilder-hide-result-categories");
+
+            SearchBar.onTriggerSearch();
+        }
+
+        grp = document.createElement("div");
+        grp.setAttribute("class", "row-col");
+        grp.append(inputUseCategories, labelUseCategories);
+        div.appendChild(grp);
+
         const divP = document.getElementById("view-preferences");
         if (divP !== null)
         {
