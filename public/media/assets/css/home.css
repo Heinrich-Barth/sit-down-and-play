@@ -383,3 +383,15 @@ footer {
   scale: 1.4;
   cursor: pointer;
 }
+
+.time-restart-information {
+  font-size: 1.3em;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: red;
+  display: inline-block;
+}
+.time-restart-information i {
+  margin-right: 1em;
+}

@@ -1,3 +1,4 @@
+const autoRestart = typeof process.env.SERVER_AUTO_RESTART === "string" && process.env.SERVER_AUTO_RESTART !== "";
 
 const getLoadavg = function()
 {
@@ -24,7 +25,8 @@ const onHealthSmall = function(_req, res)
     const data = { 
         startup: g_sUptime,
         uptime : Date.now() - lUptime,
-        games: gameCount
+        games: gameCount,
+        autoRestart: autoRestart
     };
 
     res.header('Content-Type', 'application/json');

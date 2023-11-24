@@ -203,6 +203,34 @@ const onAddFooterTime = function(data)
         text.appendChild(document.createTextNode(", " + gameCount + " games so far."));
 
     footer.appendChild(text);
+    return data;
+}
+
+const onAddUptimeNotification = function(data)
+{
+    const hrs = typeof data.uptime !== "number" ? 0 : (data.uptime /  1000 / 60 / 60).toFixed(2);
+    if (hrs < 22 || data.autoRestart !== true)
+        return;
+
+    const elem = document.getElementById("login");
+    if (elem === null)
+        return;
+
+    let p = document.getElementById("time-restart-information");
+    if (p === null)
+    {
+        p = document.createElement("p");
+        p.setAttribute("class", "center time-restart-information");
+        p.setAttribute("id", "time-restart-information");
+        elem.appendChild(p);
+    }
+
+    while (p.firstChild)
+        p.removeChild(p.firstChild);
+
+    const i = document.createElement("i");
+    i.setAttribute("class", "fa fa-clock-o");
+    p.append(i, document.createTextNode("Server restarts approx. every 24hrs. Server has been running for " +  hrs + "h now."));
 }
 
 const onResult = function(data)
@@ -257,7 +285,7 @@ const fetchAndUpdateGames = function()
 {
     g_nCountFechGames++;
     fetch("/data/games").then((response) => response.json()).then(onResult).catch(showFetchError);
-    fetch("/health").then(response => response.json()).then(onAddFooterTime).catch(showFetchError);
+    fetch("/health").then(response => response.json()).then(onAddFooterTime).then(onAddUptimeNotification).catch(showFetchError);
     if (g_nCountFechGames === 60)
     {
         clearInterval(g_fetchGamesInterval);
