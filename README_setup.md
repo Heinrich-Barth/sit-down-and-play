@@ -2,16 +2,17 @@
 
 You will need to follow these steps:
 
-* Provide card data and images
+* Provide card data and images (sample data is included)
 * Provide the map image slices (optionally, if a map is needed)
 * Set the position markers on the map (optionally, if a map is needed)
-* Provide starter decks
+* Provide starter decks (2 sample decks are included)
 * Personalisation with custom dices, backgrounds and sounds (optionally)
 
 Once everything is setup, you can start the project via
 
 ````
 npm install
+npm run build
 npm start
 ````
 
@@ -25,7 +26,7 @@ In the beginning, be aware that the http server allows for very strong browser c
 
 The project does have a very low resource requirements:
 
-* About 100 MB RAM
+* About 50-60 MB RAM
 * Single Core CPU is enough
 
 By default, the project does *does not* spawn separate processes, because room/game management via socket.io does not consider a multi-thread approach.
@@ -40,23 +41,15 @@ There are 3 ways to setup this project.
 * import data from your (own) ccg games
 * use CDN sever that hosts the data files (load balancing, separation of concerns, etc.)
 
-Whichever of the first twho methods you prefer, please create the following local directories:
-
-`./data-local`
-`./data-local/images`
-
-If you want to use a CDN server, you do not need to create those folders.
-
 The very last chapter describes how to create map data if necessary (not all CCGs need that).
 
 ### Using the sample data provided in this project
 
-Simply copy 
-
-* `./data/cards.json` to `./data-local/cards.json`
-* `./data/card-images/*` to `./data-local/images`
+You are good to go!
 
 ### Using the sample data provided in this project
+
+*Important Information:* This process is likely to change, so it is not as fail proof as one might hope. Generally speaking, the sample data provided here should give you enough of an idea how to transform your xml files into json properly.
 
 You can run the `build from xmls` script to create the `cards.json` data file. To do so, please proceed as follows.
 
@@ -70,24 +63,23 @@ Run the following command to create the `./data-local/cards.json` file. Please b
 npm run build_xmls
 ````
 
-Upon successfull creation of this file, you can copy the card images into the `./data-local/images` directory. It is very probably, that your individual card images are arranged by set folders as given in the spoiler.xml files. Please maintain that structure inside the `./data-local/images` directory as well.
+Upon successfull creation of this file, you can copy the card images into the `./data-local/images` directory. It is very probably, that your individual card images are arranged by set folders as given in the spoiler.xml files. Please maintain that structure inside the `./data-local/images` directory as well. You can verify the image path in the json file at any time.
 
 ### Using a CDN sever
 
-This project comes with a sample configuration file at `./data/config-example.json`. Simply copy this file to `./data/config.json` and edit it with the editor or your choice.
+This project comes with a sample configuration file at `./data/csp-data.json`. 
 
 ````
 {
-    "image_domain" : "https://my-cdn.com",
-    "cardsUrl" : "https://my-cdn.com/data/cards"
+    "image" : "https://raw.githubusercontent.com"
 }
 ````
 
-If you use this approach, `cardsUrl` refers to the URL where you can find the content matching the `cards.json` data. `image_domain` is the URL where you can find the images. 
+To add more domains, just extend the value string with blank space as delimiter.
 
 ## Providing a Map
 
-You can either use the sample map data provided at `./data/map-positions-example.json` and copy that to `./data/map-positions.json`.
+You can either use the sample map data provided at `./data-local/map-positions.json`.
 
 You can always `edit` the map positions and add new markers to it via `localhost:8080/map/regions/edit`
 
@@ -104,7 +96,7 @@ The map uses the following zoom levels at
 * `/media/maps/regions/5`
 * `/media/maps/regions/6`
 
-To make full use of the map, you can assign cards with locations/markers on the map. Such a position file has to be located at `./data/map-positions.json`. Please see below on how to create such a file using the map editor.
+Please see below on how to create such a file using the map editor.
 
 ### Creating a suitable map file
 
@@ -165,10 +157,8 @@ Starter decks can be useful for players to check out the game and start right aw
 An example structure may look like this
 
 ```
-./data/decks/Starter Decks/A - deckname1.meccg
-./data/decks/Starter Decks/A - deckname2.meccg
-./data/decks/Starter Decks/A - deckname3.meccg
-./data/decks/Starter Decks/A - deckname4.meccg
+./public/decks/Starter Decks/deckname1.meccg
+./public/decks/Starter Decks/deckname2.meccg
 ```
 
 The deck collections's folder name will be used to group the decks during the deck selection process before a game. The deck's file names will be used (except the file extension) inside your collection list.
@@ -183,24 +173,24 @@ If you want, you can deploy background image files into the folder `./media/pers
 
 ### Custom Dices
 
-Custom dices can be added to the folder `/media/personalisation/dice`. A dice collection consists of 6 `PNG` image files which have to be named using a specific pattern, e.g. `dice-1.png` .... `dice-6.png`. Each collection of dice images has to be stored in a separate folder, e.g-
+Custom dices can be added to the folder `/public/media/personalisation/dice`. A dice collection consists of 6 `PNG` image files which have to be named using a specific pattern, e.g. `dice-1.png` .... `dice-6.png`. Each collection of dice images has to be stored in a separate folder, e.g-
 
 ```
-./media/personalisation/dice/folder1/dice-1.png
-./media/personalisation/dice/folder1/dice-2.png
-./media/personalisation/dice/folder1/dice-3.png
-./media/personalisation/dice/folder1/dice-4.png
-./media/personalisation/dice/folder1/dice-5.png
-./media/personalisation/dice/folder1/dice-6.png
+./public/media/personalisation/dice/folder1/dice-1.png
+./public/media/personalisation/dice/folder1/dice-2.png
+./public/media/personalisation/dice/folder1/dice-3.png
+./public/media/personalisation/dice/folder1/dice-4.png
+./public/media/personalisation/dice/folder1/dice-5.png
+./public/media/personalisation/dice/folder1/dice-6.png
 ```
 
 Dices will be discovered automatically upon application start.
 
 ### Sound Effects
 
-To make use of sound effects, you need to create the folder `./media/personalisation/sounds`. Its best to deploy all sound files here as well.
+To make use of sound effects, you need to create the folder `./public/media/personalisation/sounds`. Its best to deploy all sound files here as well.
 
-Finally, create a json file `./media/personalisation/sounds/sounds.json` and paste this example
+Finally, create a json file `./public/media/personalisation/sounds/sounds.json` and paste this example
 
 ```
 {
