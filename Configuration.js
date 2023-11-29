@@ -1,41 +1,50 @@
 const fs = require("fs");
 
-class Configuration {
+class Configuration 
+{
+    #csp_header;
+    #csp_self;
+    #isProd;
+    #maxRooms;
+    #mapPositions;
+    #port;
+    #maxPlayersPerRoom;    
+    #hasLocaLImages;
+    #imageUrl;
+    #hasLocaLCards;
+    #cardsUrl;
 
     constructor()
     {
-        this._csp_header = "";
-        this._csp_self = "";
-        this._isProd = process.env.NODE_ENV === "production";
-
-        this._maxRooms = Configuration.assertString(process.env.ROOMS, 10);
-        this._maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
-
-        this._port = Configuration.assertString(process.env.PORT, 8080);
+        this.#csp_header = "";
+        this.#csp_self = "";
+        this.#isProd = process.env.NODE_ENV === "production";
+        this.#maxRooms = Configuration.assertString(process.env.ROOMS, 10);
+        this.#mapPositions = Configuration.#obtainMapPositionFile();
+        this.#port = Configuration.assertString(process.env.PORT, 8080);
+        this.#maxPlayersPerRoom = Configuration.assertString(process.env.PLAYER, 10);
 
         if(Configuration.#checkHasLocalImages())
         {
-            this._hasLocaLImages = true;
-            this._imageUrl = "/data-images";
+            this.#hasLocaLImages = true;
+            this.#imageUrl = "/data-images";
         }
         else
         {
-            this._hasLocaLImages = false;
-            this._imageUrl = Configuration.#assertUrlOrDirectory(process.env.IMAGE_PATH);
+            this.#hasLocaLImages = false;
+            this.#imageUrl = Configuration.#assertUrlOrDirectory(process.env.IMAGE_PATH);
         }
         
         if (Configuration.#hasLocalCardJson())
         {
-            this._hasLocaLCards = true;
-            this._cardsUrl = __dirname + "/data-local/cards.json";
+            this.#hasLocaLCards = true;
+            this.#cardsUrl = __dirname + "/data-local/cards.json";
         }
         else
         {
-            this._hasLocaLCards = false;
-            this._cardsUrl = Configuration.#assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
+            this.#hasLocaLCards = false;
+            this.#cardsUrl = Configuration.#assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
         }
-
-        this._mapPositions = Configuration.#obtainMapPositionFile();
     }
 
     getRequestTimeout()
@@ -115,10 +124,10 @@ class Configuration {
             return;
 
         if (this.isValid(json.image_path))
-            this._imageUrl = json.image_path;
+            this.#imageUrl = json.image_path;
 
-        if (this.isValid(json.cardsUrl) && !this._hasLocaLCards)
-            this._cardsUrl = json.cardsUrl;
+        if (this.isValid(json.cardsUrl) && !this.#hasLocaLCards)
+            this.#cardsUrl = json.cardsUrl;
     }
 
     readJson(sFile)
@@ -137,42 +146,42 @@ class Configuration {
 
     mapPositionsFile()
     {
-        return this._mapPositions;
+        return this.#mapPositions;
     }
 
     port()
     {
-        return this._port;
+        return this.#port;
     }
 
     maxRooms()
     {
-        return this._maxRooms;
+        return this.#maxRooms;
     }
 
     maxPlayersPerRoom()
     {
-        return this._maxPlayersPerRoom;
+        return this.#maxPlayersPerRoom;
     }
     
     isProduction()
     {
-        return this._isProd;
+        return this.#isProd;
     }
 
     hasLocalImages()
     {
-        return this._imageUrl !== "" && this._imageUrl.indexOf("//") === -1;
+        return this.#imageUrl !== "" && this.#imageUrl.indexOf("//") === -1;
     }
 
     imageFolder()
     {
-        return this._imageUrl.indexOf("//") !== -1 ? "" : this._imageUrl;
+        return this.#imageUrl.indexOf("//") !== -1 ? "" : this.#imageUrl;
     }
 
     imageUrl()
     {
-        return this._imageUrl.indexOf("//") !== -1 ? this._imageUrl : "/data/images";
+        return this.#imageUrl.indexOf("//") !== -1 ? this.#imageUrl : "/data/images";
     }
 
     extractDomain(sInput)
@@ -195,7 +204,7 @@ class Configuration {
 
     imageDomain()
     {
-        return this.extractDomain(this._imageUrl);
+        return this.extractDomain(this.#imageUrl);
     }
 
     /**
@@ -204,7 +213,7 @@ class Configuration {
      */
     cardUrl()
     {
-        return this._cardsUrl;
+        return this.#cardsUrl;
     }
 
     joinMap(jEntries)
@@ -230,10 +239,7 @@ class Configuration {
 
     createContentSecurityPolicyMegaAdditionals()
     {
-        this._csp_header = "";
-        this._csp_self = "";
-
-        if (this._csp_header === "")
+        if (this.#csp_header === "")
         {
             const jEntries = {
                 "default-src" : "'none'",
@@ -254,15 +260,15 @@ class Configuration {
             jEntries["connect-src"] += " " + this.getCspImageValue();
             jEntries["connect-src"] = jEntries["connect-src"].trim();
 
-            this._csp_header = this.joinMap(jEntries);                
+            this.#csp_header = this.joinMap(jEntries);                
         }
 
-        return this._csp_header;
+        return this.#csp_header;
     }
 
     createContentSecurityPolicySelfOnly()
     {
-        if (this._csp_self === "")
+        if (this.#csp_self === "")
         {
             const jEntries = {
                 "default-src": "'none'",
@@ -276,10 +282,10 @@ class Configuration {
                 "report-uri": "/csp-violation"
             };
             
-            this._csp_self = this.joinMap(jEntries);
+            this.#csp_self = this.joinMap(jEntries);
         }
 
-        return this._csp_self;
+        return this.#csp_self;
     }
 
     static #checkHasLocalImages()
@@ -294,7 +300,7 @@ class Configuration {
 
     useLocalImages()
     {
-        return this._hasLocaLImages;
+        return this.#hasLocaLImages;
     }
 }
 
