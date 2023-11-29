@@ -363,4 +363,5 @@ A username will be rejected if it contains HTML breaking characters `<` or `>` a
 
 ## License
 
-All information is given in a dedicated [README_license.md](README_license.md).
+All information is given at the repository start page. Please consult https://github.com/Heinrich-Barth/sit-down-and-play/blob/main/LICENSE as well.
+
