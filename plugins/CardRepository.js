@@ -190,9 +190,13 @@ class CardRepository {
         let nCount = 0;
         for (let card of this.#raw)
         {
-            card.isQuest = card.Race && card.Race.toLowerCase().startsWith("quest") ? true : false;
-            if (card.isQuest)
+            if (card.Race?.toLowerCase().startsWith("quest"))
+            {
+                card.isQuest = true;
                 nCount++;
+            }
+            else
+                card.isQuest = false;
         }
         
         Logger.info("\t- Quests: " + nCount);
@@ -245,9 +249,8 @@ class CardRepository {
             if (card.text === undefined || card.text === "" || card.text === null)
                 continue;
 
-            let sText = card.text.trim();
-
-            let nLast = sText.lastIndexOf("\"-");
+            const sText = card.text.trim();
+            const nLast = sText.lastIndexOf("\"-");
             if (nLast  === -1)
                 continue;
 
