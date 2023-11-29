@@ -7,7 +7,7 @@ const Configuration = require("./Configuration");
 const ResultToken = require("./game-management/ResultToken");
 const Logger = require("./Logger");
 
-let SERVER = {
+const SERVER = {
 
     configuration: Configuration,
 
