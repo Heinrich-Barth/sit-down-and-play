@@ -223,7 +223,7 @@ SERVER.onListenSetupSocketIo = function ()
         }
         catch(err)
         {
-            Logger.log(err);
+            Logger.error(err);
         }
 
         next(null, false);
