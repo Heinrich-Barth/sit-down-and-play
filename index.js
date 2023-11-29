@@ -9,8 +9,6 @@ const Logger = require("./Logger");
 
 const SERVER = {
 
-    configuration: Configuration,
-
     caching : {
 
         headerData : {
@@ -171,13 +169,13 @@ SERVER.instance = g_pExpress();
 
         if (cspAllowRemoteImages(req.path))
         {
-            res.header('Content-Security-Policy', SERVER.configuration.createContentSecurityPolicyMegaAdditionals());
-            res.header('X-Content-Security-Policy', SERVER.configuration.createContentSecurityPolicyMegaAdditionals());    
+            res.header('Content-Security-Policy', Configuration.createContentSecurityPolicyMegaAdditionals());
+            res.header('X-Content-Security-Policy', Configuration.createContentSecurityPolicyMegaAdditionals());    
         }
         else
         {
-            res.header('Content-Security-Policy', SERVER.configuration.createContentSecurityPolicySelfOnly());
-            res.header('X-Content-Security-Policy', SERVER.configuration.createContentSecurityPolicySelfOnly());
+            res.header('Content-Security-Policy', Configuration.createContentSecurityPolicySelfOnly());
+            res.header('X-Content-Security-Policy', Configuration.createContentSecurityPolicySelfOnly());
         }
 
         next();
@@ -480,8 +478,8 @@ SERVER.instance.post("/login", (req, res) => {
         res.redirect(url);
 });
 
-require("./server/RoutingPlay")(SERVER, SERVER.configuration.isProduction(), g_pAuthentication);
-require("./server/RoutingMap").setup(SERVER, SERVER.configuration.isProduction(), g_pExpress);
+require("./server/RoutingPlay")(SERVER, Configuration.isProduction(), g_pAuthentication);
+require("./server/RoutingMap").setup(SERVER, Configuration.isProduction(), g_pExpress);
 require("./server/RoutingRules").setup(SERVER, g_pExpress);
 require("./server/RoutingHealth").setup(SERVER, g_pAuthentication);
 require("./server/RoutingGenerals")(SERVER, g_pExpress);
@@ -578,11 +576,8 @@ SERVER.instance.use(function(err, _req, res, _next)
     });    
 });
 
-SERVER.instanceListener = SERVER._http.listen(SERVER.configuration.port(), SERVER.onListenSetupSocketIo);
-{
-    const seconds = SERVER.configuration.getRequestTimeout();
-    SERVER.instanceListener.setTimeout(1000 * seconds);
-}
+SERVER.instanceListener = SERVER._http.listen(Configuration.port(), SERVER.onListenSetupSocketIo);
+SERVER.instanceListener.setTimeout(1000 * Configuration.getRequestTimeout());
 
 SERVER.instanceListener.on('clientError', (err, socket) => 
 {
@@ -590,7 +585,7 @@ SERVER.instanceListener.on('clientError', (err, socket) =>
     socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-Logger.info("Server started at port " + SERVER.configuration.port());
+Logger.info("Server started at port " + Configuration.port());
 
 process.on('beforeExit', code => {
     setTimeout(() => {
