@@ -133,7 +133,7 @@ SERVER.cards = CardDataProvider;
     const g_pEventManager = require("./EventManager");
     g_pEventManager.trigger("add-sample-rooms", SERVER._sampleRooms);
     g_pEventManager.trigger("add-sample-names", SERVER._sampleNames);
-
+    
 })();
 
 
