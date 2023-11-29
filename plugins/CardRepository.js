@@ -20,25 +20,22 @@ const getRemovableKeysArray = function()
 
 class CardRepository {
 
-    constructor()
-    {
-        this._raw = [];
-        this._CardRepository = {};
-        this._types = { };
-        this._agentList = [];
-        this._nameCodeAlternatives = {};
-        this._cardsDeckbuilder = [];
-        this._listAvatars = [];
-    }
+    #raw = [];
+    #agentList = [];
+    #nameCodeAlternatives = {};
+    #cardsDeckbuilder = [];
+    #listAvatars = [];
+    #types = {};
+    #cardRepository = {};
 
     getCards()
     {
-        return this._raw;
+        return this.#raw;
     }
 
     getCardsDeckbuilder()
     {
-        return this._cardsDeckbuilder;
+        return this.#cardsDeckbuilder;
     }
 
     createCardsDeckbuilder()
@@ -51,12 +48,12 @@ class CardRepository {
                 return val.trim();
         }
 
-        this._cardsDeckbuilder = [];
+        this.#cardsDeckbuilder = [];
 
         let listStrings = ["set_code", "full_set", "Secondary", "alignment", "type",  "code", "uniqueness"]
         let listOther = ["uniqueness", "skills", "keywords"];
 
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             let candidate = { };
 
@@ -71,24 +68,24 @@ class CardRepository {
             for (let key of listOther)
                 candidate[key] = card[key];
 
-            this._cardsDeckbuilder.push(candidate);
+            this.#cardsDeckbuilder.push(candidate);
         }
 
     }
 
     getCardRepository()
     {
-        return this._raw;
+        return this.#raw;
     }
 
     sort() 
     {
-        this._raw.sort( (card1, card2) => card1.title.replace(/"/g, '').localeCompare(card2.title.replace(/"/g, ''), "de-DE"));
+        this.#raw.sort( (card1, card2) => card1.title.replace(/"/g, '').localeCompare(card2.title.replace(/"/g, ''), "de-DE"));
     }
 
     stripQuotes()
     {
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             card.code = this.removeQuotes(card.code);
             card.title = this.removeQuotes(card.title);
@@ -97,7 +94,7 @@ class CardRepository {
 
     codesLowercase()
     {
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             card.code = card.code.toLowerCase();
             card.title = card.title.toLowerCase();
@@ -118,7 +115,7 @@ class CardRepository {
     addIndices() 
     {
         let index = 0;
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
             card.index = ++index;
     }
 
@@ -144,9 +141,9 @@ class CardRepository {
 
     prepareArda()
     {
-        this._CardRepository = {};
-        for (let card of this._raw)
-            this._CardRepository[card.code] = card;
+        this.#cardRepository = {};
+        for (let card of this.#raw)
+            this.#cardRepository[card.code] = card;
     }
 
     buildFlipCardsMap()
@@ -154,13 +151,13 @@ class CardRepository {
         const questsB = { };
         const quests = { };
 
-        for (let card of this._raw)
+        for (let card of this.#raw)
         {
             if (card["flip-title"] !== undefined && card["flip-title"] !== card.normalizedtitle)
                 questsB[card["flip-title"]] = card.code;
         }
 
-        for (let card of this._raw)
+        for (let card of this.#raw)
         {
             if (questsB[card.normalizedtitle] !== undefined)
             {
@@ -181,11 +178,11 @@ class CardRepository {
     identifyAvatars()
     {
         let nCount = 0;
-        for (let card of this._raw)
+        for (let card of this.#raw)
         {
             if (card["Secondary"] === "Avatar")
             {
-                this._listAvatars.push(card.code);
+                this.#listAvatars.push(card.code);
                 nCount++;
             }
         }
@@ -196,7 +193,7 @@ class CardRepository {
     identifyQuests()
     {
         let nCount = 0;
-        for (let card of this._raw)
+        for (let card of this.#raw)
         {
             card.isQuest = card.Race && card.Race.toLowerCase().startsWith("quest") ? true : false;
             if (card.isQuest)
@@ -209,7 +206,7 @@ class CardRepository {
     identifyInLieuItems()
     {
         let text = "";
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (card.code === "Towers Destroyed (FB)")
                 card.isStartable = false;
@@ -228,7 +225,7 @@ class CardRepository {
         const vsUnused = getRemovableKeysArray();
 
         let rem = 0;
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             vsUnused.forEach(key => 
             {
@@ -248,7 +245,7 @@ class CardRepository {
     {
         let rem = 0;
 
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (card.text === undefined || card.text === "" || card.text === null)
                 continue;
@@ -315,7 +312,7 @@ class CardRepository {
                 invalids[card.code].push(field);
         }
 
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (card.code === "")
                 continue;
@@ -330,7 +327,7 @@ class CardRepository {
 
     updateMps()
     {
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (card.MPs === undefined && card.mp !== undefined)
             {
@@ -354,7 +351,7 @@ class CardRepository {
 
     updateMind()
     {
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (card.Mind === undefined && card.mind !== undefined)
             {
@@ -392,23 +389,23 @@ class CardRepository {
 
     createCardNameCodeSuggestionsList()
     {
-        const res = new CardNameCodeSuggestions().create(this._raw);
+        const res = new CardNameCodeSuggestions().create(this.#raw);
         if (res)
-            this._nameCodeAlternatives = res;
+            this.#nameCodeAlternatives = res;
 
-        return Object.keys(this._nameCodeAlternatives).length;
+        return Object.keys(this.#nameCodeAlternatives).length;
     }
 
     identifyUnderdeeps()
     {
-        new CardRepositoryUnderdeeps().create(this._raw);
+        new CardRepositoryUnderdeeps().create(this.#raw);
     }
 
     setup(_raw)
     {
         Logger.info("Setting up card data.");
 
-        this._raw = this.removeUnwantedCardRepository(_raw);
+        this.#raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
         this.codesLowercase();
         this.identifyQuests();
@@ -426,14 +423,14 @@ class CardRepository {
         this.createAgentList();
         this.createCardNameCodeSuggestionsList();
 
-        Logger.info("\t- " + this._raw.length + " cards available in total.");
-        return this._raw;
+        Logger.info("\t- " + this.#raw.length + " cards available in total.");
+        return this.#raw;
     }    
 
     createTypes()
     {
-        for (let card of this._raw) 
-            this._types[card.code] = card["type"];
+        for (let card of this.#raw) 
+            this.#types[card.code] = card["type"];
     }
     
     getCardType(code)
@@ -442,7 +439,7 @@ class CardRepository {
             return "";
         
         code = code.toLowerCase();
-        return this._types[code] === undefined ? "" : this._types[code];
+        return this.#types[code] === undefined ? "" : this.#types[code];
     }
 
     getCardByCode(code)
@@ -451,7 +448,7 @@ class CardRepository {
             return "";
         
         code = code.toLowerCase();
-        return this._CardRepository[code] === undefined ? null : this._CardRepository[code];
+        return this.#cardRepository[code] === undefined ? null : this.#cardRepository[code];
     }
 
     getCardMind(code)
@@ -506,7 +503,7 @@ class CardRepository {
 
     isCardAvailable(code)
     {
-        return code !== undefined && code !== "" && this._types[code.toLowerCase()] !== undefined;
+        return code !== undefined && code !== "" && this.#types[code.toLowerCase()] !== undefined;
     }
 
     isCardAvailableGuessed(code)
@@ -515,13 +512,13 @@ class CardRepository {
             return false;
 
         let sCode = code.toLowerCase();
-        if (this._types[sCode.replace(" (", " [h] (")] !== undefined)
+        if (this.#types[sCode.replace(" (", " [h] (")] !== undefined)
             return true;
-        else if (this._types[sCode.replace(" (", " [m] (")] !== undefined)
+        else if (this.#types[sCode.replace(" (", " [m] (")] !== undefined)
             return true;
-        else if (this._types[sCode.replace(" [h] (", "( ")] !== undefined)
+        else if (this.#types[sCode.replace(" [h] (", "( ")] !== undefined)
             return true;
-        else if (this._types[sCode.replace(" [m] (", "( ")] !== undefined)
+        else if (this.#types[sCode.replace(" [m] (", "( ")] !== undefined)
             return true;
         else
             return false;
@@ -533,15 +530,15 @@ class CardRepository {
             return "";
 
         let sCode = code.toLowerCase();
-        if (this._types[sCode] !== undefined)
+        if (this.#types[sCode] !== undefined)
             return sCode;
-        else if (this._types[sCode.replace(" (", " [h] (")] !== undefined)
+        else if (this.#types[sCode.replace(" (", " [h] (")] !== undefined)
             return sCode.replace(" (", " [h] (");
-        else if (this._types[sCode.replace(" (", " [m] (")] !== undefined)
+        else if (this.#types[sCode.replace(" (", " [m] (")] !== undefined)
             return sCode.replace(" (", " [m] (");
-        else if (this._types[sCode.replace(" [h] (", "( ")] !== undefined)
+        else if (this.#types[sCode.replace(" [h] (", "( ")] !== undefined)
             return sCode.replace(" [h] (", "( ");
-        else if (this._types[sCode.replace(" [m] (", "( ")] !== undefined)
+        else if (this.#types[sCode.replace(" [m] (", "( ")] !== undefined)
             return sCode.replace(" [m] (", "( ");
         else
             return "";
@@ -565,23 +562,23 @@ class CardRepository {
 
     isAvatar(code)
     {
-        return code !== "" && this._listAvatars.includes(code);
+        return code !== "" && this.#listAvatars.includes(code);
     }
 
     createAgentList()
     {
-        for (let card of this._raw) 
+        for (let card of this.#raw) 
         {
             if (this.isAgent(card))
-                this._agentList.push(card.code);
+                this.#agentList.push(card.code);
         }
 
-        Logger.info("\t- " + this._agentList.length + " agents identified.");
+        Logger.info("\t- " + this.#agentList.length + " agents identified.");
     }
 
     getAgents()
     {
-        return this._agentList;
+        return this.#agentList;
     }
 
     onProcessCardData()
@@ -605,7 +602,7 @@ class CardRepository {
 
     getNameCodeSuggestionMap()
     {
-        return this._nameCodeAlternatives;
+        return this.#nameCodeAlternatives;
     }
 }
 
