@@ -337,7 +337,6 @@ exports.getDeckList = function()
         g_vpDedckList.splice(0, g_vpDedckList.length);
     
     loadDeckList(__dirname + "/../public/decks");
-    console.log(g_pDeckById)
     return g_vpDedckList;
 }
 
