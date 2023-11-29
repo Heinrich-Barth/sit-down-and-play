@@ -19,11 +19,6 @@ const getTappedSites = function(SERVER, cookies)
 const CookiePreferences = require("./CookiePreferences");
 class MapCookiePreferences extends CookiePreferences
 {
-    constructor(sPrefix)
-    {
-        super(sPrefix);
-    }
-
     sanatizeValue(val)
     {
         return val === true;
