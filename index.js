@@ -2,8 +2,9 @@
 /**
  * Load Cards, prepare image lists etc.
  */
-const ResultToken = require("./game-management/ResultToken");
 const Logger = require("./Logger");
+const ResultToken = require("./game-management/ResultToken");
+const Configuration = require("./Configuration");
 const CardDataProvider = require("./plugins/CardDataProvider");
 const g_pExpress = require('express');
 const ServerModule = require("./Server");
@@ -227,7 +228,10 @@ SERVER.instance.use(function(req, res, next)
 /** 404 - not found */
 SERVER.instance.use(function(_req, res, _next) 
 {
-    res.status(404).send(SERVER.getPage404());
+    if (!Configuration.isProduction())
+        console.info("404 " + decodeURIComponent(_req.baseUrl))
+
+    res.status(404).send(ServerModule.getPage404());
 });
   
 /* 500 - Any server error */
@@ -236,10 +240,12 @@ SERVER.instance.use(function(err, _req, res, _next)
     if (err)
     {
         Logger.error(err);
+        if (!Configuration.isProduction())
+            console.info("500 " + decodeURIComponent(_req.baseUrl))
         console.error(err);
     }
 
-    res.status(500).send(SERVER.getPage500());
+    res.status(500).send(ServerModule.getPage500());
 });
 
 process.on('beforeExit', code => 
