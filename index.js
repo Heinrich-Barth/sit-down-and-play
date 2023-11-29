@@ -127,22 +127,15 @@ SERVER.cards = CardDataProvider;
 
 (function(){
 
-    const g_pEventManager = require("./EventManager");
     const RoomManager = require("./game-management/RoomManager");
+    require("./plugins/events").setupEvents();
+    
+    SERVER.roomManager = new RoomManager(SERVER.getSocketIo, fs.readFileSync(__dirname + "/pages/game.html", 'utf8'));
 
-    require("./plugins/events").registerEvents(g_pEventManager);
-    
-    SERVER.eventManager = g_pEventManager;
-    SERVER.roomManager = new RoomManager(SERVER.getSocketIo, 
-        fs.readFileSync(__dirname + "/pages/game.html", 'utf8'),
-        g_pEventManager, 
-        SERVER.cards,
-        SERVER.configuration.maxRooms(),
-        SERVER.configuration.maxPlayersPerRoom());
-    
     SERVER.authenticationManagement = require("./game-management/authentication");
     SERVER.authenticationManagement.setUserManager(SERVER.roomManager);
 
+    const g_pEventManager = require("./EventManager");
     g_pEventManager.trigger("add-sample-rooms", SERVER._sampleRooms);
     g_pEventManager.trigger("add-sample-names", SERVER._sampleNames);
 

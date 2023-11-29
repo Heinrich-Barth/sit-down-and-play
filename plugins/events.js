@@ -1,4 +1,5 @@
 const Logger = require("../Logger");
+const EventManager = require("../EventManager");
 const fs = require("fs");
 
 const readJson = function(file)
@@ -42,7 +43,6 @@ const Discord = require("./discord");
 
 const g_pDiscord = new Discord();
 
-
 function _register(pEventManager)
 {
     pEventManager.addEvent("add-sample-rooms", function(targetList)
@@ -63,4 +63,13 @@ function _register(pEventManager)
     pEventManager.dump();
 }
 
-exports.registerEvents = (pEventManager) => _register(pEventManager);
+let g_bIsIint = false;
+
+exports.setupEvents = function() 
+{
+    if (!g_bIsIint)
+    {
+        _register(EventManager);
+        g_bIsIint = true;
+    }
+} 

@@ -1,5 +1,9 @@
 const GameRoom = require("./GameRoom");
 const Logger = require("../Logger");
+const CardDataProvider = require("../plugins/CardDataProvider");
+const Configuration = require("../Configuration");
+const EventManager = require("../EventManager");
+
 
 /**
  * Create a new room if necessary
@@ -7,11 +11,11 @@ const Logger = require("../Logger");
  * @returns TRUE if the romm has been created, FALSE if it already existed
  */
 class RoomManager {
-    constructor(fnSocketIo, sGameHtmlPageUri, pEventManager, pGameCardProvider, maxRooms, maxPlayers)
+    constructor(fnSocketIo, sGameHtmlPageUri)
     {
         this.gamePageHtml = sGameHtmlPageUri;
-        this._eventManager = pEventManager;
-        this.gameCardProvider = pGameCardProvider;
+        this._eventManager = EventManager;
+        this.gameCardProvider = CardDataProvider;
         this.fnSocketIo = fnSocketIo;
 
         this._rooms = {};
@@ -20,8 +24,8 @@ class RoomManager {
             players : 0
         };
 
-        this.maxRooms = maxRooms;
-        this.maxPlayers = maxPlayers;
+        this.maxRooms = Configuration.maxRooms();
+        this.maxPlayers = Configuration.maxPlayersPerRoom();
         this.roomCountAll = [];
     }
 

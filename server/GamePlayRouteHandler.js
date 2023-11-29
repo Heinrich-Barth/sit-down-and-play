@@ -1,6 +1,7 @@
 const Logger = require("../Logger");
 const fs = require('fs');
 const UTILS = require("../meccg-utils");
+const EventManager = require("../EventManager");
 
 const GamePlayRouteHandlerUtil = require("./GamePlayRouteHandlerUtil");
 
@@ -551,7 +552,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     onAfterPlayAtTableSuccessJoin(req, _res)
     {
-        this.getServerInstance().eventManager.trigger("game-joined", req._roomName, this.isArda(), req._socialName);
+        EventManager.trigger("game-joined", req._roomName, this.isArda(), req._socialName);
     }
 
     onAfterPlayAtTableSuccessSocial(req, _res, next)
@@ -587,9 +588,9 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         if (req._roomCount !== 1)
             next();
         else if (req._doShare === "openchallenge")
-            this.getServerInstance().eventManager.trigger("game-created-openchallenge", req._roomName, this.isArda(), req._socialName);
+            EventManager.trigger("game-created-openchallenge", req._roomName, this.isArda(), req._socialName);
         else
-            this.getServerInstance().eventManager.trigger("game-created", req._roomName, this.isArda(), req._socialName);
+            EventManager.trigger("game-created", req._roomName, this.isArda(), req._socialName);
     }
 
 }
