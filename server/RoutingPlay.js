@@ -1,30 +1,33 @@
 const Logger = require("../Logger");
+const Configuration = require("../Configuration");
+
 const CookiePreferences = require("./CookiePreferences");
+const ServerModule = require("../Server");
 
 const pCookiePreferences = new CookiePreferences("game");
 pCookiePreferences.addPreference("background", "bg-game");
+if (!Configuration.isProduction())
+    pCookiePreferences.setProduction(false);
 
-module.exports = function(SERVER, isProduction, g_pAuthentication)
+module.exports = function()
 {
-    pCookiePreferences.setProduction(isProduction);
-
     const GamePlayRouteHandlerDefault = require("./GamePlayRouteHandler");
-    new GamePlayRouteHandlerDefault(SERVER, "/play", "home.html", "login.html", "lobby.html", g_pAuthentication).setupRoutes();
+    new GamePlayRouteHandlerDefault("/play", "login.html", "lobby.html").setupRoutes();
 
     const GamePlayRouteHandlerArda = require("./GamePlayRouteHandlerArda");
-    new GamePlayRouteHandlerArda(SERVER, "/arda", "home.html", "login-arda.html", "lobby.html", g_pAuthentication).setupRoutes();
+    new GamePlayRouteHandlerArda("/arda", "login-arda.html", "lobby.html").setupRoutes();
 
     const GamePlayRouteHandlerSingle = require("./GamePlayRouteHandlerSingle");
-    new GamePlayRouteHandlerSingle(SERVER, "/singleplayer", "home.html", "login.html", "home.html", g_pAuthentication).setupRoutes();
+    new GamePlayRouteHandlerSingle("/singleplayer", "login.html", "home.html").setupRoutes();
 
-    SERVER.instance.get("/data/preferences/game", SERVER.caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
-    SERVER.instance.post("/data/preferences/game", (req, res) =>  { 
+    ServerModule.getServerInstance().get("/data/preferences/game", ServerModule.Caching.expires.jsonCallback, (req, res) => res.send(pCookiePreferences.get(req.cookies)).status(200));
+    ServerModule.getServerInstance().post("/data/preferences/game", (req, res) =>  { 
         pCookiePreferences.update(req, res);
         res.setHeader('Content-Type', 'text/plain');
         res.send("").status(200); 
     });
 
-    SERVER.instance.post("/data/preferences/dice", (req, res) =>  { 
+    ServerModule.getServerInstance().post("/data/preferences/dice", (req, res) =>  { 
         try
         {
             const jData = req.body;

@@ -765,7 +765,7 @@ class RoomManager {
     isSinglePlayer(room)
     {
         const pRoom = this.getRoom(room);
-        return pRoom !== null && pRoom.getGame().isSinglePlayer() ;
+        return pRoom?.getGame().isSinglePlayer();
     }
 
     /**
@@ -811,7 +811,7 @@ class RoomManager {
     {
         const userid = pRoom.getGame().getHost();
         const pPlayer = pRoom.getPlayer(userid);
-        return pPlayer !== null && pPlayer.isConnected();
+        return pPlayer?.isConnected() === true;
     }
 
     updateEntryTime(room, userId)

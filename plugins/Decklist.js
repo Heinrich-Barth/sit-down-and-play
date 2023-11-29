@@ -1,5 +1,7 @@
 const fs = require('fs');
 const Logger = require("../Logger");
+const CardDataProvider = require("../plugins/CardDataProvider");
+const ServerModule = require("../Server");
 
 const g_vpDedckList = [];
 const g_pDeckById = { };
@@ -302,7 +304,7 @@ const countDeck = function(data)
     return count;
 }
 
-const updateCardImages = function(imageProvider)
+const updateCardImages = function()
 {
     for (let key in g_pDeckById)
     {
@@ -312,12 +314,12 @@ const updateCardImages = function(imageProvider)
         const list = getDeckCodeList(data.deck);
         for (let code of list)
         {
-            const img = imageProvider.getImageByCode(code);
+            const img = CardDataProvider.getImageByCode(code);
             if (typeof img === "string" && img !== "")
             {
                 data.images[code] = img;
 
-                if (meta.avatar === "" && imageProvider.isAvatar(code))
+                if (meta.avatar === "" && CardDataProvider.isAvatar(code))
                     meta.avatar = img;
             }
         }
@@ -326,8 +328,8 @@ const updateCardImages = function(imageProvider)
     }
 }
 
-
 loadDeckList(__dirname + "/../public/decks");
+updateCardImages();
 
 exports.getDeckList = function()
 {
@@ -346,18 +348,17 @@ exports.getDeckList = function()
   * @param {String} sDir 
   * @returns 
   */
-exports.load = function(SERVER)
+module.exports = function()
 {
     if (g_lId === 0)
     {
-        SERVER.instance.get("/data/decks", (_req, res) => res.json([]).status(200));
+        ServerModule.Server.getServerInstance().get("/data/decks", (_req, res) => res.json([]).status(200));
         return;
-    }
+    }    
 
-    updateCardImages(SERVER.cards);
-
-    SERVER.instance.get("/data/decks", SERVER.caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
-    SERVER.instance.get("/data/decks/:id", SERVER.caching.expires.jsonCallback, (req, res) => 
+    
+    ServerModule.Server.getServerInstance().get("/data/decks", ServerModule.Caching.expires.jsonCallback, (_req, res) => res.json(g_vpDedckList).status(200));
+    ServerModule.Server.getServerInstance().get("/data/decks/:id", ServerModule.Caching.expires.jsonCallback, (req, res) => 
     {
         res.status(200);
         if (req.params.id && g_pDeckById[req.params.id])

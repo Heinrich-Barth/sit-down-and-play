@@ -2,21 +2,25 @@ const Logger = require("../Logger");
 const fs = require('fs');
 const UTILS = require("../meccg-utils");
 const EventManager = require("../EventManager");
-
+const Authentication = require("../authentication");
+const CardRepository = require("../plugins/CardDataProvider")
 const GamePlayRouteHandlerUtil = require("./GamePlayRouteHandlerUtil");
 
 class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 {
-    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, g_pAuthentication)
-    {
-        super(pServer, sContext);
+    #pAuthentication = Authentication;
+    #contextRoot;
+    #contextPlay;
 
-        this.contextPlay = sContext + "/";
-        this.contextRoot = sContext;
-        this.pAuthentication = g_pAuthentication;
+    constructor(sContext, sPageLogin, sLobbyPage)
+    {
+        super();
+
+        this.#contextPlay = sContext + "/";
+        this.#contextRoot = sContext;
 
         const path = require('path');
-        this.pageHome = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/"  + sPagePlayRoot));
+        this.pageHome = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/home.html"));
         this.pageLogin = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/" + sPageLogin));
         this.pageLobby = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/" + sLobbyPage));
         this.pageWatch = GamePlayRouteHandler.readFile(path.join(__dirname, "/../pages/login-watch.html"));
@@ -65,17 +69,19 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     setupRoutes()
     {
-        this.getServerInstance().instance.use(this.contextRoot, this.pAuthentication.signInFromPWA);
+        Logger.info("Setting up routes for " + this.#contextRoot + " and " + this.#contextPlay);
+
+        this.getServerRouteInstance().use(this.#contextRoot, this.#pAuthentication.signInFromPWA);
 
         /**
          * Home
          */
-        this.getServerInstance().instance.get(this.contextRoot, this.onHome.bind(this));
+        this.getServerRouteInstance().get(this.#contextRoot, this.onHome.bind(this));
 
         /**
          * Verify game room and add to request object
          */
-        this.getServerInstance().instance.use(this.contextPlay + ":room", this.onVerifyGameRoomParam.bind(this));
+        this.getServerRouteInstance().use(this.#contextPlay + ":room", this.onVerifyGameRoomParam.bind(this));
         
         /**
          * The LOGIN page.
@@ -85,7 +91,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * 
          * The page forwards to a login page which will create all cookies.
          */
-        this.getServerInstance().instance.get(this.contextPlay + ":room/login",
+        this.getServerRouteInstance().get(this.#contextPlay + ":room/login",
             this.redirectToGameIfMember.bind(this),
             this.gameJoinSupported.bind(this), 
             this.onLogin.bind(this)
@@ -98,7 +104,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.getServerInstance().instance.post(this.contextPlay + ":room/login/check", 
+         this.getServerRouteInstance().post(this.#contextPlay + ":room/login/check", 
             this.gameJoinSupported.bind(this), 
             this.onRoomIsTooCrowded.bind(this),
             this.onLoginCheck.bind(this),
@@ -114,42 +120,41 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * If the player does not yet have logged in, redirect to login.
          * Otherwise, simply show the waiting screen
          */
-         this.getServerInstance().instance.get(this.contextPlay + ":room/lobby", this.onValidateGameCookies.bind(this), this.onLobby.bind(this));
+         this.getServerRouteInstance().get(this.#contextPlay + ":room/lobby", this.onValidateGameCookies.bind(this), this.onLobby.bind(this));
 
         /**
          * Get a list of players who are waiting to join this game
          
-         this.getServerInstance().instance.get(this.contextPlay + ":room/waiting/:token", this.onWaiting.bind(this));
+         this.getServerRouteInstance().get(this.#contextPlay + ":room/waiting/:token", this.onWaiting.bind(this));
         */
-        this.getServerInstance().instance.post(this.contextPlay + ":room/invite/:token/:type/:allow", this.onJoinTable.bind(this));
+        this.getServerRouteInstance().post(this.#contextPlay + ":room/invite/:token/:type/:allow", this.onJoinTable.bind(this));
 
-        this.getServerInstance().instance.get(this.contextPlay + ":room/accessibility", this.onSendAccessibility.bind(this));
+        this.getServerRouteInstance().get(this.#contextPlay + ":room/accessibility", this.onSendAccessibility.bind(this));
 
         /**
          * Allow player to access the table
          *
-         this.getServerInstance().instance.post(this.contextPlay + ":room/invite/:id/:token", this.onJoinTable.bind(this));
+         this.getServerRouteInstance().post(this.#contextPlay + ":room/invite/:id/:token", this.onJoinTable.bind(this));
 
         /**
          * Reject player access to table
-         this.getServerInstance().instance.post(this.contextPlay + ":room/reject/:id/:token", this.onReqjectEntry.bind(this));
+         this.getServerRouteInstance().post(this.#contextPlay + ":room/reject/:id/:token", this.onReqjectEntry.bind(this));
          */
 
         /**
          * Reject player access to table
          */
-         this.getServerInstance().instance.post(this.contextPlay + ":room/remove/:id/:token", this.onRemovePlayer.bind(this));
+         this.getServerRouteInstance().post(this.#contextPlay + ":room/remove/:id/:token", this.onRemovePlayer.bind(this));
 
         /**
          * Get the status of a given player (access denied, waiting, addmitted)
          */
-        this.getServerInstance().instance.get(this.contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
+        this.getServerRouteInstance().get(this.#contextPlay + ":room/status/:id", this.onPlayerStatus.bind(this));
 
         /**
          * Setup spectator
          */
-        this.getServerInstance().instance.get(this.contextPlay + ":room/watch", this.onWatchSupported.bind(this), this.onWatch.bind(this));
-
+        this.getServerRouteInstance().get(this.#contextPlay + ":room/watch", this.onWatchSupported.bind(this), this.onWatch.bind(this));
 
         /**
          * Perform the login and set all necessary cookies.
@@ -158,19 +163,18 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * checked to be alphanumeric only to avoid any HTML injection possibilities.
          * 
          */
-         this.getServerInstance().instance.post(this.contextPlay + ":room/watch/check", 
+         this.getServerRouteInstance().post(this.#contextPlay + ":room/watch/check", 
             this.onWatchSupported.bind(this), 
             this.onWatchCheck.bind(this),
             this.redirectToLobby.bind(this)
         );
-
 
         /**
          * Player joins a table.
          * 
          * The room name has to be ALPHANUMERIC. Otherwise, the requets will fail.
          */
-         this.getServerInstance().instance.get(this.contextPlay + ":room", 
+         this.getServerRouteInstance().get(this.#contextPlay + ":room", 
             this.onValidateGameCookies.bind(this), 
             this.onPlayAtTable.bind(this), 
             this.onAfterPlayAtTableSuccessSocial.bind(this),
@@ -179,16 +183,28 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         );
     }
 
+    onValidateGameCookies(req, res, next)
+    {
+        /** 
+         * Check if player has never been in this room before.
+         * Forward to login page for deck selection and display name
+         */
+        if (!this.validateCookies(req)) 
+            res.redirect(this.#contextPlay + req.room + "/login");
+        else
+            super.onValidateGameCookies(req, res, next);
+    }
+
     onLogin(req, res)
     {
         /** no cookies available */
         if (req.cookies.userId !== undefined && req.cookies.userId !== null && req.cookies.userId.length === UTILS.uuidLength())
         {
             /* already in the game. redirect to game room */
-            const status = this.getServerInstance().roomManager.isAccepted(req.params.room, req.cookies.userId)
+            const status = this.getRoomManager().isAccepted(req.params.room, req.cookies.userId)
             if (status !== null && status)
             {
-                res.redirect(this.contextPlay + req.params.room);
+                res.redirect(this.#contextPlay + req.params.room);
                 return;
             }
         }
@@ -204,7 +220,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         /**
          * Validate Deck first
          */
-        return this.getServerInstance().cards.validateDeck(jDeck);
+        return CardRepository.validateDeck(jDeck);
     }
 
     getAvatar(jDeck)
@@ -212,20 +228,20 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         if (this.isArda() || this.isSinglePlayer())
             return  "";
         else
-            return this.getServerInstance().cards.getAvatar(jDeck);
+            return CardRepository.getAvatar(jDeck);
     }
 
     redirectToGameIfMember(req, res, next)
     {
         if (this.userIsAlreadyInGame(req))
-            this.createExpireResponse(res, 'text/plain').redirect(this.contextPlay + req.room);
+            this.createExpireResponse(res, 'text/plain').redirect(this.#contextPlay + req.room);
         else
             next();
     }
 
     onWatchSupported(req, res, next)
     {
-        if (this.getServerInstance().roomManager.grantAccess(req.room, false))
+        if (this.getRoomManager().grantAccess(req.room, false))
             next();
         else
             this.createExpireResponse(res).redirect("/error/denied");
@@ -247,13 +263,13 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             if (!UTILS.isAlphaNumeric(displayname))
                 throw new Error("Invalid data");
 
-            if (!this.getServerInstance().roomManager.roomExists(room))
+            if (!this.getRoomManager().roomExists(room))
                 throw new Error("Room does not exist");
 
             const userId = this.requireUserId(req);
 
             /** add player to lobby */
-            const lNow = this.getServerInstance().roomManager.addSpectator(room, userId, displayname);
+            const lNow = this.getRoomManager().addSpectator(room, userId, displayname);
 
             /** proceed to lobby */
             this.updateCookieUser(res, userId, displayname);
@@ -279,10 +295,10 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     gameJoinSupported(req, res, next)
     {
-        const nPlayers = this.getServerInstance().roomManager.countPlayersInRoom(req.room);
+        const nPlayers = this.getRoomManager().countPlayersInRoom(req.room);
         if (nPlayers < 1)
             next();
-        else if (!this.isSinglePlayer() && this.getServerInstance().roomManager.grantAccess(req.room, true))
+        else if (!this.isSinglePlayer() && this.getRoomManager().grantAccess(req.room, true))
             next();
         else
             this.createExpireResponse(res).redirect("/error/denied");
@@ -291,14 +307,14 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
     onRoomIsTooCrowded(req, res, next)
     {
         const room = req.room;
-        if (this.getServerInstance().roomManager.tooManyRooms() || this.getServerInstance().roomManager.tooManyPlayers(room))
+        if (this.getRoomManager().tooManyRooms() || this.getRoomManager().tooManyPlayers(room))
         {
             Logger.info("Too many rooms or too many players in room " + room);
             this.createExpireResponse(res).redirect("/error/login");
             return;
         }
         
-        const nPlayers = this.getServerInstance().roomManager.countPlayersInRoom(room);
+        const nPlayers = this.getRoomManager().countPlayersInRoom(room);
         if (GamePlayRouteHandler.maxPlayersPerRoom > 0 && nPlayers > GamePlayRouteHandler.maxPlayersPerRoom)
         {
             Logger.info("Too crowded in room " + room);
@@ -347,7 +363,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             };
 
             /** add player to lobby */
-            const lNow = this.getServerInstance().roomManager.addToLobby(room, userId, displayname, jDeck, roomOptions);
+            const lNow = this.getRoomManager().addToLobby(room, userId, displayname, jDeck, roomOptions);
             if (lNow === -1)
             {
                 /** ghost game */
@@ -374,7 +390,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     redirectToRoom(req, res)
     {
-        this.createExpireResponse(res, 'text/plain').redirect(this.contextPlay + req.room);
+        this.createExpireResponse(res, 'text/plain').redirect(this.#contextPlay + req.room);
     }
 
     hasValidUserId(req)
@@ -408,7 +424,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
     {
         this.clearCookies(req, res);
         
-        if (!this.getServerInstance().roomManager.roomExists(req.room))
+        if (!this.getRoomManager().roomExists(req.room))
             res.redirect("/error/nosuchroom");
         else
             this.createExpireResponse(res, 'text/html').send(this.pageWatch).status(200);
@@ -416,24 +432,24 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     onLobby(req, res)
     {
-        if (this.getServerInstance().roomManager.isAccepted(req.room, req.cookies.userId))  /* if player is admin or accepted, simply redirect to game room */
+        if (this.getRoomManager().isAccepted(req.room, req.cookies.userId))  /* if player is admin or accepted, simply redirect to game room */
         {
-            res.redirect(this.contextPlay + req.room);
+            res.redirect(this.#contextPlay + req.room);
         }
         else 
         {
-            this.getServerInstance().roomManager.sendJoinNotification(req.room);
+            this.getRoomManager().sendJoinNotification(req.room);
             this.createExpireResponse(res, "text/html").send(this.pageLobby.replace("{room}", this.sanatiseCookieValue(req.room)).replace("{id}", this.sanatiseCookieValue(req.cookies.userId))).status(200);
         }
     }
 
     onWaiting(req, res)
     {
-        if (this.getServerInstance().roomManager.isGameHost(req.params.room, req.params.token))
+        if (this.getRoomManager().isGameHost(req.params.room, req.params.token))
         {
             let data = {
-                waiting: this.getServerInstance().roomManager.getWaitingList(req.params.room),
-                players : this.getServerInstance().roomManager.getPlayerList(req.params.room)
+                waiting: this.getRoomManager().getWaitingList(req.params.room),
+                players : this.getRoomManager().getPlayerList(req.params.room)
             }
 
             this.createExpireResponse(res, "application/json").send(data).status(200);
@@ -445,8 +461,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
     onSendAccessibility(req, res)
     {
         const data = {
-            player: this.getServerInstance().roomManager.grantAccess(req.room, true),
-            visitor: this.getServerInstance().roomManager.grantAccess(req.room, false)
+            player: this.getRoomManager().grantAccess(req.room, true),
+            visitor: this.getRoomManager().grantAccess(req.room, false)
         } 
 
         this.createExpireResponse(res, "application/json").send(data).status(200);
@@ -454,7 +470,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     onJoinTable(req, res)
     {
-        if (!this.getServerInstance().roomManager.isGameHost(req.params.room, req.params.token))
+        if (!this.getRoomManager().isGameHost(req.params.room, req.params.token))
         {
             res.sendStatus(401);
             return;
@@ -462,16 +478,16 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
         const type = req.params.type;
         if (type === "visitor" || type === "player")
-            this.getServerInstance().roomManager.updateAccess(req.params.room, type, req.params.allow === "true");
+            this.getRoomManager().updateAccess(req.params.room, type, req.params.allow === "true");
 
         this.createExpireResponse(res).sendStatus(204);
     }
 
     onReqjectEntry(req, res)
     {
-        if (this.getServerInstance().roomManager.isGameHost(req.params.room, req.params.token))
+        if (this.getRoomManager().isGameHost(req.params.room, req.params.token))
         {
-            this.getServerInstance().roomManager.rejectEntry(req.params.room, req.params.id);
+            this.getRoomManager().rejectEntry(req.params.room, req.params.id);
             this.createExpireResponse(res).sendStatus(204);
         }
         else
@@ -480,9 +496,9 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
     onRemovePlayer(req, res)
     {
-        if (this.getServerInstance().roomManager.isGameHost(req.params.room, req.params.token))
+        if (this.getRoomManager().isGameHost(req.params.room, req.params.token))
         {
-            this.getServerInstance().roomManager.removePlayerFromGame(req.params.room, req.params.id);
+            this.getRoomManager().removePlayerFromGame(req.params.room, req.params.id);
             this.createExpireResponse(res).sendStatus(204);
         }
         else
@@ -496,7 +512,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
             room: req.params.room
         };
 
-        let status = this.getServerInstance().roomManager.isAccepted(req.params.room, req.params.id);
+        let status = this.getRoomManager().isAccepted(req.params.room, req.params.id);
         if (status !== null)
             _obj.status = status ? "ok" : "wait";
 
@@ -510,15 +526,15 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         /**
          * Assert that the user really accepted
          */
-        const bForwardToGame = this.getServerInstance().roomManager.isAccepted(room, req.cookies.userId);
+        const bForwardToGame = this.getRoomManager().isAccepted(room, req.cookies.userId);
         if (bForwardToGame === null) 
         {   
-            res.redirect(this.contextPlay + room + "/login");
+            res.redirect(this.#contextPlay + room + "/login");
             return;
         }
         else if (!bForwardToGame) 
         {
-            res.redirect(this.contextPlay + room + "/lobby");
+            res.redirect(this.#contextPlay + room + "/lobby");
             return;
         }
 
@@ -529,10 +545,10 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
          * 
          * The user may have joined with a second window. In that case, they would have 2 active sessions open.
          */
-        let lTimeJoined = this.getServerInstance().roomManager.updateEntryTime(room, req.cookies.userId, dice);
+        let lTimeJoined = this.getRoomManager().updateEntryTime(room, req.cookies.userId, dice);
         if (lTimeJoined === 0) 
         {
-            res.redirect(this.contextPlay + room + "/login");
+            res.redirect(this.#contextPlay + room + "/login");
         }
         else
         {
@@ -543,8 +559,8 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
 
             this.clearSocialMediaCookies(res);
     
-            this.getServerInstance().roomManager.updateDice(room, req.cookies.userId, dice);
-            this.createExpireResponse(res, "text/html").send(this.getServerInstance().roomManager.loadGamePage(room, this.sanatiseCookieValue(req.cookies.userId), this.sanatiseCookieValue(req.cookies.username), lTimeJoined, dice)).status(200);
+            this.getRoomManager().updateDice(room, req.cookies.userId, dice);
+            this.createExpireResponse(res, "text/html").send(this.getRoomManager().loadGamePage(room, this.sanatiseCookieValue(req.cookies.userId), this.sanatiseCookieValue(req.cookies.username), lTimeJoined, dice)).status(200);
 
             next();
         }
@@ -562,17 +578,17 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         
         /* enforece lowercase room, is always alphanumeric */
         const room = req.params.room.toLocaleLowerCase();
-        if (!this.getServerInstance().roomManager.roomExists(room))
+        if (!this.getRoomManager().roomExists(room))
             return;
 
-        const roomCount = this.getServerInstance().roomManager.countPlayersInRoom(room); 
+        const roomCount = this.getRoomManager().countPlayersInRoom(room); 
         const noSharing = req._doShare !== "openchallenge" && req._doShare !== "visitor";
 
         let proceedNext = !noSharing;
         if (roomCount === 1)
-            this.getServerInstance().roomManager.setAllowSocialMediaShare(room, !noSharing);
+            this.getRoomManager().setAllowSocialMediaShare(room, !noSharing);
         else 
-            proceedNext = this.getServerInstance().roomManager.getAllowSocialMediaShare(room) && !noSharing;
+            proceedNext = this.getRoomManager().getAllowSocialMediaShare(room) && !noSharing;
 
         if (proceedNext)
         {

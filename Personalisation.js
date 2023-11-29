@@ -1,4 +1,5 @@
 const fs = require("fs");
+const ServerModule = require("./Server");
 
 const Personalisation = {
     dices : [],
@@ -77,9 +78,9 @@ const Personalisation = {
     console.log("\t - "+Personalisation.background_keys.length + " background(s) available");
 })();
 
-module.exports = function(SERVER)
+module.exports = function()
 {
-    SERVER.instance.get("/data/dices", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.dices).status(200));
-    SERVER.instance.get("/data/backgrounds", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.background_keys).status(200));
+    ServerModule.Server.getServerInstance().get("/data/dices", ServerModule.Caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.dices).status(200));
+    ServerModule.Server.getServerInstance().get("/data/backgrounds", ServerModule.Caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.background_keys).status(200));
 }
 

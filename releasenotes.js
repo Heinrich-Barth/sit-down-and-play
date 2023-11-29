@@ -1,5 +1,6 @@
 
 const fs = require('fs');
+const ServerModule = require("./Server");
 
 const loadFile = function()
 {
@@ -51,4 +52,4 @@ const loadRows = function(data)
 
 const listRows = loadRows(loadFile());
 
-module.exports = (Server) => Server.instance.get("/data/releasenotes", Server.caching.cache.jsonCallback6hrs, (_req, res) => res.status(200).json(listRows));
+module.exports = () => ServerModule.Server.getServerInstance().get("/data/releasenotes", ServerModule.Caching.cache.jsonCallback6hrs, (_req, res) => res.status(200).json(listRows));

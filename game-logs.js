@@ -1,4 +1,6 @@
 const fs = require("fs");
+const ServerModule = require("./Server");
+const g_pExpress = require('express');
 
 const GameLogs = {
 
@@ -43,8 +45,8 @@ const GameLogs = {
 
 GameLogs.updateLogs();
 
-module.exports = function(server, expressStatic)
+module.exports = function()
 {
-    server.use("/logs", expressStatic.static("logs"));
-    server.get("/games/history", (_req, res) => res.status(200).json(GameLogs.getLogs()));
+    ServerModule.Server.getServerInstance().use("/logs", g_pExpress.static("logs"));
+    ServerModule.Server.getServerInstance().get("/games/history", (_req, res) => res.status(200).json(GameLogs.getLogs()));
 }

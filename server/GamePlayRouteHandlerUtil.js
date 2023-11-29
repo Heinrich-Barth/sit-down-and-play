@@ -2,15 +2,12 @@ const ClearCookies = require("./ClearCookies");
 const Logger = require("../Logger");
 
 const UTILS = require("../meccg-utils");
+const ServerModule = require("../Server");
 
 class GamePlayRouteHandlerUtil
 {
-    constructor(pServer, context)
-    {
-        this.m_pServerInstance = pServer;
-        this.startupTime = pServer.startupTime;
-        this.contextPlay = context;
-    }    
+    #startupTime = Date.now();
+    #serverInstance = ServerModule.Server;
 
     clearCookies(req, res)
     {
@@ -22,16 +19,9 @@ class GamePlayRouteHandlerUtil
         res.clearCookie('socialMedia');
     }
 
-    onValidateGameCookies(req, res, next)
+    onValidateGameCookies(_req, _res, next)
     {
-        /** 
-         * Check if player has never been in this room before.
-         * Forward to login page for deck selection and display name
-         */
-        if (!this.validateCookies(req)) 
-            res.redirect(this.contextPlay + req.room + "/login");
-        else
-            next();
+        next();
     }
 
     userIsAlreadyInGame(req)
@@ -70,9 +60,9 @@ class GamePlayRouteHandlerUtil
         {
             if (req.cookies.userId.length !== UTILS.uuidLength())
                 throw new Error("Invalid player uuid.");
-            else if (req.cookies.joined < this.startupTime) 
+            else if (req.cookies.joined < this.#startupTime) 
                 throw new Error("Cookie server time is old.");
-            else if (!this.m_pServerInstance.roomManager.isValidRoomCreationTime(req.cookies.room, req.cookies.joined))
+            else if (!this.getRoomManager().isValidRoomCreationTime(req.cookies.room, req.cookies.joined))
                 throw new Error("Cookie does not match room.");
 
             return true;
@@ -94,9 +84,18 @@ class GamePlayRouteHandlerUtil
 
     getServerInstance()
     {
-        return this.m_pServerInstance;
+        return this.#serverInstance;
     }
 
+    getRoomManager()
+    {
+        return this.getServerInstance().roomManager;
+    }
+
+    getServerRouteInstance()
+    {
+        return this.getServerInstance().instance;
+    }
 
     /**
      * Simple cookie value check to avoid some illegal characters that could add 

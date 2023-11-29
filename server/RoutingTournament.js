@@ -1,4 +1,6 @@
 const ResultToken = require("../game-management/ResultToken");
+const ServerModule = require("../Server");
+const g_pExpress = require('express');
 
 const validateToken = function(req, res)
 {
@@ -9,9 +11,9 @@ const validateToken = function(req, res)
         res.status(500).send("");
 }
 
-module.exports = function(SERVER, g_pExpress)
+module.exports = function()
 {
     const pageDir = __dirname + "/../pages";
-    SERVER.instance.use("/tournament", g_pExpress.static(pageDir + "/tournament.html", SERVER.caching.headerData.generic));
-    SERVER.instance.post("/tournament/validate", validateToken);
+    ServerModule.Server.getServerInstance().use("/tournament", g_pExpress.static(pageDir + "/tournament.html", ServerModule.Caching.headerData.generic));
+    ServerModule.Server.getServerInstance().post("/tournament/validate", validateToken);
 }

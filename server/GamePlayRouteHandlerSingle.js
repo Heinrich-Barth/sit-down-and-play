@@ -1,16 +1,12 @@
 
 const GamePlayRouteHandler = require("./GamePlayRouteHandler");
+const CardRepository = require("../plugins/CardDataProvider")
 
 class GamePlayRouteHandlerSingle extends GamePlayRouteHandler
 {
-    constructor(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, pAuthentication)
-    {
-        super(pServer, sContext, sPagePlayRoot, sPageLogin, sLobbyPage, pAuthentication)
-    }
-
     validateDeck(jDeck)
     {
-        return this.m_pServerInstance.cards.validateDeckSingleplayer(jDeck);
+        return CardRepository.validateDeckSingleplayer(jDeck);
     }
 
     isSinglePlayer()
@@ -23,5 +19,6 @@ class GamePlayRouteHandlerSingle extends GamePlayRouteHandler
         return true;
     }
 }
+
 
 module.exports = GamePlayRouteHandlerSingle;

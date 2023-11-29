@@ -1,16 +1,19 @@
+const g_pExpress = require('express');
+const g_pAuthentication = require("./authentication");
+const SERVER = require("./Server").Server;
 
-
-module.exports = function(SERVER, g_pExpress, pAuthenticator)
+const onPwaRunning = function(req, res)
 {
-    SERVER.instance.get("/pwa/running", SERVER.caching.expires.jsonCallback, (req, res) => 
-    {
-        const data = {
-            pwa: pAuthenticator.isSignedInPWA(req)
-        };
+    const data = {
+        pwa: g_pAuthentication.isSignedInPWA(req)
+    };
 
-        res.send(data).status(200);
-    });
+    res.send(data).status(200);
+}
 
-    SERVER.instance.get("/pwa", pAuthenticator.signInFromPWA, (_req, res) => res.redirect("/pwa/app.html"));
+module.exports = function()
+{
+    SERVER.instance.get("/pwa/running", SERVER.caching.expires.jsonCallback, onPwaRunning);
+    SERVER.instance.get("/pwa", g_pAuthentication.signInFromPWA, (_req, res) => res.redirect("/pwa/app.html"));
     SERVER.instance.use("/serviceWorker.js", g_pExpress.static(__dirname + "/serviceWorker.js"));
 }

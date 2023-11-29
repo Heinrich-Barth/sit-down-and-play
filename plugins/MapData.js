@@ -119,7 +119,7 @@ class MapData
         const code = this.removeSetInformation(codeFull);
         for (let key in jCards) 
         {
-            if (key.indexOf(code) === 0)
+            if (key.startsWith(code))
                 return jCards[key];
         }
 

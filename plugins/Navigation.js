@@ -1,3 +1,7 @@
+const Authentication = require("../authentication");
+const ServerModule = require("../Server");
+const g_pExpress = require('express');
+
 const navigationEntry = function(url, label, blank)
 {
     return { url: url, label: label, blank: blank };
@@ -6,7 +10,7 @@ const navigationEntry = function(url, label, blank)
 
 const getNavigationJson = function(_req, res)
 {
-    let targetList = [];
+    const targetList = [];
     targetList.push(navigationEntry("/play", "Play a game", false));
     targetList.push(navigationEntry("/tournament", "Tournament", false));
     targetList.push(navigationEntry("/deckbuilder", "Deckbuilder", false));
@@ -19,16 +23,15 @@ const getNavigationJson = function(_req, res)
 };
 
 
-module.exports = function(SERVER, g_pExpress, g_pAuthentication, htmlDir)
+module.exports = function(htmlDir)
 {
     /**
      * Get the navigation
      */
-    SERVER.instance.get("/data/navigation", SERVER.caching.cache.jsonCallback, getNavigationJson);
+    ServerModule.Server.getServerInstance().get("/data/navigation", ServerModule.Caching.cache.jsonCallback, getNavigationJson);
 
-    SERVER.instance.use("/about", g_pExpress.static(htmlDir + "/pages/about.html", SERVER.caching.headerData.generic));
-    SERVER.instance.use("/converter", SERVER.endpointVisits.increase, g_pExpress.static(htmlDir + "/pages/converter.html", SERVER.caching.headerData.generic));
-    SERVER.instance.use("/help", g_pExpress.static(htmlDir + "/pages/help.html", SERVER.caching.headerData.generic));
-    SERVER.instance.use("/deckbuilder", g_pAuthentication.isSignedInDeckbuilder, SERVER.endpointVisits.increase, g_pExpress.static(htmlDir + "/pages/deckbuilder.html", SERVER.caching.headerData.generic));
-
+    ServerModule.Server.getServerInstance().use("/about", g_pExpress.static(htmlDir + "/pages/about.html", ServerModule.Caching.headerData.generic));
+    ServerModule.Server.getServerInstance().use("/converter", ServerModule.Server.endpointVisits.increase, g_pExpress.static(htmlDir + "/pages/converter.html", ServerModule.Caching.headerData.generic));
+    ServerModule.Server.getServerInstance().use("/help", g_pExpress.static(htmlDir + "/pages/help.html", ServerModule.Caching.headerData.generic));
+    ServerModule.Server.getServerInstance().use("/deckbuilder", Authentication.isSignedInDeckbuilder, ServerModule.Server.endpointVisits.increase, g_pExpress.static(htmlDir + "/pages/deckbuilder.html", ServerModule.Caching.headerData.generic));
 }
