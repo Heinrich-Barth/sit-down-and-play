@@ -72,12 +72,7 @@ class CardRepository {
         }
 
     }
-
-    getCardRepository()
-    {
-        return this.#raw;
-    }
-
+    
     sort() 
     {
         this.#raw.sort( (card1, card2) => card1.title.replace(/"/g, '').localeCompare(card2.title.replace(/"/g, ''), "de-DE"));
