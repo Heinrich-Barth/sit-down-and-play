@@ -13,7 +13,7 @@ class Configuration {
 
         this._port = Configuration.assertString(process.env.PORT, 8080);
 
-        if(Configuration.checkHasLocalImages())
+        if(Configuration.#checkHasLocalImages())
         {
             this._hasLocaLImages = true;
             this._imageUrl = "/data-images";
@@ -21,10 +21,10 @@ class Configuration {
         else
         {
             this._hasLocaLImages = false;
-            this._imageUrl = Configuration.assertUrlOrDirectory(process.env.IMAGE_PATH);
+            this._imageUrl = Configuration.#assertUrlOrDirectory(process.env.IMAGE_PATH);
         }
         
-        if (Configuration.hasLocalCardJson())
+        if (Configuration.#hasLocalCardJson())
         {
             this._hasLocaLCards = true;
             this._cardsUrl = __dirname + "/data-local/cards.json";
@@ -32,10 +32,10 @@ class Configuration {
         else
         {
             this._hasLocaLCards = false;
-            this._cardsUrl = Configuration.assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
+            this._cardsUrl = Configuration.#assertUrlOrDataDirectory(process.env.CARDURL, "/data/cards.json");
         }
 
-        this._mapPositions = Configuration.obtainMapPositionFile();
+        this._mapPositions = Configuration.#obtainMapPositionFile();
     }
 
     getRequestTimeout()
@@ -55,7 +55,7 @@ class Configuration {
         return 20;
     }
     
-    static obtainMapPositionFile()
+    static #obtainMapPositionFile()
     {
         try
         {
@@ -80,7 +80,7 @@ class Configuration {
             return input;
     }
 
-    static assertUrlOrDirectory(input)
+    static #assertUrlOrDirectory(input)
     {
         let val = Configuration.assertString(input, "");
         if (val === "" || val.indexOf("..") !== -1)
@@ -93,9 +93,9 @@ class Configuration {
             return __dirname + "/" + val;
     }
 
-    static assertUrlOrDataDirectory(input, def)
+    static #assertUrlOrDataDirectory(input, def)
     {
-        let val = Configuration.assertString(input, def);
+        const val = Configuration.assertString(input, def);
         if (val.indexOf("//") > -1)
             return val;
         else if (val.startsWith("/"))
@@ -175,7 +175,7 @@ class Configuration {
         return this._imageUrl.indexOf("//") !== -1 ? this._imageUrl : "/data/images";
     }
 
-    static extractDomain(sInput)
+    extractDomain(sInput)
     {
         if (sInput === undefined || sInput === null || sInput.trim() === "")
             return "";
@@ -195,7 +195,7 @@ class Configuration {
 
     imageDomain()
     {
-        return Configuration.extractDomain(this._imageUrl);
+        return this.extractDomain(this._imageUrl);
     }
 
     /**
@@ -282,12 +282,12 @@ class Configuration {
         return this._csp_self;
     }
 
-    static checkHasLocalImages()
+    static #checkHasLocalImages()
     {
         return fs.existsSync(__dirname + "/data-local") && fs.existsSync(__dirname + "/data-local/images");
     }
 
-    static hasLocalCardJson()
+    static #hasLocalCardJson()
     {
         return fs.existsSync(__dirname + "/data-local") && fs.existsSync(__dirname + "/data-local/cards.json");
     }
@@ -298,4 +298,6 @@ class Configuration {
     }
 }
 
-module.exports = Configuration;
+const Instance = new Configuration();
+
+module.exports = Instance;
