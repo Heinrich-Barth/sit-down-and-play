@@ -7,9 +7,6 @@ const Configuration = require("./Configuration");
 const ResultToken = require("./game-management/ResultToken");
 const Logger = require("./Logger");
 
-if (!fs.existsSync("./logs"))
-    fs.mkdirSync("./logs");
-
 let SERVER = {
 
     configuration: Configuration,
