@@ -91,7 +91,7 @@ SERVER.instance.get("/data/spectators/:room", SERVER.caching.expires.jsonCallbac
 /**
  * Load a list of available challenge decks to start right away
  */
-require("./plugins/Decklist.js")();
+require("./plugins/Decklist").initRoutes();
 
 /**
   * Check if the deck is valid.

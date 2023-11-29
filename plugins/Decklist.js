@@ -348,7 +348,7 @@ exports.getDeckList = function()
   * @param {String} sDir 
   * @returns 
   */
-module.exports = function()
+exports.initRoutes = function()
 {
     if (g_lId === 0)
     {
