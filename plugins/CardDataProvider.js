@@ -5,6 +5,7 @@ const DeckValidator = require("./DeckValidator");
 const ImageList = require("./ImageList");
 const VerifyImages = require("./VerifyImages");
 const Logger = require("../Logger");
+const Configuration = require("../Configuration");
 
 class CardDataProvider extends CardRepository {
    
@@ -167,4 +168,7 @@ class CardDataProvider extends CardRepository {
     }
 }
 
-module.exports = CardDataProvider;
+const Instance = new CardDataProvider(Configuration.mapPositionsFile(), Configuration.cardUrl(), Configuration.imageUrl());
+Instance.load();
+
+module.exports = Instance;

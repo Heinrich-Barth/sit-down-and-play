@@ -3,7 +3,7 @@
  * Load Cards, prepare image lists etc.
  */
 const fs = require('fs');
-const Configiration = require("./Configuration");
+const Configuration = require("./Configuration");
 const ResultToken = require("./game-management/ResultToken");
 const Logger = require("./Logger");
 
@@ -12,7 +12,7 @@ if (!fs.existsSync("./logs"))
 
 let SERVER = {
 
-    configuration: new Configiration(),
+    configuration: Configuration,
 
     caching : {
 
@@ -123,8 +123,7 @@ let SERVER = {
 };
 
 const CardDataProvider = require("./plugins/CardDataProvider");
-SERVER.cards = new CardDataProvider(SERVER.configuration.mapPositionsFile(), SERVER.configuration.cardUrl(), SERVER.configuration.imageUrl());
-SERVER.cards.load();
+SERVER.cards = CardDataProvider;
 
 (function(){
 

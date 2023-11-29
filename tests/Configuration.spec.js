@@ -12,7 +12,7 @@ describe('Configuration', () => {
 
     it('construct empty', () => {
 
-        const instance = new Configuration();
+        const instance = Configuration;
 
         expect(instance.port()).toEqual(8080);
         expect(instance.maxRooms()).toEqual(10);
@@ -33,7 +33,7 @@ describe('Configuration', () => {
             "image_path" : "https://test.com/img/cards",
             "cardsUrl" : "https://test.com/data/cards"
         };
-        const instance = new Configuration();
+        const instance = Configuration;
         instance.loadFromJson(data);
 
         expect(instance.port()).toEqual(8080);
