@@ -28,5 +28,42 @@
     .room-text {
         margin-left: 140px;
         min-height: 110px;
+        h3,
+        p { margin: 0;}
     }
+}
+
+.avatar-list {
+
+    list-style-type: none;
+    display: block;
+    margin-bottom: 0;
+
+    li {
+        &.label 
+        {
+            height: 30px;
+            vertical-align: top;
+        }
+        &:not(.label)
+        {
+            width: 30px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        height: 30px;
+        position: relative;
+        display: inline-block;
+        margin-right: 5px;
+
+        img {
+            position: absolute;
+            width: 100%;
+            top: 7px;
+            scale: 1.6;
+        }
+    }
+
+
 }

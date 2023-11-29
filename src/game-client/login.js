@@ -1099,6 +1099,35 @@ const g_pDeckTextFields = new DeckTextFields();
 
 })();
 
+function createAvatarList(list)
+{
+    if (!Array.isArray(list) || list.length === 0)
+        return document.createDocumentFragment();
+
+    const res = document.createElement("ul");
+    res.setAttribute("class", "avatar-list");
+
+    const li = document.createElement("li");
+    li.setAttribute("class", "label");
+    li.innerText = "Avatars competing:"
+    res.append(li);
+    for (let src of list)
+    {
+        if (src === "")
+            continue;
+
+        const img = document.createElement("img");
+        img.setAttribute("src", src);
+        
+        const cont = document.createElement("li");
+        cont.append(img);
+
+        res.append(cont);
+    }
+
+    return res;
+}
+
 (function () {
 
     fetch("/data/decks")
@@ -1118,7 +1147,10 @@ const g_pDeckTextFields = new DeckTextFields();
         {
             const button = document.getElementById("host");
             if (button !== null)
+            {
                 button.innerHTML = button.innerHTML.replace("Create ", "Join ");
+                button.parentElement.append(createAvatarList(data.avatars));
+            }
 
             const text = document.getElementById("game-type");
             if (text !== null)

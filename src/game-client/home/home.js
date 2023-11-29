@@ -67,6 +67,31 @@ const getGameTypeDuration = function(isArda, lTime)
     return (isArda ? "Arda, " : "") + "" + lMins 
 }
 
+const createAvatarList = function(list)
+{
+    if (!Array.isArray(list) || list.length === 0)
+        return document.createDocumentFragment();
+
+    const res = document.createElement("ul");
+    res.setAttribute("class", "avatar-list");
+
+    for (let src of list)
+    {
+        if (src === "")
+            continue;
+
+        const img = document.createElement("img");
+        img.setAttribute("src", src);
+        
+        const cont = document.createElement("li");
+        cont.append(img);
+
+        res.append(cont);
+    }
+
+    return res;
+}
+
 const addGameType = function(value, isArda)
 {
     const _room = value.room;
@@ -94,6 +119,8 @@ const addGameType = function(value, isArda)
 
     tdRoom.innerHTML = `<h3>${_room.toUpperCase()} <span class="game-duration fa fa-clock-o"> ${since}</span></h3>
     <p>${_players}</p>`;
+
+    tdRoom.append(createAvatarList(value.avatars));
 
     if (value.jitsi)
     {
@@ -123,7 +150,7 @@ const addGameType = function(value, isArda)
         span.setAttribute("class", "deck-label-blue")
         span.innerText = "Standard | DC";
     }
-    
+   
     const label = document.createElement("div");
     label.setAttribute("class", "deck-label");
     label.appendChild(span);

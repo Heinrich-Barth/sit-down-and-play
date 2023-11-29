@@ -207,6 +207,37 @@ body, p {
   margin-left: 140px;
   min-height: 110px;
 }
+.room-image-wrapper .room-text h3,
+.room-image-wrapper .room-text p {
+  margin: 0;
+}
+
+.avatar-list {
+  list-style-type: none;
+  display: block;
+  margin-bottom: 0;
+}
+.avatar-list li {
+  height: 30px;
+  position: relative;
+  display: inline-block;
+  margin-right: 5px;
+}
+.avatar-list li.label {
+  height: 30px;
+  vertical-align: top;
+}
+.avatar-list li:not(.label) {
+  width: 30px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.avatar-list li img {
+  position: absolute;
+  width: 100%;
+  top: 7px;
+  scale: 1.6;
+}
 
 .game-list {
   padding: 2em;
