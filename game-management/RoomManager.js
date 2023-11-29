@@ -209,7 +209,8 @@ class RoomManager {
             players : pRoom.getPlayers().length,
             share: pRoom.getAllowSocialMedia(),
             allowPlayers: pRoom.canJoinPlayer(),
-            allowSpectator: pRoom.canJoinVisitor()
+            allowSpectator: pRoom.canJoinVisitor(),
+            avatars: pRoom.getPlayerAvatarsList()
         }
     }
 
@@ -244,7 +245,8 @@ class RoomManager {
                 visitors: pRoom.canJoinVisitor(),
                 jitsi: pRoom.useJitsi(),
                 accessible: pRoom.canJoinPlayer(),
-                players : []
+                players : [],
+                avatars: pRoom.getPlayerAvatarsList()
             }
 
             for (userid in pRoom.getPlayers())

@@ -4,9 +4,13 @@ const Scores = require("./Scores");
 const GameBase = require("./GameBase");
 const PlayerDices = require("./PlayerDices");
 const ResultToken = require("./ResultToken");
+const CardDataProvider = require("../plugins/CardDataProvider");
 
 class GamePlayers extends GameBase
 {
+    #avatarImages = { };
+    #avatarImageList = []
+
     constructor(_MeccgApi, _Chat, _playboardManager)
     {
         super(_MeccgApi, _Chat, _playboardManager)        
@@ -25,6 +29,24 @@ class GamePlayers extends GameBase
 
         this.scoring = new Scores(this.isArda());
         this.playerDices = new PlayerDices();
+    }
+
+    #reloadAvatarMap()
+    {
+        if (this.#avatarImageList.length > 0)
+            this.#avatarImageList.splice(0, this.#avatarImageList.length);
+
+        for (let id of Object.keys(this.#avatarImages))
+        {
+            const img = this.#avatarImages[id];
+            if (img !== "")
+                this.#avatarImageList.push(img);
+        }
+    }
+
+    getPlayerAvatarsList()
+    {
+        return this.#avatarImageList;
     }
 
     getPlayerDices()
@@ -93,8 +115,7 @@ class GamePlayers extends GameBase
         this.players.ids.push(sId);
         this.players.names[sId] = sName;
 
-        if (avatar !== undefined && avatar !== "")
-            this.players.avatars[sId] = avatar;
+        this.setAvatar(sId, avatar);            
 
         if (checksum !== "")
             this.players.checksums.push(checksum);
@@ -106,6 +127,9 @@ class GamePlayers extends GameBase
         if (sId !== undefined && this.players.ids.includes(sId) && avatar !== undefined && avatar !== "")
         {
             this.players.avatars[sId] = avatar;
+            this.#avatarImages[sId] = CardDataProvider.getImageByCode(avatar);
+
+            this.#reloadAvatarMap();
             return true;
         }
         else
@@ -143,6 +167,8 @@ class GamePlayers extends GameBase
         this.players.current = 0;
         this.players.turn = 1;
         this.players.avatars = {};
+        this.#avatarImages = {};
+        this.#avatarImageList = [];
         this.scoring.reset();
     }
 
@@ -230,6 +256,9 @@ class GamePlayers extends GameBase
 
         if (this.players.avatars[userId] !== undefined)
             delete this.players.avatars[userId];
+
+        if (this.#avatarImages[userId] !== undefined)
+            delete this.#avatarImages[userId];
 
         /** it might be that the removed player had its turn already. hence, the current player moved on place to the left */
         if (this.players.current !== 0 && this.players.current >= _posDel)

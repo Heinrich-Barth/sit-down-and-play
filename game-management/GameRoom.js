@@ -335,6 +335,14 @@ class GameRoom
         }
     }
 
+    getPlayerAvatarsList()
+    {
+        if (this.game === null)
+            return [];
+        else
+            return this.game.getPlayerAvatarsList();
+    }
+
     createGame(_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
     {       
         if (isArda)
