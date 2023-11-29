@@ -11,37 +11,46 @@ const EventManager = require("../EventManager");
  * @returns TRUE if the romm has been created, FALSE if it already existed
  */
 class RoomManager {
+
+    #eventManager;
+    #gamePageHtml;
+    #gameCardProvider;
+    #rooms;
+    #maxRooms;
+    #maxPlayers;
+    #roomCountAll;
+
     constructor(fnSocketIo, sGameHtmlPageUri)
     {
-        this.gamePageHtml = sGameHtmlPageUri;
-        this._eventManager = EventManager;
-        this.gameCardProvider = CardDataProvider;
+        this.#gamePageHtml = sGameHtmlPageUri;
+        this.#eventManager = EventManager;
+        this.#gameCardProvider = CardDataProvider;
         this.fnSocketIo = fnSocketIo;
 
-        this._rooms = {};
+        this.#rooms = {};
         this.stats = {
             games : 0,
             players : 0
         };
 
-        this.maxRooms = Configuration.maxRooms();
-        this.maxPlayers = Configuration.maxPlayersPerRoom();
-        this.roomCountAll = [];
+        this.#maxRooms = Configuration.maxRooms();
+        this.#maxPlayers = Configuration.maxPlayersPerRoom();
+        this.#roomCountAll = [];
     }
 
     tooManyRooms()
     {
-        return this.maxRooms > 0 && this.countRooms() > this.maxRooms;
+        return this.#maxRooms > 0 && this.countRooms() > this.#maxRooms;
     }
 
     countRooms()
     {
-        return Object.keys(this._rooms).length;
+        return Object.keys(this.#rooms).length;
     }
 
     tooManyPlayers(room)
     {
-        return this.maxPlayers > 0 && this.countPlayersInRoom(room) > this.maxPlayers;
+        return this.#maxPlayers > 0 && this.countPlayersInRoom(room) > this.#maxPlayers;
     }
 
     countPlayersInRoom(room)
@@ -52,13 +61,13 @@ class RoomManager {
 
     getAgentList()
     {
-        return this.gameCardProvider.getAgents();
+        return this.#gameCardProvider.getAgents();
     }
 
     getRoom(room)
     {
-        if (room !== undefined && room !== "" && room.length <= 50 && this._rooms[room] !== undefined)
-            return this._rooms[room];
+        if (room !== undefined && room !== "" && room.length <= 50 && this.#rooms[room] !== undefined)
+            return this.#rooms[room];
         else
             return null;
     }
@@ -70,26 +79,26 @@ class RoomManager {
         const useDCE = options.dce;
         const jitsi = options.jitsi;
 
-        if (this._rooms[room] !== undefined)
-            return this._rooms[room];
+        if (this.#rooms[room] !== undefined)
+            return this.#rooms[room];
 
-        this._rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this._eventManager, this.gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
+        this.#rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this.#eventManager, this.#gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
         
         if (!useDCE)
-            this._rooms[room].setUseDCE(false);
+            this.#rooms[room].setUseDCE(false);
         if (jitsi)
-            this._rooms[room].setUseJitsi(true);
+            this.#rooms[room].setUseJitsi(true);
 
-        if (this.roomCountAll.length >= 10)
-            this.roomCountAll.shift();
+        if (this.#roomCountAll.length >= 10)
+            this.#roomCountAll.shift();
 
-        this.roomCountAll.push({
+        this.#roomCountAll.push({
             "time": Date.now(),
             "creator": displayname,
             "arda": isArda
         });
     
-        return this._rooms[room];
+        return this.#rooms[room];
     }
 
     getTappedSites(room, userid)
@@ -191,10 +200,10 @@ class RoomManager {
 
     getActiveGame(room)
     {
-        if (room === undefined || room === null || room === "" || this._rooms[room] === undefined)
+        if (room === undefined || room === null || room === "" || this.#rooms[room] === undefined)
             return { exists: false };
 
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         return {
             exists : true,
             players : pRoom.getPlayers().length,
@@ -206,10 +215,10 @@ class RoomManager {
 
     getSpectators(room)
     {
-        if (room === undefined || room === null || room === "" || this._rooms[room] === undefined)
+        if (room === undefined || room === null || room === "" || this.#rooms[room] === undefined)
             return { count: 0, names: [] };
 
-        const list = this._rooms[room].getVisitorNames();
+        const list = this.#rooms[room].getVisitorNames();
         return {
             count: list.length,
             names:  list
@@ -222,9 +231,9 @@ class RoomManager {
         let res = [];
         let jRoom;
         let isValidRoom;
-        for (room in this._rooms) 
+        for (room in this.#rooms) 
         {
-            pRoom = this._rooms[room];
+            pRoom = this.#rooms[room];
             isValidRoom = false;
 
             jRoom = {
@@ -256,8 +265,8 @@ class RoomManager {
         if (this.countRooms() === 0)
             return false;
 
-        for (let room in this._rooms) 
-            this._rooms[room].sendSaveOnShutdown();
+        for (let room in this.#rooms) 
+            this.#rooms[room].sendSaveOnShutdown();
 
         return true;
     }
@@ -265,11 +274,11 @@ class RoomManager {
     getGameCount()
     {
         
-        if (this.roomCountAll.length === 0)
+        if (this.#roomCountAll.length === 0)
             return [];
 
         const res = [];
-        for (let _val of this.roomCountAll)
+        for (let _val of this.#roomCountAll)
         {
             res.push(
             {
@@ -292,9 +301,9 @@ class RoomManager {
         let room, userid, pRoom, _player;
         let res = { };
         let jRoom;
-        for (room in this._rooms) 
+        for (room in this.#rooms) 
         {
-            pRoom = this._rooms[room];
+            pRoom = this.#rooms[room];
 
             jRoom = {
                 created : new Date(pRoom.getCreated()).toUTCString(),
@@ -322,8 +331,8 @@ class RoomManager {
     
     _sendConnectivity(userid, room, connected)
     {
-        if (this._rooms[room] !== undefined)
-            this._rooms[room].publish("/game/player/indicator", "", { userid: userid, connected : connected });
+        if (this.#rooms[room] !== undefined)
+            this.#rooms[room].publish("/game/player/indicator", "", { userid: userid, connected : connected });
     }
 
     onReconnected(userid, room)
@@ -388,9 +397,9 @@ class RoomManager {
         this.kickDisconnectedPlayers(pRoom);
         this.kickDisconnectedSpectators(pRoom);
 
-        if (this._rooms[room].isEmpty())
+        if (this.#rooms[room].isEmpty())
         {
-            delete this._rooms[room];
+            delete this.#rooms[room];
             return true;
         }
         else
@@ -416,7 +425,7 @@ class RoomManager {
             if (pThis.kickDisconnected(room))
             {
                 /** make sure to remove game from events */
-                pThis._eventManager.trigger("game-remove", room, fileLog);
+                pThis.#eventManager.trigger("game-remove", room, fileLog);
                 Logger.info("Game room " + room + " is empty and was destroyed.");
             }
 
@@ -433,15 +442,15 @@ class RoomManager {
      */
     isValidRoomCreationTime(room, userJoined) 
     {
-        return this._rooms[room] !== undefined && this._rooms[room].getCreated() <= userJoined;
+        return this.#rooms[room] !== undefined && this.#rooms[room].getCreated() <= userJoined;
     }
 
     rejectEntry(room, userId) 
     {
-        if (this._rooms[room] === undefined)
+        if (this.#rooms[room] === undefined)
             return;
 
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         if (pRoom.players[userId] !== undefined)
             delete pRoom.players[userId];
         else if (pRoom.visitors[userId] !== undefined)
@@ -456,26 +465,26 @@ class RoomManager {
      */
     removePlayerFromGame(room, userId) 
     {
-        if (this._rooms[room] === undefined || this._rooms[room].players[userId] === undefined)
+        if (this.#rooms[room] === undefined || this.#rooms[room].players[userId] === undefined)
             return;
 
-        if (!this._rooms[room].players[userId].isAdmin())
+        if (!this.#rooms[room].players[userId].isAdmin())
         {
-            this._rooms[room].publish("/game/player/remove", "", { userid: userId });
-            this._rooms[room].getGame().removePlayer(userId);
+            this.#rooms[room].publish("/game/player/remove", "", { userid: userId });
+            this.#rooms[room].getGame().removePlayer(userId);
         }
     }
 
 
     rejoinAfterReconnect(userid, room, socket) 
     {
-        if (this._rooms[room] === undefined)
+        if (this.#rooms[room] === undefined)
         {
             Logger.warn("Room is not available: " + room);
             return false;
         }
         
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         const isPlayer = pRoom.players[userid] !== undefined;
         const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
         if (pPlayer === undefined)
@@ -520,10 +529,10 @@ class RoomManager {
      */
     rejoinAfterBreak(userid, room, socket) 
     {
-        if (this._rooms[room] === undefined)
+        if (this.#rooms[room] === undefined)
             return false;
         
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         const isPlayer = pRoom.players[userid] !== undefined;
         const pPlayer = isPlayer ? pRoom.players[userid] : pRoom.visitors[userid];
         if (pPlayer === undefined)
@@ -578,8 +587,8 @@ class RoomManager {
     {
         try
         {
-            if (this._rooms[socket.room] !== undefined && message.indexOf("<") === -1 && message.indexOf(">") === -1 && message.trim() !== "")
-                this._rooms[socket.room].sendMessage(socket.userid, message.trim());
+            if (this.#rooms[socket.room] !== undefined && message.indexOf("<") === -1 && message.indexOf(">") === -1 && message.trim() !== "")
+                this.#rooms[socket.room].sendMessage(socket.userid, message.trim());
         }
         catch (err) 
         {
@@ -588,15 +597,15 @@ class RoomManager {
       
     sendFinalScore(room)
     {
-        if (this._rooms[room] !== undefined)
-            this._rooms[room].publish("/game/score/final", "", this._rooms[room].getGame().getFinalScore());
+        if (this.#rooms[room] !== undefined)
+            this.#rooms[room].publish("/game/score/final", "", this.#rooms[room].getGame().getFinalScore());
     }
         
     
     leaveGame(userid, room)
     {
-        if (typeof userid !== "undefined" && typeof room !== "undefined" && this._rooms[room] !== undefined)
-            this._rooms[room].sendMessage(userid, "has left the game.");
+        if (typeof userid !== "undefined" && typeof room !== "undefined" && this.#rooms[room] !== undefined)
+            this.#rooms[room].sendMessage(userid, "has left the game.");
     }
 
     getGameLog(room)
@@ -607,10 +616,10 @@ class RoomManager {
     
     endGame(room)
     {
-        if (this._rooms === undefined || this._rooms[room] === undefined)
+        if (this.#rooms === undefined || this.#rooms[room] === undefined)
             return;
 
-        let pRoom = this._rooms[room];
+        let pRoom = this.#rooms[room];
         const bAllowSocial = pRoom.getAllowSocialMedia();
         const scores = pRoom.getFinalGameScore();
 
@@ -619,12 +628,12 @@ class RoomManager {
 
         const logfile = pRoom.getGameLog();
 
-        delete this._rooms[room];
+        delete this.#rooms[room];
 
         if (scores !== undefined && bAllowSocial)
-            this._eventManager.trigger("game-finished", room, scores);
+            this.#eventManager.trigger("game-finished", room, scores);
 
-        this._eventManager.trigger("game-remove", room, logfile);
+        this.#eventManager.trigger("game-remove", room, logfile);
         Logger.info("Game " + room + " has ended.");
     }
 
@@ -635,8 +644,8 @@ class RoomManager {
      */
     sendJoinNotification(room)
     {
-        if (this._rooms[room] !== undefined)
-            this._rooms[room].publish("/game/lobby/request", "", {  });
+        if (this.#rooms[room] !== undefined)
+            this.#rooms[room].publish("/game/lobby/request", "", {  });
     }
 
     /**
@@ -663,10 +672,10 @@ class RoomManager {
 
     allowJoin(room, expectSecret, userId, joined, player_access_token_once) 
     {
-        if (room === "" || this._rooms[room] === undefined || this._rooms[room].getSecret() !== expectSecret)
+        if (room === "" || this.#rooms[room] === undefined || this.#rooms[room].getSecret() !== expectSecret)
             return false;
 
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         let bIsPlayer = true;
         if (pRoom.hasPlayer(userId))
         {
@@ -702,20 +711,20 @@ class RoomManager {
 
     roomExists(room)
     {
-        return room !== undefined && room !== "" && this._rooms[room] !== undefined;
+        return room !== undefined && room !== "" && this.#rooms[room] !== undefined;
     }
 
     setAllowSocialMediaShare(room, bAllow)
     {
-        if (room !== undefined && room !== "" && this._rooms[room] !== undefined)
-            this._rooms[room].setAllowSocialMedia(bAllow);
+        if (room !== undefined && room !== "" && this.#rooms[room] !== undefined)
+            this.#rooms[room].setAllowSocialMedia(bAllow);
     }
 
     getAllowSocialMediaShare(room)
     {
         return room !== undefined && room !== "" 
-            && this._rooms[room] !== undefined
-            && this._rooms[room].getAllowSocialMedia();
+            && this.#rooms[room] !== undefined
+            && this.#rooms[room].getAllowSocialMedia();
     }
 
     /**
@@ -728,23 +737,23 @@ class RoomManager {
      */
     isGameHost(room, token)
     {
-        return this._rooms[room] !== undefined && this._rooms[room].getLobbyToken() === token;
+        return this.#rooms[room] !== undefined && this.#rooms[room].getLobbyToken() === token;
     }
 
     updateAccess(room, type, allow)
     {
-        if (room !== "" && this._rooms[room] !== undefined)
-            this._rooms[room].updateAccess(type, allow);
+        if (room !== "" && this.#rooms[room] !== undefined)
+            this.#rooms[room].updateAccess(type, allow);
     }
 
     grantAccess(room, isPlayer)
     {
-        return room !== "" && this._rooms[room] !== undefined && this._rooms[room].grantAccess(isPlayer);
+        return room !== "" && this.#rooms[room] !== undefined && this.#rooms[room].grantAccess(isPlayer);
     }
 
     addSpectator (room, userId, displayname) 
     {
-        const pRoom = this._rooms[room];
+        const pRoom = this.#rooms[room];
         if (pRoom === undefined)
             return 0;
             
@@ -779,7 +788,7 @@ class RoomManager {
             return -1;
 
         if (pRoom.getGame().isArda() && !roomOptions.singleplayer)
-            this._eventManager.trigger("arda-prepare-deck", this.gameCardProvider, jDeck, isFirst);
+            this.#eventManager.trigger("arda-prepare-deck", this.#gameCardProvider, jDeck, isFirst);
 
         const lNow = Date.now();
         pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow, roomOptions.avatar);
@@ -842,7 +851,7 @@ class RoomManager {
         const conCount = pRoom.getConnectionCount(userId);
         const useDCE = pRoom.useDCE() ? "true" : "false";
 
-        return this.gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
+        return this.#gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
             .replace("{TPL_USE_DCE}", useDCE)
