@@ -18,7 +18,7 @@ class Chat {
         this._endpoint = sEndpoint;
         this._players = {};
         this._log = [];
-        const gameLogfileName = Chat.requireGameLogFile(room) 
+        const gameLogfileName = Chat.#requireGameLogFile(room) 
         this._gameLogFileUri = path.join(__dirname + "/../logs/" + gameLogfileName);
         this._gameLogfileName = gameLogfileName;
         this._hasLogData = false;
@@ -35,7 +35,7 @@ class Chat {
         return this._gameLogfileName;
     }
 
-    static requireGameLogFile(room)
+    static #requireGameLogFile(room)
     {
         return Date.now() + (room === undefined || room === "" ? "" : "-" + room) + ".txt";
     }
@@ -43,10 +43,10 @@ class Chat {
     addPlayer(userid, displayname, deckChecksum)
     {
         this._players[userid] = displayname;
-        this.appendLog(displayname + " joins the game (deck #" + deckChecksum + ")", "");
+        this.#appendLog(displayname + " joins the game (deck #" + deckChecksum + ")", "");
     }
 
-    appendLog(message, userid = "")
+    #appendLog(message, userid = "")
     {
         if (message === "" || this.saveLogsAfter < 10)
             return;
@@ -54,7 +54,7 @@ class Chat {
         if (userid === "")
             this._log.push(message);
         else
-            this._log.push(this.getUserName(userid) + " " + message);
+            this._log.push(this.#getUserName(userid) + " " + message);
 
         if (this._log.length > this.saveLogsAfter)
         {
@@ -63,7 +63,7 @@ class Chat {
         }
     }
 
-    getUserName(userid)
+    #getUserName(userid)
     {
         const val = this._players[userid];
         return val === undefined ? "A player" : val;
@@ -82,12 +82,12 @@ class Chat {
 
     gameLogNextPlayer(message)
     {
-        this.appendLog("\n", "");
-        this.appendLog(message, "");
-        this.appendLog("==================", "");
+        this.#appendLog("\n", "");
+        this.#appendLog(message, "");
+        this.#appendLog("==================", "");
     }
 
-    getFinalScoreHeader(score)
+    #getFinalScoreHeader(score)
     {
         const keys = Object.keys(score.score);
         if (keys.length < 1)
@@ -112,7 +112,7 @@ class Chat {
             return null;
 
 
-        const sHeader = this.getFinalScoreHeader(finalScores);
+        const sHeader = this.#getFinalScoreHeader(finalScores);
         if (sHeader === "")
             return null;
 
@@ -126,7 +126,7 @@ class Chat {
                 continue;
 
             const row = finalScores.score[id];
-            line = [name, this.countScoreTotal(row)];
+            line = [name, this.#countScoreTotal(row)];
             for (let key in row)
                 line.push(row[key]);
 
@@ -140,12 +140,12 @@ class Chat {
     {
         const res = this.createLogFinalScore(finalScores);
         if (res === null)
-            this.appendLog("Could not calculate final scores.", "");   
+            this.#appendLog("Could not calculate final scores.", "");   
         else
-            this.appendLog(res.join("\n"), "");   
+            this.#appendLog(res.join("\n"), "");   
     }
 
-    countScoreTotal(score)
+    #countScoreTotal(score)
     {
         let total = 0;
 
@@ -186,7 +186,7 @@ class Chat {
         });
 
         if (saveGameLog)
-            this.appendLog(text, userid);
+            this.#appendLog(text, userid);
     }
 }
 
