@@ -5,17 +5,7 @@ const SaveGameEvaluation = require("../game-management/SaveGameEvaluation");
 describe('SaveGameEvaluation', () => {
 
     const data = JSON.parse(require("fs").readFileSync(__dirname + "/savegame/invalid.json"));
-    
-
-    it("assertGameProperties(game)", () => 
-    {
-        const instance = new SaveGameEvaluation(data.assignments);
-        expect(instance.assertGameProperties(data.game)).toBeTruthy();
-        expect(instance.assertGameProperties({})).toBeFalsy();
-        expect(instance.assertGameProperties()).toBeFalsy();
-    });
-
-    
+        
     it('evaluateCardMap()', () => {
         
         let playboard = {
@@ -52,15 +42,6 @@ describe('SaveGameEvaluation', () => {
         };
 
         expect(Object.keys(siteMap).length).toEqual(1);
-        expect(instance.clearMap(siteMap)).toBeTruthy();
-        expect(Object.keys(siteMap).length).toEqual(0);
-
-        siteMap = {
-            "a": {
-                "MySite [H] (TW)": true
-            }
-        };
-        expect(instance.clearMap(siteMap)).toBeTruthy();
     });
 
     it("evaluateCompanies(companies)", () =>

@@ -25,7 +25,7 @@ test("Chat.createLogFinalScore()", () => {
     };
 
     const instance = new Chat(null, null, "roomname");
-    expect(instance._log.length).toEqual(0);
+    expect(instance.getLogSize()).toEqual(0);
 
     const res = instance.createLogFinalScore(score);
     const message = res.join("\n");

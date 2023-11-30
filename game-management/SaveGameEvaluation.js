@@ -2,24 +2,18 @@ const Logger = require("../Logger");
 
 class SaveGameEvaluation 
 {
+    #assignments;
+    #errors = [];
+
     constructor(assignments)
     {
-        this.assignments = assignments;
-        this.errors = [];
+        this.#assignments = assignments;
     }
 
-    assertGameProperties(game)
-    {
-        return game !== undefined
-            && game["meta"] !== undefined 
-            && game["playboard"] !== undefined
-            && game["scoring"] !== undefined;
-    }
-
-    addError(message)
+    #addError(message)
     {
         if (message !== "")
-            this.errors.push(message);
+            this.#errors.push(message);
     }
 
     evaluateCardMap(playboard)
@@ -29,14 +23,14 @@ class SaveGameEvaluation
         for (let _cardId of cardIds)
         {
             const _formerOwner = _map[_cardId].owner;
-            if (this.assignments[_formerOwner] === undefined)
+            if (this.#assignments[_formerOwner] === undefined)
                 delete _map[_cardId];
         }
 
         return Object.keys(_map).length > 0;
     }
 
-    evaluateOwnerMap(siteMap, type)
+    #evaluateOwnerMap(siteMap, type)
     {
         if (type === undefined)
             return false;
@@ -45,7 +39,7 @@ class SaveGameEvaluation
         for (let _cardId of cardIds)
         {
             const _formerOwner = _cardId;
-            if (this.assignments[_formerOwner] === undefined)
+            if (this.#assignments[_formerOwner] === undefined)
             {
                 Logger.warn("Cannot find former " + type + " owner " + _formerOwner + " of " + _cardId + ". Removing card.");
                 delete siteMap[_cardId];
@@ -55,7 +49,7 @@ class SaveGameEvaluation
         return Object.keys(siteMap).length > 0;
     }
 
-    clearMap(siteMap)
+    #clearMap(siteMap)
     {
         const cardIds = Object.keys(siteMap);
         for (let _cardId of cardIds)
@@ -73,7 +67,7 @@ class SaveGameEvaluation
             if (_formerOwner === undefined)
                 continue;
             
-            if (this.assignments[_formerOwner] === undefined)
+            if (this.#assignments[_formerOwner] === undefined)
             {
                 Logger.warn("Cannot find former owner " + _formerOwner + " of company " + companyId + ". Removing card.");
                 delete companies[companyId];
@@ -89,31 +83,31 @@ class SaveGameEvaluation
     {
         if (isArda !== game.meta.arda)
         {
-            this.addError("Arda missmatch");
+            this.#addError("Arda missmatch");
             return null;
         }
         else if (!this.evaluateCardMap(game.playboard))
         {
-            this.addError("Could not restore card map.");
+            this.#addError("Could not restore card map.");
             return null;
         }
-        else if (!this.evaluateOwnerMap(game.playboard.decks.deck, "deck"))
+        else if (!this.#evaluateOwnerMap(game.playboard.decks.deck, "deck"))
         {
-            this.addError("No more decks available.");
+            this.#addError("No more decks available.");
             return null;
         }
-        else if (!this.evaluateOwnerMap(game.playboard.stagingarea, "staging area"))
+        else if (!this.#evaluateOwnerMap(game.playboard.stagingarea, "staging area"))
         {
-            this.addError("No more staging areas available. Illegal state.");
+            this.#addError("No more staging areas available. Illegal state.");
             return null;
         }
-        else if (!this.evaluateOwnerMap(game.scoring, "scoring"))
+        else if (!this.#evaluateOwnerMap(game.scoring, "scoring"))
         {
-            this.addError("No more scoring available. Illegal state.");
+            this.#addError("No more scoring available. Illegal state.");
             return null;
         }
 
-        this.clearMap(game.playboard.decks.siteMap);
+        this.#clearMap(game.playboard.decks.siteMap);
         this.evaluateCompanies(game.playboard.companies);
 
         return game;
@@ -121,10 +115,10 @@ class SaveGameEvaluation
 
     getMessageString()
     {
-        if (this.errors.length === 0)
+        if (this.#errors.length === 0)
             return "";
         else
-            return this.errors.join("; ");
+            return this.#errors.join("; ");
     }
 }
 

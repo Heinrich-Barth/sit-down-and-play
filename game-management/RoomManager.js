@@ -72,7 +72,7 @@ class RoomManager {
             return null;
     }
 
-    _createRoom(room, userId, displayname, options) 
+    #createRoom(room, userId, displayname, options) 
     {
         const isArda = options.arda;
         const isSinglePlayer = options.singleplayer;
@@ -119,7 +119,7 @@ class RoomManager {
         }
     }
 
-    _getPlayerOrVisitor(room, userid)
+    #getPlayerOrVisitor(room, userid)
     {
         const pRoom = this.getRoom(room);
         if (pRoom === null)
@@ -134,7 +134,7 @@ class RoomManager {
 
     updatePlayerToken(room, userid)
     {
-        const pPlayer = this._getPlayerOrVisitor(room, userid);
+        const pPlayer = this.#getPlayerOrVisitor(room, userid);
         if (pPlayer === null)
             return 0;
         
@@ -145,7 +145,7 @@ class RoomManager {
 
     isValidAccessToken(room, userid, lToken)
     {
-        const pPlayer = this._getPlayerOrVisitor(room, userid);
+        const pPlayer = this.#getPlayerOrVisitor(room, userid);
         if (pPlayer === null || lToken < 1)
             return false;
         else
@@ -331,7 +331,7 @@ class RoomManager {
         return res;
     }
     
-    _sendConnectivity(userid, room, connected)
+    #sendConnectivity(userid, room, connected)
     {
         if (this.#rooms[room] !== undefined)
             this.#rooms[room].publish("/game/player/indicator", "", { userid: userid, connected : connected });
@@ -339,12 +339,12 @@ class RoomManager {
 
     onReconnected(userid, room)
     {
-        this._sendConnectivity(userid, room, true);
+        this.#sendConnectivity(userid, room, true);
     }
 
     onDisconnected(userid, room)
     {
-        this._sendConnectivity(userid, room, false);
+        this.#sendConnectivity(userid, room, false);
     }
 
     kickDisconnectedPlayers(pRoom)
@@ -515,6 +515,7 @@ class RoomManager {
         }
         catch (err)
         {
+            console.error(err);
             Logger.error(err);
             pRoom.getGame().removePlayer(userid);
         }
@@ -577,6 +578,7 @@ class RoomManager {
         }
         catch (err)
         {
+            console.error(err);
             Logger.error(err);
             pRoom.getGame().removePlayer(userid);
         }
@@ -782,7 +784,7 @@ class RoomManager {
      */
     addToLobby(room, userId, displayname, jDeck, roomOptions) 
     {
-        const pRoom = this._createRoom(room, userId, displayname, roomOptions);
+        const pRoom = this.#createRoom(room, userId, displayname, roomOptions);
         const isFirst = pRoom.isEmpty();
 
         /** a singleplayer game cannot have other players and a ghost game about to die should not allow new contestants */
@@ -838,7 +840,7 @@ class RoomManager {
         if (pRoom === null)
             return "";
             
-        const pPlayer = this._getPlayerOrVisitor(room, userId);
+        const pPlayer = this.#getPlayerOrVisitor(room, userId);
         if (pPlayer === null)
             return "";
 

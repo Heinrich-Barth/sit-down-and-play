@@ -5,13 +5,15 @@ const Logger = require("../Logger");
  */
 class GameAPI 
 {
+    #io;
+    #room;
+    #funcs = {};
+    #vsPaths = [];
+
     constructor(io, room)
     {
-        this._sockets = {};
-        this._vsPaths = [];
-        this._funcs = {};
-        this._room = room;
-        this._io = io;
+        this.#room = room;
+        this.#io = io;
     }
 
     /**
@@ -21,13 +23,13 @@ class GameAPI
      */
     addListener(sPath, func_callback)
     {
-        if (typeof this._funcs[sPath] === "undefined")
+        if (typeof this.#funcs[sPath] === "undefined")
         {
-            this._vsPaths.push(sPath);
+            this.#vsPaths.push(sPath);
             if (typeof func_callback === "function")
-                this._funcs[sPath] = func_callback;
+                this.#funcs[sPath] = func_callback;
             else
-                this._funcs[sPath] = function() { /** fallback */};
+                this.#funcs[sPath] = function() { /** fallback */};
         }
     }
     
@@ -40,7 +42,7 @@ class GameAPI
      */
     onPath(socket, path, data)
     {
-        if (path === "" || typeof this._funcs[path] === "undefined")
+        if (path === "" || typeof this.#funcs[path] === "undefined")
         {
             Logger.info("no endpint available at requested path (not printed for security reasons).");
             return;
@@ -48,7 +50,7 @@ class GameAPI
 
         try
         {
-            this._funcs[path](socket.userid, socket, data);
+            this.#funcs[path](socket.userid, socket, data);
         } 
         catch (e)
         {
@@ -65,7 +67,7 @@ class GameAPI
     initGameEndpoint(socket)
     {
         const THIS = this;
-        for (const path of this._vsPaths)
+        for (const path of this.#vsPaths)
             socket.on(path, (data) => THIS.onPath(socket, path, data));
 
         socket.isingame = true;
@@ -83,7 +85,7 @@ class GameAPI
         if (typeof data === "undefined")
             data = {};
 
-        this._io.to(socket.room).emit(path, data);
+        this.#io.to(socket.room).emit(path, data);
     }
 
     /**
@@ -114,7 +116,7 @@ class GameAPI
         if (typeof data === "undefined")
             data = {};
         
-        this._io.to(this._room).emit(sPath, {target: player, payload: data});
+        this.#io.to(this.#room).emit(sPath, {target: player, payload: data});
     }
 }
 

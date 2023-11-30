@@ -4,17 +4,14 @@
  */
 class PlayerDices {
     
-    constructor()
-    {
-        this.dices = { };
-        this.stats = { };
-        this.diceList = ["black", "black-grey", "gold", "gold-light", "grey", "minion", "red", "redblack", "redwhite", "rune-alatar", "rune-gandalf", "rune-palando", "rune-radagast", "rune-saruman", "zblack-marc"];
-    }
+    #dices = { };
+    #stats = { };
+    static #diceList = ["black", "black-grey", "gold", "gold-light", "grey", "minion", "red", "redblack", "redwhite", "rune-alatar", "rune-gandalf", "rune-palando", "rune-radagast", "rune-saruman", "zblack-marc"];
 
     /**
      * Random number [1-nMax]
      */
-    getRandom(nMax)
+    #getRandom(nMax)
     {
         if (nMax === undefined || nMax < 1)
             nMax = 6;
@@ -28,18 +25,18 @@ class PlayerDices {
       */
     roll()
     {
-        const nTimes = this.getRandom(10);
+        const nTimes = this.#getRandom(10);
             
         let _res = 6;
         for (let i = 0; i < nTimes; i++)
-            _res = this.getRandom(6);
+            _res = this.#getRandom(6);
 
         return _res;
     }
 
     getStats()
     {
-        return this.stats;
+        return this.#stats;
     }
 
     saveRoll(userid, nValue)
@@ -47,16 +44,16 @@ class PlayerDices {
         if (nValue < 1 || nValue > 12 || userid === "")
             return false;
 
-        if (this.stats[userid] === undefined)
+        if (this.#stats[userid] === undefined)
         {
             const data = { };
             for (let i = 1; i < 13; i++)
                 data["" + i] = 0;
 
-            this.stats[userid] = data;
+            this.#stats[userid] = data;
         }
 
-        this.stats[userid]["" + nValue] += 1;
+        this.#stats[userid]["" + nValue] += 1;
         return true;
     }
 
@@ -66,7 +63,7 @@ class PlayerDices {
      */
     getAvailableDices()
     {
-        return [...this.diceList];
+        return [...PlayerDices.#diceList];
     }
 
     /**
@@ -76,8 +73,8 @@ class PlayerDices {
     getDices()
     {
         let res = {};
-        for (let key in this.dices)
-            res[key] = this.dices[key];
+        for (let key in this.#dices)
+            res[key] = this.#dices[key];
 
         return res;
     }
@@ -89,7 +86,7 @@ class PlayerDices {
      */
     getDice(userid)
     {
-        return userid === undefined || userid === "" || this.dices[userid] === undefined ? "" : this.dices[userid]; 
+        return userid === undefined || userid === "" || this.#dices[userid] === undefined ? "" : this.#dices[userid]; 
     }
 
     /**
@@ -104,9 +101,9 @@ class PlayerDices {
         if (userid === undefined || userid === "" || dice === undefined || dice === "")
             return false;
 
-        if (this.diceList.includes(dice))
+        if (PlayerDices.#diceList.includes(dice))
         {
-            this.dices[userid] = dice;
+            this.#dices[userid] = dice;
             return true;
         }
         else

@@ -5,14 +5,16 @@ const Logger = require("../Logger");
  */
 class DeckCommons {
     
+    #id;
+    #deck_uuid_count = 0;
+
     /**
      * Create instance
      * @param {String} playerId 
      */
     constructor(playerId)
     {      
-        this.id = playerId;
-        this.g_deck_uuid_count = 0;
+        this.#id = playerId;
     }
 
     /**
@@ -30,7 +32,7 @@ class DeckCommons {
      */
     getPlayerId()
     {
-        return this.id;
+        return this.#id;
     }
 
     /**
@@ -41,7 +43,7 @@ class DeckCommons {
     save(isAdmin)
     {
         return {
-            id : this._id,
+            id : this.#id,
             ishost : isAdmin
         };
     }
@@ -230,7 +232,7 @@ class DeckCommons {
      */
     createNewCardUuid()
     {
-        return ++this.g_deck_uuid_count;
+        return ++this.#deck_uuid_count;
     }
 
     /**

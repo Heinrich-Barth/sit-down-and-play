@@ -281,6 +281,7 @@ class GameRoom
         }
         catch (err)
         {
+            console.error(err);
             Logger.error(err);
         }
     }
@@ -331,6 +332,7 @@ class GameRoom
         }
         catch(err)
         {
+            console.error(err);
             Logger.error(err);
         }
     }

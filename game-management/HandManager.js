@@ -7,33 +7,37 @@ class HandManager
         this.DECKS = pDecks;
     }
 
+    getPlayerDeck(playerId)
+    {
+        return this.DECKS.getPlayerDeck(playerId);
+    }
+
     getCardPils(playerId, type)
     {
-        if (typeof this.DECKS._deck[playerId] === "undefined")
+        const deck = this.getPlayerDeck(playerId);
+        if (deck === null)
         {
             Logger.warn("Cannod find deck of player #" + playerId);
             return [];
         }
-        else if (typeof this.DECKS._deck[playerId][type] === "undefined")
+
+        const val = deck[type];
+        if (typeof val === "undefined")
         {
             Logger.warn("Cannod find " + type + " pile of player #" + playerId);
             return [];
         }
-        else 
-        {
-            return this.DECKS._deck[playerId][type];
-        }
+
+        return val;
     }
 
     size(playerId)
     {
-        if (typeof this.DECKS._deck[playerId] === "undefined")
-        {
-            Logger.warn("decksize: Cannod find deck of player #" + playerId);
+        const deck = this.getPlayerDeck(playerId);
+        if (deck === null)
             return null;
-        }
         else
-            return this.DECKS._deck[playerId].size();
+            return deck.size();
     }
 
     sites(playerId)
@@ -74,7 +78,7 @@ class HandManager
     getShared(type, ignorePlayId)
     {
         let list = [];
-        for (let id of Object.keys(this.DECKS._deck))
+        for (let id of Object.keys(this.DECKS.getDecks()))
         {
             if (id !== ignorePlayId)
                 list = list.concat(this.getCardPils(id, type));

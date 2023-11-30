@@ -688,7 +688,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
             return this.GetCardByUuid(vsChars[0].uuid);
     }
 
-    _addCharacter(jsonChar, targetList)
+    #addCharacter(jsonChar, targetList)
     {
         if (typeof jsonChar === "undefined" || typeof jsonChar.uuid === "undefined")
             return;
@@ -723,7 +723,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         if (typeof jsonChar.influenced !== "undefined")
         {
             for (let _uuid of jsonChar.influenced)
-                this._addCharacter({uuid : _uuid, influenced : []}, elem.influenced);
+                this.#addCharacter({uuid : _uuid, influenced : []}, elem.influenced);
         }
 
         targetList.push(elem);
@@ -751,7 +751,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         };
 
         for (let _char of pCompany.characters)
-            this._addCharacter(_char, company.characters);
+            this.#addCharacter(_char, company.characters);
 
         return company;
     }

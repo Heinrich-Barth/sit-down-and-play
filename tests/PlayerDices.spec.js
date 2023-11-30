@@ -30,25 +30,6 @@ describe('Test', () => {
         }
 
     });
-    it("getRandom()", () => {
-
-        const pInstance = new PlayerDices();
-        
-        for (let i = 0; i < 100; i++)
-        {
-            let val = pInstance.getRandom();
-            expect(val > 0).toBeTruthy();
-            expect(val < 7).toBeTruthy();
-        }
-
-        const MAX = 100;
-        for (let i = 0; i < 100; i++)
-        {
-            let val = pInstance.getRandom(MAX);
-            expect(val > 0).toBeTruthy();
-            expect(val < MAX+1).toBeTruthy();
-        }
-    });
     
     it("roll100 times", () => {
 

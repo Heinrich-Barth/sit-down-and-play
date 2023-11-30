@@ -3,6 +3,8 @@ const EventManager = require("../EventManager");
 
 class GameBase {
 
+    #adminUser = "";
+
     constructor(_MeccgApi, _Chat, playboardManager)
     {
         this.apis = {
@@ -11,7 +13,7 @@ class GameBase {
         };
 
         this.playboardManager = playboardManager;
-        this._adminUser = "";
+        
         this.player_phase =  "start";
         this.started = null;
         this.bSingle = false;
@@ -29,6 +31,7 @@ class GameBase {
         }
         catch (err)
         {
+            console.error(err);
             Logger.error(err);
         }
     }            
@@ -87,7 +90,7 @@ class GameBase {
 
         data.meta = {
             phase : this.player_phase,
-            admin : this._adminUser,
+            admin : this.#adminUser,
             arda : this.isArda(),
             gameduration: this.getGameDuration(),
             players : null
@@ -124,8 +127,8 @@ class GameBase {
 
     setGameAdminUser(id)
     {
-        if (id !== undefined && id !== "" && this._adminUser === "")
-            this._adminUser = id;
+        if (id !== undefined && id !== "" && this.#adminUser === "")
+            this.#adminUser = id;
     }
 
     reset()
@@ -180,7 +183,7 @@ class GameBase {
 
     getHost()
     {
-        return this._adminUser;
+        return this.#adminUser;
     }
 
     isSinglePlayer()

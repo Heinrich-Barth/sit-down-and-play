@@ -7,6 +7,16 @@ const Logger = require("../Logger");
  */
 class Chat {
 
+    #api;
+    #endpoint;
+    #saveLogsAfter
+    #gameLogFileUri;
+    #gameLogfileName;
+
+    #players = {};
+    #vsLogs = [];
+    #hasLogData = false;
+
     /**
      * Create instance
      * @param {Object} pApi Game API Reference
@@ -14,25 +24,27 @@ class Chat {
      */
     constructor(pApi, sEndpoint, room, saveLogsAfter)
     {
-        this._api = pApi;
-        this._endpoint = sEndpoint;
-        this._players = {};
-        this._log = [];
+        this.#api = pApi;
+        this.#endpoint = sEndpoint;
         const gameLogfileName = Chat.#requireGameLogFile(room) 
-        this._gameLogFileUri = path.join(__dirname + "/../logs/" + gameLogfileName);
-        this._gameLogfileName = gameLogfileName;
-        this._hasLogData = false;
-        this.saveLogsAfter = saveLogsAfter;
+        this.#gameLogFileUri = path.join(__dirname + "/../logs/" + gameLogfileName);
+        this.#gameLogfileName = gameLogfileName;
+        this.#saveLogsAfter = saveLogsAfter;
     }
 
     hasLogData()
     {
-        return this._hasLogData;
+        return this.#hasLogData;
+    }
+
+    getLogSize()
+    {
+        return this.#vsLogs.length;
     }
 
     getGameLogFile()
     {
-        return this._gameLogfileName;
+        return this.#gameLogfileName;
     }
 
     static #requireGameLogFile(room)
@@ -42,30 +54,30 @@ class Chat {
 
     addPlayer(userid, displayname, deckChecksum)
     {
-        this._players[userid] = displayname;
+        this.#players[userid] = displayname;
         this.#appendLog(displayname + " joins the game (deck #" + deckChecksum + ")", "");
     }
 
     #appendLog(message, userid = "")
     {
-        if (message === "" || this.saveLogsAfter < 10)
+        if (message === "" || this.#saveLogsAfter < 10)
             return;
 
         if (userid === "")
-            this._log.push(message);
+            this.#vsLogs.push(message);
         else
-            this._log.push(this.#getUserName(userid) + " " + message);
+            this.#vsLogs.push(this.#getUserName(userid) + " " + message);
 
-        if (this._log.length > this.saveLogsAfter)
+        if (this.#vsLogs.length > this.#saveLogsAfter)
         {
-            this._hasLogData = true;
+            this.#hasLogData = true;
             this.saveGameLog();
         }
     }
 
     #getUserName(userid)
     {
-        const val = this._players[userid];
+        const val = this.#players[userid];
         return val === undefined ? "A player" : val;
     }
 
@@ -157,16 +169,16 @@ class Chat {
 
     saveGameLog()
     {
-        if (!this._hasLogData)
+        if (!this.#hasLogData)
             return;
         
-        fs.appendFile(this._gameLogFileUri, this._log.join("\n"), function (err) 
+        fs.appendFile(this.#gameLogFileUri, this.#vsLogs.join("\n"), function (err) 
         {
             if (err)
                 Logger.error(err.message);
         });
 
-        this._log = [""];
+        this.#vsLogs = [""];
     }
 
     /**
@@ -177,10 +189,10 @@ class Chat {
      */
     sendMessage(userid, text, saveGameLog = false)
     {
-        if (this._endpoint === undefined || this._endpoint === "" || this._api === null || text.indexOf(">") !== -1 || text.indexOf("<") !== -1)
+        if (this.#endpoint === undefined || this.#endpoint === "" || this.#api === null || text.indexOf(">") !== -1 || text.indexOf("<") !== -1)
             return;
 
-        this._api.publish(this._endpoint, userid, {
+        this.#api.publish(this.#endpoint, userid, {
             userid: userid,
             message: text
         });

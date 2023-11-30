@@ -4,18 +4,13 @@ const DeckArda = require("./DeckArda");
 
 class DeckManagerArda extends DeckManager {
 
-    constructor()
-    {
-        super();
-
-        this.adminUserId = "";
-        this.singlePlayer = false;
-        this.poolGame = { };
-    }
-
+    #adminUserId = "";
+    #singlePlayer = false;
+    #poolGame = { };
+    
     getAdminDeck()
     {
-        return super.getPlayerDeck(this.adminUserId);
+        return super.getPlayerDeck(this.#adminUserId);
     }
 
     newDeckInstance(playerId)
@@ -35,7 +30,7 @@ class DeckManagerArda extends DeckManager {
 
     isSinglePlayer()
     {
-        return this.singlePlayer;
+        return this.#singlePlayer;
     }
 
     shuffleArdaMarshallingPoints()
@@ -50,7 +45,7 @@ class DeckManagerArda extends DeckManager {
         for (let key of Object.keys(decks.deck))
         {
             if (decks.deck[key].ishost === false)
-                this.updateDeckData(key, this.adminUserId)
+                this.updateDeckData(key, this.#adminUserId)
         }
 
         return true;
@@ -61,19 +56,19 @@ class DeckManagerArda extends DeckManager {
         if (super.deckCount() === 0)
         {
             for (let _key in jsonDeck["pool"])
-                this.poolGame[_key] = jsonDeck["pool"][_key];
+                this.#poolGame[_key] = jsonDeck["pool"][_key];
         }
         else
         {
             jsonDeck["pool"] = { };
-            for (let _key in this.poolGame)
-                jsonDeck["pool"][_key] = this.poolGame[_key];
+            for (let _key in this.#poolGame)
+                jsonDeck["pool"][_key] = this.#poolGame[_key];
         }
 
         const pDeck = super.addDeck(playerId, jsonDeck, listAgents, gameCardProvider);
         if (super.deckCount() === 1)
         {
-            this.adminUserId = playerId;
+            this.#adminUserId = playerId;
 
             /** all players share the same minor item hand */
             this.drawMinorItems(playerId, 4);
@@ -82,7 +77,7 @@ class DeckManagerArda extends DeckManager {
         }
         else
         {
-            this.updateDeckData(playerId, this.adminUserId);
+            this.updateDeckData(playerId, this.#adminUserId);
         }
 
         /** every player draws their own MP hand */

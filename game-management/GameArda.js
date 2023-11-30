@@ -3,16 +3,11 @@ const GameStandard = require("./GameStandard");
 
 class GameArda extends GameStandard
 {
-    constructor(_MeccgApi, _Chat, _playboardManager)
-    {
-        super(_MeccgApi, _Chat, _playboardManager)
-        
-        this.reycled = {
-            minors : false,
-            characters: false,
-            ready : false,
-        };
-    }
+    #reycled = {
+        minors : false,
+        characters: false,
+        ready : false,
+    };
 
     isSinglePlayer()
     {
@@ -280,7 +275,7 @@ class GameArda extends GameStandard
         {
             deck.recycleMinorItems();
             this.publishChat(userid, "recycled all minor items");
-            this.reycled.minors = true;
+            this.#reycled.minors = true;
             isMinor = true;
         }
         else if (obj.type === "charackters")
@@ -290,7 +285,7 @@ class GameArda extends GameStandard
             deck.recycleCharacter();
             deck.shuffle();
             this.publishChat(userid, "recycled all characters");
-            this.reycled.characters = true;
+            this.#reycled.characters = true;
         }
         else
             return;
@@ -317,7 +312,7 @@ class GameArda extends GameStandard
 
     drawOpeningHand()
     {
-        if (!this.reycled.characters || !this.reycled.minors)
+        if (!this.#reycled.characters || !this.#reycled.minors)
             return;
 
         const players = this.getDeckManager().getPlayers();
@@ -357,7 +352,7 @@ class GameArda extends GameStandard
         this.assignOpeningChars7();
         this.assignOpeningChars(8);
 
-        this.reycled.ready = true;
+        this.#reycled.ready = true;
         this.onCheckDraft(userid, socket);
     }
 
@@ -444,9 +439,9 @@ class GameArda extends GameStandard
     onCheckDraft(_userid, socket)
     {
         let data = {
-            characters: this.reycled.characters,
-            minoritems: this.reycled.minors,
-            ready: this.reycled.ready
+            characters: this.#reycled.characters,
+            minoritems: this.#reycled.minors,
+            ready: this.#reycled.ready
         };
 
         this.replyToPlayer("/game/arda/checkdraft", socket, data);

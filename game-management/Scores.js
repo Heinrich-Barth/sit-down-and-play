@@ -40,26 +40,28 @@ const g_pScores = loadScoreStats();
 
 class ScorintSheet {
 
+    #total = 0;
+    #sheet;
+
     constructor(isExtended)
     {
-        this._sheet = createNewScoreSheet(isExtended);
-        this._total = 0;
+        this.#sheet = createNewScoreSheet(isExtended);
     }
 
     updateCategory(type, nPoints)
     {
-        if (type !== "" && typeof this._sheet[type] !== "undefined")
-            this._sheet[type] += nPoints;
+        if (type !== "" && typeof this.#sheet[type] !== "undefined")
+            this.#sheet[type] += nPoints;
 
-        return this._calculate();
+        return this.#calculate();
     }
 
     setCategory(type, nPoints)
     {
-        if (type !== "" && typeof this._sheet[type] !== "undefined")
-            this._sheet[type] = nPoints;
+        if (type !== "" && typeof this.#sheet[type] !== "undefined")
+            this.#sheet[type] = nPoints;
 
-        return this._calculate();
+        return this.#calculate();
     }
 
     /**
@@ -68,25 +70,25 @@ class ScorintSheet {
      */
     update(jData)
     {
-        for (let key in this._sheet)
+        for (let key in this.#sheet)
         {
             if (typeof jData[key] !== "undefined")
-                this._sheet[key] = jData[key];
+                this.#sheet[key] = jData[key];
         }
 
-        return this._calculate();
+        return this.#calculate();
     }
 
     getTotal()
     {
-        return this._total;
+        return this.#total;
     }
 
     getSheet()
     {
         let _res = { };
-        for (let key in this._sheet)
-            _res[key] = this._sheet[key];
+        for (let key in this.#sheet)
+            _res[key] = this.#sheet[key];
 
         return _res;
     }
@@ -94,25 +96,25 @@ class ScorintSheet {
     /**
      * Calculate total
      */
-    _calculate()
+    #calculate()
     {
         let _tot = 0;
 
-        for (let key in this._sheet)
+        for (let key in this.#sheet)
         {
             if (key !== "stage")
-                _tot += this._sheet[key];
+                _tot += this.#sheet[key];
         }
 
-        this._total = _tot;
+        this.#total = _tot;
         return _tot;
     }
     
     save()
     {
         return {
-            scores: this._sheet,
-            total: this._total
+            scores: this.#sheet,
+            total: this.#total
         };
     }
 
@@ -122,33 +124,35 @@ class ScorintSheet {
             return;
 
         this.total = 0;
-        for (let key of Object.keys(this._sheet))
+        for (let key of Object.keys(this.#sheet))
         {
-            this._sheet[key] = scores[key] === undefined ? 0 : parseInt(scores[key]);
-            this.total += this._sheet[key];
+            this.#sheet[key] = scores[key] === undefined ? 0 : parseInt(scores[key]);
+            this.total += this.#sheet[key];
         }
     }
 }
 
 class Scores {
     
+    #sheets = { };
+    #isExtended;
+
     constructor(isExtended)
     {
-        this._sheets = { };
-        this._isExtended = isExtended;
+        this.#isExtended = isExtended;
     }
 
     reset()
     {
-        this._sheets = { };
+        this.#sheets = { };
     }
 
     save()
     {
         let data = {};
-        let keys = Object.keys(this._sheets);
+        let keys = Object.keys(this.#sheets);
         for (let key of keys)
-            data[key] = this._sheets[key].save();
+            data[key] = this.#sheets[key].save();
 
         return data;
     }
@@ -161,7 +165,7 @@ class Scores {
         for (let sPlayerId of keys)
         {  
             this.add(sPlayerId);
-            this._sheets[sPlayerId].restore(scores[sPlayerId].scores);
+            this.#sheets[sPlayerId].restore(scores[sPlayerId].scores);
         }
 
         return true;
@@ -174,56 +178,56 @@ class Scores {
      */
     add(sPlayerId)
     {
-        if (typeof this._sheets[sPlayerId] === "undefined")
-            this._sheets[sPlayerId] = new ScorintSheet(this._isExtended);
+        if (typeof this.#sheets[sPlayerId] === "undefined")
+            this.#sheets[sPlayerId] = new ScorintSheet(this.#isExtended);
     }
 
     update(userid, type, nPoints)
     {
-        if (typeof this._sheets[userid] === "undefined" || nPoints === 0)
+        if (typeof this.#sheets[userid] === "undefined" || nPoints === 0)
             return -1;
         else
-            return this._sheets[userid].updateCategory(type, nPoints);
+            return this.#sheets[userid].updateCategory(type, nPoints);
     }
 
     getScoreSheets() 
     {
         let sheets = { };
         
-        for (let key in this._sheets)
-            sheets[key] = this._sheets[key].getSheet();
+        for (let key in this.#sheets)
+            sheets[key] = this.#sheets[key].getSheet();
         
         return sheets;
     }
 
     getScoreSheet(userid)
     {
-        if (typeof this._sheets[userid] === "undefined")
+        if (typeof this.#sheets[userid] === "undefined")
             return { };
         else
-            return this._sheets[userid].getSheet();
+            return this.#sheets[userid].getSheet();
     }
 
     getPlayerScore(sPlayerId)
     {
-        if (typeof this._sheets[sPlayerId] === "undefined")
+        if (typeof this.#sheets[sPlayerId] === "undefined")
             return -1;
         else
-            return this._sheets[sPlayerId].getTotal();
+            return this.#sheets[sPlayerId].getTotal();
     }
 
     updateScore(sPlayerId, jData)
     {
-        if (typeof this._sheets[sPlayerId] !== "undefined")
-            return this._sheets[sPlayerId].update(jData);
+        if (typeof this.#sheets[sPlayerId] !== "undefined")
+            return this.#sheets[sPlayerId].update(jData);
         else
             return -1;
     }
 
     setCategory(sPlayerId, type, nPoints)
     {
-        if (typeof this._sheets[sPlayerId] !== "undefined")
-            return this._sheets[sPlayerId].setCategory(type, nPoints);
+        if (typeof this.#sheets[sPlayerId] !== "undefined")
+            return this.#sheets[sPlayerId].setCategory(type, nPoints);
         else
             return -1;
     }

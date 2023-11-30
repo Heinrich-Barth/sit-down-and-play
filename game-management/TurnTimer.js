@@ -1,9 +1,6 @@
 class TurnTimer {
 
-    constructor()
-    {
-        this._start = Date.now();
-    }
+    #start = Date.now();
 
     reset()
     {
@@ -12,12 +9,12 @@ class TurnTimer {
 
     update(lNow)
     {
-        this._start = lNow;
+        this.#start = lNow;
     }
 
     getElapsedMins(lNow)
     {
-        const lDuration = lNow - this._start;
+        const lDuration = lNow - this.#start;
         return new Date(lDuration).getMinutes();
     }
 

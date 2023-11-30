@@ -31,39 +31,41 @@ Object.defineProperties(CARD_STATE, {
 
 class DeckManager {
 
-    constructor()
+    #uuid_count = 0;
+    #cardMap = { };
+    #siteMap = { };
+    #deck = { };
+    #handManager = null;
+    #firstPlayerId = "";
+
+    getDecks()
     {
-        this._uuid_count = 0;
-        this._cardMap = { };
-        this._siteMap = { };
-        this._deck = { };
-        this._handManager = null;
-        this._firstPlayerId = "";
+        return this.#deck;
     }
 
     save()
     {
         let jData = 
         {
-            admin : this._firstPlayerId,
-            uuid_count : this._uuid_count,
-            cardMap : this._cardMap,
-            siteMap : this._siteMap,
+            admin : this.#firstPlayerId,
+            uuid_count : this.#uuid_count,
+            cardMap : this.#cardMap,
+            siteMap : this.#siteMap,
             deck : { }
         };
         
-        for (let key in this._deck) 
-            jData.deck[key] = this._deck[key].save(this._firstPlayerId === key);
+        for (let key in this.#deck) 
+            jData.deck[key] = this.#deck[key].save(this.#firstPlayerId === key);
 
         return jData;
     }
 
     size(playerid)
     {
-        if (playerid == undefined || this._deck[playerid] === undefined)
+        if (playerid == undefined || this.#deck[playerid] === undefined)
             return null;
         else
-            return this._deck[playerid].size();
+            return this.#deck[playerid].size();
     }
 
     resoteCardMapCloneCard(_input)
@@ -77,7 +79,7 @@ class DeckManager {
         if (data === null || data === undefined)
             return;
 
-        this._cardMap = { };
+        this.#cardMap = { };
 
         for (let key of Object.keys(data))
         {
@@ -85,24 +87,24 @@ class DeckManager {
             if (_card === null)
                 throw new Error("Cannot duplicate card");
             else
-                this._cardMap[key] = _card;
+                this.#cardMap[key] = _card;
         }
     }
 
     restoreSiteMap(data)
     {
-        this._siteMap = { };
+        this.#siteMap = { };
 
         if (data === null || data === undefined)
             return;
 
         for (let key of Object.keys(data))
         {
-            this._siteMap[key] = {};
+            this.#siteMap[key] = {};
 
             let _site = data[key];
             for (let site of Object.keys(_site))
-                this._siteMap[key][site] = _site[site] === true;
+                this.#siteMap[key][site] = _site[site] === true;
         }
     }
 
@@ -114,7 +116,7 @@ class DeckManager {
             {
                 let deck = this.newDeckInstance(key);
                 deck.restore(decks.deck[key]);
-                this._deck[key] = deck;
+                this.#deck[key] = deck;
             }
         }
     }
@@ -163,14 +165,14 @@ class DeckManager {
 
     reset()
     {
-        this._uuid_count = 0;
-        this._cardMap = { };
-        this._deck = { };
+        this.#uuid_count = 0;
+        this.#cardMap = { };
+        this.#deck = { };
     }
     
     getPlayers()
     {
-        return Object.keys(this._deck);
+        return Object.keys(this.#deck);
     }
     
     newDeckInstance(_playerId)
@@ -181,32 +183,32 @@ class DeckManager {
     addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
     {
         let deck = this.newDeckInstance(playerId)
-        deck.addDeck(jsonDeck, listAgents, this._cardMap, gameCardProvider);
+        deck.addDeck(jsonDeck, listAgents, this.#cardMap, gameCardProvider);
         deck.shuffle();
-        this._deck[playerId] = deck;
+        this.#deck[playerId] = deck;
 
-        if (this._firstPlayerId === "")
-            this._firstPlayerId = playerId;
+        if (this.#firstPlayerId === "")
+            this.#firstPlayerId = playerId;
 
         return deck;
     }
 
     deckCount()
     {
-        return Object.keys(this._deck).length;
+        return Object.keys(this.#deck).length;
     }
     
     addCardsToSideboardDuringGame(playerId, jsonDeck, listAgents, gameCardProvider)
     {
-        if (typeof this._deck[playerId] === "undefined")
+        if (typeof this.#deck[playerId] === "undefined")
             Logger.info("Could not find deck " + playerId);
 
-        return typeof this._deck[playerId] === "undefined" ? -1 : this._deck[playerId].registerCardsToSideboard(jsonDeck, listAgents, this._cardMap, gameCardProvider);
+        return typeof this.#deck[playerId] === "undefined" ? -1 : this.#deck[playerId].registerCardsToSideboard(jsonDeck, listAgents, this.#cardMap, gameCardProvider);
     }
 
     importCardsToHand(playerId, code, bAsCharacter, gameCardProvider)
     {
-        if (typeof this._deck[playerId] === "undefined")
+        if (typeof this.#deck[playerId] === "undefined")
         {
             Logger.info("Could not find deck " + playerId);
             return false;
@@ -217,99 +219,99 @@ class DeckManager {
             return false;
         }
         else
-            return this._deck[playerId].importCardsToHand(code, bAsCharacter, this._cardMap, gameCardProvider);
+            return this.#deck[playerId].importCardsToHand(code, bAsCharacter, this.#cardMap, gameCardProvider);
 
     }
 
     importCardsToGame(playerId, code, bAsCharacter, gameCardProvider)
     {
-        if (typeof this._deck[playerId] === "undefined" || code === "")
+        if (typeof this.#deck[playerId] === "undefined" || code === "")
             return "";
         else
-            return this._deck[playerId].importCardsToDeck(code, bAsCharacter, this._cardMap, gameCardProvider);
+            return this.#deck[playerId].importCardsToDeck(code, bAsCharacter, this.#cardMap, gameCardProvider);
     }
 
     getCards() 
     {
-        if (this._handManager === null)
-            this._handManager = this.creatHandManager();
+        if (this.#handManager === null)
+            this.#handManager = this.creatHandManager();
         
-        return this._handManager;
+        return this.#handManager;
     }
 
     getPlayerDeck(playerId)
     {
-        if (typeof this._deck[playerId] === "undefined")
+        if (typeof this.#deck[playerId] === "undefined")
         {
             Logger.warn("Cannot find deck of player " + playerId);
             return null;
         }
         else
-            return this._deck[playerId];
+            return this.#deck[playerId];
     }
 
     flipCard(uuid)
     {
-        if (typeof this._cardMap[uuid] === "undefined")
+        if (typeof this.#cardMap[uuid] === "undefined")
             return false;
 
-        this._cardMap[uuid].revealed = !this._cardMap[uuid].revealed;
-        return this._cardMap[uuid].revealed;
+        this.#cardMap[uuid].revealed = !this.#cardMap[uuid].revealed;
+        return this.#cardMap[uuid].revealed;
     }
     
-    _clearSitesTappedByPlaer(playerId)
+    #clearSitesTappedByPlaer(playerId)
     {
-        if (typeof playerId !== "undefined" && typeof this._siteMap[playerId] !== "undefined")
+        if (typeof playerId !== "undefined" && typeof this.#siteMap[playerId] !== "undefined")
         {
-            this._siteMap[playerId] = {};
+            this.#siteMap[playerId] = {};
             Logger.info("cleared tapped sites.")
         }
     }
     
-    _tapSiteState(playerId, code, bTapped)
+    #tapSiteState(playerId, code, bTapped)
     {
-        if (typeof this._siteMap[playerId] === "undefined")
-            this._siteMap[playerId] = {};
+        if (typeof this.#siteMap[playerId] === "undefined")
+            this.#siteMap[playerId] = {};
         
-        if (bTapped && typeof this._siteMap[playerId][code] === "undefined")
-            this._siteMap[playerId][code] = true;
-        else if (!bTapped && typeof this._siteMap[playerId][code] !== "undefined")
-            delete this._siteMap[playerId][code];
+        if (bTapped && typeof this.#siteMap[playerId][code] === "undefined")
+            this.#siteMap[playerId][code] = true;
+        else if (!bTapped && typeof this.#siteMap[playerId][code] !== "undefined")
+            delete this.#siteMap[playerId][code];
     }
     
-    _siteIsTapped(playerId, code)
+    #siteIsTapped(playerId, code)
     {
         if (typeof playerId === "undefined" || playerId === "" || typeof code === "undefined" || code === "")
             return false;
         else
-            return typeof this._siteMap[playerId] !== "undefined" && typeof this._siteMap[playerId][code] !== "undefined";
+            return typeof this.#siteMap[playerId] !== "undefined" && typeof this.#siteMap[playerId][code] !== "undefined";
     }
 
-    _getTappedSites(playerId)
+    #getTappedSites(playerId)
     {
-        if (typeof playerId === "undefined" || playerId === "" || typeof this._siteMap[playerId] === "undefined")
+        if (typeof playerId === "undefined" || playerId === "" || typeof this.#siteMap[playerId] === "undefined")
             return { };
         else
-            return  this._siteMap[playerId];
+            return  this.#siteMap[playerId];
     }
 
-    _setCardState(uuid, nState)
+    #setCardState(uuid, nState)
     {
-        if (typeof this._cardMap[uuid] === "undefined")
+        if (typeof this.#cardMap[uuid] === "undefined")
             return -1;
         else
         {
-            this._cardMap[uuid].state = nState;
+            this.#cardMap[uuid].state = nState;
             return nState;
         }
     }
 
-    _isCardState(uuid, nState)
+    #isCardState(uuid, nState)
     {
-        if (typeof this._cardMap[uuid] === "undefined")
+        if (typeof this.#cardMap[uuid] === "undefined")
             return false;
         else
-            return this._cardMap[uuid].state === nState;
+            return this.#cardMap[uuid].state === nState;
     }
 
     getCharacters(playerid)
@@ -318,9 +320,9 @@ class DeckManager {
             return [];
         
         const codes = [];
-        Object.keys(this._cardMap).forEach(uuid => 
+        Object.keys(this.#cardMap).forEach(uuid => 
         {
-            const card = this._cardMap[uuid];
+            const card = this.#cardMap[uuid];
             if (card.owner === playerid && (card.type === "character" || card.type === "avatar") && !codes.includes(card.code))
                 codes.push(card.code);
         })
@@ -330,66 +332,66 @@ class DeckManager {
 
     tapCard(uuid)
     {
-        return this._setCardState(uuid, CARD_STATE.tapped);
+        return this.#setCardState(uuid, CARD_STATE.tapped);
     }
 
     woundCard(uuid)
     {
-        return this._setCardState(uuid, CARD_STATE.wounded);
+        return this.#setCardState(uuid, CARD_STATE.wounded);
     }
 
     tapCardFixed(uuid)
     {
-        return this._setCardState(uuid, CARD_STATE.tapped_fixed);
+        return this.#setCardState(uuid, CARD_STATE.tapped_fixed);
     }
 
     readySite(playerId, code)
     {
-        return this._tapSiteState(playerId, code, false);
+        return this.#tapSiteState(playerId, code, false);
     }
     
     clearPlayerSites(playerId)
     {
-        return this._clearSitesTappedByPlaer(playerId);
+        return this.#clearSitesTappedByPlaer(playerId);
     }
     
     tapSite(playerId, code)
     {
-        return this._tapSiteState(playerId, code, true);
+        return this.#tapSiteState(playerId, code, true);
     }
     
     siteIsTapped(playerId, code)
     {
-        return this._siteIsTapped(playerId, code);
+        return this.#siteIsTapped(playerId, code);
     }
 
     getTappedSites(playerId)
     {
-        return this._getTappedSites(playerId);
+        return this.#getTappedSites(playerId);
     }
     
     readyCard(uuid)
     {
-        return this._setCardState(uuid, CARD_STATE.ready);
+        return this.#setCardState(uuid, CARD_STATE.ready);
     }
     triceTapCard(uuid)
     {
-        return this._setCardState(uuid, CARD_STATE.rot270);
+        return this.#setCardState(uuid, CARD_STATE.rot270);
     }
 
     isStateWounded (uuid)
     {
-        return this._isCardState(uuid, CARD_STATE.wounded);
+        return this.#isCardState(uuid, CARD_STATE.wounded);
     }
 
     isStateTapped(uuid)
     {
-        return this._isCardState(uuid, CARD_STATE.tapped);
+        return this.#isCardState(uuid, CARD_STATE.tapped);
     }
 
     getFullPlayerCard(uuid)
     {
-        if (uuid === "" || typeof this._cardMap[uuid] === "undefined")
+        if (uuid === "" || typeof this.#cardMap[uuid] === "undefined")
         {
             if (uuid !== "_site")
                 Logger.warn("Cannot find card by uuid " + uuid);
@@ -397,7 +399,7 @@ class DeckManager {
             return null;
         }
         else
-            return this._cardMap[uuid];
+            return this.#cardMap[uuid];
     }
 
     updateToken(uuid, bAdd)

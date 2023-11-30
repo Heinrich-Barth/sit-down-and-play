@@ -7,18 +7,13 @@ const Logger = require("../Logger");
 
 class GameStandard extends GamePlayers
 {
-    constructor(_MeccgApi, _Chat, _playboardManager)
-    {
-        super(_MeccgApi, _Chat, _playboardManager)
-
-        this._fnEndGame = null;
-        this._timeTimer = new TurnTimer();
-    }
+    #fnEndGame = null;
+    #timeTimer = new TurnTimer();
 
     setCallbackOnRestoreError(fn)
     {
         if (fn !== undefined && typeof fn === "function")
-            this._fnEndGame = fn;
+            this.#fnEndGame = fn;
     }
 
     init()
@@ -1160,7 +1155,7 @@ class GameStandard extends GamePlayers
             userid = this.nextPlayersTurn();
             nNewTurn = this.getCurrentTurn();
 
-            const lTime = this._timeTimer.pollElapsedMins();
+            const lTime = this.#timeTimer.pollElapsedMins();
 
             this.publishChat(userid, " ends turn after " + lTime + "mins. Active player is " + this.getCurrentPlayerName(), true);
             this.publishGameLogNextPlayer(this.getCurrentPlayerName() + " starts their turn.");
@@ -1580,8 +1575,8 @@ class GameStandard extends GamePlayers
         {
             Logger.error(err);
 
-            if (this._fnEndGame !== null)
-                this._fnEndGame();
+            if (this.#fnEndGame !== null)
+                this.#fnEndGame();
         }
     }
 

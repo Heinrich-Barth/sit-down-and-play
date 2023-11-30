@@ -3,11 +3,6 @@ const HandManager = require("./HandManager");
 
 class HandManagerArda extends HandManager
 {
-    constructor(pDecks)
-    {
-        super(pDecks);
-    }
-
     handCardsCharacters(playerId)
     {
         return this.getCardPils(playerId, "handCardsCharacters");
