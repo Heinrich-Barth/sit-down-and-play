@@ -119,27 +119,27 @@ class DeckArda extends DeckDefault {
 
         let nSize = 0;
 
-        this.copyIdsOpeningHand(this.handCards, _cardMap);
+        this.#copyIdsOpeningHand(this.handCards, _cardMap);
 
         /** minor items will be drawn to hand on startup */
         nSize = this.add(jsonDeck["minors"], this.handMinorItems, _cardMap, [], gameCardProvider);
-        this.copyIds(this.handMinorItems, this.typesMinors);
+        this.#copyIds(this.handMinorItems, this.typesMinors);
 
         Logger.info("Added " + nSize + " minor items");
         
         nSize = this.add(jsonDeck["mps"], this.playdeckMP, _cardMap, [], gameCardProvider);
-        this.copyIds(this.playdeckMP, this.typesMPs);
-        this.shuffleAnyTimes(this.playdeckMP, 3);
+        this.#copyIds(this.playdeckMP, this.typesMPs);
+        this.#shuffleAnyTimes(this.playdeckMP, 3);
         Logger.info("Added " + nSize + " marshalling points cards");
 
         nSize = this.add(jsonDeck["chars_mind7"], this.playDeckCharacters7, _cardMap, listAgents, gameCardProvider);
-        this.copyIds(this.playDeckCharacters7, this.typesCharacters);
-        this.shuffleAnyTimes(this.playDeckCharacters7, 3);
+        this.#copyIds(this.playDeckCharacters7, this.typesCharacters);
+        this.#shuffleAnyTimes(this.playDeckCharacters7, 3);
         Logger.info("Added " + nSize + " characters with mind of 6+");
 
         nSize = this.add(jsonDeck["chars_others"], this.playdeckCharacters, _cardMap, listAgents, gameCardProvider);
-        this.copyIds(this.playdeckCharacters, this.typesCharacters);
-        this.shuffleAnyTimes(this.playdeckCharacters, 3);
+        this.#copyIds(this.playdeckCharacters, this.typesCharacters);
+        this.#shuffleAnyTimes(this.playdeckCharacters, 3);
         Logger.info("Added " + nSize + " characters with mind of 5-");
 
         this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
@@ -152,7 +152,7 @@ class DeckArda extends DeckDefault {
      * @param {Array} list 
      * @returns 
      */
-    isInTypeList(uuid, list)
+    #isInTypeList(uuid, list)
     {
         return uuid !== "" && list.includes(uuid);
     }
@@ -162,9 +162,9 @@ class DeckArda extends DeckDefault {
      * @param {String} uuid 
      * @returns boolean
      */
-    isTypeCharacter(uuid)
+    #isTypeCharacter(uuid)
     {
-        return this.isInTypeList(uuid, this.typesCharacters);
+        return this.#isInTypeList(uuid, this.typesCharacters);
     }
 
     /**
@@ -172,9 +172,9 @@ class DeckArda extends DeckDefault {
      * @param {String} uuid 
      * @returns boolean
      */
-    isTypeMPs(uuid)
+    #isTypeMPs(uuid)
     {
-        return this.isInTypeList(uuid, this.typesMPs);
+        return this.#isInTypeList(uuid, this.typesMPs);
     }
 
     /**
@@ -182,9 +182,9 @@ class DeckArda extends DeckDefault {
      * @param {String} uuid 
      * @returns boolean
      */
-    isTypeMinorItem(uuid)
+    #isTypeMinorItem(uuid)
     {
-        return this.isInTypeList(uuid, this.typesMinors);
+        return this.#isInTypeList(uuid, this.typesMinors);
     }
 
     /**
@@ -193,7 +193,7 @@ class DeckArda extends DeckDefault {
      * @param {Array} listSource 
      * @param {Array} listTarget 
      */
-    copyIds(listSource, listTarget)
+    #copyIds(listSource, listTarget)
     {
         const nLen = listSource.length;
         for (let i = 0; i < nLen; i++)
@@ -205,7 +205,7 @@ class DeckArda extends DeckDefault {
      * @param {Array} list List to shuffle
      * @param {Number} nTimes Number of times a list is to be shuffled
      */
-    shuffleAnyTimes(list, nTimes)
+    #shuffleAnyTimes(list, nTimes)
     {
         for (let i = 0; i < nTimes; i++)
             this.shuffleAny(list);
@@ -320,14 +320,6 @@ class DeckArda extends DeckDefault {
     }
 
     /**
-     * Pop the first card from the MP playdeck
-     */
-    popTopCardMarshallingPoints()
-    {
-        return this.popTopCardFrom(this.playdeckMP);
-    }
-
-    /**
      * Shuffle character playdeck
      */
     shuffleCharacterDeck()
@@ -388,7 +380,7 @@ class DeckArda extends DeckDefault {
         return this.playdeckMP;
     }
 
-    copyIdsOpeningHand(list, _cardMap)
+    #copyIdsOpeningHand(list, _cardMap)
     {
         const listChars = [];
         for (let uuid of list)
@@ -398,7 +390,7 @@ class DeckArda extends DeckDefault {
                 listChars.push(uuid);
         }
 
-        this.copyIds(listChars, this.typesCharacters);
+        this.#copyIds(listChars, this.typesCharacters);
     }
 
     /**
@@ -417,11 +409,11 @@ class DeckArda extends DeckDefault {
         const deck = this;
         res.toDiscardpile = function(uuid)
         {
-            if (deck.isTypeCharacter(uuid))
+            if (deck.#isTypeCharacter(uuid))
                 return res.to(uuid, deck.discardPileCharacters);
-            else if (deck.isTypeMinorItem(uuid))
+            else if (deck.#isTypeMinorItem(uuid))
                 return res.to(uuid, deck.discardPileMinorItems);
-            else if (deck.isTypeMPs(uuid))
+            else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.discardPileMP);
             else 
                 return res.to(uuid, deck.discardPile);
@@ -429,11 +421,11 @@ class DeckArda extends DeckDefault {
 
         res.toPlaydeck = function(uuid)
         {
-            if (deck.isTypeCharacter(uuid))
+            if (deck.#isTypeCharacter(uuid))
                 return res.to(uuid, deck.playdeckCharacters);
-            else if (deck.isTypeMinorItem(uuid))
+            else if (deck.#isTypeMinorItem(uuid))
                 return res.to(uuid, deck.playdeckMinorItems);
-            else if (deck.isTypeMPs(uuid))
+            else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.playdeckMP);
             else 
                 return res.to(uuid, deck.playdeck);
@@ -446,11 +438,11 @@ class DeckArda extends DeckDefault {
 
         res.toHand = function(uuid)
         {
-            if (deck.isTypeCharacter(uuid))
+            if (deck.#isTypeCharacter(uuid))
                 return res.to(uuid, deck.handCardsCharacters);
-            else if (deck.isTypeMinorItem(uuid))
+            else if (deck.#isTypeMinorItem(uuid))
                 return res.to(uuid, deck.handMinorItems);
-            else if (deck.isTypeMPs(uuid))
+            else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.handCardsMP);
             else 
                 return res.to(uuid, deck.handCards);
@@ -530,10 +522,10 @@ class DeckArda extends DeckDefault {
             this.playdeckMinorItems = pAdmin.playdeckMinorItems;
             this.playDeckCharacters7 = pAdmin.playDeckCharacters7;
 
-            this.copyIds(this.typesCharacters, pAdmin.typesCharacters);
-            this.copyIds(this.typesMinors, pAdmin.typesMinors);
-            this.copyIds(this.typesMPs, pAdmin.typesMPs);
-            this.copyIds(this.listSpecialCharacters, pAdmin.listSpecialCharacters);
+            this.#copyIds(this.typesCharacters, pAdmin.typesCharacters);
+            this.#copyIds(this.typesMinors, pAdmin.typesMinors);
+            this.#copyIds(this.typesMPs, pAdmin.typesMPs);
+            this.#copyIds(this.listSpecialCharacters, pAdmin.listSpecialCharacters);
 
             this.typesCharacters = pAdmin.typesCharacters;
             this.typesMinors = pAdmin.typesMinors;
