@@ -3,13 +3,13 @@ const Logger = require("../Logger");
 
 class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 {
-    stagingareas = { };
+    #stagingareas = { };
 
     reset()
     {
         super.reset();
         
-        this.stagingareas = { };
+        this.#stagingareas = { };
     }
     /**
      * Add a player deck to the game 
@@ -21,7 +21,7 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
     {
         super.AddDeck(playerId, jsonDeck);
 
-        this.stagingareas[playerId] = {
+        this.#stagingareas[playerId] = {
             resources : [],
             hazards : []
         };
@@ -36,7 +36,7 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
      Save()
      {
          let data = super.Save();
-         data.stagingarea = this.stagingareas;
+         data.stagingarea = this.#stagingareas;
  
          return data;
      }
@@ -54,9 +54,9 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
         if (super.removeCardFromDeckOrCompany(playerId, uuid))
             return true;
 
-        for (let i in this.stagingareas)
+        for (let i in this.#stagingareas)
         {
-            if (super.removeFromList(uuid, this.stagingareas[i].resources) || super.removeFromList(uuid, this.stagingareas[i].hazards))
+            if (super.removeFromList(uuid, this.#stagingareas[i].resources) || super.removeFromList(uuid, this.#stagingareas[i].hazards))
                 return true;
         }
         
@@ -84,7 +84,7 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
             return false;
         }
 
-        const pStagingArea = typeof this.stagingareas[playerTagetId] === "undefined" ? null : this.stagingareas[playerTagetId];
+        const pStagingArea = typeof this.#stagingareas[playerTagetId] === "undefined" ? null : this.#stagingareas[playerTagetId];
         if (pStagingArea === null)
             return false;
 
@@ -101,10 +101,10 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
     {
         super.Restore(playboard);
 
-        this.stagingareas = { };
+        this.#stagingareas = { };
         for (let uuid in playboard.stagingarea)
         {
-            this.stagingareas[uuid] = {
+            this.#stagingareas[uuid] = {
                 resources : this.ArrayUUIDClone(playboard.stagingarea[uuid].resources),
                 hazards : this.ArrayUUIDClone(playboard.stagingarea[uuid].hazards)
             };
@@ -114,12 +114,12 @@ class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 
     GetStagingCards(playerId, isResources)
     {
-        if (this.stagingareas[playerId] === undefined)
+        if (this.#stagingareas[playerId] === undefined)
             return [];
-        else if (isResources && this.stagingareas[playerId].resources !== undefined)
-            return this.stagingareas[playerId].resources;
-        else if (!isResources && this.stagingareas[playerId].hazards !== undefined)
-            return this.stagingareas[playerId].hazards;
+        else if (isResources && this.#stagingareas[playerId].resources !== undefined)
+            return this.#stagingareas[playerId].resources;
+        else if (!isResources && this.#stagingareas[playerId].hazards !== undefined)
+            return this.#stagingareas[playerId].hazards;
         else
             return [];        
     }
