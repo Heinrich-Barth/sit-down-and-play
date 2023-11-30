@@ -10,7 +10,9 @@ class GamePlayers extends GameBase
 {
     #avatarImages = { };
     #avatarImageList = []
-
+    #playerDices = new PlayerDices();
+    #scoring;
+    
     constructor(_MeccgApi, _Chat, _playboardManager)
     {
         super(_MeccgApi, _Chat, _playboardManager)        
@@ -27,8 +29,7 @@ class GamePlayers extends GameBase
             turn: 1,
         };
 
-        this.scoring = new Scores(this.isArda());
-        this.playerDices = new PlayerDices();
+        this.#scoring = new Scores(this.isArda());
     }
 
     #reloadAvatarMap()
@@ -51,7 +52,7 @@ class GamePlayers extends GameBase
 
     getPlayerDices()
     {
-        return this.playerDices;
+        return this.#playerDices;
     }
 
     updateDices(userid, dice)
@@ -86,7 +87,7 @@ class GamePlayers extends GameBase
             checksums: this.players.checksums
         }
         
-        data.scoring = this.scoring.save();
+        data.scoring = this.#scoring.save();
         return data;
     }
 
@@ -100,7 +101,7 @@ class GamePlayers extends GameBase
 
     getPlayerScore(player)
     {
-        return this.scoring.getPlayerScore(player)
+        return this.#scoring.getPlayerScore(player)
     }
 
     registerThisPlayer(sId, sName)
@@ -119,7 +120,7 @@ class GamePlayers extends GameBase
 
         if (checksum !== "")
             this.players.checksums.push(checksum);
-        this.scoring.add(sId);
+        this.#scoring.add(sId);
     }
 
     setAvatar(sId, avatar)
@@ -169,7 +170,7 @@ class GamePlayers extends GameBase
         this.players.avatars = {};
         this.#avatarImages = {};
         this.#avatarImageList = [];
-        this.scoring.reset();
+        this.#scoring.reset();
     }
 
     restoreChecksums(meta)
@@ -188,7 +189,7 @@ class GamePlayers extends GameBase
     restore(playboard, score, meta)
     {
         this.restoreChecksums(meta);
-        return super.restore(playboard) && this.scoring.restore(score);
+        return super.restore(playboard) && this.#scoring.restore(score);
     }
     currentIsMe ()
     {
@@ -277,14 +278,14 @@ class GamePlayers extends GameBase
 
     getScoring()
     {
-        return this.scoring;
+        return this.#scoring;
     }
 
     getFinalScore()
     {
         const data = {
-            score: this.scoring.getScoreSheets(),
-            stats: this.playerDices.getStats(),
+            score: this.#scoring.getScoreSheets(),
+            stats: this.#playerDices.getStats(),
             duration: this.getGameDuration(),
             turns: this.players.turn,
             checksums: this.players.checksums,

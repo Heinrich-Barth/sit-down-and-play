@@ -14,43 +14,49 @@ const Logger = require("../Logger");
 
 class GameRoom 
 {
+    #name;
+    #fnEndGame;
+
+    #gameInstance = null;
+    #reconnectionCounts = {};
+    #socialMedia = false;
+    #allowAccessPlayer = true;
+    #allowAccessVisitor = true;
+    #useDCEbyDefault = true;
+    #jitsi = false;
+
+    #secret = UTILS.createSecret();
+    #lobbyToken = UTILS.createSecret();
+    
     constructor(io, room, fnEndGame)
     {
-        this.secret = UTILS.createSecret();
-        this.lobbyToken = UTILS.createSecret();
-        this.game = null;
         this.api = new GameAPI(io, room);
         this.chat = new Chat(this.api, "/game/chat/message", room, USE_GAME_LOG === true);
         this.players = {};
         this.visitors = {};
-        this.name = room;
-        this.fnEndGame = fnEndGame;
-        this.reconnectionCounts = {};
-        this.socialMedia = false;
-        this.allowAccessPlayer = true;
-        this.allowAccessVisitor = true;
-        this.useDCEbyDefault = true;
-        this.jitsi = false;
+
+        this.#name = room;
+        this.#fnEndGame = fnEndGame;
     }
 
     setUseDCE(bUse)
     {
-        this.useDCEbyDefault = bUse === true;
+        this.#useDCEbyDefault = bUse === true;
     }
 
     setUseJitsi(bUse)
     {
-        this.jitsi = bUse;
+        this.#jitsi = bUse;
     }
 
     useJitsi()
     {
-        return this.jitsi;
+        return this.#jitsi;
     }
 
     useDCE()
     {
-        return this.useDCEbyDefault === true;
+        return this.#useDCEbyDefault === true;
     }
 
     getGameLog()
@@ -61,34 +67,34 @@ class GameRoom
     updateAccess(type, allow)
     {
         if (type === "visitor")
-            this.allowAccessVisitor = allow === true;
+            this.#allowAccessVisitor = allow === true;
         else if (type === "player")
-            this.allowAccessPlayer = allow === true;
+            this.#allowAccessPlayer = allow === true;
     }
 
     canJoinPlayer()
     {
-        return this.allowAccessPlayer;
+        return this.#allowAccessPlayer;
     }
 
     canJoinVisitor()
     {
-        return this.allowAccessVisitor;
+        return this.#allowAccessVisitor;
     }
 
     grantAccess(isPlayer)
     {
-        return isPlayer ? this.allowAccessPlayer : this.allowAccessVisitor;
+        return isPlayer ? this.#allowAccessPlayer : this.#allowAccessVisitor;
     }
 
     getAllowSocialMedia()
     {
-        return this.socialMedia;
+        return this.#socialMedia;
     }
 
     setAllowSocialMedia(bAllow)
     {
-        this.socialMedia = bAllow === true;
+        this.#socialMedia = bAllow === true;
     }
 
     getConnectionCount(userid)
@@ -96,28 +102,28 @@ class GameRoom
         if (userid === undefined || userid === "")
             return 0;
         
-        if (this.reconnectionCounts[userid] === undefined)
+        if (this.#reconnectionCounts[userid] === undefined)
         {
-            this.reconnectionCounts[userid] = 0;
+            this.#reconnectionCounts[userid] = 0;
             return 0;
         }
         else
-            return  ++this.reconnectionCounts[userid];
+            return  ++this.#reconnectionCounts[userid];
     }
 
     getCreated()
     {
-        return this.game ===  null ? Date.now() : this.game.getGameCreated();
+        return this.#gameInstance ===  null ? Date.now() : this.#gameInstance.getGameCreated();
     }
 
     getLobbyToken()
     {
-        return this.lobbyToken;
+        return this.#lobbyToken;
     }
 
     getSecret()
     {
-        return this.secret;
+        return this.#secret;
     }
 
     hasPlayer(userId)
@@ -174,7 +180,7 @@ class GameRoom
     {
         const player = this.getPlayer(userid);
         if (player !== null)
-            this.game.updateDices(userid, dice);
+            this.#gameInstance.updateDices(userid, dice);
     }
     
     updateEntryTime(userId)
@@ -305,7 +311,7 @@ class GameRoom
     getFinalGameScore()
     {
         let finalScore = {
-            score : this.game.getFinalScore().score,
+            score : this.#gameInstance.getFinalScore().score,
             players : { }
         };
 
@@ -327,8 +333,8 @@ class GameRoom
 
         try
         {
-            if (this.fnEndGame !== null && this.fnEndGame !== undefined)
-                this.fnEndGame(this.name);
+            if (this.#fnEndGame !== null && this.#fnEndGame !== undefined)
+                this.#fnEndGame(this.#name);
         }
         catch(err)
         {
@@ -339,10 +345,10 @@ class GameRoom
 
     getPlayerAvatarsList()
     {
-        if (this.game === null)
+        if (this.#gameInstance === null)
             return [];
         else
-            return this.game.getPlayerAvatarsList();
+            return this.#gameInstance.getPlayerAvatarsList();
     }
 
     createGame(isArda, isSinglePlayer,  adminUser)
@@ -351,23 +357,23 @@ class GameRoom
         if (isArda)
         {
             pPlayboardManager = new PlayboardManagerArda();
-            this.game = new GameArda(this.api, this.chat, pPlayboardManager);
+            this.#gameInstance = new GameArda(this.api, this.chat, pPlayboardManager);
         }
         else
         {
             pPlayboardManager = new PlayboardManager();
-            this.game = new GameStandard(this.api, this.chat, pPlayboardManager);
+            this.#gameInstance = new GameStandard(this.api, this.chat, pPlayboardManager);
             
             if (isSinglePlayer)
-                this.game.setSinglePlayer(isSinglePlayer);
+                this.#gameInstance.setSinglePlayer(isSinglePlayer);
         }
 
         pPlayboardManager.triggerEventSetupNewGame();
         
-        this.game.setCallbackOnRestoreError(this.endGame.bind(this));
-        this.game.init();
-        this.game.onAfterInit();
-        this.game.setGameAdminUser(adminUser);
+        this.#gameInstance.setCallbackOnRestoreError(this.endGame.bind(this));
+        this.#gameInstance.init();
+        this.#gameInstance.onAfterInit();
+        this.#gameInstance.setGameAdminUser(adminUser);
     }
 
     sendSaveOnShutdown()
@@ -378,9 +384,9 @@ class GameRoom
             _player = this.players[userid];
             if (_player.isAdmin())
             {
-                this.game.publishToPlayers("/game/score/final-only", userid, this.game.getFinalScore());
-                this.game.publishToPlayers("/disconnect/shutdown", userid, {});
-                this.game.globalSaveGame(userid, _player.getSocket());
+                this.#gameInstance.publishToPlayers("/game/score/final-only", userid, this.#gameInstance.getFinalScore());
+                this.#gameInstance.publishToPlayers("/disconnect/shutdown", userid, {});
+                this.#gameInstance.globalSaveGame(userid, _player.getSocket());
                 break;
             }
         }
@@ -388,7 +394,7 @@ class GameRoom
 
     getGame()
     {
-        return this.game;
+        return this.#gameInstance;
     }
 
     initGameEndpoint(socket)
