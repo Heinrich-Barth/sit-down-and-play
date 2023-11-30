@@ -19,13 +19,14 @@ class RoomManager {
     #maxRooms;
     #maxPlayers;
     #roomCountAll;
-
+    #fnSocketIo;
+    
     constructor(fnSocketIo, sGameHtmlPageUri)
     {
         this.#gamePageHtml = sGameHtmlPageUri;
         this.#eventManager = EventManager;
         this.#gameCardProvider = CardDataProvider;
-        this.fnSocketIo = fnSocketIo;
+        this.#fnSocketIo = fnSocketIo;
 
         this.#rooms = {};
         this.stats = {
@@ -82,7 +83,7 @@ class RoomManager {
         if (this.#rooms[room] !== undefined)
             return this.#rooms[room];
 
-        this.#rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, isArda, isSinglePlayer, this.endGame.bind(this), userId);
+        this.#rooms[room] = GameRoom.newGame(this.#fnSocketIo(), room, isArda, isSinglePlayer, this.endGame.bind(this), userId);
         
         if (!useDCE)
             this.#rooms[room].setUseDCE(false);
