@@ -206,7 +206,7 @@ class DeckManager {
         return typeof this.#deck[playerId] === "undefined" ? -1 : this.#deck[playerId].registerCardsToSideboard(jsonDeck, this.#cardMap);
     }
 
-    importCardsToHand(playerId, code, bAsCharacter, gameCardProvider)
+    importCardsToHand(playerId, code, bAsCharacter)
     {
         if (typeof this.#deck[playerId] === "undefined")
         {
@@ -219,16 +219,16 @@ class DeckManager {
             return false;
         }
         else
-            return this.#deck[playerId].importCardsToHand(code, bAsCharacter, this.#cardMap, gameCardProvider);
+            return this.#deck[playerId].importCardsToHand(code, bAsCharacter, this.#cardMap);
 
     }
 
-    importCardsToGame(playerId, code, bAsCharacter, gameCardProvider)
+    importCardsToGame(playerId, code, bAsCharacter)
     {
         if (typeof this.#deck[playerId] === "undefined" || code === "")
             return "";
         else
-            return this.#deck[playerId].importCardsToDeck(code, bAsCharacter, this.#cardMap, gameCardProvider);
+            return this.#deck[playerId].importCardsToDeck(code, bAsCharacter, this.#cardMap);
     }
 
     getCards() 

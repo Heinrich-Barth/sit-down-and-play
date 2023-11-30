@@ -156,7 +156,7 @@ class DeckDefault extends DeckCommons {
             return false;
     }
 
-    importCardsToDeck(code, bAsCharacter, _cardMap, gameCardProvider)
+    importCardsToDeck(code, bAsCharacter, _cardMap)
     {
         code = this.removeQuotes(code);
 
@@ -186,9 +186,9 @@ class DeckDefault extends DeckCommons {
         return _entry.uuid;
     }
 
-    importCardsToHand(code, bAsCharacter, _cardMap, gameCardProvider)
+    importCardsToHand(code, bAsCharacter, _cardMap)
     {
-        const uuid = this.importCardsToDeck(code, bAsCharacter, _cardMap, gameCardProvider)
+        const uuid = this.importCardsToDeck(code, bAsCharacter, _cardMap)
         return uuid !== "";
     }
     

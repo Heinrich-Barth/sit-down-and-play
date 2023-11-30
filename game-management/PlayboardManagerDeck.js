@@ -497,7 +497,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     ImportCardsToHand(playerId, code, bAsCharacter)
     {
-        return this.getDecks().importCardsToHand(playerId, code, bAsCharacter, this.#gameCardProvider);
+        return this.getDecks().importCardsToHand(playerId, code, bAsCharacter);
     }
 
     /**
@@ -510,7 +510,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     ImportCardsToGame(playerId, code, bAsCharacter)
     {
-        return this.getDecks().importCardsToGame(playerId, code, bAsCharacter, this.#gameCardProvider);
+        return this.getDecks().importCardsToGame(playerId, code, bAsCharacter);
     }
     
     isValidTarget(target)
