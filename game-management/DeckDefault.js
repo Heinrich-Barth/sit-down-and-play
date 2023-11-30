@@ -198,9 +198,9 @@ class DeckDefault extends DeckCommons {
      * 
      * @param {String} playerId 
      * @param {list} cards 
-     * @param {list} listAgents 
+     * @param {map} _cardMap 
      */
-    registerCardsToSideboard(cards, listAgents, _cardMap)
+    registerCardsToSideboard(cards, _cardMap)
     {
         let nAdded = 0;
         let _entry;

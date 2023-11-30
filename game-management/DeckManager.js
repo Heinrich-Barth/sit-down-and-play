@@ -198,12 +198,12 @@ class DeckManager {
         return Object.keys(this.#deck).length;
     }
     
-    addCardsToSideboardDuringGame(playerId, jsonDeck, listAgents, gameCardProvider)
+    addCardsToSideboardDuringGame(playerId, jsonDeck)
     {
         if (typeof this.#deck[playerId] === "undefined")
             Logger.info("Could not find deck " + playerId);
 
-        return typeof this.#deck[playerId] === "undefined" ? -1 : this.#deck[playerId].registerCardsToSideboard(jsonDeck, listAgents, this.#cardMap, gameCardProvider);
+        return typeof this.#deck[playerId] === "undefined" ? -1 : this.#deck[playerId].registerCardsToSideboard(jsonDeck, this.#cardMap);
     }
 
     importCardsToHand(playerId, code, bAsCharacter, gameCardProvider)
