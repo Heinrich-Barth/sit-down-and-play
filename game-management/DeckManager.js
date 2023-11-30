@@ -412,13 +412,10 @@ class DeckManager {
                 if (bAdd)
                     card.token = 1;
             }
-            else
-            {
-                if (bAdd)
-                    card.token++;
-                else if (card.token > 0)
-                    card.token--;
-            }
+            else if (bAdd)
+                card.token++;
+            else if (card.token > 0)
+                card.token--;
 
             return card.token;
         }
