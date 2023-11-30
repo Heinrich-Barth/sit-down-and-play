@@ -298,7 +298,7 @@ const onIoConnection = function (socket)
 
 exports.shutdown = () => 
 {
-    Logger.info("\nShutting down game server.");
+    Logger.info("Shutting down game server.");
 
     /** send save game instruction to running games */
     if (SERVER.getRoomManager().sendShutdownSaving())
@@ -312,6 +312,7 @@ exports.shutdown = () =>
     }
     else
         doShutdown();
+
 }
 
 exports.setup = function(express)
