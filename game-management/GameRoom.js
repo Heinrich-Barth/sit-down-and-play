@@ -343,7 +343,7 @@ class GameRoom
             return this.game.getPlayerAvatarsList();
     }
 
-    createGame(_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
+    #createGame(_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
     {       
         if (isArda)
         {
@@ -399,7 +399,7 @@ class GameRoom
             Logger.info("Setting up game " + room);
 
         const pRoomInstance = new GameRoom(io, room, fnEndGame);
-        pRoomInstance.createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
+        pRoomInstance.#createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
         return pRoomInstance;
     }
 }
