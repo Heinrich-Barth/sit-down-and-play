@@ -249,7 +249,7 @@ class CardRepository {
             if (card.text === undefined || card.text === "" || card.text === null)
                 continue;
 
-            const sText = card.text.trim();
+            let sText = card.text.trim();
             const nLast = sText.lastIndexOf("\"-");
             if (nLast  === -1)
                 continue;
