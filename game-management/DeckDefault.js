@@ -160,7 +160,7 @@ class DeckDefault extends DeckCommons {
     {
         code = this.removeQuotes(code);
 
-        const _entry = this.createCardEntry(code, false, gameCardProvider);
+        const _entry = this.createCardEntry(code, false);
         if (_entry === null)
         {
             Logger.info("Cannot register card " + code + " to game.");
@@ -200,7 +200,7 @@ class DeckDefault extends DeckCommons {
      * @param {list} cards 
      * @param {list} listAgents 
      */
-    registerCardsToSideboard(cards, listAgents, _cardMap, gameCardProvider)
+    registerCardsToSideboard(cards, listAgents, _cardMap)
     {
         let nAdded = 0;
         let _entry;
@@ -211,7 +211,7 @@ class DeckDefault extends DeckCommons {
             {
                 card.code = this.removeQuotes(card.code);
 
-                _entry = this.createCardEntry(card.code, this.isAgent(card.code, listAgents), gameCardProvider);
+                _entry = this.createCardEntry(card.code, this.isAgent(card.code));
                 if (_entry === null)
                 {
                     Logger.info("Cannot register card " + card.code + " to sideboard.");

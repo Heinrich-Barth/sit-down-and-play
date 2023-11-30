@@ -1,4 +1,5 @@
 const Logger = require("../Logger");
+const CardDataProvider = require("../plugins/CardDataProvider");
 
 /**
  * Commpn playdeck 
@@ -51,19 +52,11 @@ class DeckCommons {
     /**
      * Check if given code represents an agent
      * @param {String} code 
-     * @param {Array} listAgents 
      * @returns 
      */
-    isAgent(code, listAgents)
+    isAgent(code)
     {
-        const nSize = code === "" ? -1 : listAgents.length;
-        for(let i = 0; i < nSize; i++)
-        {
-            if (listAgents[i] === code)
-                return true;
-        }
-
-        return false;
+        return code !== "" && CardDataProvider.getAgents().includes(code);
     }
 
     /**
@@ -91,7 +84,7 @@ class DeckCommons {
             const key = this.removeQuotes(_key);
             for (let i = 0; i < count && nSize < MAX_CARDS_PER_DECK; i++)
             {
-                _entry = this.createCardEntry(key, this.isAgent(key, listAgents), gameCardProvider);
+                _entry = this.createCardEntry(key, this.isAgent(key));
                 if (_entry === null)
                 {
                     Logger.warn("Cannot add card " + key + " to deck.");
@@ -303,10 +296,9 @@ class DeckCommons {
      * 
      * @param {String} code 
      * @param {Boolean} isAgent 
-     * @param {Object} gameCardProvider 
      * @returns 
      */
-    createCardEntry(code, isAgent, gameCardProvider)
+    createCardEntry(code, isAgent)
     {
         if (typeof code === "undefined")
         {
@@ -314,14 +306,14 @@ class DeckCommons {
             return null;
         }
 
-        const sType = gameCardProvider.getCardType(code);
+        const sType = CardDataProvider.getCardType(code);
         if (sType === "")
         {
             Logger.info("Invalid card type");
             return null;
         }
 
-        let data = DeckCommons.#createEmptyCardEntry();
+        const data = DeckCommons.#createEmptyCardEntry();
         data.code = code;
         data.type = sType.toLowerCase();
         data.uuid = this.#requestNewCardUuid();
@@ -330,7 +322,7 @@ class DeckCommons {
         data.revealed = isAgent !== true
         data.agent = isAgent === true;
         data.turn = 0;
-        data.secondary = gameCardProvider.getCardTypeSpecific(code);
+        data.secondary = CardDataProvider.getCardTypeSpecific(code);
         return data;
     }
 }
