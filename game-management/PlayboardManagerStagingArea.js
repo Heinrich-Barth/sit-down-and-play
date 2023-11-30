@@ -3,12 +3,7 @@ const Logger = require("../Logger");
 
 class PlayboardManagerStagingArea extends PlayboardManagerCharacters
 {
-    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
-    {
-        super(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer);
-        
-        this.stagingareas = { };
-    }
+    stagingareas = { };
 
     reset()
     {

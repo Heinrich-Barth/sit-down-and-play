@@ -1,17 +1,18 @@
 const PlayboardManagerBase = require("./PlayboardManagerBase");
 const DeckManagerDefault = require("./DeckManagerDefault");
 const Logger = require("../Logger");
+const CardDataProvider = require("../plugins/CardDataProvider");
+const EventManager = require("../EventManager");
 
-class PlayboardManagerDeck extends PlayboardManagerBase {
-
-
-    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
+class PlayboardManagerDeck extends PlayboardManagerBase 
+{
+    constructor(isSinglePlayer)
     {
-        super(_eventManager);
+        super(EventManager);
         
         this.decks = this.requireDeckManager(isSinglePlayer);
-        this.gameCardProvider = _gameCardProvider;
-        this.agents = _listAgents === undefined ? [] : _listAgents;
+        this.gameCardProvider = CardDataProvider;
+        this.agents = CardDataProvider.getAgents;
     }
 
     requireDeckManager(_isSinglePlayer)

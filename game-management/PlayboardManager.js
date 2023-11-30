@@ -3,13 +3,6 @@ const Logger = require("../Logger");
 
 class PlayboardManager extends PlayboardManagerCompanies
 {
-    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
-    {
-        super(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer);
-
-        super.triggerEventSetupNewGame();
-    }
-
     reset()
     {
         super.reset();

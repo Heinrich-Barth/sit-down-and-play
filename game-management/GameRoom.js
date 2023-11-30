@@ -343,23 +343,26 @@ class GameRoom
             return this.game.getPlayerAvatarsList();
     }
 
-    #createGame(_MeccgApi, _Chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
+    #createGame(_MeccgApi, _Chat, isArda, isSinglePlayer, fnEndGame, adminUser)
     {       
+        let pPlayboardManager;
         if (isArda)
         {
-            const pPlayboardManager = new PlayboardManagerArda(_agentList, _eventManager, _gameCardProvider, isSinglePlayer);
+            pPlayboardManager = new PlayboardManagerArda(isSinglePlayer);
             this.game = new GameArda(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
         }
         else
         {
-            const pPlayboardManager = new PlayboardManager(_agentList, _eventManager, _gameCardProvider, isSinglePlayer);
+            pPlayboardManager = new PlayboardManager(isSinglePlayer);
             this.game = new GameStandard(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
         }
+
+        pPlayboardManager.triggerEventSetupNewGame();
     
         this.game.setSinglePlayer(isSinglePlayer);
         this.game.setCallbackOnRestoreError(fnEndGame);
         this.game.init();
-        this.game.onAfterInit(_eventManager);
+        this.game.onAfterInit();
         this.game.setGameAdminUser(adminUser);
     }
 
@@ -389,7 +392,7 @@ class GameRoom
         this.api.initGameEndpoint(socket);
     }
 
-    static newGame(io, room, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, fnEndGame, adminUser)
+    static newGame(io, room, isArda, isSinglePlayer, fnEndGame, adminUser)
     {
         if (isSinglePlayer)
             Logger.info("Setting up single player game " + room);
@@ -399,7 +402,7 @@ class GameRoom
             Logger.info("Setting up game " + room);
 
         const pRoomInstance = new GameRoom(io, room, fnEndGame);
-        pRoomInstance.#createGame(pRoomInstance.api, pRoomInstance.chat, _agentList, _eventManager, _gameCardProvider, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
+        pRoomInstance.#createGame(pRoomInstance.api, pRoomInstance.chat, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
         return pRoomInstance;
     }
 }

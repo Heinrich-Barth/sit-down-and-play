@@ -3,12 +3,7 @@ const Logger = require("../Logger");
 
 class PlayboardManagerCharacters extends PlayboardManagerDeck
 {
-    constructor(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer)
-    {
-        super(_listAgents, _eventManager, _gameCardProvider, isSinglePlayer);
-        
-        this.characters = { };
-    }
+    characters = { };
 
     reset()
     {

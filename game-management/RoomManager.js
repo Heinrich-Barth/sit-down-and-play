@@ -82,7 +82,7 @@ class RoomManager {
         if (this.#rooms[room] !== undefined)
             return this.#rooms[room];
 
-        this.#rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, this.getAgentList(), this.#eventManager, this.#gameCardProvider, isArda, isSinglePlayer, this.endGame.bind(this), userId);
+        this.#rooms[room] = GameRoom.newGame(this.fnSocketIo(), room, isArda, isSinglePlayer, this.endGame.bind(this), userId);
         
         if (!useDCE)
             this.#rooms[room].setUseDCE(false);
