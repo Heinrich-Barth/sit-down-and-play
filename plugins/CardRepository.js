@@ -452,13 +452,13 @@ class CardRepository {
     getCardMind(code)
     {
         const card = this.getCardByCode(code);
-        return card !== null && card.Mind !== undefined ? card.Mind : -1;
+        return card?.Mind !== undefined ? card.Mind : -1;
     }
 
     getCardTypeSpecific(code)
     {
         const card = this.getCardByCode(code);
-        return card !== null && card.Secondary !== undefined ? card.Secondary : "";
+        return card?.Secondary !== undefined ? card.Secondary : "";
     }
 
     getMarshallingPoints(code)
