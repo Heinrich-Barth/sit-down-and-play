@@ -3,18 +3,18 @@ const Logger = require("../Logger");
 
 class PlayboardManagerCharacters extends PlayboardManagerDeck
 {
-    characters = { };
+    #characters = { };
 
     reset()
     {
         super.reset();
         
-        this.characters = { };
+        this.#characters = { };
     }
 
     characterExists(uuid)
     {
-        return typeof this.characters[uuid] !== "undefined";
+        return typeof this.#characters[uuid] !== "undefined";
     }
     
     /**
@@ -24,7 +24,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     Save()
     {
         let data = super.Save();
-        data.characters = this.characters;
+        data.characters = this.#characters;
         return data;
     }
 
@@ -40,9 +40,9 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         if (super.removeCardFromDeckOrCompany(playerId, uuid))
             return true;
 
-        for (let i in this.characters)
+        for (let i in this.#characters)
         {
-            if (super.removeFromList(uuid, this.characters[i].resources) || super.removeFromList(uuid, this.characters[i].hazards))
+            if (super.removeFromList(uuid, this.#characters[i].resources) || super.removeFromList(uuid, this.#characters[i].hazards))
                 return true;
         }
  
@@ -60,8 +60,8 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
       {
           for (let _uuid of listAdded)
           {
-              this.characters[_uuid].companyId = targetCompanyId;
-              this.characters[_uuid].parentUuid = hostingCharacterUuid;
+              this.#characters[_uuid].companyId = targetCompanyId;
+              this.#characters[_uuid].parentUuid = hostingCharacterUuid;
           }
   
           return true;
@@ -89,10 +89,10 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      getOrCreateCharacter(uuid, targetCompany)
      {
          /* create character card info if necessary (e.g. if played from hand) */
-         if (typeof this.characters[uuid] === "undefined")
-             this.characters[uuid] = this.createNewCharacter(targetCompany, uuid);
+         if (typeof this.#characters[uuid] === "undefined")
+             this.#characters[uuid] = this.createNewCharacter(targetCompany, uuid);
 
-        return this.characters[uuid];
+        return this.#characters[uuid];
      }
 
 
@@ -104,7 +104,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     getCharacterByUuid(uuid)
     {
         if (uuid !== "" && this.characterExists(uuid))
-            return this.characters[uuid];
+            return this.#characters[uuid];
         else
             return null;
     }
@@ -127,11 +127,11 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     {
         super.Restore(playboard);
 
-        this.characters = { };
+        this.#characters = { };
         for (let characterid in playboard.characters)
         {
             const _source = playboard.characters[characterid];
-            this.characters[characterid] = {
+            this.#characters[characterid] = {
                 companyId : this.AssertString(_source.companyId),
                 character : this.AssertString(_source.character),
                 uuid : this.AssertString(_source.uuid),
@@ -216,8 +216,8 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      */
     deleteCharacter0(uuid)
     {
-        if (uuid !== undefined && uuid !== "" && this.characters[uuid] !== undefined)
-            delete this.characters[uuid];
+        if (uuid !== undefined && uuid !== "" && this.#characters[uuid] !== undefined)
+            delete this.#characters[uuid];
     }
 
     /**
@@ -249,7 +249,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         }
         else
         {
-            for (let _card of this.characters[uuid].resources)
+            for (let _card of this.#characters[uuid].resources)
                 super.readyCard(_card);
         }
     }
@@ -265,7 +265,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
     CharacterHostCard(company, character, uuid)
     {
         const pCard = this.GetCardByUuid(uuid);
-        if (pCard === null || this.characters[character] === undefined)
+        if (pCard === null || this.#characters[character] === undefined)
             return false;
 
         const playerId = pCard.owner;
@@ -284,9 +284,9 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         }
 
         if (pCard.type === "hazard")
-            this.characters[character].hazards.push(uuid);
+            this.#characters[character].hazards.push(uuid);
         else
-            this.characters[character].resources.push(uuid);
+            this.#characters[character].resources.push(uuid);
 
         return true;
     }
@@ -352,7 +352,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      */
      CharacterTransferCard(_sourceCharacter, targetCharacter, cardUuid, playerId)
      {
-         const pTargetChar = this.characters[targetCharacter];
+         const pTargetChar = this.#characters[targetCharacter];
          if (typeof pTargetChar === "undefined")
          {
              Logger.warn("Undefinied target character "+ targetCharacter);
@@ -386,7 +386,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
  
      addNewCharacter(uuid, companyId)
      {
-        this.characters[uuid] = this.createNewCharacter(companyId, uuid);
+        this.#characters[uuid] = this.createNewCharacter(companyId, uuid);
      }
 }
 

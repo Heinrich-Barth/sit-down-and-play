@@ -1,21 +1,19 @@
+const EventManager = require("../EventManager");
 
 class PlayboardManagerBase
 {
-    constructor(pEventManager)
-    {
-        this.data = { };
-        this._counter = 0;
-        this._eventManager = pEventManager;
-    }
+    #data = { };
+    #counter = 0;
+    #eventManager = EventManager;
 
     triggerEventSetupNewGame()
     {
-        this._eventManager.trigger("setup-new-game", this.data);
+        this.#eventManager.trigger("setup-new-game", this.#data);
     }
 
     getEventManager()
     {
-        return this._eventManager;
+        return this.#eventManager;
     }
 
     /**
@@ -25,7 +23,7 @@ class PlayboardManagerBase
      */
     GetData()
     {
-        return this.data;
+        return this.#data;
     }
 
     /**
@@ -35,14 +33,14 @@ class PlayboardManagerBase
      Save()
      {
          return {
-             counter : this._counter
+             counter : this.#counter
          };
      }
  
  
      Restore(playboard)
      {
-        this._counter = parseInt(playboard.counter);
+        this.#counter = parseInt(playboard.counter);
      }
     
     /**
@@ -52,13 +50,13 @@ class PlayboardManagerBase
      */
     obtainUniqueCompanyId()
     {
-        return "company_" + (++this._counter);
+        return "company_" + (++this.#counter);
     }
  
     reset()
     {
-        this.data = { };
-        this._counter = 0;
+        this.#data = { };
+        this.#counter = 0;
     }
 
     /**

@@ -3,13 +3,13 @@ const Logger = require("../Logger");
 
 class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 {
-    companies = { };
+    #companies = { };
 
     reset()
     {
         super.reset();
         
-        this.companies = { };
+        this.#companies = { };
     }
 
     /**
@@ -20,7 +20,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     {
         let data = super.Save();
 
-        data.companies = this.companies;
+        data.companies = this.#companies;
 
         return data;
     }
@@ -29,7 +29,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     {
         super.Restore(playboard);
 
-        this.companies = {};
+        this.#companies = {};
 
         for (let companyid in playboard.companies)
         {
@@ -66,7 +66,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
                 newCompany.sites.revealed = _company.sites.revealed === true;
             }
 
-            this.companies[companyid] = newCompany;
+            this.#companies[companyid] = newCompany;
         }
     }
 
@@ -78,9 +78,9 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     removeEmptyCompanies()
     {
         let keys = [];
-        for (let key in this.companies)
+        for (let key in this.#companies)
         {
-            if (this.companies[key].characters.length === 0)
+            if (this.#companies[key].characters.length === 0)
             {
                 this.discardCompanyOnGuardCards(key);
                 keys.push(key);
@@ -88,7 +88,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         }
 
         for (let _key of keys)
-            delete this.companies[_key];
+            delete this.#companies[_key];
 
         return keys;
     }
@@ -104,7 +104,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
             return;
 
         let jCard, pDeck;
-        for (let _uuid of this.companies[companyUuid].sites.attached)
+        for (let _uuid of this.#companies[companyUuid].sites.attached)
         {
             jCard = this.GetCardByUuid(_uuid);
             pDeck = jCard === null ? null : super.getPlayerDeck(jCard.owner);
@@ -112,7 +112,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
                 pDeck.push().toDiscardpile(_uuid);
         }
 
-        this.companies[companyUuid].sites = [];
+        this.#companies[companyUuid].sites = [];
     }
  
     /**
@@ -127,7 +127,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
             return false;
 
         let _uuid, jCard, pDeck;
-        let vsSites = this.companies[companyUuid].sites.attached;
+        let vsSites = this.#companies[companyUuid].sites.attached;
         for (let i = vsSites.length - 1; i >= 0; i--)
         {
             _uuid = vsSites[i];
@@ -171,9 +171,9 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
     PopOnGuardCard(cardUuid)
     {
         let _list, count, _uuid;
-        for (let key in this.companies) 
+        for (let key in this.#companies) 
         {
-            _list = this.companies[key].sites.attached;
+            _list = this.#companies[key].sites.attached;
             count = _list.length;
             for (let i = count - 1; i >= 0; i--)
             {
@@ -212,7 +212,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
      */
      addCompanyCharacterToCompany(targetCompanyId, hostingCharacterUuid, companyCharacter)
      {
-         let targetCompany = this.companies[targetCompanyId];
+         let targetCompany = this.#companies[targetCompanyId];
          if (typeof targetCompany === "undefined")
          {
             Logger.warn("Target company does not exist: " + targetCompanyId);
@@ -264,7 +264,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 
         pDeck.pop().fromHand(uuid);
 
-        this.companies[companyId].characters.push({ uuid: uuid, influenced : [] });
+        this.#companies[companyId].characters.push({ uuid: uuid, influenced : [] });
         this.addNewCharacter(uuid, companyId, uuid);
         return true;
     }
@@ -334,7 +334,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         if (!this.companyExists(companyUuid))
             return;
 
-        for (let _companyCharacter of this.companies[companyUuid].characters)
+        for (let _companyCharacter of this.#companies[companyUuid].characters)
         {
             super.readyCard(_companyCharacter.uuid);
             super.readyResources(_companyCharacter.uuid);
@@ -354,15 +354,15 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
      getCharactersCurrentLocation(uuid)
      {
          let _list, _companyCharacter;
-         for (let key in this.companies)
+         for (let key in this.#companies)
          {
-             _list = this.companies[key].characters;
+             _list = this.#companies[key].characters;
              for (let i = 0; i < _list.length; i++)
              {
-                _companyCharacter = this.companies[key].characters[i];
+                _companyCharacter = this.#companies[key].characters[i];
                 const _found = _companyCharacter.uuid === uuid;
                 if (_found || this.getCharactersCurrentLocationFromCompaniesCharacter(uuid, _companyCharacter.influenced))
-                     return this.companies[key].sites.current;
+                     return this.#companies[key].sites.current;
              }
          }
  
@@ -388,9 +388,9 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
       */
       SetCompanyStartSite(companyUuid, sStart, vsRegions, sTarget)
       {
-          if (this.companies[companyUuid] !== undefined)
+          if (this.#companies[companyUuid] !== undefined)
           {
-              let jCompanySites = this.companies[companyUuid].sites;
+              let jCompanySites = this.#companies[companyUuid].sites;
               jCompanySites.current = sStart;
               jCompanySites.regions = vsRegions;
               jCompanySites.target = sTarget;
@@ -406,7 +406,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
       RevealCompanyDestinationSite(companyUuid)
       {
           if (this.companyExists(companyUuid))
-              this.companies[companyUuid].sites.revealed = true;
+              this.#companies[companyUuid].sites.revealed = true;
       }
   
       CompanyArrivedAtDestination(companyUuid)
@@ -414,7 +414,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
           if (!this.companyExists(companyUuid))
               return;
           
-          let jCompanySites = this.companies[companyUuid].sites;
+          let jCompanySites = this.#companies[companyUuid].sites;
           if (jCompanySites.target !== "")
           {
               jCompanySites.current = jCompanySites.target;
@@ -430,7 +430,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
           if (!this.companyExists(companyUuid))
               return;
           
-          let jCompanySites = this.companies[companyUuid].sites;
+          let jCompanySites = this.#companies[companyUuid].sites;
           if (jCompanySites.target !== "")
               jCompanySites.target = "";
   
@@ -452,7 +452,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
             return false;
         }
 
-        let vsSites = this.companies[companyUuid].sites.attached;
+        let vsSites = this.#companies[companyUuid].sites.attached;
         for (let _uuid of vsSites)
         {
             if (cardUuid === _uuid)
@@ -465,7 +465,7 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 
     popCompanyCharacter0(uuid)
     {
-        const card = this.popCompanyCharacterFromList(this.companies, uuid);
+        const card = this.popCompanyCharacterFromList(this.#companies, uuid);
         return card !== null ? card :  this.popCompanyCharacterAny("", uuid, []);
     }
 
@@ -589,8 +589,8 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
   
     createNewCompanyWithCharacter(companyId, playerId, hostUuid, listInfluencedUUids, startingLocation)
     {
-        this.companies[companyId] = this.createNewCompany(companyId, playerId, this.createCompanyCharacter(hostUuid, listInfluencedUUids), startingLocation);
-        return this.companies[companyId];
+        this.#companies[companyId] = this.createNewCompany(companyId, playerId, this.createCompanyCharacter(hostUuid, listInfluencedUUids), startingLocation);
+        return this.#companies[companyId];
     }
    
     /**
@@ -606,9 +606,9 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
 
         let list = [];
  
-        for (let key in this.companies) 
+        for (let key in this.#companies) 
         {
-            if (this.companies[key].playerId === playerId)
+            if (this.#companies[key].playerId === playerId)
                 list.push(key);
         }
  
@@ -618,15 +618,15 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
  
      companyExists(uuid)
      {
-         return typeof this.companies[uuid] !== "undefined";
+         return typeof this.#companies[uuid] !== "undefined";
      }
 
     getCompanyById(companyId)
     {
-        if(companyId === "" || this.companies[companyId] === undefined)
+        if(companyId === "" || this.#companies[companyId] === undefined)
             return null;
         else
-            return this.companies[companyId];
+            return this.#companies[companyId];
     }
  
      GetCompanyAttachedLocationCards(companyId)
@@ -768,9 +768,9 @@ class PlayboardManagerCompanies extends PlayboardManagerStagingArea
         if (characterUuid === undefined || characterUuid === "")
             return "";
 
-        for (let companyUuid in this.companies)
+        for (let companyUuid in this.#companies)
         {
-            for (let character of this.companies[companyUuid].characters)
+            for (let character of this.#companies[companyUuid].characters)
             {
                 if (character.uuid === characterUuid)
                     return companyUuid;

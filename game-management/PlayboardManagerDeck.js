@@ -2,7 +2,6 @@ const PlayboardManagerBase = require("./PlayboardManagerBase");
 const DeckManagerDefault = require("./DeckManagerDefault");
 const Logger = require("../Logger");
 const CardDataProvider = require("../plugins/CardDataProvider");
-const EventManager = require("../EventManager");
 
 class PlayboardManagerDeck extends PlayboardManagerBase 
 {
@@ -12,8 +11,8 @@ class PlayboardManagerDeck extends PlayboardManagerBase
     
     constructor()
     {
-        super(EventManager);
-
+        super();
+        
         this.#decks = this.requireDeckManager();
     }
 
