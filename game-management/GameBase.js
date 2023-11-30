@@ -97,8 +97,6 @@ class GameBase {
         };
         
         data.playboard = this.getPlayboardManager().Save();
-        data.scoring = this.scoring.save();
-
         return data;
     }
 

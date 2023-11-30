@@ -113,36 +113,36 @@ class DeckArda extends DeckDefault {
      * @param {Object} _cardMap Card map to save card uuids of this deck
      * @param {Object} gameCardProvider 
      */
-    addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
+    addDeck(jsonDeck, _cardMap)
     {
-        super.addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider);
+        super.addDeck(jsonDeck, _cardMap);
 
         let nSize = 0;
 
         this.#copyIdsOpeningHand(this.handCards, _cardMap);
 
         /** minor items will be drawn to hand on startup */
-        nSize = this.add(jsonDeck["minors"], this.handMinorItems, _cardMap, [], gameCardProvider);
+        nSize = this.add(jsonDeck["minors"], this.handMinorItems, _cardMap);
         this.#copyIds(this.handMinorItems, this.typesMinors);
 
         Logger.info("Added " + nSize + " minor items");
         
-        nSize = this.add(jsonDeck["mps"], this.playdeckMP, _cardMap, [], gameCardProvider);
+        nSize = this.add(jsonDeck["mps"], this.playdeckMP, _cardMap);
         this.#copyIds(this.playdeckMP, this.typesMPs);
         this.#shuffleAnyTimes(this.playdeckMP, 3);
         Logger.info("Added " + nSize + " marshalling points cards");
 
-        nSize = this.add(jsonDeck["chars_mind7"], this.playDeckCharacters7, _cardMap, listAgents, gameCardProvider);
+        nSize = this.add(jsonDeck["chars_mind7"], this.playDeckCharacters7, _cardMap);
         this.#copyIds(this.playDeckCharacters7, this.typesCharacters);
         this.#shuffleAnyTimes(this.playDeckCharacters7, 3);
         Logger.info("Added " + nSize + " characters with mind of 6+");
 
-        nSize = this.add(jsonDeck["chars_others"], this.playdeckCharacters, _cardMap, listAgents, gameCardProvider);
+        nSize = this.add(jsonDeck["chars_others"], this.playdeckCharacters, _cardMap);
         this.#copyIds(this.playdeckCharacters, this.typesCharacters);
         this.#shuffleAnyTimes(this.playdeckCharacters, 3);
         Logger.info("Added " + nSize + " characters with mind of 5-");
 
-        this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap, [], gameCardProvider);
+        this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap);
     }
 
     /**

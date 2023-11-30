@@ -180,10 +180,10 @@ class DeckManager {
         throw new Error("Overwrite newDeckInstance");
     }
 
-    addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
+    addDeck(playerId, jsonDeck)
     {
-        let deck = this.newDeckInstance(playerId)
-        deck.addDeck(jsonDeck, listAgents, this.#cardMap, gameCardProvider);
+        const deck = this.newDeckInstance(playerId)
+        deck.addDeck(jsonDeck, this.#cardMap);
         deck.shuffle();
         this.#deck[playerId] = deck;
 

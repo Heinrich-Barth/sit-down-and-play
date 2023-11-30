@@ -109,7 +109,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     AddDeck(playerId, jsonDeck)
     {
-        this.getDecks().addDeck(playerId, jsonDeck, this.#agents, this.#gameCardProvider);
+        this.getDecks().addDeck(playerId, jsonDeck);
         return true;
     }
 

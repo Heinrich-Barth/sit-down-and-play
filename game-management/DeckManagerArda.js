@@ -51,7 +51,7 @@ class DeckManagerArda extends DeckManager {
         return true;
     }
 
-    addDeck(playerId, jsonDeck, listAgents, gameCardProvider)
+    addDeck(playerId, jsonDeck)
     {
         if (super.deckCount() === 0)
         {
@@ -65,7 +65,7 @@ class DeckManagerArda extends DeckManager {
                 jsonDeck["pool"][_key] = this.#poolGame[_key];
         }
 
-        const pDeck = super.addDeck(playerId, jsonDeck, listAgents, gameCardProvider);
+        const pDeck = super.addDeck(playerId, jsonDeck);
         if (super.deckCount() === 1)
         {
             this.#adminUserId = playerId;

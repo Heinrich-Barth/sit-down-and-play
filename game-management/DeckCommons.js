@@ -65,11 +65,9 @@ class DeckCommons {
      * @param {JSON} cards 
      * @param {Array} _targetList 
      * @param {Object} _cardMap 
-     * @param {Array} listAgents 
-     * @param {Object} gameCardProvider 
      * @returns 
      */
-    add(cards, _targetList, _cardMap, listAgents, gameCardProvider)
+    add(cards, _targetList, _cardMap)
     {
         if (cards === undefined)
             return 0;

@@ -442,15 +442,15 @@ class DeckDefault extends DeckCommons {
      * @param {Object} _cardMap 
      * @param {Object} gameCardProvider 
      */
-    addDeck(jsonDeck, listAgents, _cardMap, gameCardProvider)
+    addDeck(jsonDeck, _cardMap)
     {
         const MAX_CARDS_PER_DECK = this.getMaxDeckSize();
 
         let nSize = 0;
-        nSize += this.add(jsonDeck["pool"], this.handCards, _cardMap, listAgents, gameCardProvider);
-        nSize += this.add(jsonDeck["playdeck"], this.playdeck, _cardMap, listAgents, gameCardProvider);
-        nSize += this.add(jsonDeck["sites"], this.sites, _cardMap, listAgents, gameCardProvider);
-        nSize += this.add(jsonDeck["sideboard"], this.sideboard, _cardMap, listAgents, gameCardProvider);
+        nSize += this.add(jsonDeck["pool"], this.handCards, _cardMap);
+        nSize += this.add(jsonDeck["playdeck"], this.playdeck, _cardMap);
+        nSize += this.add(jsonDeck["sites"], this.sites, _cardMap);
+        nSize += this.add(jsonDeck["sideboard"], this.sideboard, _cardMap);
         
         if (nSize == MAX_CARDS_PER_DECK)
             Logger.info("Maximum number of cards reached. The deck must not exceed " + MAX_CARDS_PER_DECK + " cards.");
