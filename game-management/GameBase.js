@@ -3,21 +3,22 @@ const EventManager = require("../EventManager");
 
 class GameBase {
 
-    #adminUser = "";
+    #playboardManager;
 
-    constructor(_MeccgApi, _Chat, playboardManager)
+    #adminUser = "";
+    #player_phase =  "start";
+    #created = Date.now();
+    #bSingle = false;
+    #started = null;
+
+    constructor(pMeccgApi, pChat, pPlayboardManager)
     {
         this.apis = {
-            chat : _Chat,
-            meccgApi : _MeccgApi
+            chat : pChat,
+            meccgApi : pMeccgApi
         };
 
-        this.playboardManager = playboardManager;
-        
-        this.player_phase =  "start";
-        this.started = null;
-        this.bSingle = false;
-        this.created = Date.now();
+        this.#playboardManager = pPlayboardManager;
     }
 
     globalRestoreGame(_userid, _socket, data)
@@ -27,28 +28,27 @@ class GameBase {
 
         try
         {
-            this.created -= parseInt(data.game.meta.gameduration);
+            this.#created -= parseInt(data.game.meta.gameduration);
         }
         catch (err)
         {
-            console.error(err);
             Logger.error(err);
         }
     }            
 
     getGameCreated()
     {
-        return this.created;
+        return this.#created;
     }
 
     getGameDuration()
     {
-        return Date.now() - this.created;
+        return Date.now() - this.#created;
     }
 
     restorePlayerPhase(phase, _turn, _current)
     {
-        this.player_phase = phase;
+        this.#player_phase = phase;
     }
 
     getMeccgApi()
@@ -81,7 +81,7 @@ class GameBase {
 
     getPlayboardManager()
     {
-        return this.playboardManager;
+        return this.#playboardManager;
     }
 
     save()
@@ -89,7 +89,7 @@ class GameBase {
         let data = {};
 
         data.meta = {
-            phase : this.player_phase,
+            phase : this.#player_phase,
             admin : this.#adminUser,
             arda : this.isArda(),
             gameduration: this.getGameDuration(),
@@ -116,7 +116,7 @@ class GameBase {
 
     getPlayboardDataObject()
     {
-        return this.playboardManager.GetData();
+        return this.#playboardManager.GetData();
     }
 
     getFirstCompanyCharacterCode(uuid, sDefault)
@@ -136,8 +136,8 @@ class GameBase {
         if (this.getPlayboardManager() !== null)
             this.getPlayboardManager().reset();
 
-        this.player_phase = "start";
-        this.started = 0;
+        this.#player_phase = "start";
+        this.#started = 0;
     }
 
     setupNewGame()
@@ -152,7 +152,7 @@ class GameBase {
     
     getPhase ()
     {
-        return this.player_phase;
+        return this.#player_phase;
     }
 
     getTappedSites(userid)
@@ -162,18 +162,18 @@ class GameBase {
 
     getGameOnline()
     {
-        if (this.started === null)
+        if (this.#started === null)
         {
-            this.started = new Date();
+            this.#started = new Date();
             return 0;
         }
         else
-            return new Date().getTime() - this.started;
+            return new Date().getTime() - this.#started;
     }
 
     setPhase(sVal)
     {
-        this.player_phase = sVal;
+        this.#player_phase = sVal;
     }
 
     dumpDeck()
@@ -188,12 +188,12 @@ class GameBase {
 
     isSinglePlayer()
     {
-        return this.bSingle;
+        return this.#bSingle;
     }
 
     setSinglePlayer(bSingle)
     {
-        this.bSingle = bSingle;
+        this.#bSingle = bSingle;
     }
 
     isArda()
