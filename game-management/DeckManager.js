@@ -45,7 +45,7 @@ class DeckManager {
 
     save()
     {
-        let jData = 
+        const jData = 
         {
             admin : this.#firstPlayerId,
             uuid_count : this.#uuid_count,
