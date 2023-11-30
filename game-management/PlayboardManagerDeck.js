@@ -6,31 +6,33 @@ const EventManager = require("../EventManager");
 
 class PlayboardManagerDeck extends PlayboardManagerBase 
 {
-    constructor(isSinglePlayer)
+    #gameCardProvider = CardDataProvider;
+    #agents = CardDataProvider.getAgents;
+    #decks;
+    
+    constructor()
     {
         super(EventManager);
-        
-        this.decks = this.requireDeckManager(isSinglePlayer);
-        this.gameCardProvider = CardDataProvider;
-        this.agents = CardDataProvider.getAgents;
+
+        this.#decks = this.requireDeckManager();
     }
 
-    requireDeckManager(_isSinglePlayer)
+    requireDeckManager()
     {
         return new DeckManagerDefault();
     }
 
     getDecks()
     {
-        return this.decks;
+        return this.#decks;
     }
     
     reset()
     {
         super.reset();
         
-        if (this.decks !== null)
-            this.decks.reset();
+        if (this.#decks !== null)
+            this.#decks.reset();
     }
 
     UpdateOwnership(playerId, pCard)
@@ -113,7 +115,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     AddDeck(playerId, jsonDeck)
     {
-        this.getDecks().addDeck(playerId, jsonDeck, this.agents, this.gameCardProvider);
+        this.getDecks().addDeck(playerId, jsonDeck, this.#agents, this.#gameCardProvider);
         return true;
     }
 
@@ -488,7 +490,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     AddDeckCardsToSideboard(playerId, jsonDeck)
     {
-        return this.getDecks().addCardsToSideboardDuringGame(playerId, jsonDeck, this.agents, this.gameCardProvider);
+        return this.getDecks().addCardsToSideboardDuringGame(playerId, jsonDeck, this.#agents, this.#gameCardProvider);
     }
 
     /**
@@ -501,7 +503,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     ImportCardsToHand(playerId, code, bAsCharacter)
     {
-        return this.getDecks().importCardsToHand(playerId, code, bAsCharacter, this.gameCardProvider);
+        return this.getDecks().importCardsToHand(playerId, code, bAsCharacter, this.#gameCardProvider);
     }
 
     /**
@@ -514,7 +516,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
      */
     ImportCardsToGame(playerId, code, bAsCharacter)
     {
-        return this.getDecks().importCardsToGame(playerId, code, bAsCharacter, this.gameCardProvider);
+        return this.getDecks().importCardsToGame(playerId, code, bAsCharacter, this.#gameCardProvider);
     }
     
     isValidTarget(target)

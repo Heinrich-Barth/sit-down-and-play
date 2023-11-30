@@ -14,6 +14,11 @@ class GameArda extends GameStandard
         };
     }
 
+    isSinglePlayer()
+    {
+        return false;
+    }
+
     isArda()
     {
         return true;

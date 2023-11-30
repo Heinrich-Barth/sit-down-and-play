@@ -1,4 +1,5 @@
 const Logger = require("../Logger");
+const EventManager = require("../EventManager");
 
 class GameBase {
 
@@ -260,10 +261,9 @@ class GameBase {
         this.setPhase("start")
     }
 
-    onAfterInit(pEventManager)
+    onAfterInit()
     {
-        if (pEventManager)
-            pEventManager.trigger("register-game-endpoints", this.getMeccgApi());
+        EventManager.trigger("register-game-endpoints", this.getMeccgApi());
     }
 
 }

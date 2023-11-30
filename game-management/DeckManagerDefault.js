@@ -4,13 +4,8 @@ const HandManager = require("./HandManager");
 
 const DeckDefault = require("./DeckDefault");
 
-class DeckManagerDefault extends DeckManager {
-
-    constructor()
-    {
-        super();
-    }
-
+class DeckManagerDefault extends DeckManager 
+{
     creatHandManager()
     {
         return new HandManager(this);

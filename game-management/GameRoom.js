@@ -343,24 +343,26 @@ class GameRoom
             return this.game.getPlayerAvatarsList();
     }
 
-    #createGame(_MeccgApi, _Chat, isArda, isSinglePlayer, fnEndGame, adminUser)
+    createGame(isArda, isSinglePlayer,  adminUser)
     {       
         let pPlayboardManager;
         if (isArda)
         {
-            pPlayboardManager = new PlayboardManagerArda(isSinglePlayer);
-            this.game = new GameArda(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
+            pPlayboardManager = new PlayboardManagerArda();
+            this.game = new GameArda(this.api, this.chat, pPlayboardManager);
         }
         else
         {
-            pPlayboardManager = new PlayboardManager(isSinglePlayer);
-            this.game = new GameStandard(_MeccgApi, _Chat, pPlayboardManager, fnEndGame);
+            pPlayboardManager = new PlayboardManager();
+            this.game = new GameStandard(this.api, this.chat, pPlayboardManager);
+            
+            if (isSinglePlayer)
+                this.game.setSinglePlayer(isSinglePlayer);
         }
 
         pPlayboardManager.triggerEventSetupNewGame();
-    
-        this.game.setSinglePlayer(isSinglePlayer);
-        this.game.setCallbackOnRestoreError(fnEndGame);
+        
+        this.game.setCallbackOnRestoreError(this.endGame.bind(this));
         this.game.init();
         this.game.onAfterInit();
         this.game.setGameAdminUser(adminUser);
@@ -392,19 +394,18 @@ class GameRoom
         this.api.initGameEndpoint(socket);
     }
 
-    static newGame(io, room, isArda, isSinglePlayer, fnEndGame, adminUser)
-    {
-        if (isSinglePlayer)
-            Logger.info("Setting up single player game " + room);
-        else if (isArda)
-            Logger.info("Setting up arda game " + room);
-        else
-            Logger.info("Setting up game " + room);
-
-        const pRoomInstance = new GameRoom(io, room, fnEndGame);
-        pRoomInstance.#createGame(pRoomInstance.api, pRoomInstance.chat, isArda, isSinglePlayer, pRoomInstance.endGame.bind(pRoomInstance), adminUser);
-        return pRoomInstance;
-    }
 }
 
-module.exports = GameRoom;
+exports.newGame = function(io, room, isArda, isSinglePlayer, fnEndGame, adminUser)
+{
+    if (isSinglePlayer)
+        Logger.info("Setting up single player game " + room);
+    else if (isArda)
+        Logger.info("Setting up arda game " + room);
+    else
+        Logger.info("Setting up game " + room);
+
+    const pRoomInstance = new GameRoom(io, room, fnEndGame);
+    pRoomInstance.createGame(isArda, isSinglePlayer, adminUser);
+    return pRoomInstance;
+}

@@ -4,12 +4,12 @@ const DeckArda = require("./DeckArda");
 
 class DeckManagerArda extends DeckManager {
 
-    constructor(isSinglePlayer)
+    constructor()
     {
         super();
 
         this.adminUserId = "";
-        this.singlePlayer = isSinglePlayer;
+        this.singlePlayer = false;
         this.poolGame = { };
     }
 

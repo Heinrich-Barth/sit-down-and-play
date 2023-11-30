@@ -384,6 +384,7 @@ class GamePlayRouteHandler extends GamePlayRouteHandlerUtil
         catch (e) 
         {
             Logger.error(e);
+            console.error(e);
             this.createExpireResponse(res).redirect("/error/login");
         }
     }

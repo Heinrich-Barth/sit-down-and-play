@@ -4,9 +4,9 @@ const DeckManagerArda = require("./DeckManagerArda");
 
 class PlayboardManagerArda extends PlayboardManager
 {
-    requireDeckManager(isSinglePlayer)
+    requireDeckManager()
     {
-        return new DeckManagerArda(isSinglePlayer);
+        return new DeckManagerArda();
     }
 }
 
