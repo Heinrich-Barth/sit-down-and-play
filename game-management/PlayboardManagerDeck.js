@@ -12,7 +12,7 @@ class PlayboardManagerDeck extends PlayboardManagerBase
     constructor()
     {
         super();
-        
+
         this.#decks = this.requireDeckManager();
     }
 
@@ -91,18 +91,13 @@ class PlayboardManagerDeck extends PlayboardManagerBase
 
     DrawCard(playerId, bOnlyGetTopCard)
     {
-        let _uuid = this._drawCard(playerId, bOnlyGetTopCard);
-        if (_uuid === "")
-            return null;
-
-        const _card = this.getDecks().getFullPlayerCard(_uuid);
+        const uuid = this._drawCard(playerId, bOnlyGetTopCard);
+        const _card = uuid === "" ? null : this.getDecks().getFullPlayerCard(uuid);
         if (_card === null)
             return null;
-        else
-        {
-            _card.owner = playerId;
-            return { uuid:_uuid,code:_card.code, type:_card.type, status:_card.status, owner: _card.owner };
-        }
+        
+        _card.owner = playerId;
+        return { uuid:uuid, code:_card.code, type:_card.type, status:_card.status, owner: _card.owner };
     }
 
 
