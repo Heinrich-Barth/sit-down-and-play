@@ -123,7 +123,7 @@ class DeckCommons {
             return sCode.replace(/"/g, "");
     }
 
-    randomNumber(max)
+    #randomNumber(max)
     {
         if (max <= 1)
             return 0;
@@ -142,7 +142,7 @@ class DeckCommons {
 
         while (inputList.length > 0)
         {
-            _index = this.randomNumber(inputList.length);
+            _index = this.#randomNumber(inputList.length);
             _newList.push(inputList[_index]);
             inputList.splice(_index, 1);
         }
@@ -237,7 +237,7 @@ class DeckCommons {
      * Create unique id
      * @returns ID
      */
-    requestNewCardUuid()
+    #requestNewCardUuid()
     {
         return this.getPlayerId() + "_" + this.createNewCardUuid();
     }
@@ -246,7 +246,7 @@ class DeckCommons {
      * Create empty card entry
      * @returns Object
      */
-    static createEmptyCardEntry()
+    static #createEmptyCardEntry()
     {
         return {
             code : "",
@@ -267,7 +267,7 @@ class DeckCommons {
      */
     static cloneCardEntry(input)
     {
-        let data = DeckCommons.createEmptyCardEntry();
+        let data = DeckCommons.#createEmptyCardEntry();
         for (let key of Object.keys(data))
         {
             if (input[key] === undefined)
@@ -319,10 +319,10 @@ class DeckCommons {
             return null;
         }
 
-        let data = DeckCommons.createEmptyCardEntry();
+        let data = DeckCommons.#createEmptyCardEntry();
         data.code = code;
         data.type = sType.toLowerCase();
-        data.uuid = this.requestNewCardUuid();
+        data.uuid = this.#requestNewCardUuid();
         data.state = 0;
         data.owner = this.getPlayerId();
         data.revealed = isAgent !== true
