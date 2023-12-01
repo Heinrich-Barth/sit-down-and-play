@@ -13,7 +13,7 @@ const onPwaRunning = function(req, res)
 
 module.exports = function()
 {
-    SERVER.instance.get("/pwa/running", SERVER.caching.expires.jsonCallback, onPwaRunning);
-    SERVER.instance.get("/pwa", g_pAuthentication.signInFromPWA, (_req, res) => res.redirect("/pwa/app.html"));
-    SERVER.instance.use("/serviceWorker.js", g_pExpress.static(__dirname + "/serviceWorker.js"));
+    SERVER.getServerInstance().get("/pwa/running", SERVER.caching.expires.jsonCallback, onPwaRunning);
+    SERVER.getServerInstance().get("/pwa", g_pAuthentication.signInFromPWA, (_req, res) => res.redirect("/pwa/app.html"));
+    SERVER.getServerInstance().use("/serviceWorker.js", g_pExpress.static(__dirname + "/serviceWorker.js"));
 }
