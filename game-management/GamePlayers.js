@@ -159,6 +159,39 @@ class GamePlayers extends GameBase
         return this.getCurrentPlayerId();
     }
 
+    changePlayerOrder(listIds)
+    {
+        if (listIds.length !== this.players.ids.length)
+        {
+            Logger.warn("Invalid length of new player array.");
+            return false;
+        }
+
+        for (let id of this.players.ids)
+        {
+            if (!listIds.includes(id))
+            {
+                Logger.warn("Cannot find player id in list of players... Will not change order");
+                return false;
+            }
+        }
+
+        const currentPlayerId = this.players.ids[this.players.current];
+
+        this.players.ids.splice(0, this.players.ids.length);
+        const len = listIds.length;
+        for (let i = 0; i < len; i++)
+        {
+            const _id = listIds[i];
+            this.players.ids.push(_id);
+
+            if (_id === currentPlayerId)
+                this.players.current = i;
+        }
+
+        return true;
+    }
+
     reset()
     {
         super.reset();
@@ -300,11 +333,13 @@ class GamePlayers extends GameBase
 
     sendPlayerList()
     {
-        let userid = this.getCurrentPlayerId();
+        const userid = this.getCurrentPlayerId();
         const data = {
             names: this.getNameMap(),
-            avatars: this.getAvatarMap()
+            avatars: this.getAvatarMap(),
+            listOrder: this.getPlayerIds()
         };
+        
         this.publishToPlayers("/game/set-player-names", userid, data);
         this.publishToPlayers("/game/time", userid, { time : this.getGameOnline() });
     }

@@ -1862,3 +1862,87 @@ div.card[data-token="10"]:after {
   background-color: #000;
   opacity: 0.75;
 }
+
+.change-seating {
+  background-color: #000;
+  color: #fff;
+  max-width: 90%;
+  max-height: 90%;
+}
+.change-seating::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.change-seating h3 {
+  color: #F0C648;
+  font-size: 2em;
+  text-align: center;
+}
+.change-seating ul {
+  list-style-type: none;
+  display: block;
+}
+.change-seating ul li {
+  min-height: 50px;
+  position: relative;
+}
+.change-seating ul li:first-of-type a:first-of-type {
+  visibility: hidden;
+}
+.change-seating ul li:last-of-type a:last-of-type {
+  visibility: hidden;
+}
+.change-seating .avatar-box {
+  height: 50px;
+  width: 50px;
+  left: 0;
+  top: 0;
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.change-seating .avatar-box img {
+  position: absolute;
+  width: 100%;
+  top: 7px;
+  scale: 1.6;
+}
+.change-seating .avatar-text-box {
+  position: relative;
+  padding-top: 15px;
+  margin-left: 60px;
+  font-size: 1.5em;
+  display: grid;
+  grid-template-columns: 1.5fr 0.5fr 0.5fr;
+}
+.change-seating .avatar-text-box a {
+  margin: 0 1em;
+}
+.change-seating .button-actions {
+  text-align: center;
+}
+.change-seating button {
+  border: 0;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  height: 3.5em;
+  line-height: 3.5em;
+  outline: 0;
+  padding: 0 2em 0 2em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  background-color: #a8cea4;
+  margin: 0 10px;
+}
+.change-seating button:hover {
+  background-color: #8ad681;
+}
+.change-seating button.buttonCancel {
+  background-color: #c32222;
+}
+.change-seating button.buttonCancel:hover {
+  background-color: #dc2600;
+}

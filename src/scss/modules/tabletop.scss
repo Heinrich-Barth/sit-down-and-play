@@ -756,3 +756,91 @@ div.card[data-token="9"]:after { content: "9"; }
 div.card[data-token="10"]:after { content: "10"; }
 
 @import "./tabletop_changeavatar.scss";
+
+.change-seating {
+    background-color: #000;
+    color: #fff;
+    max-width: 90%;
+    max-height: 90%;
+
+    &::backdrop {
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    h3 { color: $color-orange; font-size: 2em; text-align: center; }
+
+    ul {
+
+        list-style-type: none;
+        display: block;
+
+        li {
+            min-height: 50px;
+            position: relative;
+
+            &:first-of-type a:first-of-type { visibility: hidden;}
+            &:last-of-type a:last-of-type { visibility: hidden;}
+        }
+    }
+
+    .avatar-box {
+        height: 50px;
+        width: 50px;
+        left: 0;
+        top: 0;
+        position: absolute;
+        display: block;
+        overflow: hidden;
+        border-radius: 50%;
+
+        img {
+            position: absolute;
+            width: 100%;
+            top: 7px;
+            scale: 1.6;
+        }
+    }
+
+    .avatar-text-box {
+        position: relative;
+        padding-top: 15px;
+        margin-left: 60px;
+        font-size: 1.5em;
+        display: grid;
+        grid-template-columns: 1.5fr 0.5fr 0.5fr;
+
+        a { margin: 0 1em; }
+    }
+
+    .button-actions { text-align: center; }
+
+    button {
+        border: 0;
+        border-radius: 5px;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        height: 3.5em;
+        line-height: 3.5em;
+        outline: 0;
+        padding: 0 2em 0 2em;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        background-color: #a8cea4;
+        margin: 0 10px;
+
+        &:hover
+        {
+            background-color: #8ad681;
+        }
+
+        &.buttonCancel {
+            background-color: #c32222;
+
+            &:hover {
+                background-color: #dc2600;
+            }
+        }
+    }
+}

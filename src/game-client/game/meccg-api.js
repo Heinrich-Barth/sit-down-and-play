@@ -8,6 +8,17 @@ const MeccgPlayers = {
     usermap : null,
     avatarmap: null,
     _isMyTurn: true,
+    playerSequenceList : [],
+
+    getUserMap:function()
+    {
+        return MeccgPlayers.usermap;
+    },
+
+    getAvatarMap : function()
+    {
+        return MeccgPlayers.avatarmap;
+    },
 
     isChallenger : function(sid)
     {
@@ -54,6 +65,10 @@ const MeccgPlayers = {
         {
             this.usermap = jMap.names;
             this.avatarmap = jMap.avatars;
+            
+            if (Array.isArray(jMap.listOrder))
+                this.playerSequenceList = jMap.listOrder;
+
             this.onPlayerListReceived();
         }
     },
@@ -85,16 +100,28 @@ const MeccgPlayers = {
         {            
             this.usermap[jData.userid] = jData.name;
             this.avatarmap[jData.userid] = jData.avatar;
+
+            if (!this.playerSequenceList.includes(jData.userid))
+                this.playerSequenceList.push(jData.userid);
+
             this.onPlayerListReceived();
         }
     },
- 
+
+    rearrangePlayers : function(_bIsMe, jData)
+    {
+        const list = jData.list;
+        if (Array.isArray(list) && list.length > 0)
+            document.body.dispatchEvent(new CustomEvent("meccg-players-reorder", { "detail": list}));
+    },
+
     onPlayerListReceived : function()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-players-updated", { "detail": {
             challengerId : MeccgPlayers.getChallengerId(),
             map : MeccgPlayers.usermap,
-            avatars: MeccgPlayers.avatarmap
+            avatars: MeccgPlayers.avatarmap,
+            order: MeccgPlayers.playerSequenceList
         }}));
     },
 
@@ -111,6 +138,7 @@ const MeccgPlayers = {
         MeccgApi.addListener("/game/set-player-names", this.setPlayerNames.bind(this));
         MeccgApi.addListener("/game/player/add", this.addPlayer.bind(this));
         MeccgApi.addListener("/game/chat/message", this.onChatMessage.bind(this));
+        MeccgApi.addListener("/game/players/reorder", this.rearrangePlayers.bind(this));
     },
 
     isMyCard : function(owner)

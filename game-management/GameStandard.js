@@ -92,6 +92,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/watch/victory", this.onWatchUpdateVictory.bind(this));
 
         this.getMeccgApi().addListener("/game/avatar/set", this.onAvatarSet.bind(this));
+        this.getMeccgApi().addListener("/game/players/reorder", this.onChangePlayerOrder.bind(this));
     }
 
     /**
@@ -1050,7 +1051,6 @@ class GameStandard extends GamePlayers
     {
         this.getPlayboardManager().RevealCompanyDestinationSite(data.companyUuid);
         this.publishToPlayers("/game/company/location/reveal", userid, {company: data.companyUuid});
-        /** todo: send target location here */
         this.publishChat(userid, " revealed locations.", true);
     }
 
@@ -1124,6 +1124,18 @@ class GameStandard extends GamePlayers
         this.updateDices(userid, obj.type);
     }
 
+    onChangePlayerOrder(userid, _socket, obj)
+    {
+        if (!Array.isArray(obj.list) || obj.list.length === 0)
+            return;
+
+        if (this.changePlayerOrder(obj.list))
+        {
+            this.publishToPlayers("/game/players/reorder", userid, {
+                list: obj.list
+            });
+        }
+    }
     
     phase(userid, _socket, sPhase) 
     {

@@ -11,11 +11,35 @@ class PlayerSelector
         this._playerHex = {};
 
         document.body.addEventListener("meccg-players-updated", this.onAddPlayers.bind(this), false);
+        document.body.addEventListener("meccg-players-reorder", this.onReorderPlayers.bind(this), false);
     }
 
     onAddPlayers(e)
     {
-        this.addPlayers(e.detail.challengerId, e.detail.map);        
+        this.addPlayers(e.detail.challengerId, e.detail.map, e.detail.order);        
+    }
+
+    onReorderPlayers(e)
+    {
+        if (this.#reorderHtmlElements(e.detail))
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Player seating rearranged." }));
+    }
+
+    #reorderHtmlElements(list)
+    {
+        const elem = document.getElementById("player_selector");
+        if (!Array.isArray(list) || list.length === 0 || elem === null)
+            return false;
+
+        const len = list.length;
+        for (let i = len -1; i >= 0; i--)
+        {
+            const _playerIndicator = document.getElementById("player_selector_" + this.player2Hex(list[i]));
+            if (_playerIndicator !== null)
+                elem.prepend(_playerIndicator);
+        }
+
+        return true;
     }
 
     removePlayerIndicator(userid)
@@ -105,63 +129,68 @@ class PlayerSelector
         GameBuilder.Scoring.addInGame(sName, _playerId, sHexId, isMe);
     }
 
+    #addPlayerGetName(sMyId, sName, _playerId)
+    {
+        if (_playerId === sMyId)
+            return "Myself";
+
+        return sName === "" ? _playerId : sName;
+    }
+
     /**
      * Add players to the player indicator box 
      * @param {list} vsPlayersIds
      * @return {void}
      */
-    addPlayers(sMyId, jMap)
+    addPlayers(sMyId, jMap, playerListOrder)
     {
         for (let _playerId in jMap)
         {
-            let sName = jMap[_playerId];
-            if (sName === "")
-                sName = _playerId;
-            
-            if (_playerId === sMyId)
-                sName = "You";
-            
             const sHexId = this.player2Hex(_playerId);
-            if (document.getElementById("player_selector_" + sHexId) === null) /** indicator already available, so skipp this */
-            {
-                this.addScoring(sName, _playerId, sHexId, _playerId === sMyId);
+            if (document.getElementById("player_selector_" + sHexId) !== null) /** indicator already available, so skipp this */
+                continue;
 
-                const elemA = document.createElement("a");
-                elemA.setAttribute("href", "#");
-                elemA.setAttribute("id", "player_selector_" + sHexId);
-                elemA.setAttribute("data-hex", sHexId);
+            const sName = this.#addPlayerGetName(sMyId, jMap[_playerId], _playerId);
+            this.addScoring(sName, _playerId, sHexId, _playerId === sMyId);
 
-                const docGroup = document.createDocumentFragment();
+            const elemA = document.createElement("a");
+            elemA.setAttribute("href", "#");
+            elemA.setAttribute("id", "player_selector_" + sHexId);
+            elemA.setAttribute("data-hex", sHexId);
 
-                const txtName = document.createElement("span");
-                txtName.setAttribute("class", "indicator-green");
-                txtName.innerText = sName;
+            const docGroup = document.createDocumentFragment();
 
-                const iView = document.createElement("i");
-                iView.setAttribute("class", "player-view fa fa-eye");
-                iView.setAttribute("title", "Currently visible opponent");
+            const txtName = document.createElement("span");
+            txtName.setAttribute("class", "indicator-green");
+            txtName.innerText = sName;
 
-                const iCurrent = document.createElement("i");
-                iCurrent.setAttribute("class", "player-active fa fa-pagelines");
-                iCurrent.setAttribute("title", "Active Player");
+            const iView = document.createElement("i");
+            iView.setAttribute("class", "player-view fa fa-eye");
+            iView.setAttribute("title", "Currently visible opponent");
 
-                const iHand = document.createElement("i");
-                iHand.setAttribute("class", "player-handcard-count");
-                iHand.setAttribute("title", "cards in hand");
-                iHand.innerText = 0;
+            const iCurrent = document.createElement("i");
+            iCurrent.setAttribute("class", "player-active fa fa-pagelines");
+            iCurrent.setAttribute("title", "Active Player");
 
-                const iPlay = document.createElement("i");
-                iPlay.setAttribute("class", "player-playdeck-count");
-                iPlay.setAttribute("title", "cards in playdeck");
-                iPlay.innerText = 0;
+            const iHand = document.createElement("i");
+            iHand.setAttribute("class", "player-handcard-count");
+            iHand.setAttribute("title", "cards in hand");
+            iHand.innerText = 0;
 
-                docGroup.append(iCurrent, txtName, iView, iHand, iPlay);
-                elemA.appendChild(docGroup);
+            const iPlay = document.createElement("i");
+            iPlay.setAttribute("class", "player-playdeck-count");
+            iPlay.setAttribute("title", "cards in playdeck");
+            iPlay.innerText = 0;
 
-                document.getElementById("player_selector").appendChild(elemA);
-                document.getElementById("player_selector_" + sHexId).onclick = this.onLoadOpponentView;
-            }        
+            docGroup.append(iCurrent, txtName, iView, iHand, iPlay);
+            elemA.appendChild(docGroup);
+
+            document.getElementById("player_selector").appendChild(elemA);
+            document.getElementById("player_selector_" + sHexId).onclick = this.onLoadOpponentView;
         }
+
+        this.#reorderHtmlElements(playerListOrder)
+        
     }
     
     onLoadOpponentView(e)

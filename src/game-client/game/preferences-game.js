@@ -108,6 +108,12 @@ class GamePreferences extends Preferences {
             table.classList.remove("table-padding-bottom");
     }
 
+    #changeSeating()
+    {
+        if (typeof ChangeSeating !== "undefined")
+            ChangeSeating.change();
+    }
+
     _autosave(isActive)
     {
         if (isActive)
@@ -328,12 +334,13 @@ class GamePreferences extends Preferences {
                 this.createEntry0("game_autosave");
 
             this.createSection("Game & DC Settings");
+            if (this.isAdmin())
+                this.createEntry0("change_seats");
+
             this.createEntry0("game_addcards");   
             
             if (this.isAdmin())
-            {
                 this.createEntry0("score_double_misc");
-            }
                 
             this.createEntry0("images_errata_dc");
     
@@ -381,7 +388,10 @@ class GamePreferences extends Preferences {
         this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
 
         if(this.isAdmin())
+        {
             this.addConfigToggle("game_autosave", "Save game at the beginning of a player's turn", true, this._autosave);
+            this.addConfigAction("change_seats", "Change player order", false, "fa-circle-o-notch", this.#changeSeating.bind(this));
+        }
 
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
