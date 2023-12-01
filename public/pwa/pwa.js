@@ -6,11 +6,11 @@ const registerServiceWorker = async () =>
         {
            const registration = await navigator.serviceWorker.register("/serviceWorker.js", { scope: "/" });
             if (registration.installing) 
-                console.log("Service worker installing");
+                console.info("Service worker installing");
             else if (registration.waiting) 
-                console.log("Service worker installed");
+                console.info("Service worker installed");
             else if (registration.active)
-                console.log("Service worker active");
+                console.info("Service worker active");
         }
     }
     catch (error) 
