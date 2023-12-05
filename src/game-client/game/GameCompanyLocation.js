@@ -102,6 +102,37 @@ class GameCompanyLocation
         this.revealLocations(companyElem);
     }
 
+    showMapInteraction(sCompanyId)
+    {
+        this.removeMapInteraction(sCompanyId);
+
+        const container = this.requireMapInteractionLocationContainer(sCompanyId);
+        if (container === null)
+            return;
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "lds-ellipsis");
+        div.innerHTML = "<div></div><div></div><div></div><div></div>";
+        container.appendChild(div);
+    }
+
+    requireMapInteractionLocationContainer(sCompanyId)
+    {
+        const pCompany= document.getElementById("company_" + sCompanyId);
+        return pCompany === null ? null : pCompany.querySelector(".company-site-list");
+    }
+
+    removeMapInteraction(sCompanyId)
+    {
+        const container = this.requireMapInteractionLocationContainer(sCompanyId);
+        if (container === null)
+            return;
+
+        const elem = container.querySelector(".lds-ellipsis");
+        if (elem !== null)
+            elem.parentElement.removeChild(elem);
+    }
+
     revealLocations(companyElem)
     {
         ArrayList(companyElem).find(".location-reveal").each((e) => e.classList.remove("hide"));
@@ -272,7 +303,9 @@ class GameCompanyLocation
         if (!isRevealed && isAgent)
             revealStartSite = false;
         else if (revealStartSite === undefined)
-            revealStartSite = true; 
+            revealStartSite = true;
+
+        this.removeMapInteraction(company);
 
         if (start !== undefined && start !== "")
             this.drawStartSite(company, companyElem, start, bIsPlayer, revealStartSite, current_tapped);

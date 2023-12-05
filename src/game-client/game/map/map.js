@@ -55,6 +55,16 @@ const MapWindow = {
         const sCompany = pFrame.getAttribute("data-company") || "";
         const isRevealed = "true" === pFrame.getAttribute("data-revealved")
         DomUtils.removeAllChildNodes(pMap);
+
+        if (sCompany !== "")
+        {
+            MeccgApi.send("/game/company/location/choose", {
+                company: sCompany,
+                homesite: false,
+                hide: true
+            });
+        }
+
         return {
             company: sCompany,
             revealStart : isRevealed
@@ -184,7 +194,7 @@ const MapWindow = {
 
     showMap : function(company, code, messageId, regionMap, revealed)
     {
-        if (!MapWindow.assertValidMessage(messageId) || company === undefined || company === "" || typeof messageId === "undefined")
+        if (!this.assertValidMessage(messageId) || company === undefined || company === "" || typeof messageId === "undefined")
             return;
 
         if (code === undefined)
@@ -192,20 +202,26 @@ const MapWindow = {
 
         if (document.getElementById("map-window").classList.contains("hide"))
         {
+            this.notifyUsers(code === "", company);
+
             const url = regionMap ? "/map/regions" : "/map/underdeeps";
-            MapWindow.showIframe(url + "?code=" + code, company, revealed);
+            this.showIframe(url + "?code=" + code, company, revealed);
         }
     },
 
-    notifyUsers:function(isStartingSite)
+    notifyUsers : function(isStartingSite, company)
     {
-
+        MeccgApi.send("/game/company/location/choose", {
+            company: company,
+            homesite: isStartingSite,
+            hide: false
+        });
     },
 
     /** Custom event to show the map iframe.  */
     onShowMapMessageEvent : function(e)
     {
-        MapWindow.showMap(e.detail.company, e.detail.code, e.detail.id, e.detail.regionmap, e.detail.revealed);
+        this.showMap(e.detail.company, e.detail.code, e.detail.id, e.detail.regionmap, e.detail.revealed);
     },
 };
 

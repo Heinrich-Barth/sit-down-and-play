@@ -566,6 +566,16 @@ const GameCompanies = {
         this.pGameCompanyLocation.revealMovement(company);
     },
 
+    removeMapInteraction:function(company)
+    {
+        this.pGameCompanyLocation.removeMapInteraction(company);
+    },
+        
+    showMapInteraction:function(company)
+    {
+        this.pGameCompanyLocation.showMapInteraction(company)
+    },
+
     onCompanyMarkCurrently : function(company)
     {
         this.removeCompanyMarking();

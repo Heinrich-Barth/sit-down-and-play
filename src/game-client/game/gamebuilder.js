@@ -668,6 +668,27 @@ const GameBuilder = {
                 GameBuilder.showDropEventBox("", jData.company);
         });
 
+        MeccgApi.addListener("/game/company/location/choose", (bIsMe, jData) => 
+        {
+            if (!bIsMe)
+            {
+                if (jData.hide)
+                    GameBuilder.CompanyManager.removeMapInteraction(jData.company);
+                else
+                    GameBuilder.CompanyManager.showMapInteraction(jData.company);
+            }
+
+            const prefix = jData.hide ? "finished choosing" : "is choosing";
+            const message = prefix + " " + (jData.homesite ? "a home site" : "a destination site");
+            
+            document.body.dispatchEvent(new CustomEvent("meccg-chat-message", { "detail": {
+                name : MeccgPlayers.getPlayerDisplayName(jData.userid),
+                message : message
+            }}));
+        });
+
+        
+
         MeccgApi.addListener("/game/infobox/card", function(bIsMe, code)
         {
             if (!bIsMe)

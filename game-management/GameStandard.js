@@ -69,6 +69,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/company/location/set-location", this.onGameCompanyLocationSetLocation.bind(this));
         this.getMeccgApi().addListener("/game/company/location/reveal", this.onGameCompanyLocationReveal.bind(this));
         this.getMeccgApi().addListener("/game/company/location/attach", this.onGameCompanyLocationAttach.bind(this));
+        this.getMeccgApi().addListener("/game/company/location/choose", this.onGameCompanyLocationChoose.bind(this));
 
         this.getMeccgApi().addListener("/game/score/show", this.scoreShow.bind(this));
         this.getMeccgApi().addListener("/game/score/update", this.scoreUpdate.bind(this));
@@ -1005,6 +1006,17 @@ class GameStandard extends GamePlayers
         
         this.publishToPlayers("/game/player/draw/locations", userid, result);
         this.publishChat(userid, " organises locations.", false);
+    }
+
+    onGameCompanyLocationChoose(userid, _socket, data)
+    {
+        this.publishToPlayers("/game/company/location/choose", userid, 
+        {
+            company: data.company,
+            homesite: data.homesite === true,
+            hide: data.hide,
+            userid: userid
+        });
     }
 
     onGameCompanyLocationAttach(userid, _socket, data)
