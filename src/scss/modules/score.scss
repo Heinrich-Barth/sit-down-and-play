@@ -149,6 +149,7 @@
 
             .result-autosave a,
             .result-token a,
+            .toggle-turn-stats a,
             .return-to-lobby a{
                 display: block !important;
                 text-transform: uppercase;
@@ -241,6 +242,7 @@
     }
 
 }
+
 
 .scoring-card .view-score-container {
     position: relative;

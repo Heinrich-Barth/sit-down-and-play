@@ -414,7 +414,10 @@ const MeccgApi =
         try
         {
             localStorage.removeItem("meccg_map_settings");
-
+            
+            if (sessionStorage.getItem("meccg_turn_stats"))
+                sessionStorage.removeItem("meccg_turn_stats");
+            
             if (g_sRoom)
                 sessionStorage.removeItem("meccg_" + g_sRoom);
         }

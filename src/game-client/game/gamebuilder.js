@@ -845,6 +845,9 @@ const GameBuilder = {
             if (bIsMe || GameBuilder.isVisitor())
                 document.body.dispatchEvent(new CustomEvent("meccg-event-phase", { "detail": sPhase }));
 
+            if (sPhase === "start" || "organisation" === sPhase)
+                document.body.dispatchEvent(new CustomEvent("meccg-event-turn", { "detail": sCurrent }));
+
             if (sPhase !== "start")
                 GameBuilder.triggerLockRoom();
         },

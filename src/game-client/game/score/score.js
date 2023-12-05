@@ -460,6 +460,7 @@ const SCORING_INGAME =
         const table = document.createElement("table");
         table.append(thead, tbody, tfoot);
         table.setAttribute("class", "final-score-table");
+        table.setAttribute("id", "final-score-table");
         
         return table;
     },
