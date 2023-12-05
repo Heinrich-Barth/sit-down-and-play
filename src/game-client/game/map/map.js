@@ -102,8 +102,8 @@ const MapWindow = {
             document.body.appendChild(div);
 
             /* Getting the message from the iframe */
-            window.onmessage = MapWindow.onMessage;
-            document.body.addEventListener("meccg-map-show", MapWindow.onShowMapMessageEvent, false);
+            window.onmessage = this.onMessage.bind(this);
+            document.body.addEventListener("meccg-map-show", this.onShowMapMessageEvent.bind(this), false);
         }
     },
 
@@ -195,6 +195,11 @@ const MapWindow = {
             const url = regionMap ? "/map/regions" : "/map/underdeeps";
             MapWindow.showIframe(url + "?code=" + code, company, revealed);
         }
+    },
+
+    notifyUsers:function(isStartingSite)
+    {
+
     },
 
     /** Custom event to show the map iframe.  */
