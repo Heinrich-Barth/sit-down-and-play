@@ -5,6 +5,7 @@ class TurnStats {
     #oder = [];
     #data = { };
     #avg = { };
+    #sums = { };
     #count = 0;
     
     #getStatsList()
@@ -47,7 +48,10 @@ class TurnStats {
             return;
 
         this.#createData(list);
+        this.#sumTurnTimes();
+
         this.#printStats();
+        this.#injectStatsOnFinalScore();
     }
 
     #createData(list)
@@ -158,6 +162,67 @@ class TurnStats {
         table.appendChild(this.#createResultTableAverage());
 
         return table;
+    }
+
+    #injectStatsOnFinalScore()
+    {
+        for (let id of this.#oder)
+        {
+            const data = this.#getData(id);
+            if (data !== null)
+            {
+                this.#injectStatsOnFinalScoreValue("final-score-time-total-" + id, data.sum);
+                this.#injectStatsOnFinalScoreValue("final-score-time-avg-" + id, data.avg);
+            }            
+        }
+    }
+
+    #injectStatsOnFinalScoreValue(id, value)
+    {
+        const elem = document.getElementById(id);
+        if (elem !== null)
+            elem.innerText = value;
+    }
+
+    #isValidTime(t)
+    {
+        return t >= 1000 * 10;
+    }
+
+    #sumTurnTime(id)
+    {
+        let sum = 0;
+        let turns = 0;
+
+        const list = this.#avg[id];
+        for (let t of list)
+        {
+            if (this.#isValidTime(t))
+            {
+                sum += t;
+                turns++;
+            }
+        }
+            
+        const acum = sum === 0 ? "00:00" : this.#parseTime(sum);
+        const avg = turns === 0 ? "00:00" : this.#parseTime(Math.round(sum / turns));
+
+        return {
+            sum: acum,
+            avg: avg
+        }
+    }
+
+    #sumTurnTimes()
+    {
+        for (let id of this.#oder)
+            this.#sums[id] = this.#sumTurnTime(id);
+    }
+
+    #getData(id)
+    {
+        const val = this.#sums[id];
+        return val === undefined ? null : val;
     }
 
     #createResultTableAverage()

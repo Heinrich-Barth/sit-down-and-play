@@ -249,6 +249,7 @@ const SCORING_INGAME =
         for (let img of list)
         {
             const id = img.getAttribute("data-player-id");
+            img.setAttribute("id", "score-avatar-image-" + id);
             img.setAttribute("src", SCORING_INGAME.getAvatar(id));
         }
     },
@@ -448,14 +449,7 @@ const SCORING_INGAME =
         for (let category in map.list)
             tbody.append(map.list[category]);
 
-        const tfootTR = document.createElement("tr");
-
-        const thFinal = document.createElement("th");
-        thFinal.innerText = "total";
-        tfootTR.append(thFinal, map.total);
-
-        const tfoot = document.createElement("tfoot");
-        tfoot.append(tfootTR, this.createListTRPoints(map.arrayPoints));
+        const tfoot = this.buildFinalScores_tableFooter(map);
 
         const table = document.createElement("table");
         table.append(thead, tbody, tfoot);
@@ -465,7 +459,58 @@ const SCORING_INGAME =
         return table;
     },
 
-    createListTRPoints(list)
+    buildFinalScores_tableFooter : function(map)
+    {
+        const thFinal = document.createElement("th");
+        thFinal.innerText = "total";
+        
+        const tfootTR = document.createElement("tr");
+        tfootTR.append(thFinal, map.total);
+
+        const tfoot = document.createElement("tfoot");
+        tfoot.append(
+            tfootTR, 
+            this.createListTRPoints(map.arrayPoints),
+            this.prepareTurnStats()
+        );
+
+        return tfoot;
+    },
+
+    createSimpleNodeElement : function(type, value, id)
+    {
+        const elem = document.createElement(type);
+        elem.innerText = value;
+
+        if (typeof id === "string" && id !== "")
+            elem.setAttribute("id", id);
+
+        return elem;
+    },
+
+    prepareTurnStats:function()
+    {
+        const turnTimeTotal = document.createElement("tr");
+        const turnTimeAverage = document.createElement("tr");
+
+        turnTimeTotal.appendChild(this.createSimpleNodeElement("th", "Total Turn Time", ""));
+        turnTimeAverage.appendChild(this.createSimpleNodeElement("th", "Avg. Turn Time", ""));
+
+        const idPrefixTotal = "final-score-time-total-";
+        const idPrefixAverage = "final-score-time-avg-";
+
+        for (let id in SCORING_INGAME._scores)
+        {
+            turnTimeTotal.appendChild(this.createSimpleNodeElement("td", "-", idPrefixTotal + id));
+            turnTimeAverage.appendChild(this.createSimpleNodeElement("td", "-", idPrefixAverage + id));
+        }
+
+        const result = document.createDocumentFragment();
+        result.append(turnTimeTotal, turnTimeAverage);
+        return result;
+    },
+
+    createListTRPoints:function(list)
     {
         if (list.length !== 2)
             return document.createDocumentFragment();
