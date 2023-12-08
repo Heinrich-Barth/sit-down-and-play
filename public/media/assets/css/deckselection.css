@@ -314,6 +314,8 @@ h3 {
 
 .game-login .content {
   min-height: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 0px 20px #000;
 }
 .game-login .content h1 {
   padding-top: 1em;
