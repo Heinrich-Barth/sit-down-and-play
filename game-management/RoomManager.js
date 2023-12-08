@@ -793,7 +793,7 @@ class RoomManager {
             return -1;
 
         if (pRoom.getGame().isArda() && !roomOptions.singleplayer)
-            this.#eventManager.trigger("arda-prepare-deck", this.#gameCardProvider, jDeck, isFirst);
+            this.#eventManager.trigger("arda-prepare-deck", jDeck, isFirst);
 
         const lNow = Date.now();
         pRoom.addPlayer(userId, displayname, jDeck, isFirst, lNow, roomOptions.avatar);

@@ -56,7 +56,7 @@ function _register(pEventManager)
         g_jsonList.forEach(_e => targetList.push(_e));
     });
 
-    pEventManager.addEvent("arda-prepare-deck", (pGameCardProvider, jDeck, keepOthers) => Arda.prepareDeck(pGameCardProvider, jDeck, keepOthers));
+    pEventManager.addEvent("arda-prepare-deck", (jDeck, keepOthers) => Arda.prepareDeck(jDeck, keepOthers));
     
     g_pDiscord.registerEvents(pEventManager);
 
