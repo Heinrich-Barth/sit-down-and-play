@@ -85,9 +85,11 @@ class TurnStats {
     #parseTime(time)
     {
         const date = new Date(time);
+        const hrs = date.getHours();
+        const hh = hrs < 1 ? "" : (this.#assertLeadingZero(hrs) + ":");
         const min = this.#assertLeadingZero(date.getMinutes());
         const sec = this.#assertLeadingZero(date.getSeconds());
-        return min + ":" + sec;
+        return hh + min + ":" + sec;
     }
 
     #printStats()
