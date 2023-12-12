@@ -85,7 +85,7 @@ class TurnStats {
     #parseTime(time)
     {
         const date = new Date(time);
-        const hrs = date.getHours();
+        const hrs = date.getHours() - 1; /* hours start at 1 */
         const hh = hrs < 1 ? "" : (this.#assertLeadingZero(hrs) + ":");
         const min = this.#assertLeadingZero(date.getMinutes());
         const sec = this.#assertLeadingZero(date.getSeconds());
@@ -239,7 +239,7 @@ class TurnStats {
             for (let t of list)
                 sum += t;
 
-            const avg = this.#parseTime(Math.round(sum / list.length));
+            const avg = list.length === 0 ? "-" : this.#parseTime(Math.round(sum / list.length));
             tr.append(this.#createElement("td", avg));
         }
 
