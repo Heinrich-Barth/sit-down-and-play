@@ -93,10 +93,16 @@ class RoomManager {
         if (this.#roomCountAll.length >= 10)
             this.#roomCountAll.shift();
 
+        const gid = this.#rooms[room].getGameUid();
+
         this.#roomCountAll.push({
             "time": Date.now(),
             "creator": displayname,
-            "arda": isArda
+            "players": [displayname],
+            "duration": 0,
+            "arda": isArda,
+            "singleplayer": isSinglePlayer,
+            "gid": gid
         });
     
         return this.#rooms[room];
@@ -241,6 +247,7 @@ class RoomManager {
             jRoom = {
                 room : room,
                 arda : pRoom.getGame().isArda(),
+                single: pRoom.getGame().isSinglePlayer(),
                 created : new Date(pRoom.getCreated()).toUTCString(),
                 time: pRoom.getCreated(),
                 visitors: pRoom.canJoinVisitor(),
@@ -276,7 +283,6 @@ class RoomManager {
 
     getGameCount()
     {
-        
         if (this.#roomCountAll.length === 0)
             return [];
 
@@ -287,12 +293,43 @@ class RoomManager {
             {
                 "started": new Date(_val.time).toUTCString(),
                 "creator": _val.creator,
-                "arda": _val.arda
+                "arda": _val.arda,
+                "singleplayer": _val.singleplayer,
+                "duration": _val.duration,
+                "players": _val.players
             });
         }
         
         return res;
     }
+
+    #getRoomCountGame(gid)
+    {
+        for (let game of this.#roomCountAll)
+        {
+            if (gid === game.gid)
+                return game;
+        }
+
+        return null;
+    }
+
+    #updateRoomCountAllGameEnd(gid, score)
+    {
+        const game = this.#getRoomCountGame(gid);
+        if (game === null)
+            return;
+
+        game.duration = Math.round((Date.now() - game.time) / 1000 / 60);
+        for (let userid in score.players)
+        {
+            if (!game.players.includes(score.players[userid]))
+                game.players.push(score.players[userid]);
+        }
+
+        game.players.sort();
+    }
+
 
     /**
      * Dump all active rooms and players inside
@@ -640,6 +677,8 @@ class RoomManager {
 
         this.#eventManager.trigger("game-remove", room, logfile);
         Logger.info("Game " + room + " has ended.");
+
+        this.#updateRoomCountAllGameEnd(pRoom.getGameUid(), scores);
     }
 
     /**

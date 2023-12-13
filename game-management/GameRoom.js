@@ -24,6 +24,7 @@ class GameRoom
     #allowAccessVisitor = true;
     #useDCEbyDefault = true;
     #jitsi = false;
+    #uid = UTILS.generateUuid();
 
     #secret = UTILS.createSecret();
     #lobbyToken = UTILS.createSecret();
@@ -37,6 +38,11 @@ class GameRoom
 
         this.#name = room;
         this.#fnEndGame = fnEndGame;
+    }
+
+    getGameUid()
+    {
+        return this.#uid;
     }
 
     setUseDCE(bUse)
