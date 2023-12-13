@@ -1841,8 +1841,8 @@ div.card[data-token="10"]:after {
 }
 
 .chanage-avatar-app {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 80%;
+  max-height: 80%;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
@@ -1863,34 +1863,42 @@ div.card[data-token="10"]:after {
   opacity: 0.75;
 }
 
+.dialog-notes,
 .change-seating {
   background-color: #000;
   color: #fff;
   max-width: 90%;
   max-height: 90%;
 }
+.dialog-notes::backdrop,
 .change-seating::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
 }
+.dialog-notes h3,
 .change-seating h3 {
   color: #F0C648;
   font-size: 2em;
   text-align: center;
 }
+.dialog-notes ul,
 .change-seating ul {
   list-style-type: none;
   display: block;
 }
+.dialog-notes ul li,
 .change-seating ul li {
   min-height: 50px;
   position: relative;
 }
+.dialog-notes ul li:first-of-type a:first-of-type,
 .change-seating ul li:first-of-type a:first-of-type {
   visibility: hidden;
 }
+.dialog-notes ul li:last-of-type a:last-of-type,
 .change-seating ul li:last-of-type a:last-of-type {
   visibility: hidden;
 }
+.dialog-notes .avatar-box,
 .change-seating .avatar-box {
   height: 50px;
   width: 50px;
@@ -1901,12 +1909,14 @@ div.card[data-token="10"]:after {
   overflow: hidden;
   border-radius: 50%;
 }
+.dialog-notes .avatar-box img,
 .change-seating .avatar-box img {
   position: absolute;
   width: 100%;
   top: 7px;
   scale: 1.6;
 }
+.dialog-notes .avatar-text-box,
 .change-seating .avatar-text-box {
   position: relative;
   padding-top: 15px;
@@ -1915,12 +1925,15 @@ div.card[data-token="10"]:after {
   display: grid;
   grid-template-columns: 1.5fr 0.5fr 0.5fr;
 }
+.dialog-notes .avatar-text-box a,
 .change-seating .avatar-text-box a {
   margin: 0 1em;
 }
+.dialog-notes .button-actions,
 .change-seating .button-actions {
   text-align: center;
 }
+.dialog-notes button,
 .change-seating button {
   border: 0;
   border-radius: 5px;
@@ -1937,14 +1950,30 @@ div.card[data-token="10"]:after {
   background-color: #a8cea4;
   margin: 0 10px;
 }
+.dialog-notes button:hover,
 .change-seating button:hover {
   background-color: #8ad681;
 }
+.dialog-notes button.buttonCancel,
 .change-seating button.buttonCancel {
   background-color: #c32222;
 }
+.dialog-notes button.buttonCancel:hover,
 .change-seating button.buttonCancel:hover {
   background-color: #dc2600;
+}
+
+.dialog-notes {
+  cursor: pointer;
+  padding: 2em;
+  font-family: monospace;
+  font-size: 1.3em;
+  line-height: 1.2em;
+  max-width: 80%;
+  max-height: 80%;
+}
+.dialog-notes h2, .dialog-notes h3 {
+  margin-top: 2em;
 }
 
 /* opensource spinner from https://github.com/loadingio/css-spinner/ */

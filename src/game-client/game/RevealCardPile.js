@@ -129,21 +129,6 @@ class RevealPlayerDeck extends RevealCardPile
 
     static INSTANCE = null;
 
-    static init(id)
-    {
-        const elem = RevealPlayerDeck.INSTANCE === null || RevealCardPile.isArda() ? null : document.getElementById(id);
-        if (elem === null)
-            return;
-
-        elem.classList.add("deckpile-additional-actions");
-
-        const span = document.createElement("span");
-        span.setAttribute("class", "deckpile-additional-action fa fa-cog");
-        span.setAttribute("title", "Click for additional actions");
-        span.onclick = ContextMenu.contextActions.onContextPlayDeckActions;
-        elem.appendChild(span);
-    }
-
     onShowCardsToPlayer(_bIsMe, data)
     {
         const myId = this.getMyId();

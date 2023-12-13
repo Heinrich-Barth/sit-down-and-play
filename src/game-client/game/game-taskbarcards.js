@@ -267,20 +267,13 @@ class TaskBarCards
             return false;
         };
 
-        document.querySelector(".card-bar .playdeck").onclick = (e) =>  
-        {
-            TaskBarCards.Show("playdeck");
-            e.stopPropagation();
-            return false;
-        };
-
+        document.querySelector(".card-bar .playdeck").onclick = ContextMenu.contextActions.onContextPlayDeckActions;
+        
         document.querySelector(".card-bar .discardpile").oncontextmenu = TaskBarCards.ShuffleDiscardpile;
         document.querySelector(".card-bar .playdeck").oncontextmenu = TaskBarCards.ShufflePlaydeck;
 
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
             elem.onclick = TaskBarCards.OnTurnClick;
-
-        RevealPlayerDeck.init("icon_bar_playdeck");   
     }    
 
     static rollDiceCharacter(uuid, code)
@@ -544,7 +537,7 @@ class TaskBarCards
         MeccgApi.send("/game/view-cards/shuffle", { target: "playdeck" });
         document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Playdeck shuffled." }));
 
-        if (e !== undefined)
+        if (e !== undefined && typeof e.stopPropagation !== "undefined")
             e.stopPropagation();
 
         return false

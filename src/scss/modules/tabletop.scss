@@ -782,6 +782,7 @@ div.card[data-token="10"]:after {
 
 @import "./tabletop_changeavatar.scss";
 
+.dialog-notes,
 .change-seating {
     background-color: #000;
     color: #fff;
@@ -880,6 +881,17 @@ div.card[data-token="10"]:after {
             }
         }
     }
+}
+
+.dialog-notes {
+    cursor: pointer;
+    padding: 2em;
+    font-family: monospace;
+    font-size: 1.3em;
+    line-height: 1.2em;
+    max-width: 80%;
+    max-height: 80%;
+    h2, h3 { margin-top: 2em;}
 }
 
 /* opensource spinner from https://github.com/loadingio/css-spinner/ */

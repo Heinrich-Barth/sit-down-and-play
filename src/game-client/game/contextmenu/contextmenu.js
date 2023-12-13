@@ -463,6 +463,57 @@ const ContextMenu = {
             ContextMenu.onToken(true);
         },
 
+        viewDeckNotes:function()
+        {
+            const text = sessionStorage.getItem("deck-notes");
+            if (typeof text !== "string" || text === "")
+                return;
+
+            const dialog = document.createElement("dialog");
+            dialog.setAttribute("id", "dialog-notes");
+            dialog.setAttribute("class", "dialog-notes");
+
+            const h1 = document.createElement("h1");
+            h1.classList.add("center");
+            h1.innerText = "Your Deck Notes";
+
+            const p = document.createElement("p");
+            p.classList.add("center");
+            p.innerText = "Click anywhere or press ESC to close the window";
+
+            dialog.append(h1, p);
+
+            for (let line of text.split("\n"))
+            {
+                let elem = null;
+                if (line.startsWith("=="))
+                {
+                    elem = document.createElement("h3");
+                    elem.innerText = line.replace("==", "");
+                }
+                else if (line.startsWith("="))
+                {
+                    elem = document.createElement("h2");
+                    elem.innerText = line.replace("=", "");
+                }
+                else
+                {
+                    elem = document.createElement("p");
+                    elem.innerText = line.trim();
+                    if (elem.innerText === "")
+                        elem.innerText = " ";
+                }
+
+                dialog.appendChild(elem);
+            }
+
+            document.body.appendChild(dialog);
+            dialog.onclose = () => document.body.removeChild(document.getElementById("dialog-notes"));
+            dialog.onclick = () => document.getElementById("dialog-notes").close();
+            dialog.setAttribute("title", "Click to close");
+            dialog.showModal();
+        },
+
         generic : function(e)
         {
             e.preventDefault();
@@ -577,11 +628,6 @@ const ContextMenu = {
         reveal5CardsToOpponent : function(pMenu)
         {
             RevealPlayerDeck.INSTANCE.onChoosePlayer();
-        },
-
-        shufflePlaydeck : function(pMenu)
-        {
-            MeccgApi.send("/game/view-cards/shuffle", { target: "discardpile" });
         }
     },
     
@@ -616,13 +662,18 @@ const ContextMenu = {
         this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
         this.addItem("movement_return", "Return to site of origin", "fa-ban", "context-menu-item-arrive", ContextMenu.callbacks.returnToSiteOfOrigin, "Remove target site.");
 
+        this.addItem("view_deck_cards", "Look at my playdeck", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck"), "");
+        
+        if (sessionStorage.getItem("deck-notes"))
+            this.addItem("view_deck_notes", "View deck notes", "fa-info-circle", "context-menu-item-generic", ContextMenu.callbacks.viewDeckNotes, "");
+        
         this.addItem("reval_cards_number", "Reveal 5 cards to your opponent", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
-        this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", ContextMenu.callbacks.shufflePlaydeck, "");
+        this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
-        this.data.types["playdeck_actions"] = ["reval_cards_number", "playdeck_shuffle"];
+        this.data.types["playdeck_actions"] = ["view_deck_cards", "view_deck_notes", "reval_cards_number", "playdeck_shuffle"];
 
         this.data.specialClasses["card"] = "";
         this.data.specialClasses["location"] = "context-menu-site";
