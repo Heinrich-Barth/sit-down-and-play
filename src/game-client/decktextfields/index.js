@@ -80,6 +80,7 @@ class DeckTextFields {
         parent.append(this.createFieldsDiv("characters"));
         parent.append(this.createFieldsDiv("pool"));
         parent.append(this.createFieldsDiv("sites"));
+        parent.append(this.createFieldsDiv("notes"));
         return parent;
     }
 

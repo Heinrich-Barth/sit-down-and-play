@@ -3,7 +3,7 @@ const g_pNameCodeMap = { };
 const populateField = function(jDeck, sId, bClear)
 {
     if (bClear)
-        document.getElementById(sId).value = "";
+        populateTextField(sId, "");
 
     if (jDeck === undefined)
         return;
@@ -17,7 +17,15 @@ const populateField = function(jDeck, sId, bClear)
             sVal += "\n" + jDeck[k].count + " " + k;
     }
 
-    document.getElementById(sId).value = sVal.trim();
+    populateTextField(sId, sVal);
+};
+
+
+const populateTextField = function(sId, val)
+{
+    const elem = document.getElementById(sId);
+    if (elem)
+        elem.value = typeof val !== "string" ? "" : val.trim();
 };
 
 const getCategoryCount = function(jDeck)
@@ -104,6 +112,7 @@ const populateDeck = function(jData)
     populateField(jData.pool, "pool", true);
     populateField(jData.sites, "sites", true);
 
+    populateTextField("notes", jData.notes);
     addDeckNotes(jData.notes);
     populateCardImages();
 
@@ -967,7 +976,10 @@ const onCheckCardCodes = function()
 
     const vsCards = getCardCodeList();
     if (vsCards.length === 0)
+    {
+        document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Please choose a deck or add your own." }));
         return;
+    }
 
     /** avoid speed race. Allow click only once and hide the field */
     document.body.classList.add("isLoggingIn");
@@ -987,7 +999,10 @@ const onCheckCardCodes = function()
             response.json().then((data) => 
             {
                 if (data.valid === true)
+                {
+                    saveDeckNotesToSession();
                     preloadGameData();
+                }
                 else
                     onProcessDeckCheckResult(data.codes);
             });
@@ -998,6 +1013,21 @@ const onCheckCardCodes = function()
         document.body.dispatchEvent(new CustomEvent("meccg-notify-error", { "detail": "Could not check deck status." }));
     });   
 };
+
+const saveDeckNotesToSession = function()
+{
+    const val = getDeckNotes();
+    if (val !== "")
+        sessionStorage.setItem("deck-notes", val);
+    else if (sessionStorage.getItem("deck-notes"))
+        sessionStorage.removeItem("deck-notes");
+}
+
+const getDeckNotes = function()
+{
+    const elem = document.getElementById("notes");
+    return elem === null ? "" : elem.value.trim();
+}
 
 const randomNumber = function(max)
 {
@@ -1216,7 +1246,16 @@ const preloadGameData = function()
 
     const elem = document.querySelector("h1");
     if (elem !== null)
+    {
         elem.innerText = "... loading data ...";
+        document.body.appendChild(elem);
+    }
+    else
+    {
+        const h1 = document.createElement("h1");
+        h1.innerText = "... loading data ...";
+        document.appendChild(h1);
+    }
 
     localStorage.removeItem("game_data");
 
