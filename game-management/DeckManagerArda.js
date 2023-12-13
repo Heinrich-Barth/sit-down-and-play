@@ -5,7 +5,6 @@ const DeckArda = require("./DeckArda");
 class DeckManagerArda extends DeckManager {
 
     #adminUserId = "";
-    #singlePlayer = false;
     #poolGame = { };
     
     getAdminDeck()
@@ -26,11 +25,6 @@ class DeckManagerArda extends DeckManager {
     isArda()
     {
         return true;
-    }
-
-    isSinglePlayer()
-    {
-        return this.#singlePlayer;
     }
 
     shuffleArdaMarshallingPoints()

@@ -9,11 +9,6 @@ class GameArda extends GameStandard
         ready : false,
     };
 
-    isSinglePlayer()
-    {
-        return false;
-    }
-
     isArda()
     {
         return true;

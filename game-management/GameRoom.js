@@ -354,7 +354,7 @@ class GameRoom
     createGame(isArda, isSinglePlayer,  adminUser)
     {       
         let pPlayboardManager;
-        if (isArda)
+        if (isArda || isSinglePlayer)
         {
             pPlayboardManager = new PlayboardManagerArda();
             this.#gameInstance = new GameArda(this.api, this.chat, pPlayboardManager);
@@ -364,9 +364,10 @@ class GameRoom
             pPlayboardManager = new PlayboardManager();
             this.#gameInstance = new GameStandard(this.api, this.chat, pPlayboardManager);
             
-            if (isSinglePlayer)
-                this.#gameInstance.setSinglePlayer(isSinglePlayer);
         }
+        
+        if (isSinglePlayer)
+            this.#gameInstance.setSinglePlayer(isSinglePlayer);
 
         pPlayboardManager.triggerEventSetupNewGame();
         
