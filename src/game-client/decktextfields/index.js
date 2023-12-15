@@ -52,7 +52,11 @@ class DeckTextFields {
             return document.createDocumentFragment();
     }
 
-    createFieldsDiv(id) {
+    createFieldsDiv(id) 
+    {
+        if (document.getElementById(id) !== null)
+            return document.createDocumentFragment();
+        
         const h3 = document.createElement("h3");
         h3.innerText = id.toUpperCase();
         h3.setAttribute("data-label", id.toUpperCase());
