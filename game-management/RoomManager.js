@@ -888,7 +888,7 @@ class RoomManager {
 
         const sSecret = pRoom.getSecret();
         const sToken = this.updatePlayerToken(room, userId);
-        const sLobbyToken = pPlayer.isAdmin() ? pRoom.lobbyToken : "";
+        const sLobbyToken = pPlayer.isAdmin() ? pRoom.getLobbyToken() : "";
         const isArda = pRoom.getGame().isArda() ? "true" : "false";
         const isSinglePlayer = pRoom.getGame().isSinglePlayer() ? "true" : "false";
         const tplDice = dice === undefined || dice.indexOf(".") !== -1 ? "" : dice;
