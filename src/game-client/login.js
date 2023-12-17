@@ -1172,13 +1172,13 @@ function createAvatarList(list)
     fetch("/data/games/" + getRoomName())
     .then((response) => response.json())
     .then(data => 
-        {
+    {
         if (data.exists === true)
         {
             const button = document.getElementById("host");
             if (button !== null)
             {
-                button.innerHTML = button.innerHTML.replace("Create ", "Join ");
+                button.innerText = button.innerText.replace("Create ", "Join ");
                 button.parentElement.append(createAvatarList(data.avatars));
             }
 
@@ -1193,6 +1193,18 @@ function createAvatarList(list)
 
             if (data.share === true)
                 insertSocialMedia(true);
+        }
+
+        const btn = document.querySelector("h1");
+        if (btn !== null)
+        {
+            if (btn.innerText.endsWith("."))
+                btn.innerText = btn.innerText.replace(".", " at " + getRoomName());
+            else 
+                btn.innerText = btn.innerText + " at " + getRoomName();
+
+            if (!data.exists)
+                btn.innerText = btn.innerText.toLowerCase().replace("join the table", "Create your game");
         }
         //else 
         //    insertSocialMedia(false);
