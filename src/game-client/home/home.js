@@ -255,9 +255,28 @@ const onAddUptimeNotification = function(data)
     while (p.firstChild)
         p.removeChild(p.firstChild);
 
+    const texts = document.createDocumentFragment();
+    texts.append(document.createTextNode("Server restarts approx. every 24hrs "));
+    if (hrs === 22)
+    {
+        p.classList.add("time-restart-information-yellow");
+        texts.append(document.createTextNode("Server restarts approx. every 24hrs and has been up for " +  hrs + "h already. "));
+        texts.append(document.createTextNode("You may start a game at any time, but be aware that a restart will end your game."));
+    }
+    else if (hrs === 23)
+    {
+        texts.append(document.createTextNode("Server restarts approx. every 24hrs and has been up for " +  hrs + "h already. "));
+        texts.append(document.createTextNode("Unless you want to play a short game, you may want to wait some time."));
+    }
+    else
+    {
+        texts.append(document.createTextNode("Server restarts approx. every 24hrs and a reboot is imminent. "));
+        texts.append(document.createTextNode("Please wait a few moments."));
+    }
+    
     const i = document.createElement("i");
     i.setAttribute("class", "fa fa-clock-o");
-    p.append(i, document.createTextNode("Server restarts approx. every 24hrs. Server has been running for " +  hrs + "h now."));
+    p.append(i, texts);
 }
 
 const onResult = function(data)

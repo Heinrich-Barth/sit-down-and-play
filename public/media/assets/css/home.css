@@ -423,6 +423,9 @@ footer {
   color: red;
   display: inline-block;
 }
+.time-restart-information.time-restart-information-yellow {
+  color: #F0C648;
+}
 .time-restart-information i {
   margin-right: 1em;
 }

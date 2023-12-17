@@ -185,6 +185,9 @@ footer {
     background-color: rgba(0,0,0,0.8);
     color: red;
     display: inline-block;
+
+    &.time-restart-information-yellow { color: $color-orange; }
+    
     i {
         margin-right: 1em;
     }
