@@ -3,18 +3,21 @@
  */
 class MapView {
 
+    #minZoom = 3;
+    #maxZoom = 6;
+    #clickZoomLevel = 5;
+    #instanceLeafletjsMap = null;
+
+    #assetFolder;
+
     constructor(assetFolder)
     {
-        this.minZoom = 3;
-        this.maxZoom = 6;
-        this.instanceLeafletjsMap = null;
-        this.assetFolder = assetFolder;
-        this.clickZoomLevel = 5;
+        this.#assetFolder = assetFolder;
     }
 
     getMapInstance()
     {
-        return this.instanceLeafletjsMap;
+        return this.#instanceLeafletjsMap;
     }
 
     getStartupLat()
@@ -29,16 +32,16 @@ class MapView {
 
     getZoomStart()
     {
-        return this.maxZoom - 1;
+        return this.#maxZoom - 1;
     }
 
     flyTo(e)
     {
-        let nZoom = this.instanceLeafletjsMap.getZoom();
-        if (nZoom < this.clickZoomLevel)
-            nZoom = this.clickZoomLevel;
+        let nZoom = this.#instanceLeafletjsMap.getZoom();
+        if (nZoom < this.#clickZoomLevel)
+            nZoom = this.#clickZoomLevel;
             
-        this.instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], nZoom);
+        this.#instanceLeafletjsMap.flyTo([e.target._latlng.lat, e.target._latlng.lng], nZoom);
     }
 
     removeOverlays()
@@ -51,39 +54,39 @@ class MapView {
 
     createInstance()
     {
-        if (this.assetFolder === "" || this.assetFolder.indexOf("..") !== -1)
+        if (this.#assetFolder === "" || this.#assetFolder.indexOf("..") !== -1)
             throw new Error("Invalid asset folder");
 
         this.removeOverlays();
 
-        this.instanceLeafletjsMap = L.map('map', 
+        this.#instanceLeafletjsMap = L.map('map', 
         {
-            minZoom: this.minZoom,
-            maxZoom: this.maxZoom,
+            minZoom: this.#minZoom,
+            maxZoom: this.#maxZoom,
             dragging: true
         });
 
         const lat = this.getStartupLat();
         const lng = this.getStartLon();
         
-        L.tileLayer('/media/maps/' + this.assetFolder + '/{z}/tile_{x}_{y}.jpg').addTo(this.instanceLeafletjsMap);
-        this.instanceLeafletjsMap.setView(L.latLng(lat, lng), this.getZoomStart());
+        L.tileLayer('/media/maps/' + this.#assetFolder + '/{z}/tile_{x}_{y}.jpg').addTo(this.#instanceLeafletjsMap);
+        this.#instanceLeafletjsMap.setView(L.latLng(lat, lng), this.getZoomStart());
         
         return true;
     }
 
     destroy()
     {
-        if (this.instanceLeafletjsMap !== null)
+        if (this.#instanceLeafletjsMap !== null)
         {
             const pThis = this;  
-            this.instanceLeafletjsMap.eachLayer(function (layer) 
+            this.#instanceLeafletjsMap.eachLayer(function (layer) 
             {
-                pThis.instanceLeafletjsMap.removeLayer(layer);
+                pthis.#instanceLeafletjsMap.removeLayer(layer);
             });
 
-            this.instanceLeafletjsMap.remove();
-            this.instanceLeafletjsMap = null;
+            this.#instanceLeafletjsMap.remove();
+            this.#instanceLeafletjsMap = null;
         }
     }
 }

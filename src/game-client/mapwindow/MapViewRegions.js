@@ -256,7 +256,7 @@ class MapViewRegions extends MapView {
         {
             _show = false;
             _jSite = this.jMap[regionCode].sites[key];
-            jSites[key].addTo(this.instanceLeafletjsMap);
+            jSites[key].addTo(this.getMapInstance());
             vsList.push(key);
         }
 
@@ -266,7 +266,7 @@ class MapViewRegions extends MapView {
         jSites = this.jMarkerUnderdeeps[regionCode];
         for (let key in jSites)
         {
-            jSites[key].addTo(this.instanceLeafletjsMap);
+            jSites[key].addTo(this.getMapInstance());
             vsList.push(key);
         }
 
@@ -389,9 +389,9 @@ class MapViewRegions extends MapView {
         const id = site === "" ? region : site;
         if (typeof jMarkers[id] !== "undefined")
         {
-            if (this.instanceLeafletjsMap.hasLayer(jMarkers[id]))
+            if (this.getMapInstance().hasLayer(jMarkers[id]))
             {
-                this.instanceLeafletjsMap.removeLayer(jMarkers[id]);
+                this.getMapInstance().removeLayer(jMarkers[id]);
                 delete jMarkers[id];
             }
         }
