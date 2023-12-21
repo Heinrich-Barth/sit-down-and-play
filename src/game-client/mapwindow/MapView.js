@@ -79,12 +79,7 @@ class MapView {
     {
         if (this.#instanceLeafletjsMap !== null)
         {
-            const pThis = this;  
-            this.#instanceLeafletjsMap.eachLayer(function (layer) 
-            {
-                pthis.#instanceLeafletjsMap.removeLayer(layer);
-            });
-
+            this.#instanceLeafletjsMap.eachLayer((layer) => this.#instanceLeafletjsMap.removeLayer(layer));
             this.#instanceLeafletjsMap.remove();
             this.#instanceLeafletjsMap = null;
         }
