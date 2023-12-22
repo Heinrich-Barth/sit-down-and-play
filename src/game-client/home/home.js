@@ -256,7 +256,6 @@ const onAddUptimeNotification = function(data)
         p.removeChild(p.firstChild);
 
     const texts = document.createDocumentFragment();
-    texts.append(document.createTextNode("Server restarts approx. every 24hrs "));
     if (hrs === 22)
     {
         p.classList.add("time-restart-information-yellow");
