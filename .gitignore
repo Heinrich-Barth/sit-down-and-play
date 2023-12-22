@@ -9,7 +9,7 @@ npm-debug.log
 
 public/media/maps/*
 public/media/personalisation/*.css
-
+public/cards/en-remaster/*
 pages/rules-*.html
 
 data-local/cards-full.json
