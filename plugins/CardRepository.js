@@ -2,12 +2,13 @@ const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
 const CardRepositoryUnderdeeps = require("./CardRepositoryUnderdeeps")
 const Logger = require("../Logger");
 const LocalImageMerger = require("./LocalImageMerger");
+const fs = require("fs");
 
 const getRemovableKeysArray = function()
 {
     try
     {
-        let data = require("fs").readFileSync("./data-local/obsoleteCardKeys.json", 'utf8');
+        let data = fs.readFileSync("./data-local/obsoleteCardKeys.json", 'utf8');
         if (data !== "")
             return JSON.parse(data);
     }
@@ -408,6 +409,7 @@ class CardRepository {
     setup(_raw)
     {
         Logger.info("Setting up card data.");
+        this.#addLocalCardsDev(_raw);
         this.#mergeLocalImages(_raw);
         this.#raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
@@ -588,6 +590,38 @@ class CardRepository {
     onProcessCardData()
     {
         /** overwrite */
+    }
+
+    #appendLocalCards(cards, localList)
+    {
+        let count = 0;
+
+        for (let card of localList)
+        {
+            cards.push(card);
+            count++;
+        }
+
+        if (count > 0)
+            Logger.info(count + " local cards added.");
+    }
+
+    #addLocalCardsDev(cards)
+    {
+        try
+        {
+            const data = fs.readFileSync("./data-local/cards-full.json", 'utf8');
+            const list = data === undefined || data === null ? [] : JSON.parse(data);
+            if (Array.isArray(list) && list.length > 0)
+                this.#appendLocalCards(cards, list);
+        }
+        catch(errIgnore)
+        {
+            /** ignore any error */
+            console.error(errIgnore)
+        }
+
+        return cards;
     }
 
     onCardsReceived(body)
