@@ -373,7 +373,10 @@ class GameRoom
         }
         
         if (isSinglePlayer)
+        {
             this.#gameInstance.setSinglePlayer(isSinglePlayer);
+            this.#allowAccessPlayer = false;
+        }
 
         pPlayboardManager.triggerEventSetupNewGame();
         
