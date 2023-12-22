@@ -38,9 +38,24 @@ const isFile = function(file)
         const uri = path.resolve(__dirname + "/../public" + file);
         return fs.statSync(uri)?.isFile();
     }
-    catch (err)
+    catch (errIgnore)
     {
-        Logger.warn(err.message);
+        /* file not found */
+    }
+
+    return false;
+}
+
+const saveFile = function(data, file)
+{
+    try
+    {
+        fs.writeFileSync(file, data);
+        return true;
+    }
+    catch (errIgnore)
+    {
+
     }
 
     return false;
@@ -58,7 +73,13 @@ module.exports.validateImages = function(cards)
     }
 
     if (notFound.length === 0)
+    {
         Logger.info("\t-- all images available");
+        return;
+    }
+
+    if (saveFile(JSON.stringify(notFound), "./data-local/not-found.json"))
+        Logger.warn("\t-- some images are missing. Please check " + "./data-local/not-found.json");
     else
         Logger.warn("\t-- some images are missing:\n" + notFound.join("\n"));
 }
