@@ -1,6 +1,7 @@
 const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
 const CardRepositoryUnderdeeps = require("./CardRepositoryUnderdeeps")
 const Logger = require("../Logger");
+const LocalImageMerger = require("./LocalImageMerger");
 
 const getRemovableKeysArray = function()
 {
@@ -399,10 +400,15 @@ class CardRepository {
         new CardRepositoryUnderdeeps().create(this.#raw);
     }
 
+    #mergeLocalImages(list)
+    {
+        LocalImageMerger.replaceImages(list);
+    }
+
     setup(_raw)
     {
         Logger.info("Setting up card data.");
-
+        this.#mergeLocalImages(_raw);
         this.#raw = this.removeUnwantedCardRepository(_raw);
         this.stripQuotes();
         this.codesLowercase();
