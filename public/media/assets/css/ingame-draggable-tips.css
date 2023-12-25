@@ -1,4 +1,3 @@
-
 body.on-drag-event-character .create-new-company:before,
 body.on-drag-event-generic.on-drag-event-hazard div#staging-area-player:before,
 body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before,
@@ -8,176 +7,162 @@ body.on-drag-event-hazard .area-opponent .site-regions:before,
 body.on-drag-event-character .area-player .company-character-host:before,
 body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before,
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
-body.on-drag-event-resource .area-player .company-character-host:before
-{
-    background-color: rgba(0,0,0,0.6);
-    border-radius: 5px;
-    position: absolute;
-    text-align: center;
-    color: #ff0;
-    text-transform: uppercase;
-    font-size: 0.8em;
-    padding: 5px 2px;
+body.on-drag-event-resource .area-player .company-character-host:before {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  position: absolute;
+  text-align: center;
+  color: #ff0;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  padding: 5px 2px;
 }
 
-body.on-drag-event-character .area-player .company-character-host:before
-{
-    content: "Follow";
-    z-index: 901;
-    left: 0px;
-}
-
-body.on-drag-event-hazard .area-opponent .company-character-host:before,
-body.on-drag-event-resource .area-player .company-character-host:before
-{
-    content: "Attach";
-    z-index: 901;
-    left: 0px;
+body.on-drag-event-character .area-player .company-character-host:before {
+  content: "Follow";
+  z-index: 901;
+  left: 0px;
 }
 
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
-body.on-drag-event-resource .area-player .company-character-host:before
-{
-    content: "Attach";
-    z-index: 901;
-    left: 0px;
+body.on-drag-event-resource .area-player .company-character-host:before {
+  content: "Attach";
+  z-index: 901;
+  left: 0px;
+}
+
+body.on-drag-event-hazard .area-opponent .company-character-host:before,
+body.on-drag-event-resource .area-player .company-character-host:before {
+  content: "Attach";
+  z-index: 901;
+  left: 0px;
 }
 
 body.on-drag-event-generic #shared_outofplay,
 body.on-drag-event-generic #card_counter a {
-    position: relative;
+  position: relative;
 }
+
 body.on-drag-event-generic #shared_outofplay:after,
 body.on-drag-event-generic #card_counter a:before {
-    position: absolute;
-    color: #ff0;
-    z-index: 901;
-    left: 40px;
-    top: 20px;
-    padding: 0 2px;
-    background-color: rgba(0,0,0,0.6);
-    border-radius: 5px;
+  position: absolute;
+  color: #ff0;
+  z-index: 901;
+  left: 40px;
+  top: 20px;
+  padding: 0 2px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
 }
 
-body.on-drag-event-generic #card_counter a.victory:before { content: "Score card"; }
+body.on-drag-event-generic #card_counter a.victory:before {
+  content: "Score card";
+}
 
 body.on-drag-event-generic #card_counter a.icon {
-    background: rgba(61, 65, 70, 0.82)
+  background: rgba(61, 65, 70, 0.82);
 }
 
 body.on-drag-event-generic #card_counter a.icon img {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 body.on-drag-event-generic #card_counter a.playdeck img {
-    visibility: visible;
+  visibility: visible;
 }
-
 
 body.on-drag-event-generic #card_counter a i {
-    height: 50px;
-    width: 40px;
-    font-size: 3em;
+  height: 50px;
+  width: 40px;
+  font-size: 3em;
 }
 
-body.on-drag-event-generic #shared_outofplay:after { 
-    content: "Remove card (cannt be undone)"; 
-    font-size: 12px;
-    width: 100px;
+body.on-drag-event-generic #shared_outofplay:after {
+  content: "Remove card (cannt be undone)";
+  font-size: 12px;
+  width: 100px;
 }
 
 body.on-drag-event-generic.on-drag-event-hazard div#staging-area-player:before,
-body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before
-{
-    top: -32px;
-    left: 54px;
+body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before {
+  top: -32px;
+  left: 54px;
 }
 
-body.on-drag-event-hazard div#staging-area-player:before
-{
-    content: "Hazard Events";
-}
-body.on-drag-event-resource div#staging-area-player:before
-{
-    content: "Resources & Factions";
+body.on-drag-event-hazard div#staging-area-player:before {
+  content: "Hazard Events";
 }
 
-
-body.on-drag-event-character .create-new-company:before
-{
-    content: "Create new Company";
-    top: -32px;
-    margin-left: -30px;
-    width: 170px;
+body.on-drag-event-resource div#staging-area-player:before {
+  content: "Resources & Factions";
 }
 
-body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before
-{
-    content: "Follow";
-    z-index: 901;
-    margin-left: -30px;
-    top: 10px;
-}
-body.on-drag-event-character .area-player .company-characters-add:before
-{
-    content: "Join company";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+body.on-drag-event-character .create-new-company:before {
+  content: "Create new Company";
+  top: -32px;
+  margin-left: -30px;
+  width: 170px;
 }
 
-body.on-drag-event-generic .area-opponent .site-target:before
-{
-    content: "On-Guard";
-    top: -30px;
-    margin-left: -30px;
+body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before {
+  content: "Follow";
+  z-index: 901;
+  margin-left: -30px;
+  top: 10px;
 }
 
-body.on-drag-event-hazard .area-opponent .site-regions:before
-{
-    content: "Face Hazard";
-    top: -30px;
-    margin-left: -60px;
+body.on-drag-event-character .area-player .company-characters-add:before {
+  content: "Join company";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+body.on-drag-event-generic .area-opponent .site-target:before {
+  content: "On-Guard";
+  top: -30px;
+  margin-left: -30px;
+}
+
+body.on-drag-event-hazard .area-opponent .site-regions:before {
+  content: "Face Hazard";
+  top: -30px;
+  margin-left: -60px;
 }
 
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
 body.on-drag-event-hazard .area-opponent .site-regions:before,
-body.on-drag-event-generic .area-opponent .site-target:before
-{
-    transform: rotate(180deg);
+body.on-drag-event-generic .area-opponent .site-target:before {
+  transform: rotate(180deg);
 }
 
 body.on-drag-event-generic .area-player .company,
 body.on-drag-event-generic .area-player .company:hover {
-    scale: 1;
+  scale: 1;
 }
 
-#player_companies .company-characters-add
-{
-    background-color: rgba(0,0,0,0.2) !important;
+#player_companies .company-characters-add {
+  background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 .mobile-action-area.on-drag-over,
 body.on-drag-event-generic .card-bar .on-drag-over,
 body.on-drag-event-generic .area .on-drag-over,
 .company-character .ui-droppable-active.on-drag-over,
-#player_companies .company-characters-add.on-drag-over
-{
-    background-color: rgba(101, 152, 81, 0.3) !important
+#player_companies .company-characters-add.on-drag-over {
+  background-color: rgba(101, 152, 81, 0.3) !important;
 }
 
 body.on-drag-event-generic .card-bar .on-drag-over img,
-body.on-drag-event-generic .area .on-drag-over img
-{
-    visibility: visible;
+body.on-drag-event-generic .area .on-drag-over img {
+  visibility: visible;
 }
 
-body.on-drag-event-generic div.card img:hover
-{
-    box-shadow: none;
+body.on-drag-event-generic div.card img:hover {
+  box-shadow: none;
 }
 
 .company-character .ui-droppable-active.on-drag-over img {
-    opacity: 0.3 !important;
+  opacity: 0.3 !important;
 }
