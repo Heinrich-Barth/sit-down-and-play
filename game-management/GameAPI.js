@@ -19,17 +19,23 @@ class GameAPI
     /**
      * Set a callback function to handle given path data
      * @param {String} sPath 
-     * @param {Function} func_callback 
+     * @param {Array of Function} func_callbacks 
      */
-    addListener(sPath, func_callback)
+    addListener(sPath, ...func_callbacks)
     {
-        if (typeof this.#funcs[sPath] === "undefined")
-        {
+        if (func_callbacks === undefined || !Array.isArray(func_callbacks) || func_callbacks.length === 0)
+            return;
+
+        if (!this.#vsPaths.includes(sPath))
             this.#vsPaths.push(sPath);
+
+        if (typeof this.#funcs[sPath] === "undefined")
+            this.#funcs[sPath] = [];
+
+        for (let func_callback of func_callbacks)
+        {
             if (typeof func_callback === "function")
-                this.#funcs[sPath] = func_callback;
-            else
-                this.#funcs[sPath] = function() { /** fallback */};
+                this.#funcs[sPath].push(func_callback);
         }
     }
     
@@ -48,14 +54,17 @@ class GameAPI
             return;
         }
 
-        try
+        for (let fnCallbacl of this.#funcs[path])
         {
-            this.#funcs[path](socket.userid, socket, data);
-        } 
-        catch (e)
-        {
-            Logger.warn("An unexpected exception occurred...");
-            Logger.error(e);
+            try
+            {
+                fnCallbacl(socket.userid, socket, data);
+            } 
+            catch (e)
+            {
+                Logger.warn("An unexpected exception occurred...");
+                Logger.error(e);
+            }
         }
     }
 
