@@ -542,6 +542,10 @@ body.table-companies-breakline .companies {
     transform: rotate(180deg);
 }
 
+.area-player .site-onguard .card.card-is-mine {
+    transform: rotate(0deg);
+}
+
 .card-highlight-mark img,
 div.card img:hover {
     box-shadow: 0px 0px 10px 2px #F0C648;

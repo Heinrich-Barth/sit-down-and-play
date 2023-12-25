@@ -239,6 +239,9 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
      pDiv.setAttribute("draggable", "true");
      pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
 
+     if (MeccgPlayers.isMyCard(card.owner))
+        pDiv.classList.add("card-is-mine");
+
      if (card.token !== undefined && card.token > 0)
      {
          pDiv.setAttribute("data-token", card.token);

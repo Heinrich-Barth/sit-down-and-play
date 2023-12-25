@@ -311,14 +311,18 @@ const DropFunctions = {
     {
         const pCard = ui.draggable[0];
         const type = pCard.getAttribute("data-card-type");
-        if (type === "character")
+        if (type === "character" || type === "resource")
         {
             const source = pCard.getAttribute("data-location");
             const uuid = pCard.getAttribute("data-uuid");
             if (source === "hand")
                 DomUtils.removeNode(pCard);
     
-            HandCardsDraggable.onJoinCompany(uuid, source, companyUuid);
+            if (type === "character")
+                HandCardsDraggable.onJoinCompany(uuid, source, companyUuid);
+            else
+                HandCardsDraggable.onPlayOnCompany(uuid, companyUuid);
+
             DropFunctions.getApi().send("/game/draw/company", companyUuid);
         }
         else if (type === "site")
@@ -933,6 +937,11 @@ const HandCardsDraggable = {
         else
             HandCardsDraggable.getApi().send("/game/character/join/company", {source: source, uuid: _joiningCharacterUuid, companyId: targetCompanyId});
     },
+
+    onPlayOnCompany: function(uuid, companyUuid)
+    {
+        MeccgApi.send("/game/company/location/attach", {uuid: uuid, companyUuid: companyUuid, reveal: true});
+    },
     
     droppableParams : {
         "ui-droppable-hover": "on-drag-over",
@@ -967,7 +976,6 @@ const HandCardsDraggable = {
         let sAttr = elem.attr("data-card-type");
         return sAttr === "resource" || sAttr === "hazard";
     },
-
 
     setupCardPreviewElement : function(id)
     {

@@ -1043,6 +1043,11 @@ body.on-drag-event-generic .area-player .company-character-host {
 body.on-drag-event-generic .card-hands {
   z-index: 100;
 }
+body.on-drag-event-resource .area-player .company-characters-add {
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 body.on-drag-event-character .area-player .company-characters-add {
   display: block;
   background-image: url(/media/assets/images/icon-company-join.png);
@@ -1342,6 +1347,10 @@ img.card-icon {
 
 .site-onguard .card {
   transform: rotate(180deg);
+}
+
+.area-player .site-onguard .card.card-is-mine {
+  transform: rotate(0deg);
 }
 
 .card-highlight-mark img,

@@ -9,6 +9,14 @@ body {
         }
     }
 
+    &.on-drag-event-resource .area-player {
+        .company-characters-add {
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    }
+
     &.on-drag-event-character .area-player {
         .company-characters-add {
             display: block;
