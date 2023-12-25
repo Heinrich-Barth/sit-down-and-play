@@ -167,10 +167,10 @@ a:hover {
   content: "Out";
 }
 .card-bar .icon-shared-victory::after {
-  content: "MPs";
+  content: "Stored";
 }
 .card-bar .icon-tooltip-mps::after {
-  content: "MPs";
+  content: "Stored";
 }
 .card-bar .icon-tooltip-playdeck::after {
   content: "Deck";
@@ -521,7 +521,6 @@ a:hover {
 
 .table {
   position: relative;
-  width: 100%;
   height: 100%;
 }
 .table .area-player {
