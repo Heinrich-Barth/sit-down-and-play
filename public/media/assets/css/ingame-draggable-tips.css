@@ -1,11 +1,11 @@
 body.on-drag-event-character .create-new-company:before,
-body.on-drag-event-generic.on-drag-event-hazard div#staging-area-player:before,
-body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before,
 body.on-drag-event-character .area-player .company-characters-add:before,
-body.on-drag-event-generic .area-opponent .site-target:before,
-body.on-drag-event-hazard .area-opponent .site-regions:before,
 body.on-drag-event-character .area-player .company-character-host:before,
 body.on-drag-event-character .area-opponent .company-character.character-is-company-host:before,
+body.on-drag-event-generic .area-opponent .site-target:before,
+body.on-drag-event-generic.on-drag-event-hazard div#staging-area-player:before,
+body.on-drag-event-generic.on-drag-event-resource div#staging-area-player:before,
+body.on-drag-event-hazard .area-opponent .site-regions:before,
 body.on-drag-event-hazard .area-opponent .company-character-host:before,
 body.on-drag-event-resource .area-player .company-character-host:before {
   background-color: rgba(0, 0, 0, 0.6);
@@ -20,13 +20,6 @@ body.on-drag-event-resource .area-player .company-character-host:before {
 
 body.on-drag-event-character .area-player .company-character-host:before {
   content: "Follow";
-  z-index: 901;
-  left: 0px;
-}
-
-body.on-drag-event-hazard .area-opponent .company-character-host:before,
-body.on-drag-event-resource .area-player .company-character-host:before {
-  content: "Attach";
   z-index: 901;
   left: 0px;
 }
