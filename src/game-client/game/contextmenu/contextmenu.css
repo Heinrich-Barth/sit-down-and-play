@@ -2,7 +2,7 @@
 .contextmenu.hide { display: none; }
 .menu-overlay { background: rgba(0,0,0,0.2); position: fixed; z-index: 300; left: 0; top: 0; right: 0; bottom: 0; cursor: pointer; }
 .contextmenu { position: absolute; z-index: 401; }
-.contextmenu .context-menu { z-index: 301; position: relative; padding: 5px 0; }
+.contextmenu .context-menu { z-index: 301; position: relative; padding: 5px 0; background-color: #000;}
 .contextmenu .context-menu ul { list-style: none; margin: 0; padding: 0; }
 .contextmenu .context-menu li { display: block; justify-content: space-between; }
 
