@@ -447,7 +447,7 @@ const HandCardsDraggable = {
             jQuery(e).droppable(
             {
                 classes: HandCardsDraggable.droppableParams,
-                accept: HandCardsDraggable.droppableAcceptCharacter,
+                accept: HandCardsDraggable.droppableAcceptCharacterAndResource,
                 drop: (event, ui) => DropFunctions.dropOnAddCompanyCharacter(event, ui, companyUuid)
             });
         });
@@ -954,6 +954,12 @@ const HandCardsDraggable = {
     {
         const sType = elem.attr("data-card-type");
         return sType === "character" || sType === "site";
+    },
+
+    droppableAcceptCharacterAndResource : function(elem)
+    {
+        const sType = elem.attr("data-card-type");
+        return sType === "character" || sType === "site" || sType === "resource";
     },
     
     droppableAcceptStagingArea : function(elem)
