@@ -143,7 +143,7 @@ class GamePreferences extends Preferences {
     {
         if (isActive && !document.body.classList.contains("table-companies-breakline"))
             document.body.classList.add("table-companies-breakline");
-        else if (!document.body && document.body.classList.contains("table-companies-breakline"))
+        else if (!isActive && document.body.classList.contains("table-companies-breakline"))
             document.body.classList.remove("table-companies-breakline");
     }
 
