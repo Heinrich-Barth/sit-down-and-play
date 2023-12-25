@@ -358,12 +358,15 @@ const ContextMenu = {
 
         onContextPlayDeckActions : function(e)
         {
-            e.preventDefault();
-            e.stopPropagation();
-
             if (e.target !== null)
                 ContextMenu.show(e, "_site", "_code", "_company", "playdeck_actions");
             
+            if (e.preventDefault)
+                e.preventDefault();
+
+            if (e.stopPropagation)
+                e.stopPropagation();
+
             return false;
         },
 
