@@ -583,12 +583,8 @@ class GameStandard extends GamePlayers
             return;
 
         const result = this.onCardMoveDoMove(userid, obj, card);
-
         if (!result.isEmpty)
         {
-            if (obj.drawTop)
-                this.refreshAllHandsOfAllPlayers(userid, socket);
-        
             this.updateHandCountersPlayer(userid);
             this.publishToPlayers("/game/event/cardmoved", userid, {list: result.codes, target: obj.target, source: obj.source});
         }
@@ -602,17 +598,19 @@ class GameStandard extends GamePlayers
         /* now we have to remove the cards from the board */
         this.publishToPlayers("/game/card/remove", userid, result.uuids);
 
-        if (bShufflePlaydeck)
-            this.publishChat(userid, "Shuffled " + result.countMoved + " card(s) into playdeck", true);
-        else
-            this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target, true);
-
         this.onRedrawCompany(userid, result.affectedCompanyUuid);
 
         if (obj.target === "outofplay")
             this.publishToPlayers("/game/event/outofplay", userid, {code: card.code });
         else if (obj.target  === "discardpile")
             this.replyToPlayer("/game/event/discard", socket, {code: card.code, owner: card.owner});
+        else if (obj.target === "hand" || obj.drawTop === true)
+            this.refreshAllHandsOfAllPlayers(userid, socket);
+
+        if (bShufflePlaydeck)
+            this.publishChat(userid, "Shuffled " + result.countMoved + " card(s) into playdeck", true);
+        else
+            this.publishChat(userid, "Moved " + result.countMoved + " card(s) to top of " + obj.target, true);
     }
 
     onCardToken(userid, _socket, data)
