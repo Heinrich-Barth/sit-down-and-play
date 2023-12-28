@@ -1,0 +1,78 @@
+.notifications {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    z-index: 600;
+    transform: translateX(-50%);
+    text-align: center;
+
+    .notification
+    {
+        position: relative;
+        font-size: 1.0em;
+        color:#363434;  
+        min-width: 300px;
+        max-width: 80%;
+        margin-bottom: 20px;
+
+        display: inline-grid;
+        grid-template-columns: 40px auto;
+        column-gap: 20px;
+
+        animation: notification-fadeout 4s linear forwards;
+
+        &.success .notification-element { background: #6eb566; }
+        &.failure .notification-element { background: #e36666; }
+        &.info .notification-element 
+        { 
+            background-color: #ffab00; 
+            color: #363434; 
+        }
+    }
+
+    .notification-element {
+        padding: 10px;
+    }
+
+    .notification-icon {
+        border-radius: 50%;
+        align-self: center;
+    }
+
+    .notification-text {
+        position: relative;
+        text-align: left;
+    }
+}
+
+.notification-line-countdown-10s,
+.notification-line-countdown 
+{   
+    animation: notification-line 3s linear forwards;
+    height: 2px;
+    background: white;
+    width: 1%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.notification-line-countdown-10s
+{
+    animation: notification-line 10s linear forwards;
+}
+.notification-line-countdown 
+{
+    animation: notification-line 3s linear forwards;
+}
+
+@keyframes notification-fadeout {
+    0% { opacity: 1;}
+    90% { opacity: 1;}
+    100% { opacity: 0; display: none;}
+}
+
+@keyframes notification-line {
+    from { width: 0%; }
+    to { width: 100%; }
+}

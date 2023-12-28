@@ -4,7 +4,7 @@ class Notification {
 
     static count = 0;
 
-    static _timeout = 3000;
+    static _timeout = 5000;
 
     insertCss()
     {
@@ -22,6 +22,7 @@ class Notification {
 
             const div = document.createElement("div");
             div.setAttribute("id", "notifications");
+            div.setAttribute("class", "notifications");
             document.body.appendChild(div);
         }
     }
@@ -67,18 +68,70 @@ class Notification {
             return ++Notification.count;
     }
 
+    #getOldMessages()
+    {
+        const list = [];
+        const elem = document.getElementById("notifications");
+        for (let note of elem.querySelectorAll(".notification"))
+        {
+            if (this.#isExpired(note))
+                list.push(note);   
+        }
+
+        return list;
+    }
+
+
+
+    #removeOldMessages()
+    {
+        const elem = document.getElementById("notifications");
+        for (let _e of this.#getOldMessages())
+            elem.removeChild(_e);
+    }
+
+    #isExpired(elem)
+    {
+        try
+        {
+            const time = parseInt(elem.getAttribute("data-time"));
+            return Date.now() - time > 4000;
+        }
+        catch (e)
+        {
+            /** ignore */
+        }
+
+        return false;
+    }
+
     addMessage(content, sClass, sIcon)
     {
         const id = "notify_" + this._requestId();  
-        const div = document.createElement("div");
-        div.classList.add(sClass);
-        div.classList.add("notify");
-        div.setAttribute("id", id);
-        div.innerHTML = `<div class="notification-text"><i class="fa ${sIcon}" aria-hidden="true"></i><span>${content}</span></div>
-            <div class="notification-line-countdown"></div>`
 
-        document.getElementById("notifications").appendChild(div);
-        return id;
+        const wrapper = document.createElement("div");
+        wrapper.setAttribute("class", "notification " + sClass);
+        wrapper.setAttribute("data-time", "" + Date.now());
+        wrapper.setAttribute("id", id);
+
+        const icon = document.createElement("div");
+        icon.setAttribute("class", "notification-element notification-icon fa " + sIcon);
+        icon.setAttribute("aria-hidden", "true");
+
+        const text = document.createElement("div");
+        text.setAttribute("class", "notification-element notification-text");
+
+        const p = document.createElement("span");
+        p.innerText = content;
+
+        const line = document.createElement("div");
+        line.setAttribute("class", "notification-line-countdown");
+
+        text.append(p, line);
+
+        wrapper.append(icon, text);
+
+        document.getElementById("notifications").appendChild(wrapper);
     }
 
     addTimeout(id)
@@ -88,7 +141,8 @@ class Notification {
 
     msg(content, sClass, sIcon)
     {
-        this.addTimeout(this.addMessage(content, sClass, sIcon));
+        this.addMessage(content, sClass, sIcon)
+        this.#removeOldMessages();
     }
 
     static removeMessage(id)
