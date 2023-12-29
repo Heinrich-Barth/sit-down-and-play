@@ -56,7 +56,12 @@ const ContextMenu = {
 
         let vsItems = ContextMenu.data.types[nType];       
         for (let key of vsItems)
-            ContextMenu.createMenuEntry(pContainer, ContextMenu.data.items[key]);
+        {
+            if (ContextMenu.data.items[key] !== undefined)
+                ContextMenu.createMenuEntry(pContainer, ContextMenu.data.items[key]);
+            else
+                console.warn("Cannot find data items for key " + key);
+        }
 
         const pMenu = document.querySelector("nav");
         DomUtils.removeAllChildNodes(pMenu);      
