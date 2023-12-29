@@ -951,7 +951,16 @@ const SCORING_INGAME =
                 const th = document.createElement("th");
                 th.setAttribute("title", entry.value);
                 th.setAttribute("class", "scoring-sheet-ingame-collapse")
-                th.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+
+                const spanLetter = document.createElement("span");
+                spanLetter.setAttribute("class", "score-letter");
+                spanLetter.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+
+                const spanWord = document.createElement("div");
+                spanWord.setAttribute("class", "score-word");
+                spanWord.innerText = entry.label;
+
+                th.append(spanLetter, spanWord);
                 tr.appendChild(th);
             });
 
