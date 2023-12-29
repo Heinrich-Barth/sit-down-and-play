@@ -15,9 +15,10 @@
         max-width: 80%;
         margin-bottom: 20px;
 
-        display: inline-grid;
-        grid-template-columns: 40px auto;
-        column-gap: 20px;
+        display: grid;
+        grid-template-columns: 40px 250px;
+        justify-content: center;
+        column-gap: 10px;
 
         animation: notification-fadeout 4s linear forwards;
 
