@@ -239,10 +239,12 @@ class RoomManager {
         let res = [];
         let jRoom;
         let isValidRoom;
+        let pGame;
         for (room in this.#rooms) 
         {
             pRoom = this.#rooms[room];
             isValidRoom = false;
+            pGame = pRoom.getGame();
 
             jRoom = {
                 room : room,
@@ -260,7 +262,10 @@ class RoomManager {
             for (userid in pRoom.getPlayers())
             {
                 isValidRoom |= pRoom.getPlayer(userid).isAdmin();
-                jRoom.players.push(pRoom.getPlayer(userid).getName());
+                jRoom.players.push({
+                    name: pRoom.getPlayer(userid).getName(),
+                    score: pGame.getPlayerScore(userid)
+                });
             }
 
             if (isValidRoom)

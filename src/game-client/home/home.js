@@ -95,7 +95,7 @@ const createAvatarList = function(list)
 const addGameType = function(value, isArda)
 {
     const _room = value.room;
-    const _players = value.players.sort().join(", ");
+    const _players = value.players;
     const _context = isArda ? "arda" : "play";
 
     const since = getGameTypeDuration(isArda, value.time);
@@ -117,8 +117,25 @@ const addGameType = function(value, isArda)
     tdRoom.setAttribute("class", "room-text");
     _tr.appendChild(tdRoom);
 
-    tdRoom.innerHTML = `<h3>${_room.toUpperCase()} <span class="game-duration fa fa-clock-o"> ${since}</span></h3>
-    <p>${_players}</p>`;
+    const h3 = document.createElement("h3");
+    h3.innerHTML = `${_room.toUpperCase()} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+
+    const tempList = [];
+    for (let _player of _players)
+    {
+        if (typeof _player === "string")
+            tempList.push(_player);
+        else if (_player.score < 0)
+            tempList.push(_player.name);
+        else
+            tempList.push(_player.name + " (" + _player.score + ")");
+
+
+    }
+
+    const playerP = document.createElement("p");
+    playerP.innerText = tempList.sort().join(", ");
+    tdRoom.append(h3, playerP);
 
     tdRoom.append(createAvatarList(value.avatars));
 
