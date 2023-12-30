@@ -9,6 +9,7 @@ CardPreview.idleForceShutdown = null;
 CardPreview.idleCountdownActive = false;
 CardPreview.currentCharacterId = "";
 CardPreview.currentCardId = "";
+CardPreview.currentCardCode = "";
 
 CardPreview.getTargetContainer = function(bLeft, bTop)
 {
@@ -96,6 +97,7 @@ CardPreview.onHoverCharacter = function(img)
 {
     CardPreview.currentCharacterId = "";
     CardPreview.currentCardId = "";
+    CardPreview.currentCardCode = "";
     
     if (img.parentElement === null)
         return;
@@ -106,12 +108,14 @@ CardPreview.onHoverCharacter = function(img)
         CardPreview.currentCharacterId = id;
 
     CardPreview.currentCardId = parent.hasAttribute("data-uuid") ? parent.getAttribute("data-uuid") : "";
+    CardPreview.currentCardCode = parent.hasAttribute("data-card-code") ? parent.getAttribute("data-card-code") : "";
 }
 
 CardPreview.hide = function(bLeft, bTop)
 {
     CardPreview.currentCharacterId = "";
     CardPreview.currentCardId = "";
+    CardPreview.currentCardCode = "";
 
     const elem = CardPreview.getTargetContainer(bLeft, bTop);
     if (elem !== null)
