@@ -96,6 +96,16 @@ const ShotcutManager =
                     MeccgApi.send("/game/card/state/reveal", {uuid : CardPreview.currentCardId, code: "" }); 
                 break;
 
+            case "+":
+                if (CardPreview.currentCardId !== "" && CardPreview.currentCardCode !== "")
+                    MeccgApi.send("/game/card/token", {uuid : CardPreview.currentCardId, code: CardPreview.currentCardCode, add: true });
+                break;
+
+            case "-":
+                if (CardPreview.currentCardId !== "" && CardPreview.currentCardCode !== "")
+                    MeccgApi.send("/game/card/token", {uuid : CardPreview.currentCardId, code: CardPreview.currentCardCode, add: false });
+                break;
+
             case "x":
                 if (CardPreview.currentCardId !== "")
                     ShotcutManager.discardHoveredCard(CardPreview.currentCardId);

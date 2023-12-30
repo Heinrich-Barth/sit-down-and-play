@@ -1,18 +1,16 @@
 
 const ContextMenu = {
-   
-    updateTargetMenuPosition : function(e, _menu_raw, nType)
+
+    updateTargetMenuPosition : function(x, y, pMenuElement, clickedOnGameCard)
     {
-        const pPosition = ContextMenu._getPosition(e);
-        if (pPosition.x === 0 || pPosition.y === 0)
-            return;
-        
-        let y = pPosition.y - (nType === "card" ? 100 : 0);
+        if (clickedOnGameCard)
+            y -= 100;
+
         if (y < 10)
             y = 10;
 
-        _menu_raw.style.left = pPosition.x + "px";
-        _menu_raw.style.top = y + "px";
+        pMenuElement.style.left = x + "px";
+        pMenuElement.style.top = y + "px";
     },
    
     createMenuEntry : function(pParent, item)
@@ -38,46 +36,55 @@ const ContextMenu = {
         pParent.appendChild(li);
     },
 
-    fillTargetMenu : function(_menu_raw, nType, sUuid, sCode, companyId)
+    fillTargetMenu : function(pContextMenuElement, nType)
     {
-        if (_menu_raw == null || typeof ContextMenu.data.types[nType] === "undefined")
-            return;
+        if (pContextMenuElement == null || typeof ContextMenu.data.types[nType] === "undefined")
+            return false;
 
-        _menu_raw.setAttribute("data-card-code", sCode);
-        _menu_raw.setAttribute("data-card-uuid", sUuid);
-        _menu_raw.setAttribute("data-company", companyId);
-
-        let sClass = typeof ContextMenu.data.specialClasses[nType] === "undefined" ? "" : ContextMenu.data.specialClasses[nType];
+        const sClass = typeof ContextMenu.data.specialClasses[nType] === "undefined" ? "" : ContextMenu.data.specialClasses[nType];
         if (sClass !== "")
-            _menu_raw.classList.add(sClass);
+            pContextMenuElement.classList.add(sClass);
 
         const pContainer = document.createElement("ul");
         pContainer.setAttribute("class", "context-menu__items");
 
-        let vsItems = ContextMenu.data.types[nType];       
+        let hasElements = false;
+        const vsItems = ContextMenu.data.types[nType];       
         for (let key of vsItems)
         {
             if (ContextMenu.data.items[key] !== undefined)
+            {
                 ContextMenu.createMenuEntry(pContainer, ContextMenu.data.items[key]);
-            else
-                console.warn("Cannot find data items for key " + key);
+                hasElements = true;
+            }
         }
 
         const pMenu = document.querySelector("nav");
         DomUtils.removeAllChildNodes(pMenu);      
         pMenu.appendChild(pContainer);
 
-        _menu_raw.classList.remove("hide");
+        return hasElements;
     },
 
     show : function(e, sUuid, sCode, companyId, nType)
     {
-        let _menu_raw = document.getElementById("contextmenu");
-        if (_menu_raw !== null)
-        {
-            ContextMenu.updateTargetMenuPosition(e, _menu_raw, nType);
-            ContextMenu.fillTargetMenu(_menu_raw, nType, sUuid, sCode, companyId);
-        }
+        const pPosition = ContextMenu._getPosition(e);
+        if (pPosition.x === 0 || pPosition.y === 0)
+            return;
+
+        const clickedOnGameCard = nType === "card";
+        const pContextMenuElement = document.getElementById("contextmenu");
+        if (pContextMenuElement === null)
+            return;
+
+        ContextMenu.updateTargetMenuPosition(pPosition.x, pPosition.y, pContextMenuElement, clickedOnGameCard);
+
+        pContextMenuElement.setAttribute("data-card-code", sCode);
+        pContextMenuElement.setAttribute("data-card-uuid", sUuid);
+        pContextMenuElement.setAttribute("data-company", companyId);
+
+        if (ContextMenu.fillTargetMenu(pContextMenuElement, nType))
+            pContextMenuElement.classList.remove("hide");
     },    
     
     /**
@@ -662,9 +669,9 @@ const ContextMenu = {
         this.addItem("wound", "Wound card (180°)", "fa-arrow-circle-down", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("rot270", "Rotate 270°", "fa-arrow-circle-left", "context-menu-item-rotate context-menu-item-generic", ContextMenu.callbacks.rotate);
         this.addItem("glow_action", "Highlight card (5s)", "fa-bell-slash", "context-menu-item-glow context-menu-item-generic border-top", ContextMenu.callbacks.glow, "CTRL+Doubleclick to untap");
-        this.addItem("flipcard", "Flip Card", "fa-eye-slash", "context-menu-item-flipcard context-menu-item-generic", ContextMenu.callbacks.flip);
-        this.addItem("token_add", "Add token", "fa-plus", "context-menu-item-generic", ContextMenu.callbacks.tokenAdd);
-        this.addItem("token_remove", "Remove token", "fa-minus", "context-menu-item-generic", ContextMenu.callbacks.tokenRemove);
+        this.addItem("flipcard", "Flip Card (or press 'f')", "fa-eye-slash", "context-menu-item-flipcard context-menu-item-generic", ContextMenu.callbacks.flip);
+        this.addItem("token_add", "Add token (or press '+')", "fa-plus", "context-menu-item-generic", ContextMenu.callbacks.tokenAdd);
+        this.addItem("token_remove", "Remove token (or press '-')", "fa-minus", "context-menu-item-generic", ContextMenu.callbacks.tokenRemove);
         this.addItem("arrive", "Company arrives at destination", "fa-street-view", "context-menu-item-arrive", ContextMenu.callbacks.arrive, "Doubleclick on opponents target site to indicate NO MORE HAZARDS");
         this.addItem("add_ressource", "Add this site as a ressource", "fa-clipboard", "context-menu-item-arrive", ContextMenu.callbacks.addRessource, "Adds this site as RESSOURCE to your hand and will be played facedown.");
         this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
@@ -683,7 +690,6 @@ const ContextMenu = {
         this.data.types["arrive"] = ["arrive", "movement_return"];
         this.data.types["playdeck_actions"] = ["view_deck_cards", "view_deck_notes", "reval_cards_number", "playdeck_shuffle"];
 
-        this.data.specialClasses["card"] = "";
         this.data.specialClasses["location"] = "context-menu-site";
         this.data.specialClasses["arrive"] = "context-menu-movement";
     },
