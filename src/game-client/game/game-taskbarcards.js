@@ -267,7 +267,7 @@ class TaskBarCards
             return false;
         };
 
-        document.querySelector(".card-bar .playdeck").onclick = ContextMenu.contextActions.onContextPlayDeckActions;
+        document.querySelector(".card-bar .playdeck").onclick = TaskBarCards.onClickPlaydeck;
         
         document.querySelector(".card-bar .discardpile").oncontextmenu = TaskBarCards.ShuffleDiscardpile;
         document.querySelector(".card-bar .playdeck").oncontextmenu = TaskBarCards.ShufflePlaydeck;
@@ -275,6 +275,11 @@ class TaskBarCards
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
             elem.onclick = TaskBarCards.OnTurnClick;
     }    
+
+    static onClickPlaydeck(e)
+    {
+        ContextMenu.contextActions.onContextPlayDeckActions(e);
+    }
 
     static rollDiceCharacter(uuid, code)
     {
