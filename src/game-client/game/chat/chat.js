@@ -32,6 +32,9 @@ class ChatBox {
         div.setAttribute("class", "chatbox blue-box");
         div.setAttribute("id", "chatbox");
         document.body.appendChild(div);
+
+        if (typeof g_sVersion === "string")
+            this.message("System", "Platform " + g_sVersion.replace("=", " is "));
     }
 
     ensureLength(sText, nLen) 
@@ -48,11 +51,18 @@ class ChatBox {
             return;
 
         const text = document.createElement("div");
+        const val = document.createDocumentFragment();
+
         if (sFrom !== "(unknown)")
-            text.innerHTML = "<b>" + sFrom + "</b> " + this.ensureLength(sText, 200);
-        else
-            text.innerText = this.ensureLength(sText, 200);
-    
+        {
+            const b = document.createElement("b");
+            b.innerText = sFrom;
+            val.append(b, document.createTextNode(" "));
+        }
+
+        val.append(document.createTextNode(this.ensureLength(sText, 200)));
+        text.append(val);
+
         const objDiv = document.getElementById("chatbox");
         objDiv.prepend(text);
 
