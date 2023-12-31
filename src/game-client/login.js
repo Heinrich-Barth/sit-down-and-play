@@ -126,6 +126,82 @@ const populateDeck = function(jData)
     focusUsername();
 };
 
+const IdentifyDCErrataUsage = 
+{
+    updateDCErratas : function()
+    {
+        this.updateDCErrata("resources", "hazards", "sideboard", "characters", "pool");
+    },
+
+    updateDCErrata : function(...ids)
+    {
+        if (ids.length === 0)
+            return;
+
+        let isStandard = true;
+        for (let id of ids)
+        {
+            const elem = document.getElementById(id);
+            if (elem === null)
+                continue;
+
+            const val = typeof elem.value === "string" ? elem.value : "";
+            if (!this.isStandardDeckSection(val))
+            {
+                isStandard = false;
+                break;
+            }
+        }
+
+        const elemAllowDC = document.getElementById("toggle_allow_dce");
+        if (elemAllowDC !== null)
+            elemAllowDC.checked = !isStandard;
+    },
+
+    isStandardDeckSection : function(value)
+    {
+        if (value === "")
+            return true;
+
+        const arr = value.split("\n");
+        for (let line of arr)
+        {
+            const set = this.extractSetCode(line);
+            if (set === "")
+                continue; 
+
+            switch(set)
+            {
+                case "tw":
+                case "td":
+                case "le":
+                case "ba":
+                case "dm":
+                case "as":
+                case "wh":
+                    continue;
+
+                default:
+                    return false;
+            }
+        }
+
+        return true;
+    },
+
+    extractSetCode : function(line)
+    {
+        if (typeof line !== "string")
+            return "";
+
+        const pos = line.lastIndexOf("(");
+        if (pos === -1)
+            return "";
+        else
+            return line.substring(pos+1).replace(")", "").trim().toLowerCase();
+    }
+}
+
 const removeQuotes = function(sCode) 
 {
     if (sCode.indexOf('"') === -1)
@@ -584,7 +660,7 @@ const onChallengeDeckChosen = function(e)
     if (g_pDeckMap[deckid] !== undefined)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": g_pDeckMap[deckid].deck }));
-        setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
+        setTimeout(() => { CalculateDeckCategory.calculateAll(); IdentifyDCErrataUsage.updateDCErratas(); }, 50);
         return false;
     }
     
@@ -594,7 +670,10 @@ const onChallengeDeckChosen = function(e)
     {
         g_pDeckMap[deckid] = deckdata;
         document.body.dispatchEvent(new CustomEvent("meccg-file-dropped", { "detail": deckdata.deck }));
-        setTimeout(() => CalculateDeckCategory.calculateAll(), 50);
+        setTimeout(() => {
+            CalculateDeckCategory.calculateAll();
+            IdentifyDCErrataUsage.updateDCErratas();
+        }, 50);
     })
     .catch(err =>
     {
@@ -952,7 +1031,10 @@ const CalculateDeckCategory =
         {
             h3.setAttribute("id", "label-" + elemid);
             elem.setAttribute("data-id", "label-" + elemid);
-            elem.onchange = CalculateDeckCategory.calculate.bind(CalculateDeckCategory);
+            elem.onchange = (e) => {
+                CalculateDeckCategory.calculate(e);
+                IdentifyDCErrataUsage.updateDCErratas();
+            };
         }
     },
 
