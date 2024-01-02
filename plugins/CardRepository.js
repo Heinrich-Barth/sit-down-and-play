@@ -480,7 +480,10 @@ class CardRepository {
     isStageCard(code)
     {
         const card = this.getCardByCode(code);
-        return card?.Secondary !== undefined ? card.Secondary : "";
+        if (card === null || card.keywords === undefined || card.keywords === null)
+            return false;
+
+        return Array.isArray(card.keywords) && card.keywords.includes(code);
     }
 
     getMarshallingPoints(code)
