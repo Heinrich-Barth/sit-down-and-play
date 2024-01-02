@@ -321,7 +321,7 @@ class DeckCommons {
         data.agent = isAgent === true;
         data.turn = 0;
         data.secondary = CardDataProvider.getCardTypeSpecific(code);
-        data.stage = CardDataProvider.isStageCard(code);
+        data.stage = isAgent !== true && CardDataProvider.isStageCard(code);
         return data;
     }
 }
