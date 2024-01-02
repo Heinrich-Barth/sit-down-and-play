@@ -249,7 +249,8 @@ class DeckCommons {
             owner : "",
             revealed: false,
             agent : false,
-            turn: 0
+            turn: 0,
+            stage: false
         };
     }
 
@@ -275,6 +276,7 @@ class DeckCommons {
         data.revealed = input.revealed === true;
         data.agent = input.agent === true;
         data.turn = parseInt(input.turn);
+        data.stage = input.stage === true;
         return data;
     }
 
