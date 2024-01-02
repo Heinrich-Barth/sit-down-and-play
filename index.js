@@ -229,7 +229,7 @@ SERVER.instance.use(function(req, res, next)
 SERVER.instance.use(function(_req, res, _next) 
 {
     if (!Configuration.isProduction())
-        console.info("404 " + decodeURIComponent(_req.baseUrl))
+        console.info("404 ", _req.originalUrl);
 
     res.status(404).send(ServerModule.getPage404());
 });
