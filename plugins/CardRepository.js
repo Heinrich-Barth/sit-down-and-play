@@ -459,7 +459,7 @@ class CardRepository {
     getCardByCode(code)
     {
         if (code === undefined || code === "")
-            return "";
+            return null;
         
         code = code.toLowerCase();
         return this.#cardRepository[code] === undefined ? null : this.#cardRepository[code];
@@ -472,6 +472,12 @@ class CardRepository {
     }
 
     getCardTypeSpecific(code)
+    {
+        const card = this.getCardByCode(code);
+        return card?.Secondary !== undefined ? card.Secondary : "";
+    }
+
+    isStageCard(code)
     {
         const card = this.getCardByCode(code);
         return card?.Secondary !== undefined ? card.Secondary : "";
