@@ -626,7 +626,7 @@ class CardRepository {
         catch(errIgnore)
         {
             /** ignore any error */
-            console.error(errIgnore)
+            console.warn(errIgnore)
         }
 
         return cards;
