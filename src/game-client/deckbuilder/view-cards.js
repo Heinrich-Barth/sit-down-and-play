@@ -295,10 +295,10 @@ const ViewCards =
             if (!bAllowAllAlign && sAlign !== "" && _align !== sAlign)
                 continue;
 
-            if (keyword !== "" && !bAllowAllKeywords && (card.keywords === null || !card.keywords.includes(keyword)))
+            if (keyword !== "" && !bAllowAllKeywords && (!Array.isArray(card.keywords) || !card.keywords.includes(keyword)))
                 continue;
 
-            if (skill !== "" && !bAllowAllSkills && (card.skills === null || !card.skills.includes(skill)))
+            if (skill !== "" && !bAllowAllSkills && (!Array.isArray(card.skills) || !card.skills.includes(skill)))
                 continue;
             
             if (card.title === "Warlord AL" || card.title === "Wizard AL")
