@@ -482,8 +482,8 @@ class CardRepository {
         const card = this.getCardByCode(code);
         if (card === null || card.keywords === undefined || card.keywords === null)
             return false;
-
-        return Array.isArray(card.keywords) && card.keywords.includes(code);
+        else
+            return Array.isArray(card.keywords) && card.keywords.includes("stage resource");
     }
 
     getMarshallingPoints(code)
