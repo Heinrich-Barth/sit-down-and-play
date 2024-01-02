@@ -1,5 +1,6 @@
 const CardNameCodeSuggestions = require("./CardNameCodeSuggestions");
 const CardRepositoryUnderdeeps = require("./CardRepositoryUnderdeeps")
+const StageCard = require("./CardStageCodes");
 const Logger = require("../Logger");
 const LocalImageMerger = require("./LocalImageMerger");
 const fs = require("fs");
@@ -406,6 +407,12 @@ class CardRepository {
         LocalImageMerger.replaceImages(list);
     }
 
+    #identifyStageCards()
+    {
+        const count = StageCard.addStageCodes(this.#raw);
+        Logger.info("\t- Stage card(s) itendified: " + count);
+    }
+
     setup(_raw)
     {
         Logger.info("Setting up card data.");
@@ -416,6 +423,7 @@ class CardRepository {
         this.codesLowercase();
         this.identifyQuests();
         this.identifyAvatars();
+        this.#identifyStageCards();
         this.identifyUnderdeeps();
         this.integrityCheck();
         this.sort();
