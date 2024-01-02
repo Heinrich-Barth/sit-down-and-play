@@ -109,6 +109,13 @@ const extractCharacters = function(jDeck, pCardRepository)
     });
 };
 
+const extractStageResources = function(jDeck, pCardRepository)
+{
+    return extractBySecondary(jDeck, pCardRepository, function(card) 
+    {
+        return pCardRepository.isStageCard(card.code);
+    });
+};
 
 /**
  * Extract all special characters
@@ -225,10 +232,12 @@ exports.validateArda = function(jDeck, pCardRepository)
         jDeck.chars_special = extractCharactersSpecial(jDeck.playdeck, pCardRepository);
         jDeck.chars_mind7 = extractCharactersMindMin7(jDeck.playdeck, pCardRepository);
         jDeck.chars_others = extractCharacters(jDeck.playdeck, pCardRepository);
+        jDeck.stage = extractStageResources(jDeck.playdeck, pCardRepository);
 
         Logger.info("Arda deck summary:");
         Logger.info("- Minor Items: " + Object.keys(jDeck.minors).length);
         Logger.info("- Marshalling point cards: " + Object.keys(jDeck.mps).length);
+        Logger.info("- Stage Resources: " + Object.keys(jDeck.stage).length);
         Logger.info("- Characters with mind of > 5: " + Object.keys(jDeck.chars_mind7).length);
         Logger.info("- Characters with mind of < 6: " + (Object.keys(jDeck.chars_others).length + Object.keys(jDeck.chars_special).length));
         Logger.info("- Cards in playdeck: " + Object.keys(jDeck.playdeck).length);
