@@ -312,25 +312,31 @@ const GameBuilder = {
 
     restoreBoard : function(jData)
     {
-        for (let company of jData.player.companies)
-            GameBuilder.CompanyManager.drawCompany(true, company);
+        if (jData.player)
+        {
+            for (let company of jData.player.companies)
+                GameBuilder.CompanyManager.drawCompany(true, company);
+
+            for (let _data of jData.player.stage_hazards)
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary, _data.stage);
+            
+            for (let _data of jData.player.stage_resources)
+                GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary, _data.stage);
+        }
 
         GameBuilder.CompanyManager.onRemoveEmptyCompanies();
 
-        for (let _data of jData.player.stage_hazards)
-            GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
-        
-        for (let _data of jData.player.stage_resources)
-            GameBuilder.onAddCardToStagingArea(true, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
-
-        for (let _data of jData.opponent.companies)
-            GameBuilder.CompanyManager.drawCompany(false, _data);
-        
-        for (let _data of jData.opponent.stage_hazards)
-            GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
-        
-        for (let _data of jData.opponent.stage_resources)
-            GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary);
+        if (jData.opponent)
+        {
+            for (let _data of jData.opponent.companies)
+                GameBuilder.CompanyManager.drawCompany(false, _data);
+            
+            for (let _data of jData.opponent.stage_hazards)
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary, _data.stage);
+            
+            for (let _data of jData.opponent.stage_resources)
+                GameBuilder.onAddCardToStagingArea(false, _data.code, _data.uuid, _data.type, _data.state, _data.revealed, _data.turn, _data.token, _data.secondary, _data.stage);
+        }
         
         const scores = [];
         for (let id in jData.scores)
@@ -352,9 +358,9 @@ const GameBuilder = {
         }, 500);
     },
     
-    onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type = "", state = "", revealed = true, turn = 0, token = 0, secondary = "")
+    onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type = "", state = "", revealed = true, turn = 0, token = 0, secondary = "", stage = false)
     {
-        const cardId = GameBuilder.Stagingarea.onAddCardToStagingArea(bIsMe, uuid, cardCode, type, state, revealed, turn, token, secondary);
+        const cardId = GameBuilder.Stagingarea.onAddCardToStagingArea(bIsMe, uuid, cardCode, type, state, revealed, turn, token, secondary, stage);
         if (cardId === "")
             return false;
         else 
@@ -563,7 +569,7 @@ const GameBuilder = {
         MeccgApi.addListener("/game/card/state/mark", (_bIsMe, jData) => GameBuilder.CompanyManager.onMenuActionMark(jData.uuid, jData.mark));
 
         MeccgApi.addListener("/game/add-to-staging-area", (bIsMe, jData) => {
-            GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary);
+            GameBuilder.onAddCardToStagingArea(bIsMe, jData.code, jData.uuid, jData.type, jData.state, jData.revealed, jData.turn, jData.token, jData.secondary, jData.stage);
             if (jData.revealed && !bIsMe)
                 GameBuilder.showDropEventBox(jData.code, "");
         });
