@@ -13,6 +13,11 @@ class HandManagerArda extends HandManager
         return this.getCardPils(playerId, "handMinorItems");
     }
 
+    handStage(playerId)
+    {
+        return this.getCardPils(playerId, "handStage");
+    }
+
     sites(_playerId)
     {
         return [];
@@ -41,6 +46,16 @@ class HandManagerArda extends HandManager
     discardPileMPs(playerId)
     {
         return this.getCardPils(playerId, "discardPileMP");
+    }
+
+    discardPileStage(playerId)
+    {
+        return this.getCardPils(playerId, "discardPileStage");
+    }
+
+    playdeckStage(playerId)
+    {
+        return this.getCardPils(playerId, "playdeckStage");
     }
 
     playdeckCharacters(playerId)

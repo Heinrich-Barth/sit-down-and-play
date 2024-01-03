@@ -548,6 +548,16 @@ class TaskBarCards
         return false
     }
 
+    static #onArdaHandToggle()
+    {
+        const elem = document.getElementById("arda-action-container-mps");
+        if (elem === null || Arda === null || Arda === undefined)
+            return;
+
+        if (typeof Arda.toggleViewOnElement === "function")
+            Arda.toggleViewOnElement("arda_mps")
+    }
+
     static OnClickIconHand(e) 
     {
         const elem = document.getElementById("icon_hand");
@@ -564,6 +574,8 @@ class TaskBarCards
             /** query cards in hand */
             MeccgApi.send("/game/card/hand", {});
         }
+
+        TaskBarCards.#onArdaHandToggle();
 
         e.stopPropagation();
         return false;

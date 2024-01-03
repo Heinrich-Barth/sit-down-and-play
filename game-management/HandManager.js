@@ -17,7 +17,15 @@ class HandManager
         const deck = this.getPlayerDeck(playerId);
         if (deck === null)
         {
-            Logger.warn("Cannod find deck of player #" + playerId);
+            Logger.warn("Cannod find deck type " + type + " of player #" + playerId);
+            try
+            {
+                throw new Error("temp only")
+            }
+            catch(err)
+            {
+                console.error(err);
+            }
             return [];
         }
 

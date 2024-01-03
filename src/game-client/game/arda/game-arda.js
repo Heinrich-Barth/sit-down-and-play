@@ -98,10 +98,12 @@ let Arda = {
         if (!this.isSinglePlayer() && bAllowRecyling)
             this.insertArdaSetupContainer();
 
-        let idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
+        const idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
         document.getElementById(idMps).classList.remove("hidden");
 
-        let idMinor = this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling, "");
+        this.createContainer("arda_stage", "stage", "Common Stage Cards", 5, false, "");
+
+        const idMinor = this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling, "");
         this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling, idMinor);
 
         this.getOpeningHands();
@@ -160,7 +162,7 @@ let Arda = {
 
         this.insertMp(div, "fa-users", "Roving Characters", "charackters", "arda_characters", "");
         this.insertMp(div, "fa-shield", "Minor Item Offerings", "minor", "arda_minors", "");
-        this.insertMp(div, "fa-trophy", "Marshalling Points", "mps", "arda_mps", "");
+        this.insertMp(div, "fa-adjust", "Stage Cards", "stage", "arda_stage", "");
 
         document.body.appendChild(div);
     },
@@ -230,9 +232,9 @@ let Arda = {
         });
     },
 
-    toogleView : function(e)
+    toggleViewOnElement : function(id)
     {
-        const elem = Arda.getContainer(e.target.getAttribute("data-player"));
+        const elem = Arda.getContainer(id);
         if (elem !== null)
         {
             if (elem.classList.contains("hidden"))
@@ -240,7 +242,11 @@ let Arda = {
             else
                 elem.classList.add("hidden");
         }
-
+    },
+    
+    toogleView : function(e)
+    {
+        Arda.toggleViewOnElement(e.target.getAttribute("data-player"));
         e.preventDefault();
         return false;
     },
@@ -328,7 +334,7 @@ let Arda = {
     onShufflePlaydeck : function(e)
     {
         const type = e.target.getAttribute("data-type");
-        if (type === "mps" || type === "minor")
+        if (type === "mps" || type === "minor" || type === "stage")
         {
             MeccgApi.send("/game/arda/shuffle", { target: type });
             document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Playdeck shuffled (" + type + ")" }));
@@ -346,13 +352,42 @@ let Arda = {
         return elem;
     },
 
+    showStageCardHand : function()
+    {
+        const elem = document.getElementById("arda_stage_hand");
+        const cards = document.getElementById("arda_hand_container_stage");
+        if (elem === null || cards === null)
+            return;
+
+        if (cards.getElementsByClassName("card-hand").length > 0)
+        {
+            if (elem.classList.contains("hidden"))
+                elem.classList.remove("hidden");
+        }
+        else if (!elem.classList.contains("hidden"))
+            elem.classList.add("hidden");
+    },
+
+    addDraftClass:function(bAdd)
+    {
+        if (bAdd)
+            document.body.classList.add("arda-draft");
+        else
+            document.body.classList.remove("arda-draft");
+    },
+
     updateArdaSetupContainer : function(bIsReady, bHideDraftCharacters, bHideDraftMinors)
     {
         if (bHideDraftCharacters && bHideDraftMinors)
         {
             DomUtils.remove(document.getElementById("arda-setup-container"));
+            Arda.addDraftClass(false);
+            Arda.showStageCardHand();
             return;
         }
+
+        if (bHideDraftCharacters)
+            Arda.addDraftClass(true);
 
         const containerWrapper = document.getElementById("arda-setup-container");
         const container = document.getElementById("arda-setup-container-content");
@@ -562,6 +597,12 @@ let Arda = {
             Arda.onReceiveOpeningHandGeneric("arda_hand_container_charackters", "charackters", jData);
     },
 
+    onReceiveOpeningHandStage : function(jData)
+    {
+        /* you can only receive your opening hand once, but it will be triggered for every player at the table */
+        Arda.onReceiveOpeningHandGeneric("arda_hand_container_stage", "stage", jData);
+    },
+
     onReceiveOpeningHandMinor : function(jData)
     {
         /* you can only receive your opening hand once, but it will be triggered for every player at the table */
@@ -584,6 +625,8 @@ let Arda = {
             containerId = "arda_hand_container_mps";
         else if (jData.hand === "charackters")
             containerId = "arda_hand_container_charackters";
+        else if (jData.hand === "stage")
+            containerId = "arda_hand_container_stage";
 
         const container = containerId === "" ? null : document.getElementById(containerId);
         if (container !== null)
@@ -610,6 +653,7 @@ if ("true" === document.body.getAttribute("data-game-arda"))
     document.body.addEventListener("meccg-api-connected", () => Arda.init(), false);
     MeccgApi.addListener("/game/arda/hand/show", () => Arda.onShowHands());
     MeccgApi.addListener("/game/arda/hand/minor", (_bIsMe, jData) => Arda.onReceiveOpeningHandMinor(jData.list));
+    MeccgApi.addListener("/game/arda/hand/stage", (_bIsMe, jData) => Arda.onReceiveOpeningHandStage(jData.list));
     MeccgApi.addListener("/game/arda/hand/characters", (_bIsMe, jData) => Arda.onReceiveOpeningHandCharacters(jData.list));
     MeccgApi.addListener("/game/arda/hand/marshallingpoints", (bIsMe, jData) => Arda.onReceiveOpeningHandMarshalingPoints(bIsMe, jData.list));
     MeccgApi.addListener("/game/arda/hand/card/remove", (_bIsMe, jData) => Arda.onRemoveHandCard(jData.uuid));  

@@ -63,6 +63,7 @@ class GameAPI
             catch (e)
             {
                 Logger.warn("An unexpected exception occurred...");
+                console.error(e);
                 Logger.error(e);
             }
         }

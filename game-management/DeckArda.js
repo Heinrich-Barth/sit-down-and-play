@@ -25,6 +25,10 @@ class DeckArda extends DeckDefault {
         this.discardPileCharacters = [];
         this.playdeckCharacters = [];
 
+        this.handStage = [];
+        this.playdeckStage = [];
+        this.discardPileStage = [];
+
         this.handMinorItems = [];
         this.discardPileMinorItems = [];
         this.playdeckMinorItems = [];
@@ -34,6 +38,7 @@ class DeckArda extends DeckDefault {
         this.typesCharacters = [];
         this.typesMinors = [];
         this.typesMPs = [];
+        this.typeStage = [];
         this.listSpecialCharacters = [];
     }
 
@@ -73,6 +78,11 @@ class DeckArda extends DeckDefault {
             data.typesMinors = this.typesMinors;
             data.typesMPs = this.typesMPs;
             data.listSpecialCharacters = this.listSpecialCharacters;
+
+            data.handStage = this.handStage;
+            data.playdeckStage = this.playdeckStage;
+            data.discardPileStage = this.discardPileStage;
+            data.typeStage = this.typeStage;
         }
 
         return data;
@@ -103,6 +113,11 @@ class DeckArda extends DeckDefault {
             this.restoreList(this.typesMinors, deck.typesMinors);
             this.restoreList(this.typesMPs, deck.typesMPs);
             this.restoreList(this.listSpecialCharacters, deck.listSpecialCharacters);
+
+            this.restoreList(this.handStage, deck.handStage);
+            this.restoreList(this.playdeckStage, deck.playdeckStage);
+            this.restoreList(this.discardPileStage, deck.discardPileStage);
+            this.restoreList(this.typeStage, deck.typeStage);
         }
     }
 
@@ -143,6 +158,39 @@ class DeckArda extends DeckDefault {
         Logger.info("Added " + nSize + " characters with mind of 5-");
 
         this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap);
+
+        this.add(jsonDeck["stage"], this.playdeckStage, _cardMap);
+        this.#identifyStageCards(this.typeStage, _cardMap);
+        this.#shuffleAnyTimes(this.playdeckStage, 3);
+        Logger.info("Added " + this.typeStage.length + " stage resources");
+    }
+
+    #identifyStageCardsFromArrays(targetList, cardMap, ...arr)
+    {
+        for (let list of arr)
+        {
+            for (let uuid of list)
+            {
+                const card = cardMap[uuid];
+                if (card !== undefined && card.stage === true)
+                    targetList.push(uuid);
+            }
+        }
+    }
+
+    #identifyStageCards(targetList, cardMap)
+    {
+        this.#identifyStageCardsFromArrays(targetList, cardMap, this.playdeckMP, 
+            this.handCardsMP, 
+            this.discardPileMP, 
+            this.handStage, 
+            this.playdeckStage, 
+            this.discardPileStage, 
+            this.handMinorItems, 
+            this.discardPileMinorItems, 
+            this.playdeckMinorItems,
+            this.sideboard
+        );            
     }
 
     /**
@@ -175,6 +223,16 @@ class DeckArda extends DeckDefault {
     #isTypeMPs(uuid)
     {
         return this.#isInTypeList(uuid, this.typesMPs);
+    }
+
+    /**
+     * Check if this id is a STAGE card
+     * @param {String} uuid 
+     * @returns boolean
+     */
+    #isTypeStage(uuid)
+    {
+        return this.#isInTypeList(uuid, this.typeStage);
     }
 
     /**
@@ -218,6 +276,15 @@ class DeckArda extends DeckDefault {
     {
         this.shuffleMinorItems();
         this.shuffleMPs();
+        this.shuffleStageCards();
+    }
+
+    /**
+     * Shuffle playdeck minor items
+     */
+    shuffleStageCards()
+    {
+        this.shuffleAny(this.playdeckStage);
     }
 
     /**
@@ -257,6 +324,21 @@ class DeckArda extends DeckDefault {
         }
 
         return this.transferCard(this.playdeckMP, this.handCardsMP);
+    }
+
+    /**
+     * Draw stage card (reshuffles automatically if deck is exhausted)
+     * @returns Card uuid
+     */
+    drawCardStage()
+    {
+        if (this.playdeckStage.length === 0 && this.discardPileStage.length > 0)
+        {
+            this.moveList(this.discardPileStage, this.playdeckStage);
+            this.shuffleAny(this.playdeckStage);
+        }
+
+        return this.transferCard(this.playdeckStage, this.handStage);
     }
 
     /**
@@ -325,6 +407,15 @@ class DeckArda extends DeckDefault {
     shuffleCharacterDeck()
     {
         this.shuffleAny(this.playdeckCharacters);
+    }
+
+    /**
+     * Get stage cards in hand
+     * @returns Array of Strings
+     */
+    getHandStage()
+    {
+        return this.handStage;
     }
 
     /**
@@ -415,6 +506,8 @@ class DeckArda extends DeckDefault {
                 return res.to(uuid, deck.discardPileMinorItems);
             else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.discardPileMP);
+            else if (deck.#isTypeStage(uuid))
+                return res.to(uuid, deck.discardPileStage);
             else 
                 return res.to(uuid, deck.discardPile);
         };
@@ -427,6 +520,8 @@ class DeckArda extends DeckDefault {
                 return res.to(uuid, deck.playdeckMinorItems);
             else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.playdeckMP);
+            else if (deck.#isTypeStage(uuid))
+                return res.to(uuid, deck.playdeckStage);
             else 
                 return res.to(uuid, deck.playdeck);
         };
@@ -444,6 +539,8 @@ class DeckArda extends DeckDefault {
                 return res.to(uuid, deck.handMinorItems);
             else if (deck.#isTypeMPs(uuid))
                 return res.to(uuid, deck.handCardsMP);
+            else if (deck.#isTypeStage(uuid))
+                return res.to(uuid, deck.handStage);
             else 
                 return res.to(uuid, deck.handCards);
         };
@@ -475,6 +572,11 @@ class DeckArda extends DeckDefault {
             return res.from(uuid, deck.handCardsCharacters);
         };
 
+        res.fromHandStage = function(uuid)
+        {
+            return res.from(uuid, deck.handStage);
+        }
+
         res.fromAnywhere = function(uuid)
         {
             return res.fromHand(uuid) || 
@@ -482,12 +584,15 @@ class DeckArda extends DeckDefault {
             res.fromPlaydeck(uuid) || 
             res.fromDiscardpile(uuid) ||
             res.fromVictory(uuid) ||
+            res.fromHandStage(uuid) ||
             res.from(uuid, deck.discardPileMinorItems) ||
             res.from(uuid, deck.playdeckMinorItems) ||
             res.from(uuid, deck.discardPileCharacters) ||
             res.from(uuid, deck.playdeckCharacters) ||
             res.from(uuid, deck.playdeckMP) ||
-            res.from(uuid, deck.discardPileMP);
+            res.from(uuid, deck.discardPileMP) ||
+            res.from(uuid, deck.playdeckStage) ||
+            res.from(uuid, deck.discardPileStage);
         }
 
         return res;
@@ -522,6 +627,10 @@ class DeckArda extends DeckDefault {
             this.playdeckMinorItems = pAdmin.playdeckMinorItems;
             this.playDeckCharacters7 = pAdmin.playDeckCharacters7;
 
+            this.handStage = pAdmin.handStage;
+            this.playdeckStage = pAdmin.playdeckStage;
+            this.discardPileStage = pAdmin.discardPileStage;
+
             this.#copyIds(this.typesCharacters, pAdmin.typesCharacters);
             this.#copyIds(this.typesMinors, pAdmin.typesMinors);
             this.#copyIds(this.typesMPs, pAdmin.typesMPs);
@@ -530,6 +639,8 @@ class DeckArda extends DeckDefault {
             this.typesCharacters = pAdmin.typesCharacters;
             this.typesMinors = pAdmin.typesMinors;
             this.typesMPs = pAdmin.typesMPs;
+            this.typeStage = pAdmin.typeStage;
+
             this.listSpecialCharacters = pAdmin.listSpecialCharacters;
         }
     }

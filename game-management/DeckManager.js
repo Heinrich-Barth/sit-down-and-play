@@ -1,3 +1,5 @@
+const DeckDefault = require("./DeckDefault");
+
 const Logger = require("../Logger");
 const CARD_STATE = { };
 
@@ -68,27 +70,25 @@ class DeckManager {
             return this.#deck[playerid].size();
     }
 
-    resoteCardMapCloneCard(_input)
-    {
-        /** overwrite */
-        return null;
-    }
-
     restoreCardMap(data)
     {
         if (data === null || data === undefined)
             return;
 
         this.#cardMap = { };
-
+        
+        let countError = 0;
         for (let key of Object.keys(data))
         {
-            const _card = this.resoteCardMapCloneCard(data[key]);
-            if (_card === null)
-                throw new Error("Cannot duplicate card");
-            else
+            const _card = DeckDefault.cloneCardEntry(data[key]);
+            if (_card !== null)
                 this.#cardMap[key] = _card;
+            else
+                countError++;
         }
+
+        if (countError > 0)
+            throw new Error("Cannot duplicate " + countError + " card(s).");
     }
 
     restoreSiteMap(data)
@@ -191,6 +191,11 @@ class DeckManager {
             this.#firstPlayerId = playerId;
 
         return deck;
+    }
+
+    getFirstPlayerId()
+    {
+        return this.#firstPlayerId;
     }
 
     deckCount()

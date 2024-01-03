@@ -1,9 +1,9 @@
 .arda-hand-wrapper {
   position: fixed;
-  right: 5px;
-  top: 325px;
-  transform: translateY(-50%);
+  top: 370px;
+  right: 0;
   opacity: 0.3;
+  width: 70px;
 }
 .arda-hand-wrapper:hover {
   opacity: 1;
@@ -12,6 +12,7 @@
 .arda-hand-container {
   text-align: right;
   margin-bottom: 5px;
+  display: inline-block;
 }
 .arda-hand-container i {
   cursor: pointer;
@@ -63,37 +64,40 @@
 .arda-card-hands.arda-card-hand-mps .arda-inline:last-of-type {
   margin-right: 0;
 }
-.arda-card-hands.arda-card-hand-minor, .arda-card-hands.arda-card-hand-charackters {
+.arda-card-hands.arda-card-hand-stage, .arda-card-hands.arda-card-hand-minor, .arda-card-hands.arda-card-hand-charackters {
   opacity: 0.3;
 }
-.arda-card-hands.arda-card-hand-minor .arda-actions,
+.arda-card-hands.arda-card-hand-stage .arda-actions,
+.arda-card-hands.arda-card-hand-stage .arda-hand-card-actions,
+.arda-card-hands.arda-card-hand-stage .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-minor .arda-actions,
 .arda-card-hands.arda-card-hand-minor .arda-hand-card-actions,
 .arda-card-hands.arda-card-hand-minor .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters .arda-actions,
 .arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions,
 .arda-card-hands.arda-card-hand-charackters .arda-card-hands-sizer {
   display: none;
 }
-.arda-card-hands.arda-card-hand-minor .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions > .arda-inline {
+.arda-card-hands.arda-card-hand-stage .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-minor .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-charackters .arda-hand-card-actions > .arda-inline {
   margin-right: 0;
 }
-.arda-card-hands.arda-card-hand-minor .card-hand, .arda-card-hands.arda-card-hand-charackters .card-hand {
+.arda-card-hands.arda-card-hand-stage .card-hand, .arda-card-hands.arda-card-hand-minor .card-hand, .arda-card-hands.arda-card-hand-charackters .card-hand {
   margin-right: -30px;
 }
-.arda-card-hands.arda-card-hand-minor .card-hand:last-of-type, .arda-card-hands.arda-card-hand-charackters .card-hand:last-of-type {
+.arda-card-hands.arda-card-hand-stage .card-hand:last-of-type, .arda-card-hands.arda-card-hand-minor .card-hand:last-of-type, .arda-card-hands.arda-card-hand-charackters .card-hand:last-of-type {
   margin-right: 0;
 }
-.arda-card-hands.arda-card-hand-minor:hover, .arda-card-hands.arda-card-hand-charackters:hover {
+.arda-card-hands.arda-card-hand-stage:hover, .arda-card-hands.arda-card-hand-minor:hover, .arda-card-hands.arda-card-hand-charackters:hover {
   opacity: 1;
 }
-.arda-card-hands.arda-card-hand-minor:hover .arda-actions,
+.arda-card-hands.arda-card-hand-stage:hover .arda-actions,
+.arda-card-hands.arda-card-hand-stage:hover .arda-hand-card-actions, .arda-card-hands.arda-card-hand-minor:hover .arda-actions,
 .arda-card-hands.arda-card-hand-minor:hover .arda-hand-card-actions, .arda-card-hands.arda-card-hand-charackters:hover .arda-actions,
 .arda-card-hands.arda-card-hand-charackters:hover .arda-hand-card-actions {
   display: inline-block;
 }
-.arda-card-hands.arda-card-hand-minor:hover .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters:hover .arda-card-hands-sizer {
+.arda-card-hands.arda-card-hand-stage:hover .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-minor:hover .arda-card-hands-sizer, .arda-card-hands.arda-card-hand-charackters:hover .arda-card-hands-sizer {
   display: block;
 }
-.arda-card-hands.arda-card-hand-minor:hover .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-charackters:hover .arda-hand-card-actions > .arda-inline {
+.arda-card-hands.arda-card-hand-stage:hover .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-minor:hover .arda-hand-card-actions > .arda-inline, .arda-card-hands.arda-card-hand-charackters:hover .arda-hand-card-actions > .arda-inline {
   margin-right: 60px;
 }
 
@@ -101,8 +105,19 @@ div#arda_characters_hand {
   top: 50px;
 }
 
+div#arda_stage_hand {
+  top: 250px;
+}
+
 div#arda_minors_hand {
   top: 150px;
+}
+
+body.arda-draft .arda-card-hand-minor {
+  width: 50%;
+  max-width: 50%;
+  max-height: 400px;
+  opacity: 1;
 }
 
 div#arda_mps_hand {

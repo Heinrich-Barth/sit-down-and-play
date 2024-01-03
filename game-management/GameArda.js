@@ -88,6 +88,11 @@ class GameArda extends GameStandard
             deck.shuffleMPs();
             this.publishChat(userid, "shuffled marshalling points deck");
         }
+        else if (obj.target === "stage")
+        {
+            deck.shuffleStageCards();
+            this.publishChat(userid, "shuffled stage deck");
+        }
     }
 
     getRessourceOnly(list)
@@ -265,7 +270,6 @@ class GameArda extends GameStandard
             return;
 
         let isMinor = false;
-
         if (obj.type === "minor")
         {
             deck.recycleMinorItems();
@@ -275,7 +279,7 @@ class GameArda extends GameStandard
         }
         else if (obj.type === "charackters")
         {
-            this.clearPlayerHand();
+            this.#clearPlayerHand();
 
             deck.recycleCharacter();
             deck.shuffle();
@@ -300,22 +304,51 @@ class GameArda extends GameStandard
             }
         }
 
-        this.drawOpeningHand();
+        if (this.#drawOpeningHand(8))
+            this.#drawOpeningStageCards(5);
+
         this.publishToPlayers("/game/arda/hand/show", userid, {});
         this.onCheckDraft(userid, socket);
     }
 
-    drawOpeningHand()
+    #drawOpeningStageCards(count)
+    {
+        const userid = this.getDeckManager().getFirstPlayerId();
+        const deck = this.getDeckManager().getAdminDeck();
+        if (deck === null)
+            return;
+
+        if (deck.getHandStage().length > 0)
+            return;
+
+        for (let i = 0; i < count; i++)
+        {
+            const uuid = deck.drawCardStage();
+            if (uuid === "")
+                continue;
+                
+            const card = this.getDeckManager().getFullPlayerCard(uuid);
+            if (card !== null)
+            {
+                const data = {uuid:uuid, code:card.code, hand:"stage", clear : i == 0};
+                this.publishToPlayers("/game/arda/draw", userid, data);
+            }
+        }
+    }
+
+    #drawOpeningHand(count)
     {
         if (!this.#reycled.characters || !this.#reycled.minors)
-            return;
+            return false;
 
         const players = this.getDeckManager().getPlayers();
         for (let userid of players)
-            this.drawCardsFromPlaydeck(userid, 8);
+            this.drawCardsFromPlaydeck(userid, count);
+
+        return true;
     }
 
-    clearPlayerHand()
+    #clearPlayerHand()
     {
         let count = 0;
         const pAdminDeck = this.getDeckManager().getAdminDeck();
@@ -351,34 +384,47 @@ class GameArda extends GameStandard
         this.onCheckDraft(userid, socket);
     }
 
+    #getViewDeck(userid, pile, type)
+    {
+        const cards = this.getDeckManager().getCards();
+        if (type === "minor")
+        {
+            if (pile === "playdeck")
+                return cards.playdeckMinor(userid);
+            else if (pile === "discard")
+                return cards.discardPileMinor(userid);
+        }
+        else if (type === "mps")
+        {
+            if (pile === "playdeck")
+                return cards.playdeckMPs(userid);
+            else if (pile === "discard")
+                return cards.discardPileMPs(userid);
+        }
+        else if (type === "charackters")
+        {
+            if (pile === "playdeck")
+                return cards.playdeckCharacters(userid);
+            else if (pile === "discard")
+                return cards.discardPileCharacters(userid);
+        }
+        else if (type === "stage")
+        {
+            if (pile === "playdeck")
+                return cards.playdeckStage(userid);
+            else if (pile === "discard")
+                return cards.discardPileStage(userid);
+        }
+        else
+            return null;
+    }
+
     onViewCards(userid, socket, obj)
     {
         const type = obj.type;
         const pile = obj.pile;
         
-        let _list = null;
-        if (type === "minor")
-        {
-            if (pile === "playdeck")
-                _list = this.getDeckManager().getCards().playdeckMinor(userid);
-            else if (pile === "discard")
-                _list = this.getDeckManager().getCards().discardPileMinor(userid);
-        }
-        else if (type === "mps")
-        {
-            if (pile === "playdeck")
-                _list = this.getDeckManager().getCards().playdeckMPs(userid);
-            else if (pile === "discard")
-                _list = this.getDeckManager().getCards().discardPileMPs(userid);
-        }
-        else if (type === "charackters")
-        {
-            if (pile === "playdeck")
-                _list = this.getDeckManager().getCards().playdeckCharacters(userid);
-            else if (pile === "discard")
-                _list = this.getDeckManager().getCards().discardPileCharacters(userid);
-        }
-                
+        const _list = this.#getViewDeck(userid, pile, type);
         if (_list !== null)
         {
             this.publishChat(userid, " views " + type + " cards in " + pile);
@@ -400,6 +446,8 @@ class GameArda extends GameStandard
             uuid = deck.drawCardMarshallingPoints();
         else if (type === "charackters")
             uuid = deck.drawCardCharacter();
+        else if (type === "stage")
+            uuid = deck.drawCardStage();
         else
             return;
 
@@ -410,10 +458,12 @@ class GameArda extends GameStandard
                 sDeck += "marshalling points deck";
             else if (type === "minor")
                 sDeck += "minor items offering deck";
+            else if (type === "stage")
+                sDeck += "stage resource deck";
             else
                 sDeck += "roving characters deck";
 
-                this.publishToPlayers("/game/notification", userid, { type: "warning", message: sDeck } );
+            this.publishToPlayers("/game/notification", userid, { type: "warning", message: sDeck } );
             return;
         }
         
@@ -460,6 +510,9 @@ class GameArda extends GameStandard
 
             list = this.getCardList(pAdminDeck.getHandMinorItems());
             this.publishToPlayers("/game/arda/hand/minor", userid, {list: list});
+
+            const listStage = this.getCardList(pAdminDeck.getHandStage());
+            this.publishToPlayers("/game/arda/hand/stage", userid, {list: listStage});
         }
     }
 
@@ -477,6 +530,9 @@ class GameArda extends GameStandard
 
         const listChars = this.getCardList(pAdminDeck.getHandCharacters());
         this.publishToPlayers("/game/arda/hand/characters", userid, {list: listChars});
+
+        const listStage = this.getCardList(pAdminDeck.getHandStage());
+        this.publishToPlayers("/game/arda/hand/stage", userid, {list: listStage});
     }
 
     onMoveArdaHandCard(userid, socket, obj)
@@ -488,7 +544,7 @@ class GameArda extends GameStandard
         const deck = this.getDeckManager().getPlayerDeck(userid);
         if (deck === null)
         {
-            Logger.warn("Cannot find deck of player " + userid);
+            Logger.warn("Cannot find arda deck of player " + userid);
             return;
         }
 
@@ -500,6 +556,8 @@ class GameArda extends GameStandard
             bOk = deck.pop().fromHandMps(uuid)
         else if (obj.type === "charackters")
             bOk = deck.pop().fromHandCharacters(uuid)
+        else if (obj.type === "stage")
+            bOk = deck.pop().fromHandStage(uuid)
 
         if (!bOk)
             return;

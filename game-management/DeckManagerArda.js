@@ -27,11 +27,6 @@ class DeckManagerArda extends DeckManager {
         return true;
     }
 
-    shuffleArdaMarshallingPoints()
-    {
-        this.shuffleAny(this.playdeck);
-    }
-
     restore(decks)
     {
         super.restore(decks);
@@ -76,7 +71,10 @@ class DeckManagerArda extends DeckManager {
 
         /** every player draws their own MP hand */
         if (!this.isSinglePlayer())    
+        {
             this.drawMarshallingPoints(playerId, 5)
+            this.drawStage(playerId, 5)
+        }
     }
 
     drawMinorItems(playerId, nCount)
@@ -99,16 +97,21 @@ class DeckManagerArda extends DeckManager {
         }
     }
 
+    drawStage(playerId, nCount)
+    {
+        const deckSource = this.getPlayerDeck(playerId);
+        if (deckSource !== null)
+        {
+            for (let i = 0; i < nCount; i++)
+                deckSource.drawCardStage();
+        }
+    }
+
     updateDeckData(playerId, adminId)
     {
         const _deckPlayer = this.getPlayerDeck(playerId);
         if (_deckPlayer !== null)
             _deckPlayer.updateListReferences(this.getPlayerDeck(adminId));
-    }
-
-    resoteCardMapCloneCard(input)
-    {
-        return DeckArda.cloneCardEntry(input);
     }
 }
 

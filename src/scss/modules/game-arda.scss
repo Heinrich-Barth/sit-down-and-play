@@ -1,17 +1,16 @@
 .arda-hand-wrapper {
     position: fixed;
-    right: 5px;
-    top: 325px;
-    transform: translateY(-50%);
+    top: 370px;
+    right: 0;
     opacity: 0.3;
-
+    width: 70px;
     &:hover { opacity: 1; }
 }
 
 .arda-hand-container {
     text-align: right;
     margin-bottom: 5px;
-
+    display: inline-block;
     i {
         cursor: pointer;
         color: #fff;
@@ -76,6 +75,7 @@
         }
     } 
 
+    &.arda-card-hand-stage,
     &.arda-card-hand-minor,
     &.arda-card-hand-charackters
     {
@@ -113,8 +113,19 @@ div#arda_characters_hand {
     top: 50px;
 }
 
+div#arda_stage_hand {
+    top: 250px;
+}
+
 div#arda_minors_hand {
     top: 150px;
+}
+
+body.arda-draft .arda-card-hand-minor {
+    width: 50%;
+    max-width: 50%;
+    max-height: 400px;
+    opacity: 1;
 }
 
 div#arda_mps_hand {

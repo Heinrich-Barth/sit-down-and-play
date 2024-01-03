@@ -201,7 +201,7 @@ class GameStandard extends GamePlayers
     {
         for (let _elem of this.getPlayboardManager().GetStagingCards(_playerId, bResources))
         {
-            let card = this.getPlayboardManager().GetCardByUuid(_elem);
+            const card = this.getPlayboardManager().GetCardByUuid(_elem);
             if (card !== null)
             {
                 _dataTarget.push({uuid: card.uuid, 
@@ -212,7 +212,8 @@ class GameStandard extends GamePlayers
                     revealed: card.revealed, 
                     owner: card.owner, 
                     token: card.token === undefined ? 0 : card.token,
-                    secondary : card.secondary
+                    secondary : card.secondary,
+                    stage: card.stage === true
                 });
             }
         }
@@ -300,7 +301,8 @@ class GameStandard extends GamePlayers
             revealed: card.revealed !== false, 
             owner: card.owner, 
             turn: card.turn,
-            secondary : card.secondary
+            secondary : card.secondary,
+            stage: card.stage === true
         });
         this.updateHandCountersPlayer(userid);
         this.publishChat(userid, "added " + card.code + " to staging area", true);
@@ -1595,7 +1597,7 @@ class GameStandard extends GamePlayers
         }
         catch (err)
         {
-            console.error(err);
+            console.warn(err);
             Logger.error(err);
 
             if (this.#fnEndGame !== null)
