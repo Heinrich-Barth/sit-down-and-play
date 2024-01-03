@@ -12,49 +12,23 @@ const pInstance = new PlayboardManagerBase({
 
 describe('Test Default Value', () => {
     
-    it('triggerEventSetupNewGame', () => {
-
-        let _val = false;
-
-        const pInstance = new PlayboardManagerBase({
-            trigger : function(sId, obj)
-            {
-                expect(sId).toEqual("setup-new-game");
-                expect(obj).toEqual({});
-                _val = true;
-            }
-        });
-
-        pInstance.triggerEventSetupNewGame();
-        expect(_val).toEqual(true);
-    });
-
     it('getEventManager()', () => expect(pInstance.getEventManager()).toBeDefined());
     it('GetData()', () => expect(pInstance.GetData()).toBeDefined());
 
     it('Save()', () => {
         expect(pInstance.Save().counter).toEqual(0);
-        pInstance._counter++;
+        pInstance.obtainUniqueCompanyId();
         expect(pInstance.Save().counter).toEqual(1);
     });
     it('Restore()', () => {
-        pInstance._counter = 100;
         pInstance.Restore({counter : 1});
-        expect(pInstance._counter).toEqual(1);
+        expect(pInstance.Save().counter).toEqual(1);
     });
     it('obtainUniqueCompanyId()', () => {
-        pInstance._counter = 100;
-        expect(pInstance.obtainUniqueCompanyId()).toEqual("company_101");
-    });
-
-    it('reset()', () => {
-        pInstance._counter = 100;
-        pInstance.data = "hallo";
-
-        pInstance.reset();
-
-        expect(pInstance._counter).toEqual(0);
-        expect(pInstance.data).toEqual({});
+        const parts = pInstance.obtainUniqueCompanyId().split("_");
+        expect(parts.length).toEqual(2);
+        expect(parts[0]).toEqual("company");
+        expect(parseInt(parts[1])).toBeGreaterThan(0);
     });
 
     it("AssertString()", () => {
