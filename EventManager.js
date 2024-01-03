@@ -34,6 +34,7 @@ class EventManager
         }
         catch (e)
         {
+            Logger.warn("Event error");
             Logger.error(e);
         }
     }
