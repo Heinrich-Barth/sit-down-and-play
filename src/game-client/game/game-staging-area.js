@@ -59,13 +59,15 @@ class StagingArea
         return jDiv;
     }
 
-    getTargetContainer(isPlayer, isResource, isFaction)
+    getTargetContainer(isPlayer, isResource, isFaction, isStage)
     {
         const area = isPlayer ? StagingArea.areaPlayer : StagingArea.areaOpponent;
         if (!isResource)
             return area.hazards();
         else if (isFaction)
             return area.factions();
+        else if (isStage)
+            return area.stage();
         else
             return area.resources();
     }
@@ -73,13 +75,15 @@ class StagingArea
     static areaOpponent = {
         resources : function() { return document.getElementById("staging_area_resources_opponent"); },
         factions : function() { return document.getElementById("staging_area_factions_opponent"); },
-        hazards : function() { return document.getElementById("staging_area_hazards_opponent"); }
+        hazards : function() { return document.getElementById("staging_area_hazards_opponent"); },
+        stage : function() { return document.getElementById("staging_area_stage_opponent"); }
     }
         
     static areaPlayer = {
         resources : function() { return document.getElementById("staging_area_resources_player"); },
         factions : function() { return document.getElementById("staging_area_factions_player"); },
-        hazards : function() { return document.getElementById("staging_area_hazards_player"); }
+        hazards : function() { return document.getElementById("staging_area_hazards_player"); },
+        stage : function() { return document.getElementById("staging_area_stage_player"); }
     }
 
     revealCard(id)
@@ -90,7 +94,7 @@ class StagingArea
             img.setAttribute("src", img.getAttribute("data-img-image"));
     }
 
-    insertNewCard(uuid, isPlayer, code, type, state, turn, token, secondary)
+    #insertNewCard(uuid, isPlayer, code, type, state, turn, token, secondary, stage)
     {
         let isResource;
         if (type === "hazard")
@@ -110,7 +114,8 @@ class StagingArea
             return "";
 
         const isFacion = isResource && secondary.toLowerCase() === "faction";
-        const container = this.getTargetContainer(isPlayer, isResource, isFacion);
+        const isStage = !isFacion && stage === true;
+        const container = this.getTargetContainer(isPlayer, isResource, isFacion, isStage);
         if (container === null)
             return "";
 
@@ -134,14 +139,15 @@ class StagingArea
      * @param {Number} turn
      * @param {Number} token
      * @param {String} secondary
+     * @param {Boolean} stage
      * @returns {String} ID of card container
      */
-    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn, token, secondary)
+    onAddCardToStagingArea(bIsMe, uuid, code, type, state, revealed, turn, token, secondary, stage)
     {
         if (uuid === "" || code === "" || type === "")
             return "";
 
-        const id = this.insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn, token, secondary);
+        const id = this.#insertNewCard(uuid, bIsMe, code, type, state, turn === undefined ? 1 : turn, token, secondary, stage);
         if (id === "")
             return "";
     
