@@ -21,6 +21,7 @@ plugins/authentication-login.html
 
 logs/
 public/client
+public/cards
 
 temp.js
 .scannerwork
