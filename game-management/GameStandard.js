@@ -1477,7 +1477,7 @@ class GameStandard extends GamePlayers
         return false;
     }
 
-    globalRestoreGameOwnerShips(playboard, assignments)
+    #globalRestoreGameOwnerShips(playboard, assignments)
     {
         const _map = playboard.decks.cardMap;
         for (let _cardId in _map)
@@ -1490,7 +1490,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    globalRestoreGameSitemap(playboard, assignments)
+    #globalRestoreGameSitemap(playboard, assignments)
     {
         for (let key in playboard.decks.siteMap) 
         {
@@ -1510,7 +1510,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    globalRestoreGameDecks(playboard, assignments)
+    #globalRestoreGameDecks(playboard, assignments)
     {
         for (let key in playboard.decks.deck) 
         {
@@ -1524,7 +1524,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    globalRestoreGameStagingArea(playboard, assignments)
+    #globalRestoreGameStagingArea(playboard, assignments)
     {
         for (let key in playboard.stagingarea) 
         {
@@ -1538,7 +1538,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    globalRestoreGameScoring(scoring, assignments)
+    #globalRestoreGameScoring(scoring, assignments)
     {
         for (let key in scoring) 
         {
@@ -1552,7 +1552,7 @@ class GameStandard extends GamePlayers
         }
     }
 
-    globalRestoreGameCompanies(playboard, assignments)
+    #globalRestoreGameCompanies(playboard, assignments)
     {
         for (let key in playboard.companies) 
         {
@@ -1576,12 +1576,12 @@ class GameStandard extends GamePlayers
         try
         {
             const playboard = data.game.playboard;
-            this.globalRestoreGameOwnerShips(playboard, assignments);
-            this.globalRestoreGameSitemap(playboard, assignments);
-            this.globalRestoreGameDecks(playboard, assignments)
-            this.globalRestoreGameStagingArea(playboard, assignments);            
-            this.globalRestoreGameCompanies(playboard, assignments);
-            this.globalRestoreGameScoring(data.game.scoring, assignments);
+            this.#globalRestoreGameOwnerShips(playboard, assignments);
+            this.#globalRestoreGameSitemap(playboard, assignments);
+            this.#globalRestoreGameDecks(playboard, assignments)
+            this.#globalRestoreGameStagingArea(playboard, assignments);            
+            this.#globalRestoreGameCompanies(playboard, assignments);
+            this.#globalRestoreGameScoring(data.game.scoring, assignments);
 
             if (!this.restore(playboard, data.game.scoring, data.game.meta))
                 throw new Error("Cannot restore game playboard");
@@ -1595,6 +1595,7 @@ class GameStandard extends GamePlayers
         }
         catch (err)
         {
+            console.error(err);
             Logger.error(err);
 
             if (this.#fnEndGame !== null)
