@@ -1,6 +1,5 @@
 const GameStandard = require("../game-management/GameStandard");
 const PlayboardManager = require("../game-management/PlayboardManager");
-const DeckManager = require("../game-management/DeckManager");
 
 describe('globalRestoreGame(userid, socket, data)', () => {
 
@@ -22,8 +21,8 @@ describe('globalRestoreGame(userid, socket, data)', () => {
             /** not needed */
         }
     }
-    const eventManager = { trigger: function() { /** not needed */ } };
-    const pPlayboardManager = new PlayboardManager([], eventManager, {}, false);
+
+    const pPlayboardManager = new PlayboardManager();
     const instance = new GameStandard(_MeccgApi, _Chat, pPlayboardManager);
 
     gameData.data.playboard.decks.cardMap = instance.base64Encode(gameData.data.playboard.decks.cardMap);
@@ -40,7 +39,7 @@ describe('globalRestoreGame(userid, socket, data)', () => {
         game: gameData.data
     };
     
-    it('getDices()', () => {
+    it('globalRestoreGame()', () => {
         
         instance.globalRestoreGame("100", null, data);
         expect(15).toEqual(15);

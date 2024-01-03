@@ -261,23 +261,55 @@ class DeckCommons {
      */
     static cloneCardEntry(input)
     {
-        let data = DeckCommons.#createEmptyCardEntry();
-        for (let key of Object.keys(data))
-        {
-            if (input[key] === undefined)
-                return null;
-        }
+        const data = DeckCommons.#createEmptyCardEntry();
 
         data.code = DeckCommons.assertString(input.code);
         data.type = DeckCommons.assertString(input.type);
         data.uuid = DeckCommons.assertString(input.uuid);
-        data.state = parseInt(input.state);
+        data.state = DeckCommons.#toInt(input.state);
         data.owner = DeckCommons.assertString(input.owner);
         data.revealed = input.revealed === true;
         data.agent = input.agent === true;
-        data.turn = parseInt(input.turn);
+        data.turn = DeckCommons.#toInt(input.turn);
         data.stage = input.stage === true;
+        
+        if (DeckCommons.#hasEmptyString(data.code, data.type, data.uuid, data.owner))
+            return null;
+
         return data;
+    }
+
+    static #hasEmptyString(...arr)
+    {
+        for (let i of arr)
+        {
+            if (i === "")
+                return true;
+        }
+
+        return false;
+    }
+
+    static #toInt(input)
+    {
+        if (input === undefined)
+            input = 0;
+
+        if (typeof input === "number")
+            return input;
+
+        try
+        {
+            const val = parseInt(input);
+            if (!isNaN(val))
+                return val;
+        }
+        catch (errIgnore)
+        {
+            /** ignore */
+        }
+
+        return 0;
     }
 
     /**
