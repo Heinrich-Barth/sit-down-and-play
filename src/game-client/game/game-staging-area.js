@@ -59,7 +59,23 @@ class StagingArea
         return jDiv;
     }
 
-    getTargetContainer(isPlayer, isResource, isFaction, isStage)
+    /**
+     * Get the target container based on given input. If the specific cannot be found,
+     * a fallback is obtained to consider caching or backwards compatibility.
+     * 
+     * @param {boolean} isPlayer 
+     * @param {boolean} isResource 
+     * @param {boolean} isFaction 
+     * @param {boolean} isStage 
+     * @returns HTML element
+     */
+    #getTargetContainer(isPlayer, isResource, isFaction, isStage)
+    {
+        const area = this.#getTargetContainerSpecific(isPlayer, isResource, isFaction, isStage);
+        return area !== null ? area : this.#getTargetContainerSpecific(isPlayer, isResource, false, false);
+    }
+
+    #getTargetContainerSpecific(isPlayer, isResource, isFaction, isStage)
     {
         const area = isPlayer ? StagingArea.areaPlayer : StagingArea.areaOpponent;
         if (!isResource)
@@ -115,7 +131,7 @@ class StagingArea
 
         const isFacion = isResource && secondary.toLowerCase() === "faction";
         const isStage = !isFacion && stage === true;
-        const container = this.getTargetContainer(isPlayer, isResource, isFacion, isStage);
+        const container = this.#getTargetContainer(isPlayer, isResource, isFacion, isStage);
         if (container === null)
             return "";
 
