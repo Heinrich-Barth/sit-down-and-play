@@ -12,15 +12,15 @@ const Personalisation = {
     {
         try
         {
-            let files = fs.readdirSync(rootDir);
-            let res = files.filter(filename => fs.statSync(rootDir+ "/" + filename).isDirectory())
+            const files = fs.readdirSync(rootDir);
+            const res = files.filter(filename => fs.statSync(rootDir+ "/" + filename).isDirectory())
 
             res.sort();
             return res;
         }
         catch (err)
         {
-            console.log(err);
+            console.warn(err.message);
         }
 
         return [];
@@ -30,15 +30,15 @@ const Personalisation = {
     {
         try
         {
-            let files = fs.readdirSync(rootDir);
-            let res = files.filter(filename => fs.statSync(rootDir+ "/" + filename).isFile())
+            const files = fs.readdirSync(rootDir);
+            const res = files.filter(filename => fs.statSync(rootDir+ "/" + filename).isFile())
 
             res.sort();
             return res;
         }
         catch (err)
         {
-            console.log(err);
+            console.warn(err.message);
         }
 
         return [];
