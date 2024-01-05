@@ -248,7 +248,7 @@ CardPreview.onDocumentReady = function()
     const link = document.createElement("link");
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("type", "text/css");
-    link.setAttribute("href","/media/assets/css/card-preview.css");
+    link.setAttribute("href","/media/assets/css/card-preview.css?t=" + Date.now());
     document.head.appendChild(link);
 
     /** insert container */
