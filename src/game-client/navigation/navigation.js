@@ -15,9 +15,47 @@ const Navigation = {
         return document.body.getAttribute("data-is-game") === "true";
     },
 
-    isOpenByDefault : function()
+    getTarget : function(elem)
     {
-        return "open" == document.body.getAttribute("data-navigation-type");
+        if (Navigation.isGame() || elem.blank)
+            return "_blank";
+        else
+            return "";
+    },
+
+    isCurrentNavigation : function(uri)
+    {
+        return window.location.pathname.startsWith(uri);
+    },
+
+    insertHtml : function(json)
+    {
+        const nav = document.createElement("ul");
+        
+        for (let _elem of json)
+        {
+            const _a = document.createElement("a");
+            _a.innerText = _elem.label;
+
+            _a.setAttribute("href", _elem.url);
+            _a.setAttribute("rel", "nofollow");
+
+            const _target = this.getTarget(_elem);
+            if (_target !== "")
+                _a.setAttribute("target", "_target");
+
+            if (this.isCurrentNavigation(_elem.url))
+                _a.setAttribute("class", "navigation-active");
+
+            const li = document.createElement("li");
+            li.append(_a);
+            nav.appendChild(li);
+        }
+        
+        const div = document.createElement("div");
+        div.setAttribute("class", "navigation");
+        div.appendChild(nav);
+        document.body.prepend(div);
     },
 
     init : function(json)
@@ -25,41 +63,8 @@ const Navigation = {
         if (!Array.isArray(json) || json.length === 0)
             return;
 
-        Navigation.insertCss();
-
-        const nav = document.createElement("ul");
-
-        const target = Navigation.isGame() ? "_blank" : "";
-
-        for (let _elem of json)
-        {
-            let _target = target;
-            if (target === "" && _elem.blank)
-                _target = "_blank";
-
-            const li = document.createElement("li");
-            const _a = document.createElement("a");
-            _a.setAttribute("href", _elem.url);
-            _a.setAttribute("rel", "nofollow");
-            _a.innerText = _elem.label;
-
-            if (_target !== "")
-                _a.setAttribute("target", "_target");
-
-            if (window.location.pathname.startsWith(_elem.url))
-                _a.setAttribute("class", "navigation-active");
-
-            li.append(_a);
-
-            nav.appendChild(li);
-        }
-        
-        const div = document.createElement("div");
-        div.setAttribute("class", "navigation");
-        div.setAttribute("id", "main-navigation");
-
-        div.appendChild(nav);
-        document.body.prepend(div);
+        this.insertCss();
+        this.insertHtml(json);        
     }
 };
 
