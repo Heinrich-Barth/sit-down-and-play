@@ -60,9 +60,6 @@ const Navigation = {
 
         div.appendChild(nav);
         document.body.prepend(div);
-
-        if (Navigation.isOpenByDefault())
-            input.click();
     }
 };
 
