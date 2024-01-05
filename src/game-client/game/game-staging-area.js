@@ -28,7 +28,7 @@ class StagingArea
         if (uuid === "")
             return null;
         
-        let jDiv = document.createElement("div");
+        const jDiv = document.createElement("div");
         jDiv.setAttribute("class", "card " + cssState);
         jDiv.setAttribute("id", id);
 
@@ -45,7 +45,7 @@ class StagingArea
         if (token > 0)
             jDiv.setAttribute("data-token", token);
 
-        let jImage = document.createElement("img");
+        const jImage = document.createElement("img");
         jImage.setAttribute("class", "card-icon");
         jImage.setAttribute("src", "/data/backside");
         jImage.setAttribute("crossorigin", "anonymous");
