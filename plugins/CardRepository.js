@@ -632,10 +632,9 @@ class CardRepository {
             if (Array.isArray(list) && list.length > 0)
                 this.#appendLocalCards(cards, list);
         }
-        catch(errIgnore)
+        catch(err)
         {
             /** ignore any error */
-            console.warn(errIgnore)
         }
 
         return cards;
