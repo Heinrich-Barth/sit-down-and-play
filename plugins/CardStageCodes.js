@@ -11,7 +11,7 @@ const loadList = function()
     }
     catch (ex)
     {
-        console.warn(ex);
+        console.warn(ex.message);
     }
 
     return [];
