@@ -6,7 +6,7 @@ const Navigation = {
         const styleSheet = document.createElement("link")
         styleSheet.setAttribute("rel", "stylesheet");
         styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("href", "/media/assets/css/navigation.css");
+        styleSheet.setAttribute("href", "/media/assets/css/navigation.css?t=" + Date.now());
         document.head.appendChild(styleSheet);
     },
 
@@ -27,42 +27,37 @@ const Navigation = {
 
         Navigation.insertCss();
 
-        if (!document.body.classList.contains("navigation-full-width"))
-            document.body.classList.add("navigation-toggled");
+        const nav = document.createElement("ul");
 
-        const label = document.createElement("label");
-        label.setAttribute("for", "navigation_toggle");
-        label.innerHTML = `Navigation <i class="fa fa-bars" aria-hidden="true"></i>`;
+        const target = Navigation.isGame() ? "_blank" : "";
 
-        const input = document.createElement("input");
-        input.setAttribute("type", "checkbox");
-        input.setAttribute("id", "navigation_toggle");
+        for (let _elem of json)
+        {
+            let _target = target;
+            if (target === "" && _elem.blank)
+                _target = "_blank";
 
+            const li = document.createElement("li");
+            const _a = document.createElement("a");
+            _a.setAttribute("href", _elem.url);
+            _a.setAttribute("rel", "nofollow");
+            _a.innerText = _elem.label;
+
+            if (_target !== "")
+                _a.setAttribute("target", "_target");
+
+            if (window.location.pathname.startsWith(_elem.url))
+                _a.setAttribute("class", "navigation-active");
+
+            li.append(_a);
+
+            nav.appendChild(li);
+        }
+        
         const div = document.createElement("div");
         div.setAttribute("class", "navigation");
         div.setAttribute("id", "main-navigation");
 
-        const nav = document.createElement("ul");
-
-        const target = Navigation.isGame() ? 'target="_blank"' : "";
-        const linkIcon = Navigation.isGame() ? '<i class="fa fa-external-link-square" aria-hidden="true"></i>' : "";
-
-        for (let _elem of json)
-        {
-            if (window.location.pathname !== _elem.url)
-            {
-                let _target = target;
-                if (target === "" && _elem.blank)
-                    _target = 'target="_blank"';
-
-                const li = document.createElement("li");
-                li.innerHTML = `<a rel="nofollow" href="${_elem.url}" ${_target}>${linkIcon} ${_elem.label}</a>`
-                nav.appendChild(li);
-            }
-        }
-        
-        div.appendChild(label);
-        div.appendChild(input);
         div.appendChild(nav);
         document.body.prepend(div);
 
@@ -73,5 +68,5 @@ const Navigation = {
 
 (function()
 {
-    fetch("/data/navigation").then((response) => response.json().then(Navigation.init)).catch(console.error);
+    fetch("/data/navigation").then((response) => response.json()).then(Navigation.init.bind(Navigation)).catch(console.error);
 })();
