@@ -108,20 +108,61 @@ class PlayerSelector
      */
     setCurrentPlayer(sPlayerId, bIsMe)
     {
-        let list = document.getElementById("player_selector").getElementsByClassName("act");
-        if (list === null)
-            list = [];
+        this.#removeActivePlayer("act");
+        this.#removeActivePlayer("act-hazard");
 
-        for (let _elem of list)
-            this.removeActivePlayer(_elem);
+        this.#setActivePlayer(sPlayerId, bIsMe);
+        this.#setActiveHazardPlayer(this.#getHazardPlayerId(sPlayerId));
+    }
 
+    #getHazardPlayerId(sPlayerId)
+    {
+        return typeof MeccgPlayers.getHazardPlayer === "undefined" ? null : MeccgPlayers.getHazardPlayer(sPlayerId);
+    }
+
+    #setActiveHazardPlayer(playerInfo)
+    {
+        if (playerInfo === null)
+            return;
+
+        const hazardId = playerInfo.id;
+        const isMe = playerInfo.isMe;
+
+        if (hazardId === "")
+            return;
+
+        const elem = document.getElementById("player_selector_" + this.player2Hex(hazardId));
+        this.#setActivePlayerElement(elem, false);
+
+        if (isMe)
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "You are the hazard player." }));
+    }
+
+    #setActivePlayer(sPlayerId, bIsMe)
+    {
         const jTarget = document.getElementById("player_selector_" + this.player2Hex(sPlayerId));
         if (jTarget !== null)
         {
-            this.setActivePlayer(jTarget);
+            this.#setActivePlayerElement(jTarget, true);
             if (!bIsMe) /* show opponents board */
                 jTarget.dispatchEvent(new Event('click'));                
-        }            
+        }
+    }
+
+    #removeActivePlayer(className)
+    {
+        const list = this.#getActiveElements(className);
+        for (let _elem of list)
+            this.#removeActivePlayerAttribs(_elem, className);
+    }
+
+    #getActiveElements(className)
+    {
+        const elem = document.getElementById("player_selector");
+        if (elem === null)
+            return [];
+        else
+            return elem.getElementsByClassName(className);
     }
 
     addScoring(sName, _playerId, sHexId, isMe)
@@ -172,6 +213,10 @@ class PlayerSelector
             iCurrent.setAttribute("class", "player-active fa fa-pagelines");
             iCurrent.setAttribute("title", "Active Player");
 
+            const iHazard = document.createElement("i");
+            iHazard.setAttribute("class", "player-hazard fa fa-fire");
+            iHazard.setAttribute("title", "Current Hazard Player");
+
             const iHand = document.createElement("i");
             iHand.setAttribute("class", "player-handcard-count");
             iHand.setAttribute("title", "cards in hand");
@@ -182,7 +227,7 @@ class PlayerSelector
             iPlay.setAttribute("title", "cards in playdeck");
             iPlay.innerText = 0;
 
-            docGroup.append(iCurrent, txtName, iView, iHand, iPlay);
+            docGroup.append(iCurrent, iHazard, txtName, iView, iHand, iPlay);
             elemA.appendChild(docGroup);
 
             document.getElementById("player_selector").appendChild(elemA);
@@ -212,17 +257,33 @@ class PlayerSelector
         return false;
     }
 
-    setActivePlayer(_el)
+    #setActivePlayerElement(el, isPlayer)
     {
-        _el.classList.add("act");
-        _el.setAttribute("title", "Active player");
+        if (el === null)
+            return;
+
+        if (isPlayer)
+        {
+            el.classList.add("act");
+            el.setAttribute("title", "Active player");
+        }
+        else
+        {
+            el.classList.add("act-hazard");
+            el.setAttribute("title", "Current hazard player");
+        }
     }
-    
-    removeActivePlayer(_el)
+
+    #removeActivePlayerAttribs(elem, className)
     {
-        _el.classList.remove("act");
-        if (_el.hasAttribute("title"))
-            _el.removeAttribute("title");
+        if (elem === null)
+            return;
+
+        if (className !== "" && elem.classList.contains(className))
+            elem.classList.remove(className);
+
+        if (elem.hasAttribute("title"))
+            elem.removeAttribute("title");
     }
 }
 

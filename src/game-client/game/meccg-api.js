@@ -15,6 +15,33 @@ const MeccgPlayers = {
         return MeccgPlayers.usermap;
     },
 
+
+    findPrevPlayer:function(currentId, listIds)
+    {
+        if (listIds.length < 2)
+            return "";
+
+        let prevId = listIds[listIds.length-1];
+        for (let id of listIds)
+        {
+            if (id === currentId)
+                break;
+
+            prevId = id;
+        }
+
+        return prevId;
+    },
+
+    getHazardPlayer:function(currentPlayer)
+    {
+        const id = this.findPrevPlayer(currentPlayer, this.playerSequenceList);
+        return {
+            id: id, 
+            isMe: this.isChallenger(id)
+        };
+    },
+
     getAvatarMap : function()
     {
         return MeccgPlayers.avatarmap;

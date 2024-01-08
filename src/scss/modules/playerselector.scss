@@ -36,7 +36,8 @@
             }
         }
 
-        .player-active { display: none; }
+        .player-hazard,
+        .player-active { display: none; padding-left: 5px; }
 
         &.act {
             background-color: rgba(255, 255, 255, 0.3);
@@ -44,8 +45,13 @@
 
             .player-active { 
                 display: inline-block; 
-                padding-left: 5px; 
                 animation: player-selector-current 10s infinite forwards;
+            }
+        }
+
+        &.act-hazard {
+            .player-hazard { 
+                display: inline-block; 
             }
         }
     }
