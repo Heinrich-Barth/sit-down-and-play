@@ -286,12 +286,3 @@ class PlayerSelector
             elem.removeAttribute("title");
     }
 }
-
-(function()
-{
-    const styleSheet = document.createElement("link")
-    styleSheet.setAttribute("rel", "stylesheet");
-    styleSheet.setAttribute("type", "text/css");
-    styleSheet.setAttribute("href", "/client/game/playerselector/playerselector.css?t=" + Date.now());
-    document.head.appendChild(styleSheet);
-})();
