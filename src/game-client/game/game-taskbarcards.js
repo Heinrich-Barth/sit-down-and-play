@@ -604,34 +604,36 @@ class TaskBarCards
 
 class TaskBarCardsInterface 
 {
-    constructor(_CardList, _CardPreview)
+    #TaskBarCards;
+
+    constructor(pCardList, pCardPreview)
     {
-        this._TaskBarCards = new TaskBarCards(_CardList, _CardPreview);
+        this.#TaskBarCards = new TaskBarCards(pCardList, pCardPreview);
     }
 
     onShow(_bIsMe, jData) 
     {
-        this._TaskBarCards.onShow(jData);
+        this.#TaskBarCards.onShow(jData);
     }
 
     onShowOnOffer(bIsMe, jData) 
     {
-        this._TaskBarCards.onShowOnOffer(bIsMe, jData);
+        this.#TaskBarCards.onShowOnOffer(bIsMe, jData);
     }
 
     onShowOnOfferReveal(uuid) 
     {
-        this._TaskBarCards.onShowOnOfferReveal(uuid)
+        this.#TaskBarCards.onShowOnOfferReveal(uuid)
     }
 
     onShowOnOfferRemove(uuid) 
     {
-        this._TaskBarCards.onShowOnOfferRemove(uuid)
+        this.#TaskBarCards.onShowOnOfferRemove(uuid)
     }
 
     hideOffer()
     {
-        this._TaskBarCards.hideOffer();
+        this.#TaskBarCards.hideOffer();
     }
 }
 
