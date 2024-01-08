@@ -315,10 +315,7 @@ class GameArda extends GameStandard
     {
         const userid = this.getDeckManager().getFirstPlayerId();
         const deck = this.getDeckManager().getAdminDeck();
-        if (deck === null)
-            return;
-
-        if (deck.getHandStage().length > 0)
+        if (deck === null || deck.getHandStage().length > 0)
             return;
 
         for (let i = 0; i < count; i++)
