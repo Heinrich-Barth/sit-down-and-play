@@ -2043,3 +2043,87 @@ div.card[data-token="10"]:after {
     transform: translate(24px, 0);
   }
 }
+.player_selector {
+  padding: 5px;
+  display: inline-block;
+  height: 20px;
+}
+.player_selector:hover {
+  background: #000;
+}
+.player_selector span.game_time {
+  font-size: 0.8em;
+}
+
+.player-selector-box {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  min-width: 100px;
+  color: #fff;
+  z-index: 400;
+}
+.player-selector-box .player-view {
+  padding-left: 0;
+  display: none;
+}
+.player-selector-box .player-hazard,
+.player-selector-box .player-active {
+  display: none;
+  padding-left: 5px;
+}
+.player-selector-box a {
+  display: inline-block;
+  min-width: 10px;
+  color: #fff;
+}
+.player-selector-box a.cur {
+  color: #F0C648;
+}
+.player-selector-box a.cur.player-view {
+  display: inline-block;
+}
+.player-selector-box a.act {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+.player-selector-box a.act .player-active {
+  display: inline-block;
+  animation: player-selector-current 10s infinite forwards;
+}
+.player-selector-box a.act-hazard .player-hazard {
+  display: inline-block;
+}
+.player-selector-box span {
+  min-width: 5px;
+  min-height: auto;
+  display: inline-block;
+}
+.player-selector-box span:before {
+  padding-right: 5px;
+}
+.player-selector-box .indicator-green {
+  border-left: 5px solid #BADA55;
+}
+.player-selector-box .indicator-red {
+  border-left: 5px solid #d94f4f;
+}
+.player-selector-box .indicator-grey {
+  border-left: 5px solid grey;
+}
+
+.player_group {
+  display: inline-block;
+}
+
+@keyframes player-selector-current {
+  100% {
+    rotate: 0deg;
+  }
+  50% {
+    rotate: 180deg;
+  }
+  0% {
+    rotate: 1deg;
+  }
+}

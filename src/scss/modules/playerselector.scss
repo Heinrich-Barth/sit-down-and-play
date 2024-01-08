@@ -23,6 +23,9 @@
         display: none;
     }
 
+    .player-hazard,
+    .player-active { display: none; padding-left: 5px; }
+
     a {
         display: inline-block;
         min-width: 10px;
@@ -35,9 +38,6 @@
                 display: inline-block;
             }
         }
-
-        .player-hazard,
-        .player-active { display: none; padding-left: 5px; }
 
         &.act {
             background-color: rgba(255, 255, 255, 0.3);

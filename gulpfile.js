@@ -54,8 +54,6 @@ gulp.task('compile-saas-mapview', () => compileFile('/modules/mapview.scss'));
 gulp.task('compile-saas-gamearda', () => compileFile('/modules/game-arda.scss'));
 gulp.task('compile-saas-helprules', () => compileFile('/modules/rules.scss'));
 gulp.task('compile-saas-notification', () => compileFile('/modules/notification.scss', "./public/client/notification"));
-
-gulp.task('compile-saas-playerselector', () => compileFile('/modules/playerselector.scss', "./public/client/game/playerselector"));
 gulp.task("compile-saas-score", () => compileFile('/modules/score.scss', "./public/client/game/score"));
 
 
