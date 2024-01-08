@@ -21,6 +21,22 @@ const getRemovableKeysArray = function()
     return [];
 };
 
+const getStageCodes = function()
+{
+    try
+    {
+        const data = fs.readFileSync("./data-local/stage-codes.json", 'utf8');
+        if (data !== "")
+            return JSON.parse(data.toLowerCase());
+    }
+    catch (errIgnore)
+    {
+        /** ignore */
+    }
+
+    return [];
+};
+
 class CardRepository {
 
     #raw = [];
@@ -29,6 +45,7 @@ class CardRepository {
     #cardsDeckbuilder = [];
     #listAvatars = [];
     #types = {};
+    #stageList = [];
     #cardRepository = {};
 
     getCards()
@@ -39,6 +56,11 @@ class CardRepository {
     getCardsDeckbuilder()
     {
         return this.#cardsDeckbuilder;
+    }
+
+    getStageCards()
+    {
+        return this.#stageList;
     }
 
     createCardsDeckbuilder()
@@ -437,9 +459,16 @@ class CardRepository {
         this.createAgentList();
         this.createCardNameCodeSuggestionsList();
 
+        this.#loadStageCodes();
+
         Logger.info("\t- " + this.#raw.length + " cards available in total.");
         return this.#raw;
     }    
+
+    #loadStageCodes()
+    {
+        this.#stageList = getStageCodes();
+    }
 
     createTypes()
     {
