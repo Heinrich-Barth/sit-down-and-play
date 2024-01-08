@@ -399,7 +399,7 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this._toggleStackStage.bind(this));
         this.addConfigToggle("toggle_align_companies_left", "Align companies to the left", true, this._toggleAlignCompaniesLeft.bind(this));
 
-        this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-sign-out", this._endGame);
+        this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-power-off", this._endGame);
         this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)
 
         this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
