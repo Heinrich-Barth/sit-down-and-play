@@ -7,7 +7,7 @@ setTimeout(() => {
         return;
 
     const elem = document.createElement("i");
-    elem.setAttribute("class", "fa fa-sign-out");
+    elem.setAttribute("class", "fa fa-power-off");
     elem.setAttribute("aria-hidden", "true");
 
     const div = document.createElement("div");
@@ -70,15 +70,9 @@ setTimeout(() => {
         const divContent = document.createElement("div");
         divContent.setAttribute("class", "blue-box tip-content");
         
-        divContent.innerHTML = `<h2><i class="fa fa-info-circle" aria-hidden="true"></i> Before you start</h2>
-                            <h3><i class="fa fa-microphone" aria-hidden="true"></i> Join Audio Chat</h3>
-                            <p>You can join the <a href="https://meet.jit.si/${_room}" rel="noopener" rel="noreferrer" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Jitsi Audio Chat</a>
-                            or the <a href="https://discord.com/invite/EFqBJmT" rel="noopener" rel="noreferrer" target="_blank"><i class="fa fa-external-link-square" aria-hidden="true"></i> Discord</a> server.
-                            <br>&nbsp;</p>
-                            <h3><i class="fa fa-universal-access" aria-hidden="true"></i> How to play</h3>
+        divContent.innerHTML = `<h2><i class="fa fa-info-circle" aria-hidden="true"></i> How to play</h2>
                             <p>Simply <span class="text-white">drag &amp; drop</span> cards as you would intuitively do.</p>
-                            <p>Use the left <span class="text-white">icon bar</span> to manage your game phases.</p>
-                            <p><span class="text-white">Claim marshalling points</span> by dropping the card on the crown icon.</p>
+                            <p>Depending on your card, different targets/options will be made available visually.</p>
                             <p class="text-center"><button id="close_tip" type="button">Close tip</button></p>
                         </div>
                     </div>`;
