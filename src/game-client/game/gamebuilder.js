@@ -97,8 +97,21 @@ const GameBuilder = {
             else
                 return { count: 0 };
         })
-        .then((data) => document.getElementById("game_spectators").innerText = data.count)
+        .then((data) => GameBuilder.setSpectatorCount(data.count))
         .catch(console.error);  
+    },
+
+    setSpectatorCount:function(num)
+    {
+        const elem = document.getElementById("game_spectators");
+        elem.innerText = num;
+        if (parseInt(num) < 1)
+        {
+            if (!elem.classList.contains("hidden"))
+                elem.classList.add("hidden");
+        }
+        else if (elem.classList.contains("hidden"))
+            elem.classList.remove("hidden");
     },
 
     initAdditionals : function()
