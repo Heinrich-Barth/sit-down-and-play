@@ -372,10 +372,18 @@ class GameArda extends GameStandard
         this.publishToPlayers("/game/hand/clear", this.getHost(), {});
     }
 
-    onAssignCharacters(userid, socket)
+    #getGenericCharacterCount(data)
+    {
+        if (typeof data !== "number" || data < 8)
+            return 8
+        else
+            return data;      
+    }
+
+    onAssignCharacters(userid, socket, data)
     {
         this.assignOpeningChars7();
-        this.assignOpeningChars(8);
+        this.assignOpeningChars(this.#getGenericCharacterCount(data?.count));
 
         this.#reycled.ready = true;
         this.onCheckDraft(userid, socket);

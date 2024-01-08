@@ -177,7 +177,7 @@ let Arda = {
         /** not needed here */
     },
     
-    insertOnceAction : function(parent, html, title, dataType, playerId, label)
+    insertOnceAction : function(parent, html, title, dataType, playerId, label, count)
     {
         const div = this.insertMp(parent, html, title, dataType, playerId, label);
         div.querySelector("i").onclick = () =>
@@ -189,7 +189,7 @@ let Arda = {
             if (elem !== null)
                 elem.classList.remove("hidden");
 
-            MeccgApi.send("/game/arda/assign-characters", {});
+            MeccgApi.send("/game/arda/assign-characters", { count: count });
         };
     },
 
@@ -407,7 +407,8 @@ let Arda = {
 
             container.appendChild(elem1);
             container.appendChild(elem2);
-            this.insertOnceAction(container, "fa-users", "Assign random characters to every player.", "randomchars", "arda_ranom", "Assign random characters");
+            this.insertOnceAction(container, "fa-users", "Assign random characters to every player.", "randomchars", "arda_ranom", "Assign random characters", 8);
+            this.insertOnceAction(container, "fa-users", "Assign more random characters to every player.", "randomchars", "arda_ranom", "Assign random characters (12)", 12);
         }
         else if (!bHideDraftCharacters && !bHideDraftMinors)
         {
