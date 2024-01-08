@@ -343,7 +343,7 @@ class TaskBarCards
     onShow(jData) 
     {
         const bICanSee = !GamePreferences.offerBlindly();
-        const elem = this._onShowList(jData, "Looking at your ", bICanSee);
+        const elem = this.#onShowList(jData, "Looking at your ", bICanSee);
         if (elem === null)
             return false;
 
@@ -357,7 +357,7 @@ class TaskBarCards
     onShowOnOffer(bIsMe, jData) 
     {
         let bICanSee = !GamePreferences.offerBlindly();
-        let elem = this._onShowList(jData, bIsMe ? "Offer to show cards from " : "Opponents card from ", bICanSee);
+        let elem = this.#onShowList(jData, bIsMe ? "Offer to show cards from " : "Opponents card from ", bICanSee);
         if (elem === null)
             return false;
 
@@ -452,7 +452,7 @@ class TaskBarCards
     }
 
 
-    _onShowList(jData, sTitle, bICanSeeIt) 
+    #onShowList(jData, sTitle, bICanSeeIt) 
     {
         TaskBarCards.HideList();
 
