@@ -677,7 +677,8 @@ const ContextMenu = {
         this.addItem("add_character", "Add this site as a character", "fa-user", "context-menu-item-arrive", ContextMenu.callbacks.addCharacter, "Adds this site as CHARACTER to your hand.");
         this.addItem("movement_return", "Return to site of origin", "fa-ban", "context-menu-item-arrive", ContextMenu.callbacks.returnToSiteOfOrigin, "Remove target site.");
 
-        this.addItem("view_deck_cards", "Look at my playdeck", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck"), "");
+        this.addItem("view_deck_cards", "Look at my playdeck as it is", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", false), "");
+        this.addItem("view_deck_cards_ordered", "Look at my playdeck and sort cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", true), "");
         
         if (sessionStorage.getItem("deck-notes"))
             this.addItem("view_deck_notes", "View deck notes", "fa-info-circle", "context-menu-item-generic", ContextMenu.callbacks.viewDeckNotes, "");
@@ -688,7 +689,7 @@ const ContextMenu = {
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
-        this.data.types["playdeck_actions"] = ["view_deck_cards", "view_deck_notes", "reval_cards_number", "playdeck_shuffle"];
+        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_notes", "reval_cards_number", "playdeck_shuffle"];
 
         this.data.specialClasses["location"] = "context-menu-site";
         this.data.specialClasses["arrive"] = "context-menu-movement";

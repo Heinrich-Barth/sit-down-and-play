@@ -332,9 +332,9 @@ class TaskBarCards
         }
     }
 
-    static Show(type) 
+    static Show(type, isSorted) 
     {
-        MeccgApi.send("/game/view-cards/list", type);
+        MeccgApi.send("/game/view-cards/list", {type: type, sorted: isSorted=== true });
     }
 
     static onShowVictorySheet(e) 
@@ -515,7 +515,7 @@ class TaskBarCards
         }
 
         const type = jData.type;
-        const  vsList = type !== "sideboard" ? jData.list : this.#sortCardList(jData.list);
+        const  vsList = type === "sideboard" || jData.sorted === true ? this.#sortCardList(jData.list) : jData.list;
 
         const pHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
         const elem = ViewCardListContainer.insertHtml(pHtml, type, sTitle + ViewCardListContainer.requestTitle(type).toUpperCase());
@@ -529,6 +529,14 @@ class TaskBarCards
         }
 
         return elem;
+    }
+
+    #getSortedCardList(type, list)
+    {
+        if (type === "sideboard" || type === "playdeck")
+            return this.#sortCardList(list);
+        else
+            return list;
     }
 
     static OnClickCardIconOffered(e) 

@@ -49,6 +49,7 @@ class GameStandard extends GamePlayers
         
         this.getMeccgApi().addListener("/game/view-cards/reveal-pile", this.viewReveal.bind(this));
         this.getMeccgApi().addListener("/game/view-cards/list", this.viewList.bind(this));
+        
         this.getMeccgApi().addListener("/game/view-cards/list/close", this.viewCloseList.bind(this));
         this.getMeccgApi().addListener("/game/view-cards/shuffle", this.viewShuffle.bind(this));
         this.getMeccgApi().addListener("/game/view-cards/offer-reveal", this.viewOfferReveal.bind(this));
@@ -1348,11 +1349,13 @@ class GameStandard extends GamePlayers
 
     viewList(userid, _socket, obj)
     {
-        const list = this._getList(userid, obj);
-        this.publishToPlayers("/game/view-cards/list", userid, {type: obj, list: list});
+        const type = typeof obj === "string" ? obj : obj.type;
+        const sorted = typeof obj !== "string" && obj.sorted === true;
+        const list = this._getList(userid, type);
+        
+        this.publishToPlayers("/game/view-cards/list", userid, {type: type, list: list, sorted: sorted });
         this.publishChat(userid, " views cards in " + obj, false);
     }
-
     viewCloseList(userid, _socket, obj)
     {
         if (typeof obj.offered === "undefined")
