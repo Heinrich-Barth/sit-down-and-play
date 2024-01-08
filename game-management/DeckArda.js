@@ -160,39 +160,11 @@ class DeckArda extends DeckDefault {
         this.add(jsonDeck["chars_special"], this.listSpecialCharacters, _cardMap);
 
         this.add(jsonDeck["stage"], this.playdeckStage, _cardMap);
-        this.#identifyStageCards(this.typeStage, _cardMap);
+        this.#copyIds(this.playdeckStage, this.playdeckStage);
         this.#shuffleAnyTimes(this.playdeckStage, 3);
         Logger.info("Added " + this.typeStage.length + " stage resources");
     }
-
-    #identifyStageCardsFromArrays(targetList, cardMap, ...arr)
-    {
-        for (let list of arr)
-        {
-            for (let uuid of list)
-            {
-                const card = cardMap[uuid];
-                if (card !== undefined && card.stage === true)
-                    targetList.push(uuid);
-            }
-        }
-    }
-
-    #identifyStageCards(targetList, cardMap)
-    {
-        this.#identifyStageCardsFromArrays(targetList, cardMap, this.playdeckMP, 
-            this.handCardsMP, 
-            this.discardPileMP, 
-            this.handStage, 
-            this.playdeckStage, 
-            this.discardPileStage, 
-            this.handMinorItems, 
-            this.discardPileMinorItems, 
-            this.playdeckMinorItems,
-            this.sideboard
-        );            
-    }
-
+    
     /**
      * Check if given uuid is included in the given array
      * 
@@ -634,13 +606,13 @@ class DeckArda extends DeckDefault {
             this.#copyIds(this.typesCharacters, pAdmin.typesCharacters);
             this.#copyIds(this.typesMinors, pAdmin.typesMinors);
             this.#copyIds(this.typesMPs, pAdmin.typesMPs);
+            this.#copyIds(this.typeStage, pAdmin.typeStage);
             this.#copyIds(this.listSpecialCharacters, pAdmin.listSpecialCharacters);
 
             this.typesCharacters = pAdmin.typesCharacters;
             this.typesMinors = pAdmin.typesMinors;
             this.typesMPs = pAdmin.typesMPs;
             this.typeStage = pAdmin.typeStage;
-
             this.listSpecialCharacters = pAdmin.listSpecialCharacters;
         }
     }
