@@ -182,12 +182,12 @@ class DiceRoller
 
 class TaskBarCards 
 {
-    static _cardPreview = null;
+    static #cardPreview = null;
 
     constructor(_CardList, _CardPreview)
     {
         ViewCardListContainer.CardList = _CardList;
-        TaskBarCards._cardPreview = _CardPreview;
+        TaskBarCards.#cardPreview = _CardPreview;
 
         ViewCardListContainer.init();
         
@@ -337,7 +337,7 @@ class TaskBarCards
         const hov = elem.querySelectorAll(".card-hand");
         const len = hov.length;
         for (let i = 0; i < len; i++)
-            TaskBarCards._cardPreview.initGeneric(hov[i]);
+            TaskBarCards.#cardPreview.initGeneric(hov[i]);
     }
 
     onShow(jData) 
@@ -476,7 +476,7 @@ class TaskBarCards
         {
             const res = elem.querySelectorAll(".card-hand");
             for (let _elem of res)
-                TaskBarCards._cardPreview.initGeneric(_elem);
+                TaskBarCards.#cardPreview.initGeneric(_elem);
         }
 
         return elem;
