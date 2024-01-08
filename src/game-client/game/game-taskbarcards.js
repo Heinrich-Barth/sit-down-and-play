@@ -484,19 +484,19 @@ class TaskBarCards
 
     static OnClickCardIconOffered(e) 
     {
-        TaskBarCards._OnClickCardIcon(true, e.target);
+        TaskBarCards.#OnClickCardIcon(true, e.target);
         e.stopPropagation();
         return false;
     }
 
     static OnClickCardIconNonOffered(e) 
     {
-        TaskBarCards._OnClickCardIcon(false, e.target);
+        TaskBarCards.#OnClickCardIcon(false, e.target);
         e.stopPropagation();
         return false;
     }
 
-    static _OnClickCardIcon(isOffer, jLink) 
+    static #OnClickCardIcon(isOffer, jLink) 
     {
         const target = jLink.getAttribute("data-move-to");
         const bShuffle = jLink.getAttribute("data-shuffle") === "true";
