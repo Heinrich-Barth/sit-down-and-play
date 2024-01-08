@@ -183,11 +183,13 @@ class DiceRoller
 class TaskBarCards 
 {
     static #cardPreview = null;
+    static #sageList = null;
 
     constructor(_CardList, _CardPreview)
     {
         ViewCardListContainer.CardList = _CardList;
         TaskBarCards.#cardPreview = _CardPreview;
+        TaskBarCards.#requireStageCardList();
 
         ViewCardListContainer.init();
         
@@ -274,7 +276,18 @@ class TaskBarCards
 
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
             elem.onclick = TaskBarCards.OnTurnClick;
-    }    
+    }
+
+    static #requireStageCardList()
+    {
+        if (TaskBarCards.#sageList !== null)
+            return;
+
+        fetch("/data/list/stages")
+        .then(result => result.json())
+        .then(list => TaskBarCards.#sageList = Array.isArray(list) ? list : [])
+        .catch(() => TaskBarCards.#sageList = []);        
+    }
 
     static onClickPlaydeck(e)
     {
@@ -367,7 +380,7 @@ class TaskBarCards
                 _elem.onclick = TaskBarCards.OnClickCardIconOffered;
         }
         else
-            this.flipCards(elem);
+            this.#flipCards(elem);
 
         if (bIsMe)
             this.#addOfferedInfo(".view-card-list-container", "offer");
@@ -415,7 +428,7 @@ class TaskBarCards
             TaskBarCards.HideListContainer(jViewContainer, jViewContainer.querySelector(".view-card-list-container"));
     }
 
-    flipCards(jContainer) 
+    #flipCards(jContainer) 
     {
         const res = jContainer.querySelectorAll("img.card-icon");
         const len = res === null ? 0 : res.length;
@@ -451,6 +464,42 @@ class TaskBarCards
             MeccgApi.send("/game/view-cards/list/close", { offered: false });
     }
 
+    #sortCardList(list)
+    {
+        const arrChars = [];
+        const arrStage = [];
+        const arrHaz = [];
+        const arrRes = [];
+
+        for (let card of list)
+        {
+            if (this.#isStageCode(card.code))
+                arrStage.push(card);
+            else if (card.type === "hazard")
+                arrHaz.push(card);
+            else if (card.type === "resource")
+                arrRes.push(card);
+            else
+                arrChars.push(card);
+        }
+
+        arrChars.sort(this.#sortCards.bind(this));
+        arrStage.sort(this.#sortCards.bind(this));
+        arrHaz.sort(this.#sortCards.bind(this));
+        arrRes.sort(this.#sortCards.bind(this));
+
+        return arrChars.concat(arrStage, arrRes, arrHaz);
+    }
+
+    #sortCards(a,b)
+    {
+        return a.code.localeCompare(b.code)
+    }
+
+    #isStageCode(code)
+    {
+        return TaskBarCards.#sageList !== null && TaskBarCards.#sageList.includes(code.toLowerCase());
+    }
 
     #onShowList(jData, sTitle, bICanSeeIt) 
     {
@@ -459,14 +508,14 @@ class TaskBarCards
         if (typeof bICanSeeIt === "undefined")
             bICanSeeIt = false;
 
-        const type = jData.type;
-        const vsList = jData.list;
-
-        if (vsList === null || typeof vsList === "undefined" || vsList.length === 0) 
+        if (jData.list === null || typeof jData.list === "undefined" || !Array.isArray(jData.list) || jData.list.length === 0) 
         {
-            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "no cards to display in " + type }));
+            document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "no cards to display in " + jData.type }));
             return null;
         }
+
+        const type = jData.type;
+        const  vsList = type !== "sideboard" ? jData.list : this.#sortCardList(jData.list);
 
         const pHtml = ViewCardListContainer.createListHtml(vsList, bICanSeeIt);
         const elem = ViewCardListContainer.insertHtml(pHtml, type, sTitle + ViewCardListContainer.requestTitle(type).toUpperCase());
