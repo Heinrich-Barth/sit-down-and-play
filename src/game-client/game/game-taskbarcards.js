@@ -370,14 +370,14 @@ class TaskBarCards
             this.flipCards(elem);
 
         if (bIsMe)
-            this._addOfferedInfo(".view-card-list-container", "offer");
+            this.#addOfferedInfo(".view-card-list-container", "offer");
         else
-            this._addOfferedInfo(".view-card-list-container", "offered");
+            this.#addOfferedInfo(".view-card-list-container", "offered");
 
         return true;
     }
 
-    _addOfferedInfo(sIdentifier, sAddCss)
+    #addOfferedInfo(sIdentifier, sAddCss)
     {
         const jContainer = ViewCardListContainer.GetViewContainer();
         for (let elem of jContainer.querySelectorAll(sIdentifier))
