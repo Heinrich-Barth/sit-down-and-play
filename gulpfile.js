@@ -74,7 +74,6 @@ const sccsModules = [
     "compile-saas-mapview",
     "compile-saas-gamearda",
     "compile-saas-helprules",
-    "compile-saas-playerselector"
 ]
 
 // 
