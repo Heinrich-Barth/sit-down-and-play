@@ -227,12 +227,12 @@ exports.validateArda = function(jDeck, pCardRepository)
         /** make sure there are no avatars in the playdeck anymore */
         removeAvatars(jDeck.playdeck, pCardRepository);
 
+        jDeck.stage = extractStageResources(jDeck.playdeck, pCardRepository);
         jDeck.minors = extractMinorItems(jDeck.playdeck, pCardRepository);
         jDeck.mps = extractMarshallingPoints(jDeck.playdeck, pCardRepository);
         jDeck.chars_special = extractCharactersSpecial(jDeck.playdeck, pCardRepository);
         jDeck.chars_mind7 = extractCharactersMindMin7(jDeck.playdeck, pCardRepository);
         jDeck.chars_others = extractCharacters(jDeck.playdeck, pCardRepository);
-        jDeck.stage = extractStageResources(jDeck.playdeck, pCardRepository);
 
         Logger.info("Arda deck summary:");
         Logger.info("- Minor Items: " + Object.keys(jDeck.minors).length);
