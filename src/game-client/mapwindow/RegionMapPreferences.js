@@ -54,6 +54,9 @@ class RegionMapPreferences extends Preferences {
 
         this.createSection("Show Other Non-Released Sites");
         this.createEntry0("show_set_Others");
+
+        this.createSection("Map Settinge");
+        this.createEntry0("show_site_marker");
     }
 
     toggleHero(isActive)
@@ -157,6 +160,11 @@ class RegionMapPreferences extends Preferences {
         return this.data[key] !== false;
     }
 
+    getSettingsName()
+    {
+        return "Map settings";
+    }
+
     addConfiguration()
     {
         this.addConfigToggle("show_hero", "Hero", this.isTrue("hero"), this.toggleHero.bind(this));
@@ -184,7 +192,24 @@ class RegionMapPreferences extends Preferences {
         this.addConfigToggle("show_set_MENE", "The Necromancer", this.isTrue("MENE"), this.toggleSet_MENE.bind(this));
         this.addConfigToggle("show_set_MEML", "Morgoth's Legacy", this.isTrue("MEML"), this.toggleSet_MEML.bind(this));
         this.addConfigToggle("show_set_MENW", "The Northern Waste", this.isTrue("MENW"), this.toggleSet_MENW.bind(this));
-        this.addConfigToggle("show_set_Others", "Other sets", this.isTrue("Others"), this.toggleSet_Others.bind(this));                
+        this.addConfigToggle("show_set_Others", "Other sets", this.isTrue("Others"), this.toggleSet_Others.bind(this));
+        this.addConfigToggle("show_site_marker", "Show site marker in selected region", this.#showSiteMarker(), this.#toggleSiteMarker.bind(this));
+    }
+
+    #showSiteMarker()
+    {
+        return sessionStorage.getItem("hide_sitemarker") === null;
+    }
+
+    #toggleSiteMarker(isActive)
+    {
+        if (isActive)
+        {
+            if (sessionStorage.getItem("hide_sitemarker") !== null)
+                sessionStorage.removeItem("hide_sitemarker");
+        }
+        else
+            sessionStorage.setItem("hide_sitemarker", "true");
     }
 
     showDreamcards()

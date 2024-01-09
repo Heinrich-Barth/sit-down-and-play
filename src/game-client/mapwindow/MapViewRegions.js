@@ -242,35 +242,35 @@ class MapViewRegions extends MapView {
         }
     }
 
-    showSitesInRegion (regionCode)
+    static #showSiteMarker()
+    {
+        return sessionStorage.getItem("hide_sitemarker") === null;
+    }
+
+    showSitesInRegion(regionCode)
     {
         this.activeRegion = regionCode;
-        
-        if (typeof this.jMarkerSites[regionCode] === "undefined")
-            return;
 
-        let vsList = [];
-        let _jSite, _show;
-        let jSites = this.jMarkerSites[regionCode];
+        const bShowSiteMarker = MapViewRegions.#showSiteMarker();
+        this.vsVisibleSites = this.#showSiteMarkersInRegion(this.jMarkerSites[regionCode], bShowSiteMarker)
+        this.vsVisibleUnderdeeps = this.#showSiteMarkersInRegion(this.jMarkerUnderdeeps[regionCode], bShowSiteMarker);
+    }
+
+    #showSiteMarkersInRegion(jSites, bShowSiteMarker)
+    {
+        if (jSites === undefined)
+            return [];
+
+        const vsList = [];
         for (let key in jSites)
         {
-            _show = false;
-            _jSite = this.jMap[regionCode].sites[key];
-            jSites[key].addTo(this.getMapInstance());
+            if (bShowSiteMarker)
+                jSites[key].addTo(this.getMapInstance());
+
             vsList.push(key);
         }
 
-        this.vsVisibleSites = vsList;
-        
-        vsList = [];
-        jSites = this.jMarkerUnderdeeps[regionCode];
-        for (let key in jSites)
-        {
-            jSites[key].addTo(this.getMapInstance());
-            vsList.push(key);
-        }
-
-        this.vsVisibleUnderdeeps = vsList;
+        return vsList;
     }
 
     onRegionClick(regionCode)
@@ -316,12 +316,14 @@ class MapViewRegions extends MapView {
         elem.bindPopup(markerText);
         elem.on('mouseover', function () 
         {
-            this.openPopup();
+            if (MapViewRegions.#showSiteMarker())
+                this.openPopup();
         });
         
         elem.on('mouseout', function () 
         {
-            this.closePopup();
+            if (MapViewRegions.#showSiteMarker())
+                this.closePopup();
         });
         
         if (sSiteTitle !== "")
@@ -333,6 +335,11 @@ class MapViewRegions extends MapView {
     onSiteMarkerClick(e)
     {
         this.flyTo(e);
+        
+        /** show site popup only if no site marker are to be shown - otherwise, it gets in the way of some markers */
+        if (!MapViewRegions.#showSiteMarker())
+            e.openPopup();
+
         this.dispatchClickEvent(e.target.region, e.target.site, false);
     }
 

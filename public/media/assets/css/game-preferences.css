@@ -15,12 +15,18 @@
 }
 
 .config-wrapper-map {
-    top: 70px;
+    top: 20px;
     left: 10px;
     width: auto;
     height: auto;
     z-index: 501;
     background: rgb(39,56,76);
+}
+
+.config-wrapper.config-wrapper-map .icons { width: auto;}
+
+.map_view_layer .leaflet-control-container .leaflet-top {
+    top: 50px;
 }
 
 .dices-panel {

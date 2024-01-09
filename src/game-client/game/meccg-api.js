@@ -444,6 +444,9 @@ const MeccgApi =
             
             if (sessionStorage.getItem("meccg_turn_stats"))
                 sessionStorage.removeItem("meccg_turn_stats");
+
+            if (sessionStorage.getItem("hide_sitemarker"))
+                sessionStorage.removeItem("hide_sitemarker");
             
             if (g_sRoom)
                 sessionStorage.removeItem("meccg_" + g_sRoom);

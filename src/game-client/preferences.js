@@ -243,6 +243,11 @@ class Preferences extends PreferencesStorable {
     {
         return "";
     }
+
+    getSettingsName()
+    {
+        return "";
+    }
     
     init()
     {
@@ -259,7 +264,7 @@ class Preferences extends PreferencesStorable {
         const div = document.createElement("div");
         div.setAttribute("class", "config-wrapper blue-box " + this.getGameCss());
         div.innerHTML = `<div class="icons cursor-pointer" id="prefs">
-                            <i class="fa fa-sliders" aria-hidden="true" title="Game Settings"></i>
+                            <i class="fa fa-sliders" aria-hidden="true" title="Game Settings">${this.getSettingsName()}</i>
                         </div>
                         <div id="preferences-wrapper" class="hide">
                             <div class="config-panel-overlay" id="config-panel-overlay"></div>
