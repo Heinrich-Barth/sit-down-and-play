@@ -961,7 +961,7 @@ const ChangeAvatarApp = {
         } }));
     },
 
-    populateCards : function(codes)
+    createTitle : function()
     {
         const div = document.createDocumentFragment();
 
@@ -972,6 +972,17 @@ const ChangeAvatarApp = {
         p.innerText = "Click on your avatar/character or press ESC to close";
 
         div.append(h2, p);
+        return div;
+    },
+
+    populateCards : function(codes)
+    {
+        const div = document.createDocumentFragment();
+        if (codes.length === 0)
+            return div;
+
+        codes.sort((a,b) => a.localeCompare(b));
+
         for (let code of codes)
         {
             const elem = this.createImageElement(code);
@@ -993,12 +1004,50 @@ const ChangeAvatarApp = {
             return;
         }
         
+        if (this.avatarCodes !== null)
+        {
+            this.onAvatarsAvailable(codes);
+            return;
+        }
+        
+        fetch("/data/list/avatars")
+        .then(result => result.json())
+        .then(json => ChangeAvatarApp.avatarCodes = json)
+        .catch(console.error)
+        .finally(() => this.onAvatarsAvailable(codes));
+    },
+
+    onAvatarsAvailable : function(codes)
+    {
         const dialogElem = this.requireDialogElement();
         this.clearChildren(dialogElem);
 
-        dialogElem.append(this.populateCards(codes));
-        document.body.append(dialogElem);
+        dialogElem.append(
+            this.createTitle(),
+            this.populateCards(this.filterCharacters(codes, true)),
+            this.populateCards(this.filterCharacters(codes, false))
+        );
 
+        document.body.append(dialogElem);
         dialogElem.showModal();   
-    }
+    },
+
+    isAvatar : function(code)
+    {
+        return this.avatarCodes?.includes(code) === true;
+    },
+
+    filterCharacters:function(codes, bAvatarsOnly)
+    {
+        const list = [];
+        for (let code of codes)
+        {
+            if (this.isAvatar(code) === bAvatarsOnly)
+                list.push(code);
+        }
+
+        return list;
+    },
+
+    avatarCodes : null
 };

@@ -63,6 +63,11 @@ class CardRepository {
         return this.#stageList;
     }
 
+    getAvatarCodes()
+    {
+        return this.#listAvatars;
+    }
+
     createCardsDeckbuilder()
     {
         const assertString = function(val)

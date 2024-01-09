@@ -73,6 +73,7 @@ SERVER.instance.get("/data/marshallingpoints", SERVER.caching.expires.jsonCallba
  */
 SERVER.instance.get("/data/list/cards", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(CardDataProvider.getCardsDeckbuilder()).status(200));
 SERVER.instance.get("/data/list/stages", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(CardDataProvider.getStageCards()).status(200));
+SERVER.instance.get("/data/list/avatars", SERVER.caching.cache.jsonCallback6hrs, (_req, res) => res.send(CardDataProvider.getAvatarCodes()).status(200));
 SERVER.instance.get("/data/list/filters", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(CardDataProvider.getFilters()).status(200));
 
 SERVER.instance.use("/data/backside", g_pExpress.static(__dirname + "/public/media/assets/images/cards/backside.jpg", SERVER.caching.headerData.jpeg));
