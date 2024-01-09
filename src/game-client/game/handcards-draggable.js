@@ -1,8 +1,13 @@
 
 class CreateHandCardsDraggableUtils {
 
-    static CardPreview = null;
-    static _locationMessageId = 0
+    static #CardPreview = null;
+    static #locationMessageId = 0
+
+    static setCardPreview(pCardPreview)
+    {
+        CreateHandCardsDraggableUtils.#CardPreview = pCardPreview;
+    }
 
     static clearTargets(sDraggableCardType)
     {
@@ -11,7 +16,7 @@ class CreateHandCardsDraggableUtils {
         if (sDraggableCardType !== null)
             document.body.classList.remove("on-drag-event-" + sDraggableCardType);
 
-        CreateHandCardsDraggableUtils.CardPreview.hideAll();
+        CreateHandCardsDraggableUtils.#CardPreview.hideAll();
     }
 
     static initTargets(sDraggableCardType)
@@ -20,7 +25,7 @@ class CreateHandCardsDraggableUtils {
             document.body.classList.add("on-drag-event-" + sDraggableCardType);
 
         document.body.classList.add("on-drag-event-generic");
-        CreateHandCardsDraggableUtils.CardPreview.hideAll();
+        CreateHandCardsDraggableUtils.#CardPreview.hideAll();
     }
     
     static removeDraggableInContainer(jElem)
@@ -32,13 +37,13 @@ class CreateHandCardsDraggableUtils {
         
         jElem.find(".ui-droppable").each(function()
         {
-            CreateHandCardsDraggableUtils.removeElementDroppable(jQuery(this));
+            CreateHandCardsDraggableUtils.#removeElementDroppable(jQuery(this));
         });
         
         DomUtils.removeNode(jElem.get(0));
     }
     
-    static removeElementDroppable(jElem)
+    static #removeElementDroppable(jElem)
     {
         try
         {
@@ -56,7 +61,7 @@ class CreateHandCardsDraggableUtils {
 
     static removeElementDraggable(jElem)
     {
-        CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
+        CreateHandCardsDraggableUtils.#removeElementDroppable(jElem);
     }
 
     /**
@@ -69,7 +74,7 @@ class CreateHandCardsDraggableUtils {
         if (jElem !== null && jElem !== undefined)
         {
             CreateHandCardsDraggableUtils.removeElementDraggable(jElem);
-            CreateHandCardsDraggableUtils.removeElementDroppable(jElem);
+            CreateHandCardsDraggableUtils.#removeElementDroppable(jElem);
             DomUtils.removeNode(jElem.get(0));
         }
     }
@@ -82,7 +87,7 @@ class CreateHandCardsDraggableUtils {
 
     static requireMessageId()
     {
-        return (++CreateHandCardsDraggableUtils._locationMessageId);
+        return (++CreateHandCardsDraggableUtils.#locationMessageId);
     }
 }
 
@@ -153,7 +158,12 @@ const DropFunctions = {
             CreateHandCardsDraggableUtils.removeDraggableInContainer(ui.draggable.closest(".company-character"));
     },
 
-    getApi()
+    setApi:function(pMeccgApi)
+    {
+        this.MeccgApi = pMeccgApi;
+    },
+
+    getApi : function()
     {
         return DropFunctions.MeccgApi;
     },
@@ -353,6 +363,11 @@ const HandCardsDraggable = {
 
     _warnReDeckAt : 5,
     _warnHasShown : false,
+
+    setApi : function(pApi)
+    {
+        this.MeccgApi = pApi;
+    },
 
     getApi : function()
     {
@@ -999,11 +1014,11 @@ const HandCardsDraggable = {
     }
 };
 
-function createHandCardsDraggable(_CardPreview, _MeccgApi)
+function createHandCardsDraggable(pCardPreview, pMeccgApi)
 {
-    CreateHandCardsDraggableUtils.CardPreview = _CardPreview;
-    DropFunctions.MeccgApi = _MeccgApi;
-    HandCardsDraggable.MeccgApi = _MeccgApi;
+    CreateHandCardsDraggableUtils.setCardPreview(pCardPreview);
+    DropFunctions.setApi(pMeccgApi);
+    HandCardsDraggable.setApi(pMeccgApi);
     ResolveHandSizeContainer.createHandContainer();
 
     document.body.setAttribute("data-class", document.body.getAttribute("class"));
