@@ -251,9 +251,14 @@ const ContextMenu = {
 
             let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
             if (uuid === "")
+            {
                 uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+                if (uuid === "")
+                    return false;
+            }
 
-            CreateHandCardsDraggableUtils.removeDraggableDomElement(e.target);
+            const div = "img" === e.target.nodeName.toLowerCase() ? e.target.parentElement : e.target;
+            CreateHandCardsDraggableUtils.removeDraggableDomElement(div);
             MeccgApi.send("/game/card/move", {uuid: uuid, target: "hand", source: "inplay", drawTop : true});
         },
 
