@@ -52,6 +52,9 @@ const MapWindow = {
             pMap.classList.add("hide");
 
         const pFrame = document.getElementById("map-iframe");
+        if (pFrame === null)
+            return;
+        
         const sCompany = pFrame.getAttribute("data-company") || "";
         const isRevealed = "true" === pFrame.getAttribute("data-revealved")
         DomUtils.removeAllChildNodes(pMap);
