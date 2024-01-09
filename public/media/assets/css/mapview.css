@@ -112,6 +112,9 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+.mapview .leaflet-popup-content {
+  text-transform: uppercase;
+}
 
 textarea, input, select {
   color: #39454b;
@@ -136,13 +139,6 @@ input {
 }
 input.next {
   border: 1px solid #F0C648;
-}
-
-table.site_leaflet td {
-  padding: 5px;
-}
-table.site_leaflet td:nth-child(even) {
-  background-color: lightgrey;
 }
 
 .field {
