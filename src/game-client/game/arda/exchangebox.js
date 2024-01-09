@@ -1,10 +1,5 @@
 class ArdaExchangeBox extends TradeCards {
 
-    constructor()
-    {
-        super();
-    }
-
     labelErrorTooFewPlayers()
     {
         return "Another player is needed to trade cards";
@@ -78,9 +73,9 @@ class ArdaExchangeBox extends TradeCards {
         a.setAttribute("aria-hidden", "true");
         a.onclick = this.onChoosePlayer.bind(this);
         
-        div.setAttribute("class", "arda-hand-container ");
+        div.setAttribute("class", "arda-hand-container arda-hand-container-trade");
         div.appendChild(a);
-        container.appendChild(div);
+        container.prepend(div);
         return true;
     }
 

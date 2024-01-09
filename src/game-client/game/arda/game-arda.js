@@ -93,7 +93,6 @@ let Arda = {
         const bAllowRecyling = this.isAdraAdmin();
 
         this.addCss();
-        this.insertArdaContainer();
 
         if (!this.isSinglePlayer() && bAllowRecyling)
             this.insertArdaSetupContainer();
@@ -106,13 +105,14 @@ let Arda = {
         const idMinor = this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling, "");
         this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling, idMinor);
 
+        this.insertArdaContainer();
         this.getOpeningHands();
         this.updateSinglePlayer();
 
         if (!this.isSinglePlayer())
         {
             this._exchangeBox = new ArdaExchangeBox();
-            this._exchangeBox.create("arda-hand-wrapper");
+            this._exchangeBox.create("arda_mps_hand");
         }
         
         this._ready = true;
@@ -156,15 +156,19 @@ let Arda = {
 
     insertArdaContainer : function()
     {
-        const div = document.createElement("div");
-        div.setAttribute("class", "arda-hand-wrapper");
-        div.setAttribute("id", "arda-hand-wrapper");
+        const divChars = document.createElement("div");
+        divChars.setAttribute("class", "arda-hand-wrapper arda-hand-wrapper-characters");
+        this.insertMp(divChars, "fa-users", "Roving Characters", "charackters", "arda_characters", "");
 
-        this.insertMp(div, "fa-users", "Roving Characters", "charackters", "arda_characters", "");
-        this.insertMp(div, "fa-shield", "Minor Item Offerings", "minor", "arda_minors", "");
-        this.insertMp(div, "fa-adjust", "Stage Cards", "stage", "arda_stage", "");
+        const divMinors = document.createElement("div");
+        divMinors.setAttribute("class", "arda-hand-wrapper arda-hand-wrapper-minor");
+        this.insertMp(divMinors, "fa-shield", "Minor Item Offerings", "minor", "arda_minors", "");
 
-        document.body.appendChild(div);
+        const divStage = document.createElement("div");
+        divStage.setAttribute("class", "arda-hand-wrapper arda-hand-wrapper-stage");
+        this.insertMp(divStage, "fa-adjust", "Stage Cards", "stage", "arda_stage", "");
+
+        document.body.append(divChars, divMinors, divStage);
     },
 
     isAdraAdmin : function()
@@ -195,23 +199,24 @@ let Arda = {
 
     insertMp : function(parent, html, title, dataType, playerId, label)
     {
-        const div = document.createElement("div");
         const a = document.createElement("i");
 
         a.setAttribute("data-type", dataType);
         a.setAttribute("data-player", playerId);
         a.setAttribute("id", "arda-action-container-" + dataType);
-        a.setAttribute("title", title + ". Right click to refresh.");
-        a.setAttribute("class", "blue-box fa context-cursor " + html);
+        a.setAttribute("title", title + ". Left click to toggle visibility. Right click to refresh.");
+        a.setAttribute("class", "blue-box fa context-cursor act " + html);
         a.setAttribute("aria-hidden", "true");
         a.onclick = Arda.toogleView;
         
         if (label !== "")
             a.innerText = label;
 
-        div.setAttribute("class", "arda-hand-container ");
+        const div = document.createElement("div");
+        div.setAttribute("class", "arda-hand-container");
         div.oncontextmenu = Arda.onRefreshHands;
         div.appendChild(a);
+
         parent.appendChild(div);
         return div;
     },
@@ -247,6 +252,12 @@ let Arda = {
     toogleView : function(e)
     {
         Arda.toggleViewOnElement(e.target.getAttribute("data-player"));
+
+        if (e.target.classList.contains("act"))
+            e.target.classList.remove("act");
+        else
+            e.target.classList.add("act");
+
         e.preventDefault();
         return false;
     },
@@ -272,7 +283,7 @@ let Arda = {
         
         if (!this.isSinglePlayer())
         {
-            _sizerId = ResolveHandSizeContainer.create(div, title + " - Always resolve to", nHandSize, "cards.");
+            _sizerId = ResolveHandSizeContainer.create(div, title + " - max. ", nHandSize, "cards.");
             div.getElementsByClassName("card-hands-sizer")[0].classList.add("arda-card-hands-sizer");
         }
         else 

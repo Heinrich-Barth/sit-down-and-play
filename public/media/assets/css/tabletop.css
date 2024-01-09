@@ -221,6 +221,9 @@ a:hover {
 }
 .trade-panel .config-panel {
   padding-top: 20px;
+  top: 10%;
+  max-height: 85%;
+  overflow: auto;
 }
 .trade-panel .config-panel button {
   color: #fff;
@@ -254,6 +257,10 @@ a:hover {
 .trade-panel .config-panel .offered-list div {
   display: inline-block;
   margin: 0 3px;
+}
+.trade-panel .config-panel .offering-list {
+  max-height: 400px;
+  overflow: auto;
 }
 .trade-panel .config-panel .offering-list div {
   display: inline-block;

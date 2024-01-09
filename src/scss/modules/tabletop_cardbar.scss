@@ -153,6 +153,10 @@
     .config-panel {
         padding-top: 20px;
 
+        top: 10%;
+        max-height: 85%;
+        overflow: auto;
+
         button {
             color: #fff;
             margin: 2px;
@@ -195,28 +199,34 @@
             }
         }
 
-        .offering-list div {
-            display: inline-block;
-            margin: 0 3px;
-            position: relative;
-            border: 1px solid transparent;
+        .offering-list {
+            max-height: 400px;
+            overflow: auto;
 
-            &.fa {
-                border: 1px solid #98c593;
+            div {
+
+                display: inline-block;
+                margin: 0 3px;
+                position: relative;
+                border: 1px solid transparent;
+
+                &.fa {
+                    border: 1px solid #98c593;
+                }
+
+                &::before {
+                    position: absolute;
+                    right: 5px;
+                    top: 5px;
+                    background: #98c593;
+                    border-radius: 3px;
+                }
+
+                img {
+                    cursor: pointer;
+                }
+
             }
-
-            &::before {
-                position: absolute;
-                right: 5px;
-                top: 5px;
-                background: #98c593;
-                border-radius: 3px;
-            }
-
-            img {
-                cursor: pointer;
-            }
-
         }
     }
 }

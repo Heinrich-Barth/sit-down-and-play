@@ -1,18 +1,34 @@
 .arda-hand-wrapper {
   position: fixed;
-  top: 370px;
-  right: 0;
-  opacity: 0.3;
-  width: 70px;
+  right: 5px;
+  opacity: 1;
+  z-index: 400;
 }
 .arda-hand-wrapper:hover {
   opacity: 1;
+}
+.arda-hand-wrapper.arda-hand-wrapper-characters {
+  top: 50px;
+}
+.arda-hand-wrapper.arda-hand-wrapper-minor {
+  top: 150px;
+}
+.arda-hand-wrapper.arda-hand-wrapper-stage {
+  top: 250px;
+}
+.arda-hand-wrapper .act {
+  color: #F0C648;
 }
 
 .arda-hand-container {
   text-align: right;
   margin-bottom: 5px;
   display: inline-block;
+}
+.arda-hand-container.arda-hand-container-trade {
+  right: 5px;
+  bottom: 97px;
+  position: fixed;
 }
 .arda-hand-container i {
   cursor: pointer;
@@ -41,6 +57,9 @@
 }
 .arda-card-hands .arda-actions {
   display: none;
+}
+.arda-card-hands .card-hands-sizer {
+  text-align: left;
 }
 .arda-card-hands:hover .arda-inline {
   margin-right: 60px;
