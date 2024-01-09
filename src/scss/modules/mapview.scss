@@ -31,6 +31,7 @@ body
     width: 100% !important; 
     height: 100% !important; 
 
+    .leaflet-popup-content { text-transform: uppercase;}
 }
 
 %input-select-textarea-shared {
@@ -61,14 +62,6 @@ input {
 }
 textarea {
     @extend %input-select-textarea-shared;
-}
-
-
-table.site_leaflet td { 
-    padding: 5px; 
-    &:nth-child(even) { 
-        background-color: lightgrey; 
-    }
 }
 
 .field {
