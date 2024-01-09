@@ -943,6 +943,7 @@ const ChangeAvatarApp = {
         img.setAttribute("src", src);
         img.setAttribute("title", "Click to choose this avatar");
         img.setAttribute("data-code", code);
+        img.setAttribute("decoding", "async");
         img.onclick = this.onselectavatar.bind(this);
         return img;
     },
