@@ -195,6 +195,16 @@ class PlayboardManagerDeck extends PlayboardManagerBase
             deck.shuffle();
     }
 
+    ShufflePlaydeckCount(playerId, num)
+    {
+        if (num < 2)
+            return;
+        
+        const deck = this.getPlayerDeck(playerId);
+        if (deck !== null)
+            deck.shufflePlaydeckTop(num);
+    }
+
     ShuffleDiscardpile(playerId)
     {
         const deck = this.getPlayerDeck(playerId);

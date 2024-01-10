@@ -61,6 +61,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/deck/reveal/offer", this.onDeckRevealOffer.bind(this));
         this.getMeccgApi().addListener("/game/deck/reveal/accept", this.onDeckRevealAccept.bind(this));
         this.getMeccgApi().addListener("/game/deck/reveal/perform", this.onDeckRevealPerform.bind(this));
+        this.getMeccgApi().addListener("/game/deck/reveal/self", this.onDeckRevealSelfPerform.bind(this));
 
         this.getMeccgApi().addListener("/game/company/create", this.onGameCompanyCreate.bind(this));
         this.getMeccgApi().addListener("/game/company/arrive", this.onGameCompanyArrives.bind(this));
@@ -1335,6 +1336,38 @@ class GameStandard extends GamePlayers
             this.onDeckRevealSuccess(userid, obj);
         else
             this.onDeckRevealCancel(userid, null, obj);
+    }
+
+    #onDeckRevealSelfPerformView(userid, socket, obj)
+    {
+        const list = this.getPlayboardManager().GetTopCardsInPile(userid, obj.deck, obj.count);
+        if (list.length === 0)
+            return;
+
+        this.replyToPlayer("/game/deck/reveal/self", socket, {
+            deck: obj.deck,
+            cards: list
+        });
+
+        this.publishChat(userid, " looks at top " + obj.count + " cards in " + obj.deck, false);
+    }
+
+    #onDeckRevealSelfPerformShuffle(userid, obj)
+    {
+        const count = obj.count;
+        if (count < 2)
+            return;
+
+        this.getPlayboardManager().ShufflePlaydeckCount(userid, count);
+        this.publishChat(userid, " shuffled top " + obj.count + " cards in " + obj.deck, false);
+    }
+
+    onDeckRevealSelfPerform(userid, socket, obj)
+    {
+        if (obj.type === "show")
+            this.#onDeckRevealSelfPerformView(userid, socket, obj);
+        else if (obj.type === "shuffle")
+            this.#onDeckRevealSelfPerformShuffle(userid, obj);
     }
 
     onDeckRevealMoveToDeck(deck, cards)

@@ -145,6 +145,27 @@ class DeckCommons {
             inputList.push(_newList[i]);
     }
 
+    shufflePlaydeckTop(count)
+    {
+        if (count < 2 || this.playdeck.length < 2)
+            return;
+
+        const inputList = this.playdeck;
+        const newList = [ ];
+
+        while (inputList.length > 0 && count > 0)
+        {
+            newList.push(inputList.shift());
+            count--;
+        }
+
+        this.shuffleAny(newList);
+        
+        while (newList.length > 0)
+            inputList.unshift(newList.pop());
+    }
+
+
     /**
      * Move a card form source to target array
      * @param {Array} listPlaydeck 

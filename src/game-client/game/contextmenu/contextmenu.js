@@ -648,6 +648,12 @@ const ContextMenu = {
         reveal5CardsToOpponent : function(pMenu)
         {
             RevealPlayerDeck.INSTANCE.onChoosePlayer();
+        },
+
+        reveal5CardsToSelf : function()
+        {
+            if (typeof RevealPlayerDeckSelf !== "undefined")
+                RevealPlayerDeckSelf.lookAt(5);
         }
     },
     
@@ -688,13 +694,14 @@ const ContextMenu = {
         if (sessionStorage.getItem("deck-notes"))
             this.addItem("view_deck_notes", "View deck notes", "fa-info-circle", "context-menu-item-generic", ContextMenu.callbacks.viewDeckNotes, "");
         
-        this.addItem("reval_cards_number", "Reveal 5 cards to your opponent", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
+        this.addItem("reval_cards_number", "Reveal 5 cards to your opponent (I will not see them)", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
+        this.addItem("reval_cards_number_self", "Look at your top 5 cards", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToSelf, "");
         this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
-        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_notes", "reval_cards_number", "playdeck_shuffle"];
+        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_notes", "reval_cards_number", "reval_cards_number_self", "playdeck_shuffle"];
 
         this.data.specialClasses["location"] = "context-menu-site";
         this.data.specialClasses["arrive"] = "context-menu-movement";

@@ -138,5 +138,128 @@ class RevealPlayerDeck extends RevealCardPile
     }
 }
 
+
+class RevealPlayerDeckSelf 
+{
+    static #instance = new RevealPlayerDeckSelf();
+
+    #deck = "playdeck";
+    #currentShown = 0;
+
+    static lookAt(num)
+    {
+        if (num < 1)
+            return;
+
+        MeccgApi.send("/game/deck/reveal/self", {
+            type: "show",
+            deck: "playdeck",
+            count: num
+        });
+    }
+
+    static get()
+    {
+        return RevealPlayerDeckSelf.#instance;
+    }
+
+    onRevalToSelf(isMe, jData)
+    {
+        if (isMe !== true || jData === undefined)
+            return;
+
+        this.#removeDialog();
+        const type = jData.deck;
+        const list = jData.cards;
+
+        this.#currentShown = list.length;
+        if (this.#currentShown === 0)
+            return;
+
+        const dialog = this.#createDialog(list);
+        document.body.append(dialog);
+    }
+
+    #createDialog(codes)
+    {
+        const dialog = document.createElement("div");
+        dialog.setAttribute("id", "dialog_reveal_self");
+        dialog.setAttribute("class", "reveal-to-self");
+        dialog.setAttribute("title", "click anywhere to close");
+        dialog.onclick = () => this.#closeDialog();
+
+
+        const h2 = document.createElement("h2");
+        h2.innerText = "Look at your playdeck";
+
+        const p = document.createElement("p");
+        p.innerText = "Click anywhere here to close this dialog.";
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "reveal-to-self-content");
+
+        div.append(h2, p, this.#createCards(codes));
+        dialog.append(div);
+        return dialog;
+    }
+
+    #createCardImage(card)
+    {
+        const img = document.createElement("img");
+        img.setAttribute("src", g_Game.CardList.getImage(card.code));
+        img.setAttribute("crossorigin", "anonymous");
+        img.setAttribute("class", "card-icon");
+        img.setAttribute("data-image-backside", "/data/backside");
+
+        const elem = document.createElement("div");
+        elem.setAttribute("class", "card-hand");
+        elem.appendChild(img);
+
+        g_Game.CardPreview.init(elem, true, true);
+        return elem;
+    }
+
+    #createCards(codes)
+    {
+        const div = document.createElement("div");
+
+        for (let code of codes)
+            div.append(this.#createCardImage(code));
+
+        return div;
+    }
+
+    #closeDialog()
+    {
+        this.#removeDialog();
+
+        if (this.#currentShown < 2)
+            return;
+
+        MeccgApi.send("/game/deck/reveal/self", {
+            type: "shuffle",
+            deck: this.#deck,
+            count: this.#currentShown
+        });   
+    }
+
+    #removeDialog()
+    {
+        const elem = document.getElementById("dialog_reveal_self");
+        if (elem !== null)
+            elem.parentElement.removeChild(elem);
+    }
+
+    init()
+    {
+        MeccgApi.addListener("/game/deck/reveal/self", this.onRevalToSelf.bind(this));
+    }
+
+
+
+}
+
 if (!RevealCardPile.isArda())
     RevealPlayerDeck.INSTANCE = new RevealPlayerDeck().addRoutes();
+
+RevealPlayerDeckSelf.get().init();
