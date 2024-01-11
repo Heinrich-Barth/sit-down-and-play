@@ -1,5 +1,7 @@
 class RevealCardPile extends TradeCards
 {
+    #numCards = 5;
+
     constructor(deck)
     {
         super()
@@ -12,6 +14,21 @@ class RevealCardPile extends TradeCards
         return "true" === document.body.getAttribute("data-game-arda");
     }
 
+
+    onChoosePlayer(numCards)
+    {
+        this.setNumCards(numCards);
+        super.onChoosePlayer();
+    }
+
+    setNumCards(numCards)
+    {
+        if (typeof numCards !== "number")
+            this.#numCards = 5;
+        else 
+            this.#numCards = numCards;
+    }
+
     revealOfferedCards()
     {
         return false;
@@ -20,7 +37,7 @@ class RevealCardPile extends TradeCards
     getPayloadTriggerTrading(challengerId, partnerId)
     {
         const data = super.getPayloadTriggerTrading(challengerId, partnerId);
-        data.count = 5;
+        data.count = this.#numCards;
         data.deck = this.deck;
         return data;
     }
@@ -181,6 +198,7 @@ class RevealCardPile extends TradeCards
 
 class RevealPlayerDeck extends RevealCardPile
 {
+
     constructor()
     {
         super("playdeck");

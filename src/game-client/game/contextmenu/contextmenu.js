@@ -645,15 +645,67 @@ const ContextMenu = {
                 MeccgApi.send("/game/company/returntoorigin", {company : companyId });
         },
 
-        reveal5CardsToOpponent : function(pMenu)
+        reveal5CardsToOpponent : function()
         {
-            RevealPlayerDeck.INSTANCE.onChoosePlayer();
+            ContextMenu.callbacks.queryCardNumer(
+                "Reveal cards to opponent", 
+                "Please specifiy the number of cards your opponent will look at (if available in your deck)",
+                (count) => RevealPlayerDeck.INSTANCE.onChoosePlayer(count));
         },
 
         reveal5CardsToSelf : function()
         {
-            if (typeof RevealPlayerDeckSelf !== "undefined")
-                RevealPlayerDeckSelf.lookAt(5);
+            if (typeof RevealPlayerDeckSelf === "undefined")
+                return;
+
+            ContextMenu.callbacks.queryCardNumer(
+                "Look at your playdeck", 
+                "Please specifiy the number of cards to look at. The cards will be shuffled again automatically.",
+                (count) => RevealPlayerDeckSelf.lookAt(count)
+            );
+        },
+
+        queryCardNumer : function(sTitle, sText, fnSuccessCallback)
+        {
+            const dialog = document.createElement("dialog");
+            dialog.setAttribute("class", "reveal-choose-card-count")
+
+            const title = document.createElement("h2");
+            title.innerText = sTitle;
+
+            const p = document.createElement("p");
+            p.innerText = sText;
+
+            const input = document.createElement("input");
+            input.setAttribute("type", "number");
+            input.setAttribute("min", 3);
+            input.setAttribute("max", 20);
+            input.setAttribute("value", 5);
+            input.setAttribute("id", "input_number_cards");
+
+            const label = document.createElement("label");
+            label.setAttribute("for", "input_number_cards");
+            label.innerText = "Number of cards: ";
+
+            const divButtons = document.createElement("div");
+            divButtons.setAttribute("class", "question-answers");
+
+            const buttonOk = document.createElement("button");
+            buttonOk.innerText = "Continue";
+            buttonOk.onclick = () => { dialog.close(); fnSuccessCallback(input.value); };
+
+            const buttonCancel = document.createElement("button");
+            buttonCancel.setAttribute("class", "buttonCancel");
+            buttonCancel.innerText = "Cancel";
+            buttonCancel.onclick = () => dialog.close();
+
+            divButtons.append(buttonOk, buttonCancel);
+
+            dialog.onclose = () => dialog.parentElement.removeChild(dialog);
+            dialog.append(title, p, label, input, document.createElement("br"), divButtons);
+
+            document.body.append(dialog);
+            dialog.showModal();
         }
     },
     
@@ -694,8 +746,8 @@ const ContextMenu = {
         if (sessionStorage.getItem("deck-notes"))
             this.addItem("view_deck_notes", "View deck notes", "fa-info-circle", "context-menu-item-generic", ContextMenu.callbacks.viewDeckNotes, "");
         
-        this.addItem("reval_cards_number", "Reveal 5 cards to your opponent (I will not see them)", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
-        this.addItem("reval_cards_number_self", "Look at your top 5 cards", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToSelf, "");
+        this.addItem("reval_cards_number", "Reveal X cards to your opponent (I will not see them)", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
+        this.addItem("reval_cards_number_self", "Look at your top X cards", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToSelf, "");
         this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
