@@ -260,10 +260,14 @@ class DeckManager {
         if (typeof this.#cardMap[uuid] === "undefined")
             return false;
 
-        this.#cardMap[uuid].revealed = !this.#cardMap[uuid].revealed;
+        if (this.#cardMap[uuid].revealed === undefined)
+            this.#cardMap[uuid].revealed = true;
+        else
+            this.#cardMap[uuid].revealed = !this.#cardMap[uuid].revealed;
+        
         return this.#cardMap[uuid].revealed;
     }
-    
+
     #clearSitesTappedByPlaer(playerId)
     {
         if (typeof playerId !== "undefined" && typeof this.#siteMap[playerId] !== "undefined")
