@@ -12,7 +12,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
         this.#characters = { };
     }
 
-    characterExists(uuid)
+    #characterExists(uuid)
     {
         return typeof this.#characters[uuid] !== "undefined";
     }
@@ -103,7 +103,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
      */
     getCharacterByUuid(uuid)
     {
-        if (uuid !== "" && this.characterExists(uuid))
+        if (uuid !== "" && this.#characterExists(uuid))
             return this.#characters[uuid];
         else
             return null;
@@ -243,7 +243,7 @@ class PlayboardManagerCharacters extends PlayboardManagerDeck
 
     readyResources(uuid)
     {
-        if (!this.characterExists(uuid))
+        if (!this.#characterExists(uuid))
         {
             Logger.warn("character does not exist: " + uuid);
         }

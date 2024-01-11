@@ -1,6 +1,5 @@
 const GameRoom = require("./GameRoom");
 const Logger = require("../Logger");
-const CardDataProvider = require("../plugins/CardDataProvider");
 const Configuration = require("../Configuration");
 const EventManager = require("../EventManager");
 
@@ -14,7 +13,6 @@ class RoomManager {
 
     #eventManager;
     #gamePageHtml;
-    #gameCardProvider;
     #rooms;
     #maxRooms;
     #maxPlayers;
@@ -25,7 +23,6 @@ class RoomManager {
     {
         this.#gamePageHtml = sGameHtmlPageUri;
         this.#eventManager = EventManager;
-        this.#gameCardProvider = CardDataProvider;
         this.#fnSocketIo = fnSocketIo;
 
         this.#rooms = {};
@@ -41,10 +38,10 @@ class RoomManager {
 
     tooManyRooms()
     {
-        return this.#maxRooms > 0 && this.countRooms() > this.#maxRooms;
+        return this.#maxRooms > 0 && this.#countRooms() > this.#maxRooms;
     }
 
-    countRooms()
+    #countRooms()
     {
         return Object.keys(this.#rooms).length;
     }
@@ -58,11 +55,6 @@ class RoomManager {
     {
         const pRoom = this.getRoom(room);
         return pRoom === null ? 0 : pRoom.getPlayerCount();
-    }
-
-    getAgentList()
-    {
-        return this.#gameCardProvider.getAgents();
     }
 
     getRoom(room)
@@ -139,7 +131,7 @@ class RoomManager {
             return null;
     }
 
-    updatePlayerToken(room, userid)
+    #updatePlayerToken(room, userid)
     {
         const pPlayer = this.#getPlayerOrVisitor(room, userid);
         if (pPlayer === null)
@@ -150,7 +142,7 @@ class RoomManager {
         return lToken;
     }
 
-    isValidAccessToken(room, userid, lToken)
+    #isValidAccessToken(room, userid, lToken)
     {
         const pPlayer = this.#getPlayerOrVisitor(room, userid);
         if (pPlayer === null || lToken < 1)
@@ -159,7 +151,7 @@ class RoomManager {
             return pPlayer.getAccessToken() === lToken;
     }
 
-    filterPlayerList (room, waitingOnly)
+    #filterPlayerList (room, waitingOnly)
     {
         const pRoom = this.getRoom(room);
         if (pRoom === null)
@@ -197,12 +189,12 @@ class RoomManager {
 
     getPlayerList(room)
     {
-        return this.filterPlayerList(room, false);
+        return this.#filterPlayerList(room, false);
     }
 
     getWaitingList(room) 
     {
-        return this.filterPlayerList(room, true);
+        return this.#filterPlayerList(room, true);
     }
 
     getActiveGame(room)
@@ -277,7 +269,7 @@ class RoomManager {
 
     sendShutdownSaving()
     {
-        if (this.countRooms() === 0)
+        if (this.#countRooms() === 0)
             return false;
 
         for (let room in this.#rooms) 
@@ -390,7 +382,7 @@ class RoomManager {
         this.#sendConnectivity(userid, room, false);
     }
 
-    kickDisconnectedPlayers(pRoom)
+    #kickDisconnectedPlayers(pRoom)
     {
         let keys = [];
         let players = pRoom.getPlayers();
@@ -401,10 +393,10 @@ class RoomManager {
         }
 
         for (let _key of keys)
-            this.kickPlayer(pRoom, _key);
+            this.#kickPlayer(pRoom, _key);
     }
 
-    kickDisconnectedSpectators(pRoom)
+    #kickDisconnectedSpectators(pRoom)
     {
         let list = [];
         let spectators = pRoom.getVisitors();
@@ -433,14 +425,14 @@ class RoomManager {
      * @param {String} room 
      * @returns 
      */
-    kickDisconnected(room)
+    #kickDisconnected(room)
     {
         const pRoom = this.getRoom(room);
         if (pRoom === null)
             return false;
 
-        this.kickDisconnectedPlayers(pRoom);
-        this.kickDisconnectedSpectators(pRoom);
+        this.#kickDisconnectedPlayers(pRoom);
+        this.#kickDisconnectedSpectators(pRoom);
 
         if (this.#rooms[room].isEmpty())
         {
@@ -462,19 +454,19 @@ class RoomManager {
      */
     checkGameContinuence(room) /* wait one minute to check if a room only has one player */
     {
-        const pThis = this;
-        setTimeout(function ()
-        {
-            /** remove all players that are not connected anymore */
-            const fileLog = pThis.getGameLog(room);
-            if (pThis.kickDisconnected(room))
-            {
-                /** make sure to remove game from events */
-                pThis.#eventManager.trigger("game-remove", room, fileLog);
-                Logger.info("Game room " + room + " is empty and was destroyed.");
-            }
+        setTimeout(() => this.#checkGameContinuence(room), 2000 * 60);
+    }
 
-        }, 2000 * 60);
+    #checkGameContinuence(room)
+    {
+        /** remove all players that are not connected anymore */
+        const fileLog = this.getGameLog(room);
+        if (this.#kickDisconnected(room))
+        {
+            /** make sure to remove game from events */
+            this.#eventManager.trigger("game-remove", room, fileLog);
+            Logger.info("Game room " + room + " is empty and was destroyed.");
+        }
     }
 
     /**
@@ -704,7 +696,7 @@ class RoomManager {
      * @param {String} room 
      * @param {String} userid 
      */
-    kickPlayer(pRoom, userid) 
+    #kickPlayer(pRoom, userid) 
     {
         let pPlayer = pRoom.players[userid];
         if (pPlayer === undefined)
@@ -740,7 +732,7 @@ class RoomManager {
         else
             return false;
             
-        if (!this.isValidAccessToken(room, userId, player_access_token_once))
+        if (!this.#isValidAccessToken(room, userId, player_access_token_once))
         {
             Logger.warn("Invalid access token (once)");
             return false;
@@ -833,7 +825,7 @@ class RoomManager {
         const isFirst = pRoom.isEmpty();
 
         /** a singleplayer game cannot have other players and a ghost game about to die should not allow new contestants */
-        if (!isFirst && (pRoom.getGame().isSinglePlayer() || !this.gameIsActive(pRoom)))
+        if (!isFirst && (pRoom.getGame().isSinglePlayer() || !this.#gameIsActive(pRoom)))
             return -1;
 
         if (pRoom.getGame().isArda() && !roomOptions.singleplayer)
@@ -856,7 +848,7 @@ class RoomManager {
      * @param {Object} pRoom 
      * @returns 
      */
-    gameIsActive(pRoom)
+    #gameIsActive(pRoom)
     {
         const userid = pRoom.getGame().getHost();
         const pPlayer = pRoom.getPlayer(userid);
@@ -892,7 +884,7 @@ class RoomManager {
         const isVisitor = pRoom.hasVisitor(userId);
 
         const sSecret = pRoom.getSecret();
-        const sToken = this.updatePlayerToken(room, userId);
+        const sToken = this.#updatePlayerToken(room, userId);
         const sLobbyToken = pPlayer.isAdmin() ? pRoom.getLobbyToken() : "";
         const isArda = pRoom.getGame().isArda() ? "true" : "false";
         const isSinglePlayer = pRoom.getGame().isSinglePlayer() ? "true" : "false";
