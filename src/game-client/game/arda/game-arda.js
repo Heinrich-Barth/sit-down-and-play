@@ -204,7 +204,7 @@ let Arda = {
         a.setAttribute("data-type", dataType);
         a.setAttribute("data-player", playerId);
         a.setAttribute("id", "arda-action-container-" + dataType);
-        a.setAttribute("title", title + ". Left click to toggle visibility. Right click to refresh.");
+        a.setAttribute("title", title + ".\nLeft click to toggle visibility.\nRight click to refresh.");
         a.setAttribute("class", "blue-box fa context-cursor act " + html);
         a.setAttribute("aria-hidden", "true");
         a.onclick = Arda.toogleView;
