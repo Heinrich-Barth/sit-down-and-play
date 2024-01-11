@@ -15,7 +15,7 @@ class GameStandard extends GamePlayers
         if (fn !== undefined && typeof fn === "function")
             this.#fnEndGame = fn;
     }
-
+    
     init()
     {
         super.init();
@@ -24,6 +24,7 @@ class GameStandard extends GamePlayers
         this.getMeccgApi().addListener("/game/card/state/glow", this.onGameStateGlow.bind(this));
         this.getMeccgApi().addListener("/game/card/state/mark", this.onGameStateMark.bind(this));
         this.getMeccgApi().addListener("/game/card/state/reveal", this.onGameCardStateReveal.bind(this));
+        this.getMeccgApi().addListener("/game/card/state/hand", this.onGameCardStateInHand.bind(this));
         this.getMeccgApi().addListener("/game/card/draw", this.onCardDraw.bind(this));
         this.getMeccgApi().addListener("/game/card/draw/single", this.onCardDrawSingle.bind(this));
 
@@ -315,7 +316,7 @@ class GameStandard extends GamePlayers
         const uuid = data.uuid;
         const rev = this.getPlayboardManager().FlipCard(uuid);
 
-        this.publishToPlayers("/game/card/reveal", userid, {uuid: uuid, reveal: rev});
+        this.publishToPlayers("/game/card/reveal", userid, {uuid: uuid, reveal: rev === true });
 
         if (!rev)
             this.publishChat(userid, " hides a card", true);
@@ -323,6 +324,16 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " reveals " + data.code, true);
         else
             this.publishChat(userid, " reveals a card", true);
+    }
+
+    onGameCardStateInHand(userid, _socket, data)
+    {
+        const uuid = data.uuid;
+        const rev = this.getPlayboardManager().FlipCard(uuid);
+        if (!rev)
+            this.publishChat(userid, " marks a card in hand to be played face down", false);
+        else
+            this.publishChat(userid, " marks a card in hand to be played face up again", false);
     }
 
     onGetCharacters(userid, socket)
