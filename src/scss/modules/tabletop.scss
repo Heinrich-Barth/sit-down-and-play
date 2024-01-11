@@ -300,6 +300,10 @@ body.table-companies-breakline .companies {
         position: relative;
     }
 
+    .card-facedown img {
+        transform: rotate(180deg);
+    }
+
     .card-draw {
         width: 100%;
     }

@@ -678,6 +678,9 @@ body.table-companies-breakline .companies {
   display: inline-block;
   position: relative;
 }
+.card-hands .card-facedown img {
+  transform: rotate(180deg);
+}
 .card-hands .card-draw {
   width: 100%;
 }
