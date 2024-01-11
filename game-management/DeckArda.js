@@ -484,18 +484,18 @@ class DeckArda extends DeckDefault {
                 return res.to(uuid, deck.discardPile);
         };
 
-        res.toPlaydeck = function(uuid)
+        res.toPlaydeck = function(uuid, toBottom = false)
         {
             if (deck.#isTypeCharacter(uuid))
-                return res.to(uuid, deck.playdeckCharacters);
+                return res.to(uuid, deck.playdeckCharacters, toBottom === true);
             else if (deck.#isTypeMinorItem(uuid))
-                return res.to(uuid, deck.playdeckMinorItems);
+                return res.to(uuid, deck.playdeckMinorItems, toBottom === true);
             else if (deck.#isTypeMPs(uuid))
-                return res.to(uuid, deck.playdeckMP);
+                return res.to(uuid, deck.playdeckMP, toBottom === true);
             else if (deck.#isTypeStage(uuid))
-                return res.to(uuid, deck.playdeckStage);
+                return res.to(uuid, deck.playdeckStage, toBottom === true);
             else 
-                return res.to(uuid, deck.playdeck);
+                return res.to(uuid, deck.playdeck, toBottom === true);
         };
 
         res.toPlaydeckSpecific = function(uuid)

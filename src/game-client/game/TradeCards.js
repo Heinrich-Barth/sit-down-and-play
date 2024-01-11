@@ -210,7 +210,10 @@ class TradeCards extends PlayerSelectorAction {
         img.setAttribute("data-image-backside", "/data/backside");
 
         if (!addId)
+        {
             img.onclick = this.toggleImageOffering.bind(this);
+            img.oncontextmenu = this.toggleImageOfferingContextMenu.bind(this);
+        }
 
         const elem = document.createElement("div");
         elem.setAttribute("class", "card-hand");
@@ -224,17 +227,36 @@ class TradeCards extends PlayerSelectorAction {
         return elem;
     }
 
+    onToggleImageOffering(elem)
+    {
+        if (elem.classList.contains("fa"))
+        {
+            elem.classList.remove("fa");
+            elem.classList.remove("fa-exchange");
+            return false;
+        }
+        else 
+        {
+            elem.classList.add("fa");
+            elem.classList.add("fa-exchange");
+            return true;
+        }
+    }
+
+    toggleImageOfferingContextMenu(e)
+    {
+        return false;
+    }
+
     toggleImageOffering(e)
     {
         const elem = e.target.parentElement;
         const code = e.target.getAttribute("data-code");
         const uuid = e.target.getAttribute("data-uuid");
 
-        if (elem.classList.contains("fa"))
+        if (this.onToggleImageOffering(elem))
         {
-            elem.classList.remove("fa");
-            elem.classList.remove("fa-exchange");
-            MeccgApi.send(this.getRouteTradeRemove(), { 
+            MeccgApi.send(this.getRouteTradeOffer(), { 
                 first: this._myId,
                 second:  this._partnerId,
                 code: code,
@@ -243,10 +265,7 @@ class TradeCards extends PlayerSelectorAction {
         }
         else 
         {
-            elem.classList.add("fa");
-            elem.classList.add("fa-exchange");
-
-            MeccgApi.send(this.getRouteTradeOffer(), { 
+            MeccgApi.send(this.getRouteTradeRemove(), { 
                 first: this._myId,
                 second:  this._partnerId,
                 code: code,
@@ -284,15 +303,30 @@ class TradeCards extends PlayerSelectorAction {
         if (!isMe || this._tradeAccepted !== 2)
             return;
 
+        this.triggerTrade();
+    }
+
+    triggerTrade()
+    {
         const data = {}
-        data[this._myId] = this.toList(this._mapOffering);
-        data[this._partnerId] = this.toList(this._mapOfferred);
+        data[this._myId] = this.getListOffering();
+        data[this._partnerId] = this.getListOffered();
 
         MeccgApi.send(this.getRouteTradePerform(), { 
             first: this._myId,
             second:  this._partnerId,
             cards : data
         });
+    }
+
+    getListOffering()
+    {
+        return this.toList(this._mapOffering)
+    }
+
+    getListOffered()
+    {
+        return this.toList(this._mapOfferred)
     }
 
     toList(map)

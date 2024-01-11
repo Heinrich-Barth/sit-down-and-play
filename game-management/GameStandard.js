@@ -1332,7 +1332,7 @@ class GameStandard extends GamePlayers
 
     onDeckRevealPerform(userid, _socket, obj)
     {
-        if (this.onDeckRevealMoveToDeck(obj.deck, obj.cards))
+        if (this.onDeckRevealMoveToDeck(obj.deck, obj.cards, obj.cardsBottom))
             this.onDeckRevealSuccess(userid, obj);
         else
             this.onDeckRevealCancel(userid, null, obj);
@@ -1370,12 +1370,15 @@ class GameStandard extends GamePlayers
             this.#onDeckRevealSelfPerformShuffle(userid, obj);
     }
 
-    onDeckRevealMoveToDeck(deck, cards)
+    onDeckRevealMoveToDeck(deck, cards, cardsBottom)
     {
         let moved = false;
 
         for (let id in cards)
             moved |= this.getPlayboardManager().ReorderCardsInDeck(id, deck, cards[id]);
+
+        for (let id in cardsBottom)
+            moved |= this.getPlayboardManager().SendToBottomOfDeck(id, deck, cardsBottom[id]);
 
         return moved;
     }

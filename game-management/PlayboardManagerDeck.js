@@ -266,6 +266,26 @@ class PlayboardManagerDeck extends PlayboardManagerBase
         return moved > 0;
     }
 
+    SendToBottomOfDeck(playerId, deckType, cards)
+    {
+        if (deckType !== "playdeck" || cards.length === 0)
+            return false;
+
+        const deck = this.getPlayerDeck(playerId);
+        let moved = 0;
+
+        for (let _cardUuid of cards.reverse())
+        {
+            if (deck.pop().fromPlaydeck(_cardUuid))
+            {
+                deck.push().toPlaydeck(_cardUuid, true)
+                moved++;
+            }
+        }
+
+        return moved > 0;
+    }
+
     GetTopCardsInPile(playerId, sPile, nNumber)
     {
         if (nNumber < 1)

@@ -284,6 +284,15 @@ class DeckDefault extends DeckCommons {
                 return true;
             },
 
+            toBottom : function(uuid, list)
+            {
+                if (uuid === "" || deck.listContains(uuid, list))
+                    return false;
+
+                list.push(uuid); // put to start of array so it will be drawn next
+                return true;
+            },
+
             /**
              * Add a card to victory
              * @param {type} uuid
@@ -309,9 +318,12 @@ class DeckDefault extends DeckCommons {
              * @param {type} uuid
              * @returns {Boolean} success
              */
-            toPlaydeck : function(uuid)
+            toPlaydeck : function(uuid, toBottom = false)
             {
-                return this.to(uuid, deck.playdeck);
+                if (toBottom !== true)
+                    return this.to(uuid, deck.playdeck);
+                else
+                    return this.toBottom(uuid, deck.playdeck);
             },
 
             /**

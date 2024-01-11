@@ -203,6 +203,9 @@ const MeccgApi =
 
     send: function (path, message)
     {
+        if (path === "")
+            return false;
+
         if (typeof message === "undefined")
             message = "";
 

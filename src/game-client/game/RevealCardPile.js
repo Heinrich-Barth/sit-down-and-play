@@ -32,12 +32,12 @@ class RevealCardPile extends TradeCards
 
     labelCardsBeingOffered()
     {
-        return "Card reordering will appear automatically.";
+        return "Card reordering will appear automatically. The left is considered the TOP of the card stack.";
     }
 
     labelSelectCardsToTrade()
     {
-        return "Click on the cards to add them to the top of the deck";
+        return "Click on a card to send it to the bottom of this list. Right click on any card send it to the bottom of the deck.";
     }
 
     labelAcceptTrade()
@@ -80,36 +80,59 @@ class RevealCardPile extends TradeCards
         return "/game/deck/reveal/perform";
     }
 
-    toList(map)
+    getListOffering()
     {
-        const list = [];
-        for (let key in map)
-            list.push({uid: key, time: map[key]});
-
-        list.sort((a,b) => a.time - b.time);
-
-        const res = [];
-        for (let elem of list)
-            res.push(elem.uid);
-
-        return res;
+        return [];
     }
 
-    tradeAccepted(isMe, jData)
+    getListOffered()
     {
-        if (this.tradePartyNumber(jData) === 0 || !isMe)
-            return;
+        const list = [];
 
-        const data = {}
-        data[this._myId] = this.toList(this._mapOfferred);
-        data[this._partnerId] = this.toList(this._mapOffering);
+        for (let img of this.#getCardImageList())
+        {
+            const uuid = !this.#sendToBottom(img) ? this.#getUuid(img) : "";
+            if (uuid !== "")
+                list.push(uuid);
+        }
 
-        MeccgApi.send(this.getRouteTradePerform(), { 
-            first: this._myId,
-            second:  this._partnerId,
-            deck: this.deck,
-            cards : data
-        });
+        return list;
+    }
+
+    #getUuid(img)
+    {
+        return img.hasAttribute("data-uuid") ? img.getAttribute("data-uuid") : "";
+    }
+
+    #sendToBottom(img)
+    {
+        return img?.parentElement?.classList.contains("rot180") === true;
+    }
+
+    #getCardImageList()
+    {
+        const list = [];
+
+        const elem = document.getElementById("trade-offering")
+        const imgs = elem === null ? null : elem.querySelectorAll("img");
+        if (imgs !== null)
+            return imgs;
+        else
+            return list;
+    }
+
+    #getListOfferedBottom()
+    {
+        const list = [];
+
+        for (let img of this.#getCardImageList())
+        {
+            const uuid = this.#sendToBottom(img) ? this.#getUuid(img) : "";
+            if (uuid !== "")
+                list.push(uuid);
+        }
+
+        return list.reverse();
     }
 
     showTradeBox(isMe, jData)
@@ -117,6 +140,42 @@ class RevealCardPile extends TradeCards
         const elem = super.showTradeBox(isMe, jData);
         if (isMe && elem !== null)
             elem.classList.add("trade-hide-buttons");
+    }
+
+    toggleImageOfferingContextMenu(e)
+    {
+        const elem = e.target.parentElement;
+        if (elem.classList.contains("rot180"))
+            elem.classList.remove("rot180")
+        else
+            elem.classList.add("rot180")
+
+        return false;
+    }
+
+    toggleImageOffering(e)
+    {
+        const elem = e.target.parentElement;
+        elem.parentElement.append(elem);
+    }
+
+    tradeAccept()
+    {
+        const data = {}
+        data[this.getMyId()] = this.getListOffering();
+        data[this.getPartnerId()] = this.getListOffered();
+
+        const dataBottom = {}
+        dataBottom[this.getMyId()] = this.getListOffering();
+        dataBottom[this.getPartnerId()] = this.#getListOfferedBottom(true);
+
+        MeccgApi.send(this.getRouteTradePerform(), { 
+            first: this.getMyId(),
+            second:  this.getPartnerId(),
+            deck: this.deck,
+            cards : data,
+            cardsBottom: dataBottom,
+        });
     }
 };
 
