@@ -135,7 +135,7 @@ const GameBuilder = {
     {
         const container = document.getElementById("playercard_hand_container");
         if (container === null)
-            return;
+            return pElement;
 
         container.appendChild(pElement);    
         const currentHandSize = container.getElementsByClassName("card-hand").length;
@@ -143,6 +143,8 @@ const GameBuilder = {
 
         if (currentHandSize === allowed)
             pElement.classList.add("glowing");
+
+        return pElement;
     },
 
     getCurrentHandSizeCount : function()
@@ -290,9 +292,33 @@ const GameBuilder = {
         const _code = GameBuilder.CardList.getSafeCode(cardCode);
         const _img = GameBuilder.CardList.getImage(cardCode);
 
-        GameBuilder.addToHandContainer(GameBuilder.createHtmlElement(_code, _img, uuid, type));
+        const elem = GameBuilder.addToHandContainer(GameBuilder.createHtmlElement(_code, _img, uuid, type));
+
         GameBuilder.CardPreview.addHover("card_icon_nr_" + uuid, false, true);
         GameBuilder.HandCardsDraggable.initDragEventsForHandCard("card_icon_nr_", uuid, type);
+
+        const elemImage = elem?.querySelector("img");
+        if (elemImage)
+        {
+            elem.setAttribute("title", "Drag card to play it or \nRIGHT CLICK to toggle playing it face down");
+            elemImage.oncontextmenu = this.onHandCardContextClick.bind(this);
+        }
+    },
+
+    onHandCardContextClick : function(e)
+    {
+        const div = e.target.parentElement;
+        const uuid = div.hasAttribute("data-uuid") ? div.getAttribute("data-uuid") : "";
+        if (uuid === "")
+            return;
+
+        if (div.classList.contains("card-facedown"))
+            div.classList.remove("card-facedown");
+        else
+            div.classList.add("card-facedown");
+
+        MeccgApi.send("/game/card/state/hand", { uuid: uuid });
+        return false;
     },
 
     onRestoreHand: function(cards)
