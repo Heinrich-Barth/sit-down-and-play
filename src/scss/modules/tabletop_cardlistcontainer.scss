@@ -211,6 +211,11 @@
         text-align: center;
 
         p { color: #fff; }
-        .card-hand { display: inline-block; padding: 10px;}
+        .card-hand { 
+            display: inline-block; padding: 10px;
+            img {
+                height: 200px;
+            }
+        }
     }
 }
