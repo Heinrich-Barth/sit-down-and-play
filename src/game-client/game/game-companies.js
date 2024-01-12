@@ -2,7 +2,7 @@
 const createCompanyHtml = function(companyId, id)
 {
     const div = document.createElement("div");
-    div.setAttribute("class", "company tableCell hiddenVisibility nonEmptyContainer");
+    div.setAttribute("class", "company tableCell hiddenVisibility nonEmptyContainer context-cursor");
     div.setAttribute("id", id);
     div.setAttribute("data-company-id", companyId);
     div.innerHTML = `
@@ -162,15 +162,17 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
 
     if (bIsPlayer)
     {
-        const pNew = document.getElementById("player_companies");
-        pNew.append(pDiv);
+        document.getElementById("player_companies").prepend(pDiv);
     }
     else
     {
         const container = createOpponentContainer(sHexPlayerCode, playerId);
         if (container !== null)
-            container.appendChild(pDiv);
+            container.prepend(pDiv);
     }
+
+    if (typeof ContextMenu.contextActions.onContextCompany !== "undefined")
+        pDiv.oncontextmenu = ContextMenu.contextActions.onContextCompany.bind(ContextMenu.contextActions);
 
     return document.getElementById(id);
 }

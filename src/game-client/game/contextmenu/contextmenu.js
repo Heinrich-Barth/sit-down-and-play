@@ -373,6 +373,26 @@ const ContextMenu = {
             return false;
         },
 
+        _findCompanyContainerId : function(elem)
+        {
+            if (elem === null || elem === undefined)
+                return "";
+
+            if (!elem.classList.contains("company") && !elem.hasAttribute("data-company-id"))
+                return this._findCompanyContainerId(elem.parentElement);
+            
+            return elem.getAttribute("id");
+        },
+
+        onContextCompany : function(e)
+        {
+            const id = this._findCompanyContainerId(e.target);
+            if (id !== "")
+                ContextMenu.show(e, "_ignore", "", id, "company_position")
+
+            return false;
+        },
+
         onContextPlayDeckActions : function(e)
         {
             if (e.target !== null)
@@ -605,6 +625,46 @@ const ContextMenu = {
                 MeccgApi.send("/game/company/arrive", {company : companyId });
         },
 
+        _getCompanyElement : function(pMenu)
+        {
+            const id = ContextMenu.getAttribute(pMenu, "data-company");
+            if (id === "")
+                return null;
+            else
+                return document.getElementById(id);
+        },
+
+        companyMoveLeft: function(pMenu)
+        {
+            const div = this._getCompanyElement(pMenu);
+            const prev = div === null ? null : div.previousElementSibling;
+
+            if (prev !== null)
+                div.parentElement.insertBefore(div, prev);
+        },
+
+        companyMoveRight : function(pMenu)
+        {
+            const div = this._getCompanyElement(pMenu);
+            const next = div === null ? null : div.nextElementSibling;
+            
+            if (next === null)
+                return;
+
+            const next2 = next.nextElementSibling;
+            if (next2)
+                div.parentElement.insertBefore(div, next2);
+            else
+                div.parentElement.append(div);
+        },
+        
+        companyMoveRightEnd : function(pMenu)
+        {
+            const div = this._getCompanyElement(pMenu);
+            if (div?.nextElementSibling)
+                div.parentElement.append(div);
+        },
+        
         hide : function()
         {
             const elem = document.getElementById("contextmenu");
@@ -742,6 +802,10 @@ const ContextMenu = {
         this.addItem("view_deck_cards", "Look at my playdeck as it is", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", false), "");
         this.addItem("view_deck_cards_ordered", "Look at my playdeck and sort cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", true), "");
         
+        this.addItem("move_company_left", "Move company one position to the left", "fa-arrow-left", "context-menu-item-generic", ContextMenu.callbacks.companyMoveLeft.bind(ContextMenu.callbacks));
+        this.addItem("move_company_right", "Move company one position to the right", "fa-arrow-right", "context-menu-item-generic", ContextMenu.callbacks.companyMoveRight.bind(ContextMenu.callbacks));
+        this.addItem("move_company_end", "Move company to the end", "fa-long-arrow-right", "context-menu-item-generic", ContextMenu.callbacks.companyMoveRightEnd.bind(ContextMenu.callbacks));
+
         if (sessionStorage.getItem("deck-notes"))
             this.addItem("view_deck_notes", "View deck notes", "fa-info-circle", "context-menu-item-generic", ContextMenu.callbacks.viewDeckNotes, "");
         
@@ -753,6 +817,7 @@ const ContextMenu = {
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
         this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_notes", "reval_cards_number", "reval_cards_number_self", "playdeck_shuffle"];
+        this.data.types["company_position"] = ["move_company_left", "move_company_right", "move_company_end"];
 
         this.data.specialClasses["location"] = "context-menu-site";
         this.data.specialClasses["arrive"] = "context-menu-movement";
