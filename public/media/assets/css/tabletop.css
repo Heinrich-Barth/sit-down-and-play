@@ -1044,6 +1044,11 @@ body.table-companies-breakline .companies {
   transition: all 0.2s ease-in;
   white-space: nowrap;
 }
+@media only screen and (min-width: 1500px) {
+  .companies .company {
+    margin-right: 40px;
+  }
+}
 .companies .company:hover {
   background: rgba(255, 255, 255, 0.15);
   scale: 1.05;
@@ -1114,6 +1119,14 @@ body.table-companies-breakline .companies {
   left: 0;
   width: 100%;
   height: 96px;
+}
+@media only screen and (min-width: 1500px) {
+  .companies .company .company-characters .character-is-company-host:not(:first-child) {
+    margin-right: 40px;
+  }
+}
+.companies .company .company-character-influenced .company-character:not(:first-child) {
+  margin-left: 20px;
 }
 
 @keyframes company-moving-line {
