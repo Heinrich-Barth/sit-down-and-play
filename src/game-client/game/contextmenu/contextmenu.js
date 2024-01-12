@@ -406,27 +406,26 @@ const ContextMenu = {
             
     _getPosition : function(e)
     {
-        let posx = 0;
-        let posy = 0;
+        const result = {
+            x: 0,
+            y: 0
+        };
 
-        if (!e)
-            e = window.event;
+        if (e === undefined)
+            return result;
 
         if (e.pageX || e.pageY)
         {
-            posx = e.pageX;
-            posy = e.pageY;
+            result.x = e.pageX;
+            result.y = e.pageY;
         }
         else if (e.clientX || e.clientY)
         {
-            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            result.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            result.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
         }
 
-        return {
-            x: posx,
-            y: posy
-        };
+        return result;
     },
     
     
