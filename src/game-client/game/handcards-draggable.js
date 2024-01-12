@@ -150,10 +150,25 @@ const DropFunctions = {
 
     MeccgApi : null,
 
+    /**
+     * Check if the given character is the companies host. If so, it will not have a next sibling 
+     * (last one in the element container)
+     * 
+     * @param {jQuery} ui 
+     * @returns boolean
+     */
+    characterIsHost : function(ui)
+    {
+        const divCharacter = ui.draggable.get(0);
+        return divCharacter.nextElementSibling === null || divCharacter.nextElementSibling === undefined;
+    },
+
     removeDraggable(ui)
     {
         if (ui.draggable.attr("data-location") === "hand" || ui.draggable.attr("data-card-type") !== "character")
             CreateHandCardsDraggableUtils.removeDraggable(ui.draggable);
+        else if (!DropFunctions.characterIsHost(ui)) /** a character can be added as a ressource as well. In that case, it has to be handled as one */
+            CreateHandCardsDraggableUtils.removeDraggable(ui.draggable); 
         else
             CreateHandCardsDraggableUtils.removeDraggableInContainer(ui.draggable.closest(".company-character"));
     },
@@ -1028,7 +1043,7 @@ function createHandCardsDraggable(pCardPreview, pMeccgApi)
         tolerance: "pointer",
         classes: HandCardsDraggable.droppableParams,
         accept: HandCardsDraggable.droppableAccept,
-        drop: DropFunctions.dropOnDiscard
+        drop: DropFunctions.dropOnDiscard.bind(DropFunctions)
     });
     
     jQuery(DropableAreas.victory()).droppable(

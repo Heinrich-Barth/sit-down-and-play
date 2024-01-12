@@ -528,7 +528,22 @@ class GameStandard extends GamePlayers
             return cardOwner;
     }
 
-    onCardMoveDoMove(userid, obj, card)
+    #onCardMoveDoMoveResourceType(userid, obj, card)
+    {
+        const result = [];
+
+        /**
+         * the victory pile is different: usually, the target of your deck pils is always the card owner,
+         * yet the victory condition allows to take ownership of cards
+         */
+        const _targetPlayer = this.identifyCardOwnerWhenMoving(userid, card.owner, obj.target);
+        if (this.getPlayboardManager().MoveCardTo(obj.uuid, _targetPlayer, obj.target))
+            result.push(obj.uuid);
+
+        return result;
+    }
+
+    #onCardMoveDoMove(userid, obj, card)
     {
         const result = {
             codes: [],
@@ -540,18 +555,20 @@ class GameStandard extends GamePlayers
 
         if (card.type !== "character" || obj.source !== "inplay")
         {
-            /**
-             * the victory pile is different: usually, the target of your deck pils is always the card owner,
-             * yet the victory condition allows to take ownership of cards
-             */
-            const _targetPlayer = this.identifyCardOwnerWhenMoving(userid, card.owner, obj.target);
-            if (this.getPlayboardManager().MoveCardTo(obj.uuid, _targetPlayer, obj.target))
-                result.uuids.push(obj.uuid);
+            result.uuids = this.#onCardMoveDoMoveResourceType(userid, obj, card);
         } 
         else
         {
             result.affectedCompanyUuid = this.getPlayboardManager().findHostsCompany(obj.uuid);
             result.uuids = this.getPlayboardManager().MoveCardCharacterTo(obj.uuid, card.owner, obj.target);
+
+            /** 
+             * A character might be played onguard and dropped as ressource on another character. 
+             * That way, the engine will consider them a character but they will not meet the requirements (no company!)
+             * So, if a character has been in play, try removing it nonetheless
+             */
+            if (result.affectedCompanyUuid === "" && result.uuids.length === 0 && obj.source === "inplay")
+                result.uuids = this.#onCardMoveDoMoveResourceType(userid, obj, card);
         }
 
         for (let _uid of result.uuids)
@@ -597,7 +614,7 @@ class GameStandard extends GamePlayers
         if (card === null)
             return;
 
-        const result = this.onCardMoveDoMove(userid, obj, card);
+        const result = this.#onCardMoveDoMove(userid, obj, card);
         if (!result.isEmpty)
         {
             this.updateHandCountersPlayer(userid);
