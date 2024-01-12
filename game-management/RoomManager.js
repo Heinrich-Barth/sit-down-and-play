@@ -302,6 +302,9 @@ class RoomManager {
 
     #getRoomCountGame(gid)
     {
+        if (gid === "")
+            return null;
+
         for (let game of this.#roomCountAll)
         {
             if (gid === game.gid)
@@ -311,13 +314,11 @@ class RoomManager {
         return null;
     }
 
-    #updateRoomCountAllGameEnd(gid, score)
+    #updateRoomCountScores(game, score)
     {
-        const game = this.#getRoomCountGame(gid);
-        if (game === null)
+        if (game === null || score === undefined || score === null)
             return;
 
-        game.duration = Math.round((Date.now() - game.time) / 1000 / 60);
         for (let userid in score.players)
         {
             if (!game.players.includes(score.players[userid]))
@@ -325,6 +326,16 @@ class RoomManager {
         }
 
         game.players.sort();
+    }
+
+    #updateRoomCountAllGameEnd(gid, score)
+    {
+        const game = this.#getRoomCountGame(gid);
+        if (game !== null)
+        {
+            game.duration = Math.round((Date.now() - game.time) / 1000 / 60);
+            this.#updateRoomCountScores(game, score);
+        }
     }
 
 
@@ -461,12 +472,22 @@ class RoomManager {
     {
         /** remove all players that are not connected anymore */
         const fileLog = this.getGameLog(room);
+        const gid = this.#getRoomGuid(room);
+        
         if (this.#kickDisconnected(room))
         {
             /** make sure to remove game from events */
             this.#eventManager.trigger("game-remove", room, fileLog);
             Logger.info("Game room " + room + " is empty and was destroyed.");
+
+            this.#updateRoomCountAllGameEnd(gid, null);
         }
+    }
+
+    #getRoomGuid(room)
+    {
+        const pRoom = this.getRoom(room);
+        return pRoom === null ? "" : pRoom.getGameUid();
     }
 
     /**
