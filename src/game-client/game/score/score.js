@@ -784,13 +784,26 @@ const SCORING_INGAME =
         img.setAttribute("class", "scoring-ingame-avatar");
         img.setAttribute("title", SCORING_INGAME.getPlayerTitle(sName, _playerId));
         img.setAttribute("data-player-id", _playerId);
-        th1.appendChild(img);
+
+        const divAvatar = document.createElement("div");
+        divAvatar.setAttribute("class", "avatar");
+
+        divAvatar.appendChild(img);
+        th1.appendChild(divAvatar);
 
         if (isMe)
         {
-            img.setAttribute("class", "scoring-ingame-avatar scoring-ingame-avatar-clickable");
+            th1.classList.add("scoring-ingame-avatar-clickable");
+            th1.setAttribute("title", "Click to change your avatar");
+            th1.onclick = () => MeccgApi.send("/game/character/list");
+
+            img.setAttribute("class", "scoring-ingame-avatar");
             img.setAttribute("title", "Click to change your avatar");
-            img.onclick = () => MeccgApi.send("/game/character/list");
+
+            const linkChange = document.createElement("span");
+            linkChange.setAttribute("class", "link-change fa fa-pencil-square");
+           
+            th1.append(linkChange);
         }
         else
         {

@@ -387,8 +387,16 @@
         margin: 0 2px;
     }
 
+    .link-change { display: none;}
+
     &:hover {
         background: #000;
+        font-size: 1.5em;
+
+        .link-change { 
+            display: inline-block; 
+            cursor: pointer;
+        }
 
         a { display: block; }
         td { 
@@ -445,7 +453,7 @@
         position: relative;
         display: inline-block;
         width: 33px;
-        height: 23px;
+        min-height: 23px;
         overflow: hidden;
 
         img {
@@ -454,9 +462,13 @@
             top: -5px;
             width: 100%;
         }
+    }
 
-        .scoring-ingame-avatar-clickable {
-            cursor: pointer;
-        }
+    .scoring-ingame-avatar-clickable 
+    {
+        cursor: pointer;
+        text-align: center; 
+
+        &:hover { color:  #F0C648; }
     }
 }
