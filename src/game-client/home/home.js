@@ -54,7 +54,7 @@ const toNumberString = function(nValue)
     return (nValue < 10 ? "0" : "") + nValue;
 };
 
-const getGameTypeDuration = function(isArda, lTime)
+const getGameTypeDuration = function(lTime)
 {
     const pDate = new Date(Date.now() - lTime);
 
@@ -64,7 +64,7 @@ const getGameTypeDuration = function(isArda, lTime)
     else
         lMins = "now";
 
-    return (isArda ? "Arda, " : "") + "" + lMins 
+    return "" + lMins 
 }
 
 const createAvatarList = function(list)
@@ -92,13 +92,13 @@ const createAvatarList = function(list)
     return res;
 }
 
-const addGameType = function(value, isArda)
+const addGameType = function(value, isArda, context, labelGameType)
 {
     const _room = value.room;
     const _players = value.players;
-    const _context = isArda ? "arda" : "play";
+    const _context = context;
 
-    const since = getGameTypeDuration(isArda, value.time);
+    const since = getGameTypeDuration(value.time);
     
     const _tr = document.createElement("div");
     _tr.setAttribute("class", "room-image-wrapper");
@@ -139,34 +139,11 @@ const addGameType = function(value, isArda)
 
     tdRoom.append(createAvatarList(value.avatars));
 
-    if (value.jitsi)
-    {
-        const _a = document.createElement("a");
-        _a.setAttribute("href", "https://meet.jit.si/" + _room);
-        _a.setAttribute("title", "Click to join audio chat");
-        _a.setAttribute("class", "fa fa-microphone audio");
-        _a.innerText = " Jitsi";
-        tdRoom.append(_a);
-    }
-    else
-    {
-        const _a = document.createElement("div");
-        _a.setAttribute("class", "fa fa-microphone audio");
-        _a.innerText = " Discord";
-        tdRoom.append(_a);
-    }
+    tdRoom.append(document.createElement("br"));
 
     const span = document.createElement("span");
-    if (isArda)
-    {
-        span.setAttribute("class", "deck-label-green")
-        span.innerText = "Arda";
-    }
-    else
-    {
-        span.setAttribute("class", "deck-label-blue")
-        span.innerText = "Standard | DC";
-    }
+    span.innerText = labelGameType;
+    span.setAttribute("class", isArda ? "deck-label-green" : "deck-label-blue")
    
     const label = document.createElement("div");
     label.setAttribute("class", "deck-label");
@@ -194,14 +171,30 @@ const addGameType = function(value, isArda)
     return _tr;
 }
 
-const addGameTypes = function(container, data, isArda, existing)
+const addGameTypes = function(container, data)
 {
-    for (let value of data)
+    for (let game of data)
     {
-        if (isArda === value.arda)
+        if (!game.single && game.arda)
         {
-            container.appendChild(addGameType(value, isArda));
-            SampleRoomApp.addRoomTaken(value.room);
+            container.appendChild(addGameType(game, true, "arda", "Arda"));
+            SampleRoomApp.addRoomTaken(game.room);
+        }
+    }
+    for (let game of data)
+    {
+        if (!game.single && !game.arda)
+        {
+            container.appendChild(addGameType(game, false, "play", "Standard | DC"));
+            SampleRoomApp.addRoomTaken(game.room);
+        }
+    }
+    for (let game of data)
+    {
+        if (game.single && game.arda)
+        {
+            container.appendChild(addGameType(game, true, "singleplayer", "Solitary"));
+            SampleRoomApp.addRoomTaken(game.room);
         }
     }
 };
@@ -320,8 +313,7 @@ const onResult = function(data)
 
     const table = document.createDocumentFragment();
 
-    addGameTypes(table, data, false);
-    addGameTypes(table, data, true);
+    addGameTypes(table, data);
 
     pContainer.appendChild(table);
 
