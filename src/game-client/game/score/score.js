@@ -29,7 +29,9 @@ class ScoringContainers {
             let elem = document.createElement("div");
             elem.setAttribute("class", "score_label");
             elem.innerHTML = `<input type="radio" name="score_type" id="${entry.id}" value="${entry.value}" ${_ch}> <label id="${entry.id}_label" for="${entry.id}">${entry.label}</label>`;
-            div.appendChild(elem);
+    
+            if (entry.ignorecount !== true)
+                div.appendChild(elem);
         });
 
         return div;
@@ -386,8 +388,11 @@ const SCORING_INGAME =
 
                 map[category].append(this.buildFinalScores_tableRows_cell(_score.value, usable, isCut, true));
 
-                total += parseInt(_score.value);
-                totalUsed += parseInt(usable);
+                if (!SCORING.ignoreCategory(id))
+                {
+                    total += parseInt(_score.value);
+                    totalUsed += parseInt(usable);
+                }
             }
 
             listPoints.push(totalUsed);
@@ -547,19 +552,23 @@ const SCORING_INGAME =
             }
 
             const _score = score[id] ;
-            const usable = _score.double ? _score.usable * 2 : _score.usable;
+            const ignoreCount = SCORING.ignoreCategory(id);
+            const usable = _score.double && !ignoreCount ? _score.usable * 2 : _score.usable;
             const isCut = _score.value !== usable || _score.double;
 
             this.updateCount(td.value, _score.value, isCut);
             this.updateCount(td.usable, usable, isCut);
 
-            if (isCut)
+            if (isCut && !ignoreCount)
                 td.td.classList.add("score-is-cut");
             else if (td.td.classList.contains("score-is-cut"))
                 td.td.classList.remove("score-is-cut");
 
-            total += parseInt(_score.value);
-            totalUsed += parseInt(usable);
+            if (!ignoreCount)
+            {
+                total += parseInt(_score.value);
+                totalUsed += parseInt(usable);
+            }
         }
 
         const vpClasses = tr.getElementsByClassName("final-score");
@@ -569,7 +578,7 @@ const SCORING_INGAME =
             const _span = th.querySelector("span");
             const _strong = th.querySelector("strong");
             const isCut = totalUsed != total;
-            
+
             if (_span != null)
                 _span.innerText = total;
 
@@ -589,7 +598,7 @@ const SCORING_INGAME =
 
         for (let id in score)
         {
-            const val = score[id];
+            const val = SCORING.ignoreCategory(id) ? 0 : score[id];
             if (val > 0)
                 total += parseInt(val);
         }
@@ -618,9 +627,10 @@ const SCORING_INGAME =
         {
             for (let id in score)
             {
+                const allowComplete = score[id] < nAllowed || SCORING.ignoreCategory(id);
                 result[id] = {
                     value: score[id],
-                    usable: score[id] < nAllowed ? score[id] : nAllowed,
+                    usable: allowComplete ? score[id] : nAllowed,
                     double: false
                 } 
             }
@@ -672,6 +682,9 @@ const SCORING_INGAME =
 
         for (let id in SCORING_INGAME._scores)
         {
+            if (SCORING.ignoreCategory(id))
+                continue;
+
             for (let category in SCORING_INGAME._scores[id])
                 ptsByCategory[category] = 0;
 
@@ -696,6 +709,9 @@ const SCORING_INGAME =
         const ptsByCategory = this.createDoubleCalculationMap();
         for (let id of ids)
         {
+            if (SCORING.ignoreCategory(id))
+                continue;
+
             const score = SCORING_INGAME._scores[id];
             for (let category in score)
             {
@@ -990,6 +1006,7 @@ const SCORING_INGAME =
 const SCORING = {
         
     stats : { },
+    ignore: [],
 
     cardList : null,
     
@@ -1002,9 +1019,19 @@ const SCORING = {
         }
     },
 
+    ignoreCategory:function(id)
+    {
+        return id !== "" && SCORING.ignore.includes(id);
+    },
+
     _createStatsMap : function(categories)
     {
-        categories.forEach((entry) => SCORING.stats[entry.value] = 0);
+        categories.forEach((entry) => { 
+            SCORING.stats[entry.value] = 0;
+
+            if (entry.ignorecount)
+                SCORING.ignore.push(entry.value);
+        });
     },
 
     _init : function(categories, min, max)
@@ -1168,7 +1195,9 @@ const SCORING = {
                 if (_elem !== null)
                 {
                     _elem.innerText = jData[key][type];
-                    total += jData[key][type];
+
+                    if (!SCORING.ignoreCategory(type))
+                        total += jData[key][type];
                 }
             }
 
@@ -1383,14 +1412,19 @@ const SCORING = {
     
     onChangeScoreValue : function(e)
     {
-        let bAdd = this.getAttribute("data-score-action") === "increase";
+        const bAdd = this.getAttribute("data-score-action") === "increase";
         let jSpan = this.parentNode.querySelector("span"); 
-        let nCount = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
+        const nCount = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
         jSpan.innerText = nCount;
         
-        jSpan = document.getElementById("scoring-sheet").querySelector("th.score-total");
-        nCount = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
-        jSpan.innerText = nCount;
+        const category = e.target.parentElement?.parentElement?.parentElement?.getAttribute("data-score-type");
+        const ignore = typeof category === "string" && SCORING.ignoreCategory(category);
+        if (!ignore)
+        {
+            jSpan = document.getElementById("scoring-sheet").querySelector("th.score-total");
+            if (jSpan)
+                jSpan.innerText = parseInt(jSpan.innerText) + (bAdd ? 1 : -1);
+        }
 
         e.preventDefault();
         e.stopPropagation();
@@ -1525,7 +1559,7 @@ function createScoringApp(_CardList)
         return res;
     };
 
-    fetch("/data/scores")
+    fetch("/data/scores?t="+Date.now())
     .then((response) => response.json())
     .then((data) => 
     {
