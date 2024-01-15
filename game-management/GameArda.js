@@ -273,7 +273,10 @@ class GameArda extends GameStandard
         if (obj.type === "minor")
         {
             deck.recycleMinorItems();
-            this.publishChat(userid, "recycled all minor items");
+            deck.recycleStageCards();
+
+            this.publishChat(userid, "recycled all minor items and stage cards");
+
             this.#reycled.minors = true;
             isMinor = true;
         }
@@ -304,8 +307,10 @@ class GameArda extends GameStandard
             }
         }
 
-        if (this.#drawOpeningHand(8))
+        if (isMinor)
             this.#drawOpeningStageCards(5);
+
+        this.#drawOpeningHand(8);
 
         this.publishToPlayers("/game/arda/hand/show", userid, {});
         this.onCheckDraft(userid, socket);

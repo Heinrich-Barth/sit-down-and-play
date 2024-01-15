@@ -354,6 +354,13 @@ class DeckArda extends DeckDefault {
         this.shuffleAny(this.playdeckMinorItems);
     }
 
+    recycleStageCards()
+    {
+        this.moveList(this.discardPileStage, this.playdeckStage);
+        this.moveList(this.handStage, this.playdeckStage);
+        this.shuffleAny(this.playdeckStage);
+    }
+
     /**
      * Move all characters from hands and discard piles into the playdeck and
      * reshuffle
