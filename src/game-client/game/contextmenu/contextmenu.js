@@ -402,6 +402,20 @@ const ContextMenu = {
             return false;
         },
 
+        onContextDiscardPileActions : function(e)
+        {
+            if (e.target !== null)
+                ContextMenu.show(e, "_site", "_code", "_company", "discardpile_actions");
+            
+            if (e.preventDefault)
+                e.preventDefault();
+
+            if (e.stopPropagation)
+                e.stopPropagation();
+
+            return false;
+        },
+
         onContextPlayDeckActions : function(e)
         {
             if (e.target !== null)
@@ -811,6 +825,11 @@ const ContextMenu = {
         this.addItem("view_deck_cards", "Look at my playdeck as it is", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", false), "");
         this.addItem("view_deck_cards_ordered", "Look at my playdeck and group cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", true), "");
         this.addItem("view_deck_cards_reveal", "Reveak playdeck to opponent", "fa-eye", "context-menu-item-generic", () => TaskBarCards.OnRevealToOpponent("playdeck"), "");
+
+        this.addItem("view_discardpile_cards", "Look at my discard pile as it is", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("discard", false), "");
+        this.addItem("view_discardpile_ordered", "Look at my discard pile and group cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("discard", true), "");
+        this.addItem("view_discardpile_cards_reveal", "Reveak discard pile to opponent", "fa-eye", "context-menu-item-generic", () => TaskBarCards.OnRevealToOpponent("discard"), "");
+
         
         this.addItem("move_company_left", "Move company one position to the left", "fa-arrow-left", "context-menu-item-generic", ContextMenu.callbacks.companyMoveLeft.bind(ContextMenu.callbacks));
         this.addItem("move_company_right", "Move company one position to the right", "fa-arrow-right", "context-menu-item-generic", ContextMenu.callbacks.companyMoveRight.bind(ContextMenu.callbacks));
@@ -827,6 +846,7 @@ const ContextMenu = {
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
         this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_cards_reveal", "_divider", "reval_cards_number", "reval_cards_number_self", "_divider", "view_deck_notes", "playdeck_shuffle"];
+        this.data.types["discardpile_actions"] = ["view_discardpile_ordered", "view_discardpile_cards", "view_discardpile_cards_reveal"];
         this.data.types["company_position"] = ["move_company_left", "move_company_right", "move_company_end"];
 
         this.data.specialClasses["location"] = "context-menu-site";

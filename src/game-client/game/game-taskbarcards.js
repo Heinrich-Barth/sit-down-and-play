@@ -238,14 +238,14 @@ class TaskBarCards
 
         document.querySelector(".card-bar .sideboard").onclick = (e) => 
         {
-            TaskBarCards.Show("sideboard");
+            TaskBarCards.Show("sideboard", true);
             e.stopPropagation();
             return false;
         };
 
         document.querySelector(".card-bar-play .victory").onclick = (e) => 
         {
-            TaskBarCards.Show("victory");
+            TaskBarCards.Show("victory", true);
             e.stopPropagation();
             return false;
         };
@@ -261,17 +261,10 @@ class TaskBarCards
             e.stopPropagation();
             return false;
         };
-
-        document.querySelector(".card-bar .discardpile").onclick = (e) => 
-        {
-            TaskBarCards.Show("discard");
-            e.stopPropagation();
-            return false;
-        };
-
+        
+        document.querySelector(".card-bar .discardpile").onclick = TaskBarCards.onCLickDiscardPile;
         document.querySelector(".card-bar .playdeck").onclick = TaskBarCards.onClickPlaydeck;
         
-        document.querySelector(".card-bar .discardpile").oncontextmenu = TaskBarCards.ShuffleDiscardpile;
         document.querySelector(".card-bar .playdeck").oncontextmenu = TaskBarCards.ShufflePlaydeck;
 
         for (let elem of document.querySelectorAll(".taskbar .taskbar-turn"))
@@ -292,6 +285,17 @@ class TaskBarCards
     static onClickPlaydeck(e)
     {
         ContextMenu.contextActions.onContextPlayDeckActions(e);
+        return false;
+    }
+
+    static onCLickDiscardPile(e)
+    {
+        if (ContextMenu.contextActions.onContextDiscardPileActions === undefined)
+            TaskBarCards.Show("discard");
+        else
+            ContextMenu.contextActions.onContextDiscardPileActions(e);
+
+        return false;
     }
 
     static rollDiceCharacter(uuid, code)
