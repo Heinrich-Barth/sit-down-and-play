@@ -12,8 +12,8 @@ const ContextMenu = {
         pMenuElement.style.left = x + "px";
         pMenuElement.style.top = y + "px";
     },
-   
-    createMenuEntry : function(pParent, item)
+
+    createMenuEntry : function(pParent, item, bAddDivider)
     {
         let pLink = document.createElement("a");
 
@@ -33,6 +33,9 @@ const ContextMenu = {
         li.setAttribute("class", item.classes);
         li.appendChild(pLink);
 
+        if (bAddDivider)
+            li.classList.add("border-top");
+
         pParent.appendChild(li);
     },
 
@@ -49,13 +52,19 @@ const ContextMenu = {
         pContainer.setAttribute("class", "context-menu__items");
 
         let hasElements = false;
-        const vsItems = ContextMenu.data.types[nType];       
+        let bAddDivider = false;
+        const vsItems = ContextMenu.data.types[nType];
         for (let key of vsItems)
         {
-            if (ContextMenu.data.items[key] !== undefined)
+            if (key === "_divider")
             {
-                ContextMenu.createMenuEntry(pContainer, ContextMenu.data.items[key]);
+                bAddDivider = true;
+            }
+            else if (ContextMenu.data.items[key] !== undefined)
+            {
+                ContextMenu.createMenuEntry(pContainer, ContextMenu.data.items[key], bAddDivider);
                 hasElements = true;
+                bAddDivider = false;
             }
         }
 
@@ -800,7 +809,8 @@ const ContextMenu = {
         this.addItem("movement_return", "Return to site of origin", "fa-ban", "context-menu-item-arrive", ContextMenu.callbacks.returnToSiteOfOrigin, "Remove target site.");
 
         this.addItem("view_deck_cards", "Look at my playdeck as it is", "fa-stack-exchange", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", false), "");
-        this.addItem("view_deck_cards_ordered", "Look at my playdeck and sort cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", true), "");
+        this.addItem("view_deck_cards_ordered", "Look at my playdeck and group cards", "fa-eye", "context-menu-item-generic", () => TaskBarCards.Show("playdeck", true), "");
+        this.addItem("view_deck_cards_reveal", "Reveak playdeck to opponent", "fa-eye", "context-menu-item-generic", () => TaskBarCards.OnRevealToOpponent("playdeck"), "");
         
         this.addItem("move_company_left", "Move company one position to the left", "fa-arrow-left", "context-menu-item-generic", ContextMenu.callbacks.companyMoveLeft.bind(ContextMenu.callbacks));
         this.addItem("move_company_right", "Move company one position to the right", "fa-arrow-right", "context-menu-item-generic", ContextMenu.callbacks.companyMoveRight.bind(ContextMenu.callbacks));
@@ -811,12 +821,12 @@ const ContextMenu = {
         
         this.addItem("reval_cards_number", "Reveal X cards to your opponent (I will not see them)", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
         this.addItem("reval_cards_number_self", "Look at your top X cards", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToSelf, "");
-        this.addItem("playdeck_shuffle", "Shuffle deck", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
+        this.addItem("playdeck_shuffle", "Shuffle deck (or RIGHT CLICK)", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
-        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_notes", "reval_cards_number", "reval_cards_number_self", "playdeck_shuffle"];
+        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_cards_reveal", "_divider", "reval_cards_number", "reval_cards_number_self", "_divider", "view_deck_notes", "playdeck_shuffle"];
         this.data.types["company_position"] = ["move_company_left", "move_company_right", "move_company_end"];
 
         this.data.specialClasses["location"] = "context-menu-site";
