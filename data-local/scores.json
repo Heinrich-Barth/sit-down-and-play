@@ -1,6 +1,24 @@
 {
     "categories": [
         {
+            "id": "score_influence",
+            "value":  "influence",
+            "label": "General Influence",
+            "default": false,
+            "extended": false,
+            "ignorecount": true,
+            "icon": "mind"
+        },
+        {
+            "id": "score_stage",
+            "value":  "stage",
+            "label": "Stage Points",
+            "default": false,
+            "extended": false,
+            "ignorecount": true,
+            "icon": "stage"
+        },
+        {
             "id": "score_ally",
             "value":  "ally",
             "label": "Ally Points",
