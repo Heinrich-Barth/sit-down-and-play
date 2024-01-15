@@ -758,7 +758,7 @@ class GameStandard extends GamePlayers
         const total = this.getScoring().setCategory(userid, data.type, data.points);
         if (total !== -1)
         {
-            this.publishChat(userid, " sets" + data.type + " score to " + data.points + " point(s)", true);
+            this.publishChat(userid, " sets " + data.type + " score to " + data.points + " point(s)", true);
             this.sendCurrentScores(userid);
         }
     }
