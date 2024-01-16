@@ -7,7 +7,7 @@
             "default": false,
             "extended": false,
             "ignorecount": true,
-            "icon": "mind"
+            "icon": "/media/assets/icon_influence.png"
         },
         {
             "id": "score_stage",
@@ -16,7 +16,7 @@
             "default": false,
             "extended": false,
             "ignorecount": true,
-            "icon": "stage"
+            "icon": "/media/assets/icon_stage.png"
         },
         {
             "id": "score_ally",

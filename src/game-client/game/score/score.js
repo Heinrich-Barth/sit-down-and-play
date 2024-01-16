@@ -983,7 +983,17 @@ const SCORING_INGAME =
 
                 const spanLetter = document.createElement("span");
                 spanLetter.setAttribute("class", "score-letter");
-                spanLetter.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+                const icon = entry.icon && entry.icon !== "" ? entry.icon : "";
+                if (icon === "")
+                {
+                    spanLetter.innerText = SCORING_INGAME.getFirstCharacter(entry.label);
+                }
+                else
+                {
+                    const imgIcon = document.createElement("img");
+                    imgIcon.setAttribute("src", icon);
+                    spanLetter.append(imgIcon);
+                }
 
                 const spanWord = document.createElement("div");
                 spanWord.setAttribute("class", "score-word");
@@ -1007,7 +1017,6 @@ const SCORING = {
         
     stats : { },
     ignore: [],
-
     cardList : null,
     
     _resetStats : function()
