@@ -571,25 +571,29 @@ const SCORING_INGAME =
             }
         }
 
+        this.updateInGameScoreCutsFinal(tr, totalUsed, total);
+    },
+
+    updateInGameScoreCutsFinal : function(tr, totalUsed, total)
+    {
         const vpClasses = tr.getElementsByClassName("final-score");
-        if (vpClasses !== null && vpClasses.length > 0)
-        {
-            const th = vpClasses[0];
-            const _span = th.querySelector("span");
-            const _strong = th.querySelector("strong");
-            const isCut = totalUsed != total;
+        if (vpClasses === null || vpClasses.length === 0)
+            return;
 
-            if (_span != null)
-                _span.innerText = total;
+        const th = vpClasses[0];
+        
+        const _span = th.querySelector("span");
+        if (_span != null)
+            _span.innerText = total;
 
-            if (_strong != null)
-                _strong.innerText = totalUsed;
-            
-            if (isCut)
-                th.classList.add("score-is-cut");
-            else if (th.classList.contains("score-is-cut"))
-                th.classList.remove("score-is-cut");
-        }
+        const _strong = th.querySelector("strong");
+        if (_strong != null)
+            _strong.innerText = totalUsed;
+        
+        if (totalUsed != total)
+            th.classList.add("score-is-cut");
+        else if (th.classList.contains("score-is-cut"))
+            th.classList.remove("score-is-cut");
     },
 
     calculateTotals : function(score)
@@ -1182,36 +1186,46 @@ const SCORING = {
             return cell;
     },
 
-    scoreSheetUpdateTyble(jData, jTable)
+    scoreSheetUpdateTable(jData, jTable)
     {
         if (jTable === null)
             return;
 
-        let _elem;
-        let player;
-        let total;
-
+        const trScoreTotal = document.getElementById("scoring-sheet").querySelector("tr.score-total");
         for (let key in jData)
         {
-            total = 0;
-            player = MeccgPlayers.isChallenger(key) ? "self" : key;
-            for (let type in jData[key])
-            {
-                _elem = this._getTargetCell(jTable, type, player);
-                if (_elem !== null && player === "self")
-                    _elem = _elem.querySelector("span");
-                
-                if (_elem !== null)
-                {
-                    _elem.innerText = jData[key][type];
-
-                    if (!SCORING.ignoreCategory(type))
-                        total += jData[key][type];
-                }
-            }
-
-            document.getElementById("scoring-sheet").querySelector("tr.score-total").querySelector('th[data-player="'+player+'"]').innerText = total;
+            const count = this.scoreSheetUpdateTableOnPlayer(jTable, jData, key);
+            
+            const elem = trScoreTotal.querySelector('th[data-player="'+count.player+'"]');
+            if (elem !== null)
+                elem.innerText = count.total;
         }
+    },
+
+    scoreSheetUpdateTableOnPlayer : function(jTable, jData, key)
+    {
+        let _elem;
+        let total = 0;
+        const player = MeccgPlayers.isChallenger(key) ? "self" : key;
+        for (let type in jData[key])
+        {
+            _elem = this._getTargetCell(jTable, type, player);
+            if (_elem !== null && player === "self")
+                _elem = _elem.querySelector("span");
+            
+            if (_elem !== null)
+            {
+                _elem.innerText = jData[key][type];
+
+                if (!SCORING.ignoreCategory(type))
+                    total += jData[key][type];
+            }
+        }
+
+        return {
+            player: player,
+            total: total
+        };
     },
     
     _showScoreSheet : function(jData, bAllowUpdate, token)
@@ -1220,7 +1234,7 @@ const SCORING = {
             return;
             
         const jTable = document.getElementById("scoring-sheet").querySelector("tbody");
-        this.scoreSheetUpdateTyble(jData, jTable);
+        this.scoreSheetUpdateTable(jData, jTable);
 
         if (!bAllowUpdate)
             this.removeUpdateFunctionality(token);
