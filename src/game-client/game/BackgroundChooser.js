@@ -22,7 +22,7 @@ class BackgroundChooser extends PreferenceChoise
         return elem;
     }
 
-    _replaceBackground(sNew)
+    #replaceBackground(sNew)
     {
         if (sNew === undefined || sNew === "" || document.body.classList.contains(sNew))
             return false;
@@ -41,7 +41,7 @@ class BackgroundChooser extends PreferenceChoise
 
     onClickPerformed(elem)
     {
-        this._replaceBackground(elem);
+        this.#replaceBackground(elem);
         this.updateCookie("background", elem);
     }
 }
