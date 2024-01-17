@@ -28,17 +28,17 @@ class GamePreferences extends Preferences {
         return g_sLobbyToken !== "";
     }
 
-    _dices()
+    #dices()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-dice-chooser"));
     }
 
-    _chat(isActive)
+    #chat(isActive)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-chat-view", { "detail": isActive }));
     }
 
-    _zoomChange(val)
+    #zoomChange(val)
     {
         const rem = [];
         let add = "";
@@ -70,12 +70,12 @@ class GamePreferences extends Preferences {
         }
     }
 
-    _toggleStackStage(isActive)
+    #toggleStackStage(isActive)
     {
-        this._toggleClass(document.querySelector(".table"), isActive, "table-stage-stacking");
+        this.#toggleClass(document.querySelector(".table"), isActive, "table-stage-stacking");
     }
 
-    _toggleClass(elem, isActive, className)
+    #toggleClass(elem, isActive, className)
     {
         if (elem === null || className === "")
             return;
@@ -86,17 +86,17 @@ class GamePreferences extends Preferences {
             elem.classList.remove(className);
     }
 
-    _toggleAlignCompaniesLeft(isActive)
+    #toggleAlignCompaniesLeft(isActive)
     {
-        this._toggleClass(document.querySelector(".table"), isActive, "table-companies-left");
+        this.#toggleClass(document.querySelector(".table"), isActive, "table-companies-left");
     }
 
-    _toggleTouchHelper(isActive)
+    #toggleTouchHelper(isActive)
     {
-        this._toggleClass(document.body, isActive, "force-mobile-helper");
+        this.#toggleClass(document.body, isActive, "force-mobile-helper");
     }
 
-    _togglePaddingBottom(isActive)
+    #togglePaddingBottom(isActive)
     {
         const table = document.querySelector(".area-player");
         if (table === null)
@@ -114,7 +114,7 @@ class GamePreferences extends Preferences {
             ChangeSeating.change();
     }
 
-    _autosave(isActive)
+    #autosave(isActive)
     {
         if (isActive)
             document.body.setAttribute("data-autosave", "true");
@@ -122,12 +122,12 @@ class GamePreferences extends Preferences {
             document.body.removeAttribute("data-autosave");
     }
 
-    _doubleMiscPoints(isActive)
+    #doubleMiscPoints(isActive)
     {
         MeccgApi.send("/game/score/doublemisc", { misc: isActive === true });
     }
 
-    _toggleSpanishCards(isActive)
+    #toggleSpanishCards(isActive)
     {
         sessionStorage.setItem("cards_es", isActive ? "yes" : "no");
 
@@ -139,7 +139,7 @@ class GamePreferences extends Preferences {
             this._replaceImageLanguage(elem, !isActive);
     }
 
-    _toogleCompanyLineBreak(isActive)
+    #toogleCompanyLineBreak(isActive)
     {
         if (isActive && !document.body.classList.contains("table-companies-breakline"))
             document.body.classList.add("table-companies-breakline");
@@ -149,12 +149,12 @@ class GamePreferences extends Preferences {
 
     _replaceImageLanguage(img, useEnglish)
     {
-        this._replaceImageLanguageAttribute(img, useEnglish, "src");
-        this._replaceImageLanguageAttribute(img, useEnglish, "data-image-backside");
-        this._replaceImageLanguageAttribute(img, useEnglish, "data-img-image");
+        this.#replaceImageLanguageAttribute(img, useEnglish, "src");
+        this.#replaceImageLanguageAttribute(img, useEnglish, "data-image-backside");
+        this.#replaceImageLanguageAttribute(img, useEnglish, "data-img-image");
     }
 
-    _replaceImageLanguageAttribute(img, useEnglish, attribName)
+    #replaceImageLanguageAttribute(img, useEnglish, attribName)
     {
         if (!img.hasAttribute(attribName))
             return;
@@ -169,7 +169,7 @@ class GamePreferences extends Preferences {
             img.setAttribute(attribName, val.replace("/en-remaster/", "/es-remaster/"));
     }
 
-    _toggleFullscreen(isActive)
+    #toggleFullscreen(isActive)
     {
         const elem = document.documentElement;
         if (elem === undefined)
@@ -188,7 +188,7 @@ class GamePreferences extends Preferences {
             document.webkitExitFullscreen();
     }
 
-    _backgroundDarkness(isActive)
+    #backgroundDarkness(isActive)
     {
         const elem = document.getElementById("table-dark");
         if (isActive)
@@ -207,7 +207,7 @@ class GamePreferences extends Preferences {
         }
     }
 
-    _volumeChange(val)
+    #volumeChange(val)
     {
         document.body.dispatchEvent(new CustomEvent("meccg-sfx-test", { "detail": parseInt(val) }));
 
@@ -218,17 +218,17 @@ class GamePreferences extends Preferences {
     }
 
 
-    _copySharePlay()
+    #copySharePlay()
     {
-        this._copyToClipboard(document.location.href);
+        this.#copyToClipboard(document.location.href);
     }
 
-    _copyShareWatch()
+    #copyShareWatch()
     {
-        this._copyToClipboard(document.location.href + "/watch");
+        this.#copyToClipboard(document.location.href + "/watch");
     }
 
-    _copyToClipboard(text)
+    #copyToClipboard(text)
     {
         if (navigator === undefined || navigator.clipboard === undefined || typeof text !== "string" || text === "")
             return;
@@ -242,27 +242,22 @@ class GamePreferences extends Preferences {
         });
     }
 
-    _changeAvatar()
+    #changeAvatar()
     {
         MeccgApi.send("/game/character/list");
     }
 
-    _endGame()
+    #endGame()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-query-end-game", { }));
     }
 
-    _addCardsToDeck()
+    #addCardsToDeck()
     {
         document.body.dispatchEvent(new CustomEvent("meccg-cards-add-ingame", { "detail": "" }));
     }
 
-    _showRule(val)
-    {
-        MapWindow.showRules(val.replace("rules_", ""));
-    }
-
-    _gameAudio()
+    #gameAudio()
     {
         const div = document.createElement("div");
         div.setAttribute("id", "question-fake-hide");
@@ -308,10 +303,10 @@ class GamePreferences extends Preferences {
         if (!bWatcher)
         {
             this.createEntry0("toggle_company_break");
-            this._toggleStackStage(true);
+            this.#toggleStackStage(true);
             this.createEntry0("toggle_stack_stage");
 
-            this._toggleAlignCompaniesLeft(true);
+            this.#toggleAlignCompaniesLeft(true);
             this.createEntry0("toggle_align_companies_left");
             this.createEntry0("use_padding_bottom");
         }
@@ -373,43 +368,44 @@ class GamePreferences extends Preferences {
         this.addConfigToggle("images_errata_dc", "Use CoE Errata", this.getUseDCByDefault());
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
-        this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this._dices.bind(this));        
-        this.addConfigSlider("game_sfx", "Sound volume", 100, 20, "fa-volume-up", this._volumeChange.bind(this));
-        this.addConfigSlider("toggle_zoom", "Zoom Level", 2, 1, "fa-search-plus slider-short", this._zoomChange.bind(this));
-        this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this._backgroundDarkness);
-        this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this._doubleMiscPoints);
-        this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this._toggleFullscreen);
-        this.addConfigToggle("show_chat", "Show game log window", true, this._chat);
-        this.addConfigToggle("toggle_company_break", "Expand companies over multiple lines", false, this._toogleCompanyLineBreak.bind(this));
+        this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this.#dices.bind(this));        
+        this.addConfigSlider("game_sfx", "Sound volume", 100, 20, "fa-volume-up", this.#volumeChange.bind(this));
+        this.addConfigSlider("toggle_zoom", "Zoom Level", 2, 1, "fa-search-plus slider-short", this.#zoomChange.bind(this));
+        this.addConfigToggle("bg_shawod", "Reduce background brightness", true, this.#backgroundDarkness);
+        this.addConfigToggle("score_double_misc", "Double MISC points (DC rules)", false, this.#doubleMiscPoints);
+        this.addConfigToggle("toggle_fullscreen", "Toggle Fullscreen", false, this.#toggleFullscreen);
+        this.addConfigToggle("show_chat", "Show game log window", true, this.#chat);
+        this.addConfigToggle("toggle_company_break", "Expand companies over multiple lines", false, this.#toogleCompanyLineBreak.bind(this));
 
-        this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available).", sessionStorage.getItem("cards_es") === "yes", this._toggleSpanishCards.bind(this));
+        this.addConfigToggle("toggle_spanishcards", "Use Spanish instead of English cards (if available).", sessionStorage.getItem("cards_es") === "yes", this.#toggleSpanishCards.bind(this));
 
-        this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this._addCardsToDeck);
-        this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this._gameAudio);
+        this.addConfigAction("game_addcards", "Add new cards to sideboard", false, "fa-plus-square", this.#addCardsToDeck);
+        this.addConfigAction("game_audio", "Join audio chat", false, "fa-headphones", this.#gameAudio);
 
         if(this.isAdmin())
         {
-            this.addConfigToggle("game_autosave", "Save game at the beginning of a player's turn", true, this._autosave);
+            this.addConfigToggle("game_autosave", "Save game at the beginning of a player's turn", true, this.#autosave.bind(this));
             this.addConfigAction("change_seats", "Change player order", false, "fa-circle-o-notch", this.#changeSeating.bind(this));
         }
 
         this.addConfigAction("game_save", "Save current game", false, "fa-floppy-o", () => document.body.dispatchEvent(new CustomEvent("meccg-game-save-request", { "detail": ""})));
         this.addConfigAction("game_load", "Restore a saved game", false, "fa-folder-open", () => document.body.dispatchEvent(new CustomEvent("meccg-game-restore-request", { "detail": ""})));
 
-        this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this._toggleStackStage.bind(this));
-        this.addConfigToggle("toggle_align_companies_left", "Align companies to the left", true, this._toggleAlignCompaniesLeft.bind(this));
+        this.addConfigToggle("toggle_stack_stage", "Stack event cards vertically", true, this.#toggleStackStage.bind(this));
+        this.addConfigToggle("toggle_align_companies_left", "Align companies to the left", true, this.#toggleAlignCompaniesLeft.bind(this));
 
-        this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-power-off", this._endGame);
-        this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this._togglePaddingBottom)
+        this.addConfigAction("leave_game", "End game now (after confirmation)", false, "fa-power-off", this.#endGame);
+        this.addConfigToggle("use_padding_bottom", "Add additional space at the bottom for your hand", true, this.#togglePaddingBottom)
 
-        this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this._copySharePlay.bind(this));
-        this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this._copyShareWatch.bind(this));
-        this.addConfigToggle("toggle_touch_help", "Use mobile touch support", false, this._toggleTouchHelper.bind(this));
-        this.addConfigAction("change_avatar", "Change your avatar icon", false, "fa-magic", this._changeAvatar.bind(this));
-        this._toggleCardPreview();
+        this.addConfigAction("share_play", "Copy link to join this game to clipboard", false, "fa-share-alt", this.#copySharePlay.bind(this));
+        this.addConfigAction("share_watch", "Copy link to watch this game to clipboard", false, "fa-share-alt", this.#copyShareWatch.bind(this));
+        this.addConfigToggle("toggle_touch_help", "Use mobile touch support", false, this.#toggleTouchHelper.bind(this));
+        this.addConfigAction("change_avatar", "Change your avatar icon", false, "fa-magic", this.#changeAvatar.bind(this));
+        this.#toggleCardPreview();
+        this.#backgroundDarkness(true);
     }
 
-    _toggleCardPreview()
+    #toggleCardPreview()
     {
         document.body.classList.add("large-preview");
     }
@@ -440,7 +436,7 @@ class GamePreferences extends Preferences {
         if (this.data.background !== undefined)
             this.setBackgroundImage(this.data.background);
 
-        this._autosave(true);
+        this.#autosave(true);
     }
 
     initDices()
