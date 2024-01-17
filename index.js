@@ -56,7 +56,7 @@ SERVER.instance.get("/data/list/underdeeps", SERVER.caching.cache.jsonCallback6h
 SERVER.instance.get("/data/list/name-code-suggestions", SERVER.caching.expires.jsonCallback, (_req, res) => res.send(CardDataProvider.getNameCodeSuggestionMap()).status(200));
 
 require("./releasenotes")()
-require("./Personalisation")();
+require("./Personalisation").init();
 
 /**
  * This allows dynamic scoring categories. Can be cached, because it will not change.

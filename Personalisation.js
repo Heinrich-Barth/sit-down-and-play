@@ -78,9 +78,17 @@ const Personalisation = {
     console.log("\t - "+Personalisation.background_keys.length + " background(s) available");
 })();
 
-module.exports = function()
+exports.init = function()
 {
     ServerModule.Server.getServerInstance().get("/data/dices", ServerModule.Caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.dices).status(200));
     ServerModule.Server.getServerInstance().get("/data/backgrounds", ServerModule.Caching.expires.jsonCallback, (_req, res) => res.send(Personalisation.background_keys).status(200));
 }
 
+exports.getRandomBackground = function()
+{
+    if (Personalisation.background_keys.length < 2)
+        return "";
+
+    const index = Math.floor((Math.random() * Personalisation.background_keys.length));
+    return Personalisation.background_keys[index];
+}

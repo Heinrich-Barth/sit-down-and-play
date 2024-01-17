@@ -2,7 +2,7 @@ const GameRoom = require("./GameRoom");
 const Logger = require("../Logger");
 const Configuration = require("../Configuration");
 const EventManager = require("../EventManager");
-
+const Personalisation = require("../Personalisation");
 
 /**
  * Create a new room if necessary
@@ -914,6 +914,7 @@ class RoomManager {
         const useDCE = pRoom.useDCE() ? "true" : "false";
 
         return this.#gamePageHtml.replace("{TPL_DISPLAYNAME}", username)
+            .replace("{TPL_BACKGROUND}", this.#getRandomBackground())
             .replace("{TPL_TIME}", "" + lTimeJoined)
             .replace("{TPL_ROOM}", room)
             .replace("{TPL_USE_DCE}", useDCE)
@@ -926,6 +927,15 @@ class RoomManager {
             .replace("{TPL_IS_SINGLEPLAYER}", isSinglePlayer)
             .replace("{TPL_JOINED_TIMESTAMP}", sToken)
             .replace("{TPL_CON_COUNT}", conCount);
+    }
+
+    #getRandomBackground()
+    {
+        const img = Personalisation.getRandomBackground();
+        if (img && img !== "")
+            return img;
+        else
+            return "bg-game";
     }
 
     /**
