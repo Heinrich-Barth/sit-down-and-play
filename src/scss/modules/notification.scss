@@ -19,7 +19,7 @@
         grid-template-columns: 40px 250px;
         justify-content: center;
         column-gap: 10px;
-
+        
         animation: notification-fadeout 4s linear forwards;
 
         &.success .notification-element { background: #6eb566; }
@@ -33,10 +33,11 @@
 
     .notification-element {
         padding: 10px;
+        border-radius: 5px;
     }
 
     .notification-icon {
-        border-radius: 50%;
+        border-radius: 5px;
         align-self: center;
     }
 
