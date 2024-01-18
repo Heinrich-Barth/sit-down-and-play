@@ -1418,7 +1418,7 @@ class GameStandard extends GamePlayers
         const list = this._getList(userid, type);
         
         this.publishToPlayers("/game/view-cards/list", userid, {type: type, list: list, sorted: sorted });
-        this.publishChat(userid, " views cards in " + obj, false);
+        this.publishChat(userid, " views cards in " + type, false);
     }
     viewCloseList(userid, _socket, obj)
     {
