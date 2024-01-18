@@ -10,10 +10,22 @@ const MapInstanceRenderer = {
         const vsRegions = e.detail.regions;
         const sCodeTarget = e.detail.target;
 
-        if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0)) {
+        if (MapInstanceRenderer._isMovementSelection && (sCodeStart === "" || sCodeTarget === "" || vsRegions.length === 0)) 
+        {
+            const message = [];
+            if (sCodeStart === "")
+                message.push("start code");
+            if (sCodeTarget === "")
+                message.push("target code");
+            if (vsRegions.length === 0)
+                message.push("regions");
+
+            console.warn("Movement selection is missing essential data: " + message.join(","));
             MapInstanceRenderer.cancel();
         }
-        else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "") {
+        else if (!MapInstanceRenderer._isMovementSelection && sCodeStart === "") 
+        {
+            console.warn("Movement selection but start site missing!");
             MapInstanceRenderer.cancel();
         }
         else {
