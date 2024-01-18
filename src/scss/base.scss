@@ -48,11 +48,11 @@ body
 
 .bgblue,
 .blue-box {
-
-    background: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, rgba(60,60,60,0.4) 100%);
+    
+    background: linear-gradient(90deg, rgba(35, 35, 35, 0.7) 0%, rgba(35, 35, 35, 0.3) 100%);    
     border-radius: 5px;
-
-    &:hover { background-color: rgba(0,0,0,0.8); }
+    
+    &:hover { background-color: rgba(35, 35, 35, 0.9); }
 }
 
 h1, h2 { 

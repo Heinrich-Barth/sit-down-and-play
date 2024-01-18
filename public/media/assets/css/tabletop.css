@@ -40,12 +40,12 @@ body {
 
 .bgblue,
 .blue-box {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(60, 60, 60, 0.4) 100%);
+  background: linear-gradient(90deg, rgba(35, 35, 35, 0.7) 0%, rgba(35, 35, 35, 0.3) 100%);
   border-radius: 5px;
 }
 .bgblue:hover,
 .blue-box:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(35, 35, 35, 0.9);
 }
 
 h1, h2 {
@@ -697,7 +697,7 @@ body.table-companies-breakline .companies {
 .card-hands .hand-card-sizer {
   padding: 5px 10px;
   text-align: center;
-  color: #fff;
+  color: #ebe9df;
   font-size: 10px;
 }
 .card-hands .card-hand {
@@ -937,7 +937,7 @@ body.table-companies-breakline .companies {
   text-align: center;
 }
 .reveal-to-self .reveal-to-self-content p {
-  color: #fff;
+  color: #ebe9df;
 }
 .reveal-to-self .reveal-to-self-content .card-hand {
   display: inline-block;
@@ -1434,7 +1434,7 @@ img.card-icon {
 .config-zoom {
   position: absolute;
   top: 100px !important;
-  color: #fff;
+  color: #ebe9df;
   padding: 7px;
   display: none;
 }
@@ -1965,7 +1965,7 @@ div.card[data-token="10"]:after {
   max-height: 80%;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
+  color: #ebe9df;
 }
 .chanage-avatar-app img {
   width: 200px;
@@ -1986,7 +1986,7 @@ div.card[data-token="10"]:after {
 .dialog-notes,
 .change-seating {
   background-color: #000;
-  color: #fff;
+  color: #ebe9df;
   max-width: 90%;
   max-height: 90%;
 }
@@ -2057,7 +2057,7 @@ div.card[data-token="10"]:after {
 .change-seating button {
   border: 0;
   border-radius: 5px;
-  color: #ffffff;
+  color: #fff;
   cursor: pointer;
   display: inline-block;
   height: 3.5em;
@@ -2160,9 +2160,6 @@ div.card[data-token="10"]:after {
   display: inline-block;
   height: 20px;
 }
-.player_selector:hover {
-  background: #000;
-}
 .player_selector span.game_time {
   font-size: 0.8em;
 }
@@ -2172,7 +2169,7 @@ div.card[data-token="10"]:after {
   top: 0px;
   left: 0px;
   min-width: 100px;
-  color: #fff;
+  color: #ebe9df;
   z-index: 400;
 }
 .player-selector-box .player-view {
@@ -2187,7 +2184,7 @@ div.card[data-token="10"]:after {
 .player-selector-box a {
   display: inline-block;
   min-width: 10px;
-  color: #fff;
+  color: #ebe9df;
 }
 .player-selector-box a.cur {
   color: #F0C648;

@@ -40,12 +40,12 @@ body {
 
 .bgblue,
 .blue-box {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(60, 60, 60, 0.4) 100%);
+  background: linear-gradient(90deg, rgba(35, 35, 35, 0.7) 0%, rgba(35, 35, 35, 0.3) 100%);
   border-radius: 5px;
 }
 .bgblue:hover,
 .blue-box:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(35, 35, 35, 0.9);
 }
 
 h1, h2 {
@@ -274,7 +274,7 @@ div.panel-buttons {
 }
 
 .caption {
-  color: #fff;
+  color: #ebe9df;
   text-transform: uppercase;
   font-size: 10px;
 }
@@ -322,7 +322,7 @@ img.map-region-icon {
   width: auto;
   padding: 20px;
   text-align: center;
-  color: #fff;
+  color: #ebe9df;
   cursor: pointer;
   overflow: auto;
   max-height: 50%;

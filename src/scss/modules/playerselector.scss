@@ -3,8 +3,6 @@
     display: inline-block;
     height: 20px;
 
-    &:hover { background: #000; }
-
     span.game_time {
         font-size: 0.8em;
     }
@@ -15,7 +13,7 @@
     top: 0px;
     left: 0px;
     min-width: 100px;
-    color: #fff;
+    color: #ebe9df;
     z-index: 400;
 
     .player-view {
@@ -29,7 +27,7 @@
     a {
         display: inline-block;
         min-width: 10px;
-        color: #fff;
+        color: #ebe9df;
 
         &.cur {
             color: #F0C648;
