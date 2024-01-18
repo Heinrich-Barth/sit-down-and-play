@@ -118,7 +118,12 @@ const createCharacterHtml = function(jsonCard, id)
     iMarker.setAttribute("class", "character-mark-toggle fa fa-thumb-tack ");
     iMarker.setAttribute("data-code", jsonCard.code);
     iMarker.setAttribute("data-uuid", jsonCard.uuid);
-    iMarker.setAttribute("title", "Mark/Unmark " + jsonCard.code);
+    
+    if (jsonCard.revealed === true)
+        iMarker.setAttribute("title", "Mark/Unmark " + jsonCard.code);
+    else
+        iMarker.setAttribute("title", "Mark/Unmark this card");
+
     iMarker.onclick = markCharacter;
     characterDiv.appendChild(iMarker);
 
