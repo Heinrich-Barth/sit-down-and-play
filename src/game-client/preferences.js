@@ -15,7 +15,7 @@ class PreferencesStorable {
         try
         {
             const key = this.getLocalStorageKey();
-            const val = key === "" ? null : localStorage.getItem(key);
+            const val = key === "" ? null : sessionStorage.getItem(key);
             if (val !== null)
                 return JSON.parse(val);
         }
@@ -30,7 +30,7 @@ class PreferencesStorable {
         this.data[key] = value;
         const localKey = this.getLocalStorageKey();
         if (localKey !== "")
-            localStorage.setItem(localKey, JSON.stringify(this.data));
+            sessionStorage.setItem(localKey, JSON.stringify(this.data));
     }
 }
 
