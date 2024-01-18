@@ -81,6 +81,8 @@ const ContextMenu = {
         if (pPosition.x === 0 || pPosition.y === 0)
             return;
 
+        pPosition.y += ContextMenu.getOffset(nType);
+
         const clickedOnGameCard = nType === "card";
         const pContextMenuElement = document.getElementById("contextmenu");
         if (pContextMenuElement === null)
@@ -487,6 +489,7 @@ const ContextMenu = {
     data : {
         items : { },
         types :  { },
+        offsets: { },
         specialClasses : { }
     },
 
@@ -747,6 +750,21 @@ const ContextMenu = {
             );
         },
 
+        shuffleXCardsPlaydeck : function()
+        {
+            if (typeof RevealPlayerDeckSelf === "undefined")
+                return;
+
+            ContextMenu.callbacks.queryCardNumer(
+                "Shuffle Top Playdeck", 
+                "Please specifiy the number of cards to shuffle.",
+                (count) => {
+                    MeccgApi.send("/game/view-cards/shuffle", { target: "playdeck_top", count: count });
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-success", { "detail": "Playdeck shuffled." }));
+                }
+            );
+        },
+
         queryCardNumer : function(sTitle, sText, fnSuccessCallback)
         {
             const dialog = document.createElement("dialog");
@@ -841,16 +859,24 @@ const ContextMenu = {
         this.addItem("reval_cards_number", "Reveal X cards to your opponent (I will not see them)", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToOpponent, "");
         this.addItem("reval_cards_number_self", "Look at your top X cards", "fa-eye", "context-menu-item-generic", ContextMenu.callbacks.reveal5CardsToSelf, "");
         this.addItem("playdeck_shuffle", "Shuffle deck (or RIGHT CLICK)", "fa-random", "context-menu-item-generic", TaskBarCards.ShufflePlaydeck, "");
+        this.addItem("playdeck_shuffle_x_cards", "Shuffle top X cards of your playdeck", "fa-random", "context-menu-item-generic", ContextMenu.callbacks.shuffleXCardsPlaydeck, "");
 
         this.data.types["card"] = ["ready", "tap", "tap_91", "wound", "rot270", "glow_action", "flipcard", "token_add", "token_remove"];
         this.data.types["location"] = ["ready", "tap", "arrive", "add_ressource", "add_character", "movement_return"];
         this.data.types["arrive"] = ["arrive", "movement_return"];
-        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_cards_reveal", "_divider", "reval_cards_number", "reval_cards_number_self", "_divider", "view_deck_notes", "playdeck_shuffle"];
+        this.data.types["playdeck_actions"] = ["view_deck_cards_ordered", "view_deck_cards", "view_deck_cards_reveal", "playdeck_shuffle_x_cards", "_divider", "reval_cards_number", "reval_cards_number_self", "_divider", "view_deck_notes", "playdeck_shuffle"];
         this.data.types["discardpile_actions"] = ["view_discardpile_ordered", "view_discardpile_cards", "view_discardpile_cards_reveal"];
         this.data.types["company_position"] = ["move_company_left", "move_company_right", "move_company_end"];
 
+        this.data.offsets["playdeck_actions"] = -100;
         this.data.specialClasses["location"] = "context-menu-site";
         this.data.specialClasses["arrive"] = "context-menu-movement";
+    },
+
+    getOffset : function(type)
+    {
+        const val = this.data.offsets[type];
+        return typeof val === "number" ? val : 0;
     },
     
     insertContainers : function()

@@ -1448,6 +1448,12 @@ class GameStandard extends GamePlayers
             this.publishChat(userid, " shuffles discardpile", false);
             this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
         }
+        else if (obj.target === "playdeck_top")
+        {
+            this.getPlayboardManager().ShufflePlaydeckCount(userid, obj.count);
+            this.publishChat(userid, " shuffles top " + obj.count + " cards of their playdeck", false);
+            this.publishToPlayers("/game/sfx", userid, { "type": "shuffle" });
+        }
     }
     
     viewOfferReveal(userid, _socket, obj)
