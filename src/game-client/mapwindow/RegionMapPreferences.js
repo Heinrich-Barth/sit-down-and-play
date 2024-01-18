@@ -198,7 +198,7 @@ class RegionMapPreferences extends Preferences {
 
     #showSiteMarker()
     {
-        return sessionStorage.getItem("hide_sitemarker") === null;
+        return sessionStorage.getItem("hide_sitemarker") === "true";
     }
 
     #toggleSiteMarker(isActive)
