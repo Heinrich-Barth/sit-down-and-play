@@ -110,7 +110,12 @@ const createCharacterHtml = function(jsonCard, id)
     iDice.setAttribute("class", "character-card-dice card-dice");
     iDice.setAttribute("data-code", jsonCard.code);
     iDice.setAttribute("data-uuid", jsonCard.uuid);
-    iDice.setAttribute("title", "Click to roll dice for " + jsonCard.code);
+    
+    if (jsonCard.revealed === true)
+        iDice.setAttribute("title", "Click to roll dice for " + jsonCard.code);
+    else
+        iDice.setAttribute("title", "Click to roll dice");
+
     iDice.onclick = rollCharacterDice;
     characterDiv.appendChild(iDice);
 
