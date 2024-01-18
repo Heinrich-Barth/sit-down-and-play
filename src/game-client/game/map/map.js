@@ -21,6 +21,9 @@ const MapWindow = {
     onMessage : function(e)
     {
         const pMeta = MapWindow.close();
+        if (pMeta === null)
+            return;
+
         const sCompany = pMeta.company;
         const isRevealed = pMeta.revealStart;
 
@@ -53,7 +56,10 @@ const MapWindow = {
 
         const pFrame = document.getElementById("map-iframe");
         if (pFrame === null)
-            return;
+        {
+            console.warn("iframe map has already been destroyed");
+            return null;
+        }
         
         const sCompany = pFrame.getAttribute("data-company") || "";
         const isRevealed = "true" === pFrame.getAttribute("data-revealved")
@@ -82,7 +88,7 @@ const MapWindow = {
      */
     onClose : function(e)
     {
-        MapWindow.close();
+        this.close();
 
         e.preventDefault();
         return false;
@@ -183,7 +189,7 @@ const MapWindow = {
     {
         const elem = document.getElementById("map-window-overlay");
         if (elem !== null)
-            elem.onclick = MapWindow.onClose;
+            elem.onclick = MapWindow.onClose.bind(MapWindow);
     },
 
     /**
