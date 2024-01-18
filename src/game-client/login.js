@@ -1352,7 +1352,8 @@ const preloadGameData = function()
     }
 
     localStorage.removeItem("game_data");
-
+    localStorage.removeItem("background");
+    
     fetch("/data/list/gamedata")
     .then(response => response.json())
     .then(data => localStorage.setItem("game_data", JSON.stringify(data)))
