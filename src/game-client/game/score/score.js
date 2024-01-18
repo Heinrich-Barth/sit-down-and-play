@@ -337,6 +337,9 @@ const SCORING_INGAME =
         {
             for (let category in SCORING_INGAME._scores[id])
             {
+                if (SCORING.ignoreCategory(category))
+                    continue;
+                
                 const tr = document.createElement("tr");
                 const th = document.createElement("th");
                 tr.appendChild(th);
@@ -382,17 +385,17 @@ const SCORING_INGAME =
 
             for (let category in score)
             {
+                if (SCORING.ignoreCategory(category))
+                    continue;
+
                 const _score = score[category];
                 const usable = _score.double ? _score.usable * 2 : _score.usable;
                 const isCut = _score.value !== usable;
 
                 map[category].append(this.buildFinalScores_tableRows_cell(_score.value, usable, isCut, true));
 
-                if (!SCORING.ignoreCategory(id))
-                {
-                    total += parseInt(_score.value);
-                    totalUsed += parseInt(usable);
-                }
+                total += parseInt(_score.value);
+                totalUsed += parseInt(usable);
             }
 
             listPoints.push(totalUsed);
