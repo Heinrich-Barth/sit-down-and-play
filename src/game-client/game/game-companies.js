@@ -231,37 +231,40 @@ function insertNewcontainer(bIsPlayer, sHexPlayerCode, companyId, playerId)
     pImage.setAttribute("crossorigin", "anonymous");
     pImage.setAttribute("data-uuid", card.uuid);
     pImage.setAttribute("data-img-image", GameCompanies.CardList.getImage(card.code));
+    pImage.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
 
-     if (typeof card.owner === "undefined" || card.owner === "")
-         pImage.setAttribute("data-owner", "");
-     else
-     {
-         let bIsMyCard = MeccgPlayers.isChallenger(card.owner) ? "" : card.owner;
-         pImage.setAttribute("data-owner", bIsMyCard);
-     }
-         
-     pImage.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
+    const isMine = typeof card.owner === "undefined" || card.owner === "" || MeccgPlayers.isChallenger(card.owner);
+    if (isMine)
+    {
+        pImage.setAttribute("data-owner", "");
+        pImage.setAttribute("data-is-mine", "true");
+    }
+    else
+    {
+        pImage.setAttribute("data-owner", card.owner);
+        pImage.setAttribute("data-is-mine", "false");
+    }
+                 
+    let pDiv = document.createElement("div");
+    pDiv.setAttribute("class", "card " + getCardStateCss(card.state));
+    pDiv.setAttribute("id", GameCompanies.CARDID_PREFIX + card.uuid);
+    pDiv.setAttribute("data-uuid", card.uuid);
+    pDiv.setAttribute("data-card-code", GameCompanies.CardList.getSafeCode(card.code));
+    pDiv.setAttribute("data-card-type", card.type);
+    pDiv.setAttribute("draggable", "true");
+    pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
 
-     let pDiv = document.createElement("div");
-     pDiv.setAttribute("class", "card " + getCardStateCss(card.state));
-     pDiv.setAttribute("id", GameCompanies.CARDID_PREFIX + card.uuid);
-     pDiv.setAttribute("data-uuid", card.uuid);
-     pDiv.setAttribute("data-card-code", GameCompanies.CardList.getSafeCode(card.code));
-     pDiv.setAttribute("data-card-type", card.type);
-     pDiv.setAttribute("draggable", "true");
-     pDiv.setAttribute("data-revealed", card.revealed !== false ? "true" : "false");
+    if (MeccgPlayers.isMyCard(card.owner))
+    pDiv.classList.add("card-is-mine");
 
-     if (MeccgPlayers.isMyCard(card.owner))
-        pDiv.classList.add("card-is-mine");
+    if (card.token !== undefined && card.token > 0)
+    {
+        pDiv.setAttribute("data-token", card.token);
+        pDiv.setAttribute("title", "Tokens: " + card.token);
+    }       
 
-     if (card.token !== undefined && card.token > 0)
-     {
-         pDiv.setAttribute("data-token", card.token);
-         pDiv.setAttribute("title", "Tokens: " + card.token);
-     }       
-
-     pDiv.appendChild(pImage);
-     return pDiv;
+    pDiv.appendChild(pImage);
+    return pDiv;
  }
 
 const GameCompanies = {

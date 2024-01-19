@@ -280,7 +280,7 @@ const ContextMenu = {
 
             if (e.target === null)
                 return false;
-                
+
             let code = ContextMenu._getCardCode(e.target);
             if (code === "")
                 code = ContextMenu.getAttribute(e.target, "data-card-code");
@@ -288,6 +288,13 @@ const ContextMenu = {
             let uuid = ContextMenu.getAttribute(e.target, "data-uuid");
             if (uuid === "")
                 uuid = ContextMenu.getAttribute(e.target, "data-card-uuid");
+
+            /** only I can flip my own cards */
+            if (e.target.hasAttribute("data-is-mine") && e.target.getAttribute("data-is-mine") === "false")
+            {
+                console.warn("cannot flip other player's card.");
+                return false;
+            }
 
             const src = e.target.getAttribute("src");
             if (src !== null && src.indexOf("/backside") !== -1)
