@@ -252,6 +252,7 @@ body, p {
 .game-list {
   padding: 2em;
   margin-top: 0.5em;
+  color: #ebe9df;
 }
 .game-list .game_list-grid {
   display: grid;
@@ -274,7 +275,7 @@ body, p {
   margin-top: 0;
 }
 .game-list .room-text h3 span {
-  color: #fff;
+  color: #ebe9df;
   font-size: 0.7em;
 }
 .game-list .room-text .audio {
@@ -289,11 +290,8 @@ body, p {
 }
 .game-list .room-image-wrapper {
   padding-top: 5px;
-  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;
-}
-.game-list .room-image-wrapper:hover {
-  background-color: rgb(0, 0, 0);
+  min-height: 140px;
 }
 .game-list .room-image {
   top: 5px;
@@ -314,7 +312,6 @@ body, p {
   display: inline-block;
 }
 .game-list .deck-label span {
-  color: #fff;
   padding: 2px 10px;
   border-radius: 5px;
 }

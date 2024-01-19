@@ -3,6 +3,7 @@
 {
     padding: 2em;
     margin-top: 0.5em;
+    color: #ebe9df;
 
     .game_list-grid {
         display: grid;
@@ -26,7 +27,7 @@
         text-align: left;
         h3 { 
             margin-top: 0; 
-            span { color: #fff; font-size: 0.7em;}
+            span { color: #ebe9df; font-size: 0.7em;}
         }
 
         .audio { font-size: 0.7em; }
@@ -37,12 +38,9 @@
     .room-image-wrapper { 
         
         padding-top: 5px;
-        background-color: rgba(0,0,0,0.4);
         border-radius: 5px;
+        min-height: 140px;
 
-        &:hover {
-            background-color: rgba(0,0,0,1);
-        }
     }
     .room-image { top: 5px; }
     a { 
@@ -64,7 +62,6 @@
         display: inline-block;
 
         span {
-            color: #fff;
             padding: 2px 10px;
             border-radius: 5px;
 

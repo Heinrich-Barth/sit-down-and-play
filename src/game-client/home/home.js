@@ -101,7 +101,7 @@ const addGameType = function(value, isArda, context, labelGameType)
     const since = getGameTypeDuration(value.time);
     
     const _tr = document.createElement("div");
-    _tr.setAttribute("class", "room-image-wrapper");
+    _tr.setAttribute("class", "room-image-wrapper blue-box");
 
     {   
         const tdImage = document.createElement("div");
