@@ -244,7 +244,7 @@ class MapViewRegions extends MapView {
 
     static #showSiteMarker()
     {
-        return sessionStorage.getItem("hide_sitemarker") === null;
+        return sessionStorage.getItem("show_sitemarker") === "true";
     }
 
     showSitesInRegion(regionCode)

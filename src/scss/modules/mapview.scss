@@ -81,9 +81,21 @@ textarea {
     max-height: 95%;
 }
 
+.map-search,
+.mapchooser,
+.side-panel-sites-in-region 
+{
+    top: 170px;    
+}
+
+.side-panel-sites-in-region
+{
+    width: auto;
+    max-width: 350px;
+}
+
 #site_movement { 
     width: auto; 
-    right: 240px;
 }
 
 .side_panel img { max-width: 80px; margin-right: 2px;  }
@@ -138,8 +150,8 @@ div.panel-buttons { width: 70px; }
     padding-top: 10px;
     padding-bottom: 10px;
     img { 
-        width: 80px; 
-        height: 112px; 
+        width: 100%; 
+        max-width: 45%;
         background: url(/data/backside) 0 0 no-repeat;
         background-size: contain; 
         border: 1px solid black;
@@ -154,7 +166,7 @@ div.panel-buttons { width: 70px; }
 
 
 .movement-icon {
-    margin-top: 20px;
+    margin-top: 50px;
     margin-right: 5px;
     img {
         width: 30px;
@@ -185,26 +197,6 @@ img.map-region-icon {
     font-size: 1.1em; 
 }
 
-.region-movement-info {
-    margin-top: 5px;
-    color: $color-yellow;
-    line-height: 1.2em;
-    font-size: 0.9em;
-    padding: 5px;
-    position: relative;
-
-
-    .line-countdown 
-    {   
-        animation: notification-line-to-hide 8s linear forwards;
-        height: 2px;
-        background: white;
-        width: 1%;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-    }
-}
 
 @keyframes notification-line-to-hide {
     from { width: 0%; }

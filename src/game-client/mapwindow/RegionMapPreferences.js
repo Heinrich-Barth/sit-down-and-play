@@ -198,18 +198,19 @@ class RegionMapPreferences extends Preferences {
 
     #showSiteMarker()
     {
-        return sessionStorage.getItem("hide_sitemarker") === "true";
+        return sessionStorage.getItem("show_sitemarker") === "true";
     }
 
     #toggleSiteMarker(isActive)
     {
         if (isActive)
         {
-            if (sessionStorage.getItem("hide_sitemarker") !== null)
-                sessionStorage.removeItem("hide_sitemarker");
+            if (sessionStorage.getItem("show_sitemarker") === null)
+                sessionStorage.setItem("show_sitemarker", "true");
         }
-        else
-            sessionStorage.setItem("hide_sitemarker", "true");
+        else if (sessionStorage.getItem("show_sitemarker") !== null)
+            sessionStorage.removeItem("show_sitemarker");
+            
     }
 
     showDreamcards()
