@@ -259,6 +259,14 @@ body, p {
   grid-template-rows: auto;
   column-gap: 3%;
 }
+@media only screen and (max-width: 900px) {
+  .game-list .game_list-grid {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    column-gap: 0;
+  }
+}
 .game-list .room-text {
   text-align: left;
 }
@@ -280,7 +288,6 @@ body, p {
   font-size: 0.85em;
 }
 .game-list .room-image-wrapper {
-  height: 140px;
   padding-top: 5px;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;

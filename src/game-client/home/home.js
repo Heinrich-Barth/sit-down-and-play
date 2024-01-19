@@ -118,7 +118,14 @@ const addGameType = function(value, isArda, context, labelGameType)
     _tr.appendChild(tdRoom);
 
     const h3 = document.createElement("h3");
-    h3.innerHTML = `${_room.toUpperCase()} <span class="game-duration fa fa-clock-o"> ${since}</span>`;
+    const span = document.createElement("span");
+    span.innerText = labelGameType;
+    span.setAttribute("class", isArda ? "deck-label-green" : "deck-label-blue")
+   
+    const label = document.createElement("div");
+    label.setAttribute("class", "deck-label");
+    label.appendChild(span);
+    h3.append(document.createTextNode(_room.toUpperCase()), label);
 
     const tempList = [];
     for (let _player of _players)
@@ -129,26 +136,19 @@ const addGameType = function(value, isArda, context, labelGameType)
             tempList.push(_player.name);
         else
             tempList.push(_player.name + " (" + _player.score + ")");
-
-
     }
+    const spanTime = document.createElement("span");
+    spanTime.setAttribute("class", "game-duration fa fa-clock-o");
+    spanTime.innerText = " " + since;
 
     const playerP = document.createElement("p");
-    playerP.innerText = tempList.sort().join(", ");
+    playerP.append(spanTime, document.createTextNode(", "), document.createTextNode(tempList.sort().join(", ")));
+
     tdRoom.append(h3, playerP);
 
     tdRoom.append(createAvatarList(value.avatars));
 
     tdRoom.append(document.createElement("br"));
-
-    const span = document.createElement("span");
-    span.innerText = labelGameType;
-    span.setAttribute("class", isArda ? "deck-label-green" : "deck-label-blue")
-   
-    const label = document.createElement("div");
-    label.setAttribute("class", "deck-label");
-    label.appendChild(span);
-    tdRoom.appendChild(label);
 
     if (value.accessible || value.visitors)
     {
