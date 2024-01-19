@@ -78,7 +78,6 @@ textarea {
     width: 200px;
     right: 20px;
     overflow: auto;
-    max-height: 95%;
 }
 
 .map-search,
@@ -91,7 +90,9 @@ textarea {
 .side-panel-sites-in-region
 {
     width: auto;
-    max-width: 350px;
+    width: 50%;
+    max-width: 400px;
+    max-height: 80%;
 }
 
 #site_movement { 
@@ -215,6 +216,7 @@ img.map-region-icon {
     cursor: pointer;
     overflow: auto;
     max-height: 50%;
+    max-width: 80%;
 
     .preferred-image-list img {
         display: inline;
