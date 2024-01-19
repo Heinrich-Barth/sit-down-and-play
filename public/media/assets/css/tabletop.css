@@ -1457,7 +1457,7 @@ img.card-icon {
   margin-left: 0px;
 }
 
-.site-onguard .card {
+.area-opponent .site-onguard .card.card-is-mine {
   transform: rotate(180deg);
 }
 
