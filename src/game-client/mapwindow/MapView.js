@@ -52,6 +52,39 @@ class MapView {
             sElems.classList.remove("hide");
     }
 
+    #getPageSwitcherUrl()
+    {
+        if (window.location.pathname.includes("underdeeps"))
+        {
+            return {
+                url: window.location.pathname.replace("underdeeps", "regions"),
+                label: "Region Map"
+            }
+        }
+        else
+        {
+            return {
+                url: window.location.pathname.replace("regions", "underdeeps"),
+                label: "Underdeeps Map"
+            }
+        }
+    }
+
+    #insertPageSwitch()
+    {
+        const elem = document.createElement("div");
+        elem.setAttribute("class", "map-view-switcher cursor-pointer blue-box");
+
+        const data = this.#getPageSwitcherUrl();
+
+        const a = document.createElement("a");
+        a.innerText = "Switch to " + data.label;
+        a.setAttribute("href", data.url + window.location.search);
+
+        elem.append(a);
+        document.body.append(elem);
+    }
+
     createInstance()
     {
         if (this.#assetFolder === "" || this.#assetFolder.indexOf("..") !== -1)
@@ -72,6 +105,7 @@ class MapView {
         L.tileLayer('/media/maps/' + this.#assetFolder + '/{z}/tile_{x}_{y}.jpg').addTo(this.#instanceLeafletjsMap);
         this.#instanceLeafletjsMap.setView(L.latLng(lat, lng), this.getZoomStart());
         
+        this.#insertPageSwitch();
         return true;
     }
 

@@ -2,6 +2,7 @@ const Logger = require("../Logger");
 const Configuration = require("../Configuration");
 const CardDataProvider = require("../plugins/CardDataProvider");
 const ServerModule = require("../Server");
+const Authentication = require("../authentication");
 const g_pExpress = require('express');
 
 const onGetTappedSites = function(req, res)
@@ -53,6 +54,9 @@ module.exports = function()
 {
     /* Map images should be cached */
     ServerModule.Server.getServerInstance().use("/media/map-black-tile", g_pExpress.static(__dirname + "/../public/media/map-tile.jpg", ServerModule.Caching.headerData.generic));
+
+    ServerModule.Server.getServerInstance().use("/map/regions", Authentication.signInFromPWA);
+    ServerModule.Server.getServerInstance().use("/map/underdeeps", Authentication.signInFromPWA);
 
     /**
      * Show Map Pages

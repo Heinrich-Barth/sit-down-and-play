@@ -336,3 +336,12 @@ img.map-region-icon {
   opacity: 0.6;
   rotate: 180deg;
 }
+
+.map-view-switcher {
+  bottom: 0;
+  left: 0;
+  z-index: 501;
+  padding: 10px;
+  position: fixed;
+  color: white;
+}

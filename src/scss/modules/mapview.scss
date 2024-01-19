@@ -235,3 +235,12 @@ img.map-region-icon {
         }
     }
 }
+
+.map-view-switcher {
+    bottom: 0;
+    left: 0;
+    z-index: 501;
+    padding: 10px;
+    position: fixed;
+    color: white;
+}
