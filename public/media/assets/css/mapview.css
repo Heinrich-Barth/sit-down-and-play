@@ -164,23 +164,12 @@ input.next {
   width: 200px;
   right: 20px;
   overflow: auto;
-}
-
-.map-search,
-.mapchooser,
-.side-panel-sites-in-region {
-  top: 170px;
-}
-
-.side-panel-sites-in-region {
-  width: auto;
-  width: 50%;
-  max-width: 400px;
-  max-height: 80%;
+  max-height: 95%;
 }
 
 #site_movement {
   width: auto;
+  right: 240px;
 }
 
 .side_panel img {
@@ -255,8 +244,8 @@ div.panel-buttons {
   padding-bottom: 10px;
 }
 #found_sites img {
-  width: 100%;
-  max-width: 45%;
+  width: 80px;
+  height: 112px;
   background: url(/data/backside) 0 0 no-repeat;
   background-size: contain;
   border: 1px solid black;
@@ -267,7 +256,7 @@ div.panel-buttons {
 }
 
 .movement-icon {
-  margin-top: 50px;
+  margin-top: 20px;
   margin-right: 5px;
 }
 .movement-icon img {
@@ -299,6 +288,24 @@ img.map-region-icon {
   font-size: 1.1em;
 }
 
+.region-movement-info {
+  margin-top: 5px;
+  color: #ff0;
+  line-height: 1.2em;
+  font-size: 0.9em;
+  padding: 5px;
+  position: relative;
+}
+.region-movement-info .line-countdown {
+  animation: notification-line-to-hide 8s linear forwards;
+  height: 2px;
+  background: white;
+  width: 1%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
 @keyframes notification-line-to-hide {
   from {
     width: 0%;
@@ -319,7 +326,6 @@ img.map-region-icon {
   cursor: pointer;
   overflow: auto;
   max-height: 50%;
-  max-width: 80%;
 }
 .preferred-sites-container .preferred-image-list img {
   display: inline;

@@ -78,25 +78,12 @@ textarea {
     width: 200px;
     right: 20px;
     overflow: auto;
-}
-
-.map-search,
-.mapchooser,
-.side-panel-sites-in-region 
-{
-    top: 170px;    
-}
-
-.side-panel-sites-in-region
-{
-    width: auto;
-    width: 50%;
-    max-width: 400px;
-    max-height: 80%;
+    max-height: 95%;
 }
 
 #site_movement { 
     width: auto; 
+    right: 240px;
 }
 
 .side_panel img { max-width: 80px; margin-right: 2px;  }
@@ -151,8 +138,8 @@ div.panel-buttons { width: 70px; }
     padding-top: 10px;
     padding-bottom: 10px;
     img { 
-        width: 100%; 
-        max-width: 45%;
+        width: 80px; 
+        height: 112px; 
         background: url(/data/backside) 0 0 no-repeat;
         background-size: contain; 
         border: 1px solid black;
@@ -162,12 +149,10 @@ div.panel-buttons { width: 70px; }
             transform: rotate(180deg);
         }
     }
-    
 }
 
-
 .movement-icon {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-right: 5px;
     img {
         width: 30px;
@@ -198,6 +183,26 @@ img.map-region-icon {
     font-size: 1.1em; 
 }
 
+.region-movement-info {
+    margin-top: 5px;
+    color: $color-yellow;
+    line-height: 1.2em;
+    font-size: 0.9em;
+    padding: 5px;
+    position: relative;
+
+
+    .line-countdown 
+    {   
+        animation: notification-line-to-hide 8s linear forwards;
+        height: 2px;
+        background: white;
+        width: 1%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+}
 
 @keyframes notification-line-to-hide {
     from { width: 0%; }
@@ -216,7 +221,6 @@ img.map-region-icon {
     cursor: pointer;
     overflow: auto;
     max-height: 50%;
-    max-width: 80%;
 
     .preferred-image-list img {
         display: inline;
