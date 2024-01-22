@@ -68,11 +68,17 @@ class ResolveHandSizeFirst
         return ArrayList(document.getElementById(this.idContainer)).findByClassName("card-hand").size();
     }
 
+    #isHidden()
+    {
+        const elem = document.getElementById(this.idContainer);
+        return elem?.parentElement.classList.contains("hidden") === true;
+    }
+
     onResolveHandSizeFirst(e)
     {
         try
         {
-            if (!this.isApplicable(e.detail))
+            if (!this.isApplicable(e.detail) || this.#isHidden())
                 return;
 
             const nAllowed = this.getAllowed();
