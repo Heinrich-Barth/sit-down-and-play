@@ -92,7 +92,7 @@ class ResolveHandSizeFirst
 
 class ResolveHandSizeContainer
 {
-    static _idCount = 0;
+    static #idCount = 0;
 
     constructor(id)
     {
@@ -129,7 +129,7 @@ class ResolveHandSizeContainer
             return "";
 
         let _i;
-        const idSizerValue = "card-hand-size-limit-" + (++ResolveHandSizeContainer._idCount);
+        const idSizerValue = "card-hand-size-limit-" + (++ResolveHandSizeContainer.#idCount);
         
         const div = document.createElement("div");
         div.setAttribute("class", "card-hands-sizer");
