@@ -171,3 +171,15 @@ body.on-drag-event-hazard .area-opponent .site-regions:before {
 body.on-drag-event-generic #card_counter a.victory:before {
   content: "Store this card";
 }
+
+.card-hands:hover .taskbar::before {
+  position: absolute;
+  content: "Indicate Phase of your turn";
+  top: -25px;
+  background: linear-gradient(90deg, rgba(35, 35, 35, 0.7) 0%, rgba(35, 35, 35, 0.3) 100%);
+  border-radius: 5px;
+  color: #ff0;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  padding: 0.5em;
+}
