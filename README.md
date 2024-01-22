@@ -345,7 +345,7 @@ Clicking on this option adds 10 characters to each players hand according to the
 
 Once everybody has chosen their starting characters, you may proceed to the minor item draft. Click on the respective link in the setup wizard. As a consequence, all cards in the players' hand will be discarded and shuffled into the play decks - no need to discard them manually.
 
-### Minro Item Draft
+### Minor Item Draft
 
 Now each player picks their minor items from the minor item offering deck at the upper right of the screen.
 
