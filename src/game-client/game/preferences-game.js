@@ -267,6 +267,11 @@ class GamePreferences extends Preferences {
         document.getElementById("question-fake-hide-a").click();
         DomUtils.removeNode(document.getElementById("question-fake-hide"));
     }
+
+    static drawToHandsize()
+    {
+        return Preferences._getConfigValue("draw_to_handsize");        
+    }
     
     static useImagesDC()
     {
@@ -315,12 +320,12 @@ class GamePreferences extends Preferences {
 
         this.createSection("Accessibility / Language");
         this.createEntry0("toggle_spanishcards");
-        if (!bWatcher)
-            this.createEntry0("toggle_touch_help");
-
-
+        
         if (!bWatcher)
         {
+            this.createEntry0("toggle_touch_help");
+            this.createEntry0("draw_to_handsize");
+
             this.createSection("Save/Load");
             this.createEntry0("game_save");
             this.createEntry0("game_load");
@@ -366,6 +371,7 @@ class GamePreferences extends Preferences {
     {        
         this.addConfigToggle("viewpile_open", "I can see my own card piles (reavling to opponent...)", true);
         this.addConfigToggle("images_errata_dc", "Use CoE Errata", this.getUseDCByDefault());
+        this.addConfigToggle("draw_to_handsize", "Draw to hand size if hand is empy", true);
         
         this.addConfigAction("bg_default", "Change background", false, "fa-picture-o", () => document.body.dispatchEvent(new CustomEvent("meccg-background-chooser")));
         this.addConfigAction("game_dices", "Change dices", false, "fa-cube", this.#dices.bind(this));        
