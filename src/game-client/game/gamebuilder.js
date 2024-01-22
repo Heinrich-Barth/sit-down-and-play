@@ -428,14 +428,33 @@ const GameBuilder = {
         document.body.dispatchEvent(new CustomEvent("meccg-check-handsize", { "detail": sPhase }));
     },
 
+    countCardsToDraw : function()
+    {
+        const elem = document.getElementById("playercard_hand_container");
+        if (elem?.childElementCount !== 0 || GamePreferences?.drawToHandsize() !== true)
+            return 1;
+        
+        const sizer = document.getElementById("playercard-hand-content")?.querySelector(".card-hands-sizer-size");
+        if (sizer === null || sizer === undefined)
+            return 1;
+
+        const val =  parseInt(sizer.innerText);
+        return !isNaN(val) && val > 0 ? val : 1;
+    },
+
+    onDrawNewCardToHand : function(e)
+    {
+        const count = GameBuilder.countCardsToDraw();
+        for (let i = 0; i < count; i++)
+            MeccgApi.send("/game/card/draw/single");
+        
+        e.stopPropagation();
+        return false;
+    },
+
     initRestEndpoints : function()
     {            
-        document.getElementById("draw_card").onclick = (e) =>
-        {
-            MeccgApi.send("/game/card/draw/single");
-            e.stopPropagation();
-            return false;
-        };
+        document.getElementById("draw_card").onclick = GameBuilder.onDrawNewCardToHand;
 
         MeccgApi.addListener("/game/card/draw", function(bIsMe, jData)
         {
