@@ -1,13 +1,17 @@
 
-
 class ResolveHandSizeFirst 
 {
+    #idContainer;
+    #sHandName;
+    #phases;
+    #idSize;
+
     constructor(idContainer, idSize, sHandName, aPhases)
     {
-        this.idContainer = idContainer;
-        this.idSize = idSize;
-        this.sHandName = sHandName === undefined || sHandName === "" ? "cards" : sHandName;
-        this.phases = aPhases === undefined || aPhases.length === 0 ? null : aPhases;
+        this.#idContainer = idContainer;
+        this.#idSize = idSize;
+        this.#sHandName = sHandName === undefined || sHandName === "" ? "cards" : sHandName;
+        this.#phases = aPhases === undefined || aPhases.length === 0 ? null : aPhases;
         
     }
 
@@ -21,26 +25,26 @@ class ResolveHandSizeFirst
         if (idSize === "" || idContainer === "" || ResolveHandSizeFirst.isVisitor())
             return;
 
-        let pThis = new ResolveHandSizeFirst(idContainer, idSize, sHandName, aPhases);
-        if (pThis.isAvailable())
+        const pThis = new ResolveHandSizeFirst(idContainer, idSize, sHandName, aPhases);
+        if (pThis.#isAvailable())
             document.body.addEventListener("meccg-check-handsize", pThis.onResolveHandSizeFirst.bind(pThis), false);
     }
 
-    isApplicable(sPhase)
+    #isApplicable(sPhase)
     {
-        return this.phases === null || this.phases.includes(sPhase);
+        return this.#phases === null || this.#phases.includes(sPhase);
     }
 
-    isAvailable()
+    #isAvailable()
     {
-        return document.getElementById(this.idContainer) !== null && document.getElementById(this.idSize) !== null;
+        return document.getElementById(this.#idContainer) !== null && document.getElementById(this.#idSize) !== null;
     }
 
-    getAllowed()
+    #getAllowed()
     {
         try
         {
-            const elem = document.getElementById(this.idSize);
+            const elem = document.getElementById(this.#idSize);
             if (elem !== null)
                 return parseInt(elem.innerText)
         }
@@ -51,26 +55,23 @@ class ResolveHandSizeFirst
         return -1;
     }
 
-    createMessage(nAllowed, nSize)
+    #createMessage(nAllowed, nSize)
     {
-        let sMessage;
         const nDiff = nAllowed - nSize;
         if (nDiff > 0)
-            sMessage = "Please draw " + nDiff + " " + this.sHandName;
+            return "Please draw " + nDiff + " " + this.#sHandName;
         else
-            sMessage = "Please discard " + (nDiff*-1) + " " + this.sHandName;
-    
-        return sMessage;
+            return "Please discard " + (nDiff*-1) + " " + this.#sHandName;
     }
 
-    countHandCards()
+    #countHandCards()
     {
-        return ArrayList(document.getElementById(this.idContainer)).findByClassName("card-hand").size();
+        return ArrayList(document.getElementById(this.#idContainer)).findByClassName("card-hand").size();
     }
 
     #isHidden()
     {
-        const elem = document.getElementById(this.idContainer);
+        const elem = document.getElementById(this.#idContainer);
         return elem?.parentElement.classList.contains("hidden") === true;
     }
 
@@ -78,15 +79,15 @@ class ResolveHandSizeFirst
     {
         try
         {
-            if (!this.isApplicable(e.detail) || this.#isHidden())
+            if (!this.#isApplicable(e.detail) || this.#isHidden())
                 return;
 
-            const nAllowed = this.getAllowed();
+            const nAllowed = this.#getAllowed();
             if (nAllowed > -1)
             {
-                const nSize = this.countHandCards();
+                const nSize = this.#countHandCards();
                 if (nSize !== nAllowed) 
-                    document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": this.createMessage(nAllowed, nSize) }));    
+                    document.body.dispatchEvent(new CustomEvent("meccg-notify-info", { "detail": this.#createMessage(nAllowed, nSize) }));    
             }
         }
         catch (err)
@@ -99,12 +100,7 @@ class ResolveHandSizeFirst
 class ResolveHandSizeContainer
 {
     static #idCount = 0;
-
-    constructor(id)
-    {
-        this.id = id;
-    }
-
+    
     static updateSize(id, nAdd)
     {
         try
