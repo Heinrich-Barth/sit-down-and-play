@@ -97,13 +97,13 @@ let Arda = {
         if (!this.isSinglePlayer() && bAllowRecyling)
             this.insertArdaSetupContainer();
 
-        const idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false, "")
+        const idMps = this.createContainer("arda_mps", "mps", "Marshalling Points", 5, false)
         document.getElementById(idMps).classList.remove("hidden");
 
         this.createContainer("arda_stage", "stage", "Common Stage Cards", 5, false, "");
 
-        const idMinor = this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling, "");
-        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling, idMinor);
+        this.createContainer("arda_minors", "minor", "Minor Item Offerings", 4, bAllowRecyling);
+        this.createContainer("arda_characters", "charackters", "Roving Characters", 4, bAllowRecyling);
 
         this.insertArdaContainer();
         this.getOpeningHands();
@@ -267,7 +267,7 @@ let Arda = {
         return document.getElementById(id + "_hand");
     },
 
-    createContainer : function(playerid, dataType, title, nHandSize, bRecycleOnce, sShowNextElement)
+    createContainer : function(playerid, dataType, title, nHandSize, bRecycleOnce)
     {
         const id = playerid + "_hand";
         const idCardList = "arda_hand_container_" + dataType;
