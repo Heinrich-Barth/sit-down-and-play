@@ -11,7 +11,7 @@ let Arda = {
     createHtmlElement: function(_code, _img, _uuid, type)
     {
         const div = document.createElement("div");
-        div.setAttribute("class", "card-hand");
+        div.setAttribute("class", "card-hand transition-grow-shrink");
         div.setAttribute("id", "arda-hand-card-" + _uuid);
         div.innerHTML = `<img crossorigin="anonymous" decoding="async" src="${_img}" data-id="${_code}" class="card-icon">`;
 
@@ -205,7 +205,7 @@ let Arda = {
         a.setAttribute("data-player", playerId);
         a.setAttribute("id", "arda-action-container-" + dataType);
         a.setAttribute("title", title + ".\nLeft click to toggle visibility.\nRight click to refresh.");
-        a.setAttribute("class", "blue-box fa context-cursor act " + html);
+        a.setAttribute("class", "blue-box fa act " + html);
         a.setAttribute("aria-hidden", "true");
         a.onclick = Arda.toogleView;
         

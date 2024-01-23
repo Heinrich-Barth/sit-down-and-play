@@ -42,6 +42,7 @@ body {
 .blue-box {
   background: linear-gradient(90deg, rgba(35, 35, 35, 0.7) 0%, rgba(35, 35, 35, 0.3) 100%);
   border-radius: 5px;
+  transition: background-color 0.4s ease-in-out;
 }
 .bgblue:hover,
 .blue-box:hover {

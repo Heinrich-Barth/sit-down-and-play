@@ -41,9 +41,11 @@
         padding: 5px;
         min-width: 20px;
         text-align: center;
+        transition: all 0.2s ease-in-out;
 
         &:hover {
             color: #F0C648;
+            scale: 1.1;
         }
     }
 }
