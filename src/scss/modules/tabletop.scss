@@ -346,7 +346,7 @@ body.table-companies-breakline .companies {
     .card-hand,
     .card-dice
     {
-        transition: all 0.2s ease-in-out;
+        transition: scale 0.2s ease-in-out;
 
         &:hover {
             scale: 1.1;

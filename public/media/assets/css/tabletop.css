@@ -725,7 +725,7 @@ body.table-companies-breakline .companies {
 }
 .card-hands .card-hand,
 .card-hands .card-dice {
-  transition: all 0.2s ease-in-out;
+  transition: scale 0.2s ease-in-out;
 }
 .card-hands .card-hand:hover,
 .card-hands .card-dice:hover {
