@@ -387,14 +387,16 @@ const GameBuilder = {
         }
         setTimeout(() => {
 
-            DomUtils.removeNode(document.getElementById("lidles-eye"));
+            document.getElementById("lidles-eye").setAttribute("class", "fade-out")
             document.body.dispatchEvent(new CustomEvent("meccg-api-connected", { "detail": true }));
             document.body.dispatchEvent(new CustomEvent("meccg-sfx-ready", { "detail": true }));
             
             GameBuilder.Scoring.updateInGameScores(scores);
             MeccgApi.send("/game/card/sites", { });
 
-        }, 500);
+        }, 100);
+
+        setTimeout(() => DomUtils.removeNode(document.getElementById("lidles-eye")), 1000);
     },
     
     onAddCardToStagingArea : function(bIsMe, cardCode, uuid, type = "", state = "", revealed = true, turn = 0, token = 0, secondary = "", stage = false)
