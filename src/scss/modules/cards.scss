@@ -353,12 +353,7 @@ body {
     .category {
 
         .actions {
-            &[data-count="0"] {
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-
+            &[data-count="0"] { 
                 a {
                     display: none !important;
                 }
