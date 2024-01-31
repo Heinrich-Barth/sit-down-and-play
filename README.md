@@ -6,6 +6,9 @@ This project allows you to play MECCG or other Collectible Card Games.
 
 *MECCG* assets are not included in this repository. Please respect the copyright and trademak. 
 
+> [!CAUTION]
+> This repository is not actively developed anymore. Please check out the new typscript version (another of my repositories)
+
 ## Online Community
 
 Make sure to check out the meccg discord server. Other useful links are 
